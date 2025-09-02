@@ -9,7 +9,7 @@
 
     <name>fash-and-chaps</name>
     <!-- FIXME change it to the project's website -->
-    <url>http://www.example.com</url>
+    <url>https://gitlab.ecs.vuw.ac.nz/course-work/swen225/2025/project1/team7/fash-and-chaps</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -21,7 +21,7 @@
             <dependency>
                 <groupId>org.junit</groupId>
                 <artifactId>junit-bom</artifactId>
-                <version>5.11.0</version>
+                <version>5.13.4</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -29,12 +29,6 @@
     </dependencyManagement>
 
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/org.codehaus.mojo/exec-maven-plugin -->
-        <dependency>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <version>3.5.1</version>
-        </dependency>
         <!-- Optionally: parameterized tests support -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -45,7 +39,6 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>5.13.4</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -71,6 +64,9 @@
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>3.3.0</version>
+                    <configuration>
+                        <useModulePath>false</useModulePath>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <artifactId>maven-jar-plugin</artifactId>
@@ -95,5 +91,34 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.13</version>
+                <executions>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- https://mvnrepository.com/artifact/org.codehaus.mojo/exec-maven-plugin -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.5.1</version>
+            </plugin>
+        </plugins>
     </build>
 </project>
