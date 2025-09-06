@@ -10,9 +10,19 @@ import javax.swing.SwingUtilities;
  */
 public class Main {
     public static void main(String[] args) {
+        // Set the look and feel to the system default (optional)
+//        try {
+//            javax.swing.UIManager.setLookAndFeel(
+//                    javax.swing.UIManager.getSystemLookAndFeelClassName());
+//        } catch (Exception e) {
+//            // Ignore and use default
+//        }
+
+        // Start the UI on the Event Dispatch Thread
         SwingUtilities.invokeLater(() -> {
-            MainFrame frame = new MainFrame();
-            frame.setVisible(true);
+            GameController controller = new GameController();
+            GameWindow window = new GameWindow(controller);
+            window.setVisible(true);
         });
     }
 }
