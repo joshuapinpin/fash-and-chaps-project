@@ -11,8 +11,39 @@ public class GameWindow extends JFrame {
     // Reference to GameController
     // Reference to StatusPanel
     // Reference to MazePanel (from renderer)
+    private InputController inputController;
 
     public GameWindow(GameController controller) {
         // TODO: Set up window, menus, status bar, and embed MazePanel
+        super("Chaps Challenge");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(800, 600);
+        setFocusable(true);
+        requestFocusInWindow();
+        setVisible(true);
     }
+
+    public void setupInputController(InputController inputController) {
+        this.inputController = inputController;
+        this.addKeyListener(inputController);
+    }
+
+
+    public void showPauseDialog() {
+    }
+
+    public void showErrorDialog(String message) {
+    }
+
+    public void showMessageDialog(String message, String title) {
+    }
+
+    public void setRenderer(Renderer renderer) {
+    }
+
+    // TODO: Must decide what things are needed to be updated in the status bar
+    public void updateStatus() {
+        // TODO: Update status bar with current game info
+    }
+
 }

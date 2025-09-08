@@ -1,6 +1,6 @@
 package nz.ac.wgtn.swen225.lc.app;
 
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 /**
  * Entry point for SWEN225's ChapsChallenge application.
@@ -11,18 +11,11 @@ import javax.swing.SwingUtilities;
 public class Main {
     public static void main(String[] args) {
         // Set the look and feel to the system default (optional)
-//        try {
-//            javax.swing.UIManager.setLookAndFeel(
-//                    javax.swing.UIManager.getSystemLookAndFeelClassName());
-//        } catch (Exception e) {
-//            // Ignore and use default
-//        }
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) {e.printStackTrace();}
 
         // Start the UI on the Event Dispatch Thread
-        SwingUtilities.invokeLater(() -> {
-            GameController controller = new GameController();
-            GameWindow window = new GameWindow(controller);
-            window.setVisible(true);
-        });
+        SwingUtilities.invokeLater(GameController::new);
     }
 }
