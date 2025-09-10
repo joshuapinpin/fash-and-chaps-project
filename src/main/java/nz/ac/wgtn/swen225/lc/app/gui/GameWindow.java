@@ -15,11 +15,16 @@ import java.awt.*;
  * @author Joshua Pinpin (Student ID: 300662880)
  */
 public class GameWindow extends JFrame {
+    // Game Window Fields
+    private static final int WINDOW_WIDTH = 1280;
+    private static final int WINDOW_HEIGHT = 720;
+
     private GameController controller; // Reference to GameController
     private StatusPanel statusPanel; // Reference to StatusPanel
     // Reference to MazePanel (from renderer)
     private InputController inputController;
-    public int x = 50, y = 50;
+
+    public int x = 40, y = 40;
 
     public GameWindow(GameController controller, InputController inputController) {
         // TODO: Set up window, menus, status bar, and embed MazePanel
@@ -34,7 +39,7 @@ public class GameWindow extends JFrame {
         addKeyListener(inputController);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(null); // temporary, for testing purposes only.
-        setSize(800, 600);
+        setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         setFocusable(true);
         requestFocusInWindow();
         setVisible(true);
@@ -44,13 +49,13 @@ public class GameWindow extends JFrame {
     private void setupPanels(){
         statusPanel = new StatusPanel();
         statusPanel.setBackground(Color.red);
-        statusPanel.setBounds(x,y,50,50);
+        statusPanel.setBounds(x,y,40,40);
         this.add(statusPanel);
         System.out.println("Initialised Panels");
     }
 
     public void updateStatusPanel(int x, int y){
-        statusPanel.setBounds(this.x += x, this.y += y, 50, 50);
+        statusPanel.setBounds(this.x += x, this.y += y, 40, 40);
     }
 
     public void showPauseDialog() {

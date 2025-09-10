@@ -49,10 +49,10 @@ public class GameController {
      * Handles a user input (e.g., move, pause, save, etc).
      */
     public void handleInput(Input input) {
-        if(input == Input.MOVE_UP) window.updateStatusPanel(0, -50);
-        else if(input == Input.MOVE_DOWN) window.updateStatusPanel(0, 50);
-        else if(input == Input.MOVE_LEFT) window.updateStatusPanel(-50, 0);
-        else if(input == Input.MOVE_RIGHT) window.updateStatusPanel(50, 0);
+        if(input == Input.MOVE_UP) window.updateStatusPanel(0, -40);
+        else if(input == Input.MOVE_DOWN) window.updateStatusPanel(0, 40);
+        else if(input == Input.MOVE_LEFT) window.updateStatusPanel(-40, 0);
+        else if(input == Input.MOVE_RIGHT) window.updateStatusPanel(40, 0);
 //        else if(input == Input.PAUSE) window.showPauseDialog();
 //        else if(input == Input.RESUME) showMessage("Resuming game...", "Resume");
 //        else if(input == Input.SAVE) saveGame();
@@ -73,7 +73,7 @@ public class GameController {
         // Tell renderer to renderer current domain state
 //        renderer.render();
 
-        // Update UI status sdisplay
+        // Update UI status display
         window.updateStatus();
     }
 
