@@ -24,7 +24,10 @@ public class GameController {
     private GameState state;
     private InputController inputController;
     private TimerController timerController;
-    private PersistenceController persistenceController;
+
+    // GAME MANAGEMENT Components
+    // Reference to persistence object
+    // Reference to recorder object
 
     public GameController() {
         initialiseControllerComponents();
@@ -37,19 +40,26 @@ public class GameController {
         renderer = Renderer.of();
 
         var self = this;
-        window = new GameWindow(self);
         inputController = new InputController(self);
-        persistenceController = new PersistenceController(self);
         timerController = new TimerController(self);
-
-        window.setupInputController(inputController);
+        window = new GameWindow(self, inputController);
     }
 
     /**
-     * Handles a user inpug (e.g., move, pause, save, etc).
+     * Handles a user input (e.g., move, pause, save, etc).
      */
     public void handleInput(Input input) {
-        
+        if(input == Input.MOVE_UP) window.updateStatusPanel(0, -50);
+        else if(input == Input.MOVE_DOWN) window.updateStatusPanel(0, 50);
+        else if(input == Input.MOVE_LEFT) window.updateStatusPanel(-50, 0);
+        else if(input == Input.MOVE_RIGHT) window.updateStatusPanel(50, 0);
+//        else if(input == Input.PAUSE) window.showPauseDialog();
+//        else if(input == Input.RESUME) showMessage("Resuming game...", "Resume");
+//        else if(input == Input.SAVE) saveGame();
+//        else if(input == Input.LOAD_LEVEL_1) startNewGame(1);
+//        else if(input == Input.LOAD_LEVEL_2) startNewGame(2);
+//        else if(input == Input.EXIT) exitGame();
+
     }
 
     // ===== UPDATING VIEW =====
@@ -60,7 +70,7 @@ public class GameController {
             return;
         }
 
-        // Tell renderer to redner current domain state
+        // Tell renderer to renderer current domain state
 //        renderer.render();
 
         // Update UI status sdisplay
@@ -98,22 +108,11 @@ public class GameController {
      */
     public void saveGame(){
         if(domain == null){showError("No game to save!"); return;}
-        persistenceController.saveCurrentGame(domain);
+        //TODO: get Persistence to create a "save current game" method
     }
 
     public void loadGame(){
-        Domain loaded = persistenceController.loadSavedGame();
-        if(loaded == null){showError("No saved game found!"); return;}
-
-        // Replace current domain with loaded one
-        domain = loaded;
-//        currentLevel = domain.getCurrentLevel();
-
-        // Update renderer to reflect loaded game state
-//        renderer.setModel(domain);
-        updateView();
-
-        // ToDo: decide whether it restarts to creates new timer
+        // TODO: get Persistence to create a "load saved game" method, which returns a Domain object
     }
 
     /**

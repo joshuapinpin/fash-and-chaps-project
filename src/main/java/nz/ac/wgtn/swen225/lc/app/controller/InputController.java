@@ -46,6 +46,7 @@ public class InputController implements KeyListener {
         KeyCombo combo = new KeyCombo(e.getKeyCode(), ctrl);
         KeyAction action = actions.get(combo);
 
+        // Displays the key pressed for debugging on terminal
         var keyText = KeyEvent.getKeyText(e.getKeyCode());
         if (action != null) {
             action.execute(controller);
