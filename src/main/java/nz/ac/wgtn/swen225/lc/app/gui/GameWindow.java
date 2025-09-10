@@ -1,4 +1,4 @@
-package nz.ac.wgtn.swen225.lc.app.ui;
+package nz.ac.wgtn.swen225.lc.app.gui;
 
 import nz.ac.wgtn.swen225.lc.app.util.Renderer;
 import nz.ac.wgtn.swen225.lc.app.controller.GameController;
@@ -13,7 +13,7 @@ import javax.swing.*;
  */
 public class GameWindow extends JFrame {
     // Reference to GameController
-    // Reference to StatusPanel
+    StatusPanel statusPanel; // Reference to StatusPanel
     // Reference to MazePanel (from renderer)
     private InputController inputController;
 

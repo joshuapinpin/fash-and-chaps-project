@@ -1,12 +1,9 @@
 package nz.ac.wgtn.swen225.lc.app.controller;
 
-import nz.ac.wgtn.swen225.lc.app.util.Action;
 import nz.ac.wgtn.swen225.lc.app.state.*;
-import nz.ac.wgtn.swen225.lc.app.ui.*;
-import nz.ac.wgtn.swen225.lc.app.util.Domain;
+import nz.ac.wgtn.swen225.lc.app.gui.*;
+import nz.ac.wgtn.swen225.lc.app.util.*;
 import nz.ac.wgtn.swen225.lc.app.util.Renderer;
-
-import javax.swing.*;
 
 /**
  * Central controller for game logic and flow.
@@ -29,11 +26,8 @@ public class GameController {
     private TimerController timerController;
     private PersistenceController persistenceController;
 
-    private JPanel panel;
-
     public GameController() {
         initialiseControllerComponents();
-        setupMVCBindings();
         startNewGame(1);
     }
 
@@ -51,25 +45,10 @@ public class GameController {
         window.setupInputController(inputController);
     }
 
-    private void setupMVCBindings() {
-        // Controller observes and coordinates Model and View
-        // When Model changes, Controller updates View
-        // When user interacts with View, Controller updates Model
-
-        // Setup bindings between model, view, and controller
-        // e.g., domain.addListener(renderer);
-        // e.g., renderer.setController(this);
-    }
-
     /**
-     * Handles a user action (e.g., move, pause, save, etc).
+     * Handles a user inpug (e.g., move, pause, save, etc).
      */
-    public void handleAction(Action action) {
-        // TODO: Implement action handling
-        if(action == Action.MOVE_UP){}
-        if(action == Action.MOVE_DOWN){}
-        if(action == Action.MOVE_LEFT){}
-        if(action == Action.MOVE_RIGHT){}
+    public void handleInput(Input input) {
         
     }
 
