@@ -1,4 +1,4 @@
-package nz.ac.wgtn.swen225.lc.app;
+package nz.ac.wgtn.swen225.lc.app.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

@@ -1,6 +1,10 @@
-package nz.ac.wgtn.swen225.lc.app;
+package nz.ac.wgtn.swen225.lc.app.ui;
 
-import javax.swing.JFrame;
+import nz.ac.wgtn.swen225.lc.app.util.Renderer;
+import nz.ac.wgtn.swen225.lc.app.controller.GameController;
+import nz.ac.wgtn.swen225.lc.app.controller.InputController;
+
+import javax.swing.*;
 
 /**
  * Main application window/frame. Contains UI components and embeds the game panel from renderer.

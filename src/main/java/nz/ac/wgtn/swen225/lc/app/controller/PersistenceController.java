@@ -1,4 +1,6 @@
-package nz.ac.wgtn.swen225.lc.app;
+package nz.ac.wgtn.swen225.lc.app.controller;
+
+import nz.ac.wgtn.swen225.lc.app.util.Domain;
 
 public class PersistenceController {
     public PersistenceController(GameController controller) {

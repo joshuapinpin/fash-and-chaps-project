@@ -1,4 +1,6 @@
-package nz.ac.wgtn.swen225.lc.app;
+package nz.ac.wgtn.swen225.lc.app.controller;
+
+import nz.ac.wgtn.swen225.lc.app.util.Action;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -48,7 +50,8 @@ public class InputController implements KeyListener {
         if (action != null) {
             action.execute(controller);
             System.out.println("Key Pressed: " + keyText + (ctrl ? " (CTRL)" : ""));
-        } else System.out.println("Key Pressed (no action): " + keyText + (ctrl ? " (CTRL)" : ""));
+        }// else System.out.println("Key Pressed (no action): " + keyText + (ctrl ? " (CTRL)" : ""));
+
     }
     @Override public void keyTyped(KeyEvent e) {}
     @Override public void keyReleased(KeyEvent e) {}

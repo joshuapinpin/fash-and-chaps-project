@@ -1,12 +1,21 @@
-package nz.ac.wgtn.swen225.lc.app;
+package nz.ac.wgtn.swen225.lc.app.controller;
+
+import nz.ac.wgtn.swen225.lc.app.util.Action;
+import nz.ac.wgtn.swen225.lc.app.state.*;
+import nz.ac.wgtn.swen225.lc.app.ui.*;
+import nz.ac.wgtn.swen225.lc.app.util.Domain;
+import nz.ac.wgtn.swen225.lc.app.util.Renderer;
+
+import javax.swing.*;
 
 /**
  * Central controller for game logic and flow.
  * Handles user input, updates the domain model, and triggers view updates.
+ * Coordinates between Model (Domain), View (Renderer), and other controllers.
  *
  * @author Joshua Pinpin (Student ID: 300662880)
  */
-public class GameController implements Controller{
+public class GameController {
     // MODEL  (Domain module)
     private Domain domain; // Reference to the domain model
 
@@ -15,12 +24,12 @@ public class GameController implements Controller{
 
     // CONTROLLER Components
     private GameWindow window; // Reference to the main application window
+    private GameState state;
     private InputController inputController;
     private TimerController timerController;
     private PersistenceController persistenceController;
 
-    private boolean isGamePaused;
-    private int currentLevel;
+    private JPanel panel;
 
     public GameController() {
         initialiseControllerComponents();
@@ -57,6 +66,10 @@ public class GameController implements Controller{
      */
     public void handleAction(Action action) {
         // TODO: Implement action handling
+        if(action == Action.MOVE_UP){}
+        if(action == Action.MOVE_DOWN){}
+        if(action == Action.MOVE_LEFT){}
+        if(action == Action.MOVE_RIGHT){}
         
     }
 
@@ -81,28 +94,7 @@ public class GameController implements Controller{
      * Starts a new game at the given level.
      */
     public void startNewGame(int level) {
-        currentLevel = level;
-        isGamePaused = false;
-        try {
-            // Load level from persistence
-            domain = persistenceController.loadLevel(level);
 
-            // Initialise Renderer with new model
-            renderer = new Renderer();
-//            renderer.setModel(domain);
-            window.setRenderer(renderer);
-
-            // Start controller services
-            int timeLimit = TimerController.getTimeLimitForLevel(level);
-            timerController.startTimer(timeLimit);
-
-            // Update View
-            updateView();
-
-        } catch (Exception e) {
-            // Handle loading errors
-            System.err.println("Error loading level " + level + ": " + e.getMessage());
-        }
 
     }
 
@@ -111,9 +103,7 @@ public class GameController implements Controller{
      */
     public void pauseGame() {
         // TODO: Implement pause logic
-        isGamePaused = true;
-        timerController.pause();
-        window.showPauseDialog();
+
     }
 
     /**
@@ -121,7 +111,7 @@ public class GameController implements Controller{
      */
     public void resumeGame() {
         // TODO: Implement resume logic
-        isGamePaused = false;
+
     }
 
     /**
