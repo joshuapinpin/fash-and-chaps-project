@@ -1,4 +1,4 @@
-package nz.ac.wgtn.swen225.lc.app;
+package nz.ac.wgtn.swen225.lc.app.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,6 +12,10 @@ import javax.swing.Timer;
  * @author <Your Name>
  */
 public class TimerController implements ActionListener {
+    private static final int TIMER_INTERVAL = 1000; // Timer ticks every second
+    private static final int LEVEL_1_TIME_LIMIT = 60; // Level 1 time limit in seconds
+    private static final int LEVEL_2_TIME_LIMIT = 120; // Level 2 time limit in seconds
+
     private Timer timer;
     private int timeLeft;
     private final GameController controller;
@@ -26,7 +30,7 @@ public class TimerController implements ActionListener {
     }
 
     public static int getTimeLimitForLevel(int level) {
-        if(level == 1) return 60;
+        if(level == 1) return LEVEL_1_TIME_LIMIT;
         else throw new IllegalArgumentException("Invalid Level: " + level);
     }
 
