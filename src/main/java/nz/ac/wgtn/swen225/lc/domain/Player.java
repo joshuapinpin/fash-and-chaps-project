@@ -8,7 +8,7 @@ import java.util.List;
  * It will track the player's position, treasure chest (items collected), score
  * For updating state when interacting with tiles
  */
-public class Player implements Entity{
+public class Player{
 
     //Fields
     List<Treasure> inventory = new ArrayList<>();
