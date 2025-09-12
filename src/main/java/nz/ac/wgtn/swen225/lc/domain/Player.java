@@ -16,7 +16,7 @@ public class Player implements Entity{
     Direction direction; //enum type
     int chipsLeft;
 
-    
+
     public void move(Direction d){
         throw new UnsupportedOperationException();
     }
