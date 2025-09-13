@@ -16,6 +16,9 @@ public class Maze {
     Player player;
     int rows; int cols; //bounds of maze
 
+    //Constructor
+    Maze(int rows, int cols){throw new UnsupportedOperationException();}
+
     //For persistency?
     public void loadMaze(){
         throw new UnsupportedOperationException();
