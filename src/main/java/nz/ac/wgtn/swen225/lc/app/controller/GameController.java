@@ -39,10 +39,9 @@ public class GameController {
         domain = Domain.of();
         renderer = Renderer.of();
 
-        var self = this;
-        inputController = new InputController(self);
-        timerController = new TimerController(self);
-        window = new GameWindow(self, inputController);
+        inputController = new InputController(this);
+        timerController = new TimerController(this);
+        window = new GameWindow(this, inputController);
     }
 
     /**

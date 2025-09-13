@@ -16,21 +16,21 @@ import java.awt.*;
  */
 public class GameWindow extends JFrame {
     // Game Window Fields
-    public static final int WINDOW_WIDTH = 1200;
-    public static final int WINDOW_HEIGHT = 600;
+    public static final int WINDOW_WIDTH = 1280;
+    public static final int WINDOW_HEIGHT = 720;
 
     // Controllers
     private GameController controller; // Reference to GameController
     private InputController inputController;
 
     // Panels
-    private RootPanel rootPanel;
-    private StatusPanel statusPanel; // Reference to StatusPanel
-    private GamePanel gamePanel;// Reference to GamePanel (from renderer)
+    private JPanel rootPanel;
+    private JPanel statusPanel; // Reference to StatusPanel
+    private JPanel gamePanel;// Reference to GamePanel (from renderer)
 
     public GameWindow(GameController controller, InputController inputController) {
         // TODO: Set up window, menus, status bar, and embed MazePanel
-        super("Chaps Challenge");
+        super("Fash and Chaps :D");
         this.controller = controller;
         this.inputController = inputController;
         setupWindow();
@@ -59,7 +59,7 @@ public class GameWindow extends JFrame {
         System.out.println("Initialised Root Panel");
 
         statusPanel = new StatusPanel(this);
-        rootPanel.add(statusPanel);
+//        rootPanel.add(statusPanel);
         System.out.println("Initialised Panels");
 
         gamePanel = new GamePanel(this);
