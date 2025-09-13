@@ -1,14 +1,23 @@
 package nz.ac.wgtn.swen225.lc.renderer;
 
+
+import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Drawable {
-    Map<Tile, Enum> allTiles = new HashMap<>();
+public class Drawable extends JPanel{
+    Map<TileDummy, LoadingImg> tileIdentities = Map.of();
+    List allTiles = new List();
 
-    //will actually load all the images on jPAnel
-    public void loadTiles(Map<Tile, Enum> allTiles){
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
 
+        g.drawImage(LoadingImg.FreeTile.loadImage(), 50, 50, null);
     }
 }
 
