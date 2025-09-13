@@ -20,28 +20,7 @@ public class InputController implements KeyListener {
     /**
      * Represents a combination of key code and control modifier.
      */
-    static class KeyCombo {
-        final int keyCode;
-        final boolean ctrl;
-
-        KeyCombo(int keyCode, boolean ctrl) {
-            this.keyCode = keyCode;
-            this.ctrl = ctrl;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            KeyCombo keyCombo = (KeyCombo) o;
-            return keyCode == keyCombo.keyCode && ctrl == keyCombo.ctrl;
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(keyCode, ctrl);
-        }
-    }
+    record KeyCombo(int keyCode, boolean ctrl) {}
     interface KeyAction {void execute(GameController gameController);}
 
     public InputController(GameController controller) {
@@ -52,17 +31,17 @@ public class InputController implements KeyListener {
     }
 
     private void setupActions(){
+        actions.put(new KeyCombo(KeyEvent.VK_X, true), c -> c.handleInput(Input.EXIT));
+        actions.put(new KeyCombo(KeyEvent.VK_S, true), c -> c.handleInput(Input.SAVE));
+        actions.put(new KeyCombo(KeyEvent.VK_R, true), c -> c.handleInput(Input.RESUME));
+        actions.put(new KeyCombo(KeyEvent.VK_1, true), c -> c.handleInput(Input.LOAD_LEVEL_1));
+        actions.put(new KeyCombo(KeyEvent.VK_2, true), c -> c.handleInput(Input.LOAD_LEVEL_2));
         actions.put(new KeyCombo(KeyEvent.VK_UP, false), c -> c.handleInput(Input.MOVE_UP));
         actions.put(new KeyCombo(KeyEvent.VK_DOWN, false), c-> c.handleInput(Input.MOVE_DOWN));
-        actions.put(new KeyCombo(KeyEvent.VK_ESCAPE, false), c -> c.handleInput(Input.ESCAPE));
         actions.put(new KeyCombo(KeyEvent.VK_LEFT, false), c -> c.handleInput(Input.MOVE_LEFT));
         actions.put(new KeyCombo(KeyEvent.VK_RIGHT, false), c -> c.handleInput(Input.MOVE_RIGHT));
         actions.put(new KeyCombo(KeyEvent.VK_SPACE, false), c -> c.handleInput(Input.PAUSE));
-        actions.put(new KeyCombo(KeyEvent.VK_R, false), c -> c.handleInput(Input.RESUME));
-        actions.put(new KeyCombo(KeyEvent.VK_S, true), c -> c.handleInput(Input.SAVE));
-        actions.put(new KeyCombo(KeyEvent.VK_1, true), c -> c.handleInput(Input.LOAD_LEVEL_1));
-        actions.put(new KeyCombo(KeyEvent.VK_2, true), c -> c.handleInput(Input.LOAD_LEVEL_2));
-        actions.put(new KeyCombo(KeyEvent.VK_X, true), c -> c.handleInput(Input.EXIT));
+        actions.put(new KeyCombo(KeyEvent.VK_ESCAPE, false), c -> c.handleInput(Input.ESCAPE));
     }
 
     @Override
