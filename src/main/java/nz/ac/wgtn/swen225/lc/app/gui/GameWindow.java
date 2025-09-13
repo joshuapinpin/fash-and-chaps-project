@@ -59,7 +59,7 @@ public class GameWindow extends JFrame {
         System.out.println("Initialised Root Panel");
 
         statusPanel = new StatusPanel(this);
-//        rootPanel.add(statusPanel);
+        rootPanel.add(statusPanel);
         System.out.println("Initialised Panels");
 
         gamePanel = new GamePanel(this);

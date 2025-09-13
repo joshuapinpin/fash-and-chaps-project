@@ -15,10 +15,11 @@ import java.awt.*;
 public class StatusPanel extends JPanel {
     // TODO: Add fields and methods to display game status
 
-    private static final int PANEL_WIDTH = GameWindow.WINDOW_WIDTH / 2;
-    private static final int PANEL_HEIGHT = GameWindow.WINDOW_HEIGHT / 2;
-    private static final int PANEL_X = PANEL_WIDTH;
-    private static final int PANEL_Y = PANEL_HEIGHT;
+    // Size fields
+    private static final int PANEL_WIDTH = (GameWindow.WINDOW_HEIGHT / 8) * 7;
+    private static final int PANEL_HEIGHT = (GameWindow.WINDOW_HEIGHT / 8) * 7;;
+    private static final int PANEL_X = GameWindow.WINDOW_HEIGHT - (GameWindow.WINDOW_HEIGHT - PANEL_HEIGHT) / 2;
+    private static final int PANEL_Y = GameWindow.WINDOW_HEIGHT - (GameWindow.WINDOW_HEIGHT - PANEL_HEIGHT) / 2;
 
     private GameWindow window;
 

@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 
 public class RootPanel extends JPanel {
-
     public RootPanel() {
         setLayout(null);
         setBounds(0,0,GameWindow.WINDOW_WIDTH,GameWindow.WINDOW_HEIGHT);
