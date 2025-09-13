@@ -1,21 +1,33 @@
 package nz.ac.wgtn.swen225.lc.domain;
 
 /**
- * Represents a key entity that can be collected by player
+ * Key class representing a key entity in the game
+ * Keys have a color and can be collected by the player
+ * Implements Entity interface for interaction
  */
 public class Key implements Entity {
-    //Field
-    String color;
+    private String color;
 
-    //Constructor
+    /**
+     * Constructor for key with specified color
+     * @param color color of the key
+     */
     Key(String color){throw new UnsupportedOperationException();}
 
-    //Player to collect key when stepping on its tile
+    /**
+     * Method to handle player interaction with the key
+     * To be able to collect the key
+     * @param p player interacting with the key
+     */
+    @Override
     public void onInteract(Player p){
         throw new UnsupportedOperationException();
     }
 
-    //Getter
+    /**
+     * Getter for key color
+     * @return color of the key
+     */
     public String getColor(){
         throw new UnsupportedOperationException();
     }

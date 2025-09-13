@@ -1,23 +1,42 @@
 package nz.ac.wgtn.swen225.lc.domain;
 
 /**
- * Represents the coordinate position in the maze
- * Holds x and y coordinate for the Tiles
+ * Position class representing coordinates in the game grid
+ * Used to track entity and player positions
  */
 public class Position {
-    //Fields
     private int x;
     private int y;
 
-    //Constructor
+    /**
+     * Constructor for position with specified coordinates
+     * @param x x-coordinate
+     * @param y y-coordinate
+     */
     public Position(int x, int y){}
 
-    //Getters to get coordinates
-    public int x(){return 0;}
-    public int y(){return 0;}
+    /**
+     * Getter for x-coordinate
+     * @return x-coordinate
+     */
+    public int getX(){return 0;}
 
-    //Setters to set coordinates
-    public void x(int i){}
-    public void y(int i){}
+    /**
+     * Getter for y-coordinate
+     * @return y-coordinate
+     */
+    public int getY(){return 0;}
+
+    /**
+     * Set the x-coordinate
+     * @param i new x-coordinate
+     */
+    public void setX(int i){}
+
+    /**
+     * Set the y-coordinate
+     * @param i new y-coordinate
+     */
+    public void setY(int i){}
 
 }

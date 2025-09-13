@@ -1,27 +1,36 @@
 package nz.ac.wgtn.swen225.lc.domain;
 
 /**
- * Represents a single tile in the maze
- * Each tile has a position and defines behaviour when a player steps on it
- * Subclasses specify the type of tile (eg. wall, free, exit, info)
+ * Abstract Tile class representing a tile in the game
+ * Tiles can have different types and behaviors
+ * Each tile has a position and accessibility status
  */
-
 public abstract class Tile {
-    //Fields
-    Position pos;
+    private Position pos; //position of the tile in the maze
 
-    //Constructor
+    /**
+     * Constructor for tile with specified position
+     * @param pos position of the tile
+     */
     public Tile(Position pos){}
 
-    //Getter for position
-    public Position pos(){return null;}
+    /**
+     * Getter for tile position
+     * @return position of the tile
+     */
+    public Position getPos(){return null;}
 
-    //Can player walk on the tile or is it blocked.
+    /**
+     * Check if the tile is accessible
+     * Only to be overridden by impassable tiles like Wall
+     * @return true if accessible, false otherwise
+     */
     public boolean isAccessible(){return true;}
 
-    /*
-    * What happens when a player steps on tile
-    * eg. is it blocked? show message? trigger condition?
-    * */
+    /**
+     * Abstract method to handle player entering the tile
+     * To be implemented by subclasses for specific behaviors
+     * @param player player entering the tile
+     */
     public abstract void onEnter(Player player);
 }
