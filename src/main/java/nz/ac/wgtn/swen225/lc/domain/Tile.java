@@ -1,9 +1,36 @@
 package nz.ac.wgtn.swen225.lc.domain;
 
 /**
- * Represents a single tile in the maze
- * Each tile delegates behaviour to a TileAction using the Strategy Pattern
- * Tile holds the position on Maze and the current action/behaviour
+ * Abstract Tile class representing a tile in the game
+ * Tiles can have different types and behaviors
+ * Each tile has a position and accessibility status
  */
-public class Tile {
+public abstract class Tile {
+    private Position pos; //position of the tile in the maze
+
+    /**
+     * Constructor for tile with specified position
+     * @param pos position of the tile
+     */
+    public Tile(Position pos){}
+
+    /**
+     * Getter for tile position
+     * @return position of the tile
+     */
+    public Position getPos(){return null;}
+
+    /**
+     * Check if the tile is accessible
+     * Only to be overridden by impassable tiles like Wall
+     * @return true if accessible, false otherwise
+     */
+    public boolean isAccessible(){return true;}
+
+    /**
+     * Abstract method to handle player entering the tile
+     * To be implemented by subclasses for specific behaviors
+     * @param player player entering the tile
+     */
+    public abstract void onEnter(Player player);
 }
