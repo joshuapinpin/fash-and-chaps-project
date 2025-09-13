@@ -9,19 +9,27 @@ import java.util.List;
  * For updating state when interacting with tiles
  */
 public class Player{
-
     //Fields
-    List<Treasure> inventory = new ArrayList<>();
+    List<Key> keys = new ArrayList<>();
     Position pos;
     Direction direction; //enum type
-    int chipsLeft;
+    int treasureLeft;
+
+    //Constructor
+    Player(Position pos){throw new UnsupportedOperationException();}
 
 
+    //Moving Player across the maze in given direction
     public void move(Direction d){
         throw new UnsupportedOperationException();
     }
-    //to add treasure and decrement chipsLeft int
-    public void addTreasure(Treasure t){
+    //to add keys collection
+    public void addKey(Key k){
+        throw new UnsupportedOperationException();
+    }
+
+    //Just to decrement treasureLeft counter
+    public void collectTreasure(){
         throw new UnsupportedOperationException();
     }
 
