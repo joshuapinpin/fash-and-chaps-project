@@ -6,7 +6,9 @@ package nz.ac.wgtn.swen225.lc.domain;
  * Each entity is to define what happens when a player interacts with it
  */
 public interface Entity {
-
-    //Called when a player interacts with this entity
+    /**
+     * Defines the interaction between the player and the entity
+     * @param player the player interacting with the entity
+     */
     void onInteract(Player player);
 }
