@@ -27,31 +27,39 @@ public class TimerController implements ActionListener {
         this.controller = controller;
         this.timeLeft = initialTime;
         // TODO: Initialize timer
+        timer = new Timer(TIMER_INTERVAL, this);
+        timer.setInitialDelay(0);
     }
 
     public static int getTimeLimitForLevel(int level) {
         if(level == 1) return LEVEL_1_TIME_LIMIT;
-        else throw new IllegalArgumentException("Invalid Level: " + level);
+        else if(level == 2) return LEVEL_2_TIME_LIMIT;
+        throw new IllegalArgumentException("Invalid Level: " + level);
     }
 
 
     @Override
     public void actionPerformed(ActionEvent e) {
         // TODO: Update time left and notify controller if time runs out
+        if(timeLeft > 0) timeLeft--;
+        if(timeLeft == 0) {
+            timer.stop();
+            controller.timeUp();
+        }
     }
 
     /**
      * Starts the timer.
      */
     public void start() {
-        // TODO: Start timer
+        if(!timer.isRunning()) timer.start();
     }
 
     /**
      * Pauses the timer.
      */
     public void pause() {
-        // TODO: Pause timer
+        if(timer.isRunning()) timer.stop();
     }
 
     /**
@@ -59,12 +67,15 @@ public class TimerController implements ActionListener {
      */
     public void reset(int newTime) {
         // TODO: Reset timer
+        throw new Error("Not yet implemented");
     }
 
     public void startTimer(int timeLimit) {
+        throw new Error("Not yet implemented");
     }
 
     public void stopTimer() {
+        pause();
     }
 
 

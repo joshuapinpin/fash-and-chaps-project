@@ -49,17 +49,15 @@ public class GameController {
      * Handles a user input (e.g., move, pause, save, etc).
      */
     public void handleInput(Input input) {
-        if(input == Input.MOVE_UP) window.updateStatusPanel(0, -40);
-        else if(input == Input.MOVE_DOWN) window.updateStatusPanel(0, 40);
-        else if(input == Input.MOVE_LEFT) window.updateStatusPanel(-40, 0);
-        else if(input == Input.MOVE_RIGHT) window.updateStatusPanel(40, 0);
-//        else if(input == Input.PAUSE) window.showPauseDialog();
-//        else if(input == Input.RESUME) showMessage("Resuming game...", "Resume");
-//        else if(input == Input.SAVE) saveGame();
-//        else if(input == Input.LOAD_LEVEL_1) startNewGame(1);
-//        else if(input == Input.LOAD_LEVEL_2) startNewGame(2);
-//        else if(input == Input.EXIT) exitGame();
+        test1_redSquare(input);
 
+    }
+
+    private void test1_redSquare(Input input){
+        if(input == Input.MOVE_UP) {}
+        else if(input == Input.MOVE_DOWN) {}
+        else if(input == Input.MOVE_LEFT) {}
+        else if(input == Input.MOVE_RIGHT) {}
     }
 
     // ===== UPDATING VIEW =====
@@ -119,10 +117,12 @@ public class GameController {
      * Exits the current game.
      */
     public void exitGame() {
-        if(timerController != null) timerController.stopTimer();
-        System.exit(0);
+
     }
 
     private void showError(String message) {window.showErrorDialog(message);}
     private void showMessage(String message, String title) {window.showMessageDialog(message, title);}
+
+    public void timeUp() {
+    }
 }

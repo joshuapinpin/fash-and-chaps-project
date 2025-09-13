@@ -19,7 +19,8 @@ public class Drawable extends JPanel{
 
         g.drawImage(LoadingImg.FreeTile.loadImage(), 50, 50, null);
     }
-
-
 }
+
+// Delete this later, i just needed it for compiling purposes - Josh
+interface Tile{}
 

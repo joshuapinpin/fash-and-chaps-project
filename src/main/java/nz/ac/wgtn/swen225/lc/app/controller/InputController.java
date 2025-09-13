@@ -17,7 +17,31 @@ public class InputController implements KeyListener {
     // Track currently pressed key codes to prevent repeat events
     private final Set<Integer> pressedKeys = new HashSet<>();
 
-    record KeyCombo(int keyCode, boolean ctrl) {}
+    /**
+     * Represents a combination of key code and control modifier.
+     */
+    static class KeyCombo {
+        final int keyCode;
+        final boolean ctrl;
+
+        KeyCombo(int keyCode, boolean ctrl) {
+            this.keyCode = keyCode;
+            this.ctrl = ctrl;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            KeyCombo keyCombo = (KeyCombo) o;
+            return keyCode == keyCombo.keyCode && ctrl == keyCombo.ctrl;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(keyCode, ctrl);
+        }
+    }
     interface KeyAction {void execute(GameController gameController);}
 
     public InputController(GameController controller) {

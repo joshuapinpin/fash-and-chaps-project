@@ -16,15 +16,17 @@ import java.awt.*;
  */
 public class GameWindow extends JFrame {
     // Game Window Fields
-    private static final int WINDOW_WIDTH = 1280;
-    private static final int WINDOW_HEIGHT = 720;
+    public static final int WINDOW_WIDTH = 1200;
+    public static final int WINDOW_HEIGHT = 600;
 
+    // Controllers
     private GameController controller; // Reference to GameController
-    private StatusPanel statusPanel; // Reference to StatusPanel
-    // Reference to MazePanel (from renderer)
     private InputController inputController;
 
-    public int x = 40, y = 40;
+    // Panels
+    private RootPanel rootPanel;
+    private StatusPanel statusPanel; // Reference to StatusPanel
+    private GamePanel gamePanel;// Reference to GamePanel (from renderer)
 
     public GameWindow(GameController controller, InputController inputController) {
         // TODO: Set up window, menus, status bar, and embed MazePanel
@@ -35,30 +37,42 @@ public class GameWindow extends JFrame {
         setupPanels();
     }
 
+    /**
+     * Sets up the main game window (JFrame) properties.
+     */
     private void setupWindow(){
         addKeyListener(inputController);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(null); // temporary, for testing purposes only.
-        setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+        setLayout(null); // Using absolute positioning
+        getContentPane().setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
+        pack();
         setFocusable(true);
         requestFocusInWindow();
+        setResizable(false);
         setVisible(true);
         System.out.println("Initialised Game Window (JFrame)");
     }
 
     private void setupPanels(){
-        statusPanel = new StatusPanel();
-        statusPanel.setBackground(Color.red);
-        statusPanel.setBounds(x,y,40,40);
-        this.add(statusPanel);
+        rootPanel = new RootPanel();
+        this.add(rootPanel);
+        System.out.println("Initialised Root Panel");
+
+        statusPanel = new StatusPanel(this);
+        rootPanel.add(statusPanel);
         System.out.println("Initialised Panels");
+
+        gamePanel = new GamePanel(this);
+        rootPanel.add(gamePanel);
+        System.out.println("Initialised Game Panel");
     }
 
-    public void updateStatusPanel(int x, int y){
-        statusPanel.setBounds(this.x += x, this.y += y, 40, 40);
-    }
+    // ===== INTERACTIONS WITH CONTROLLER =====
 
     public void showPauseDialog() {
+    }
+
+    public void showHelpDialog() {
     }
 
     public void showErrorDialog(String message) {
@@ -74,5 +88,6 @@ public class GameWindow extends JFrame {
     public void updateStatus() {
         // TODO: Update status bar with current game info
     }
+
 
 }
