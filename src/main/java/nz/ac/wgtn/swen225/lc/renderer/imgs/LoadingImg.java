@@ -23,6 +23,7 @@ public enum LoadingImg {
     Wall("wall.png"),
     FreeTile("sand.png");
 
+
     private final String filename;
     private BufferedImage image;
 
@@ -47,10 +48,5 @@ public enum LoadingImg {
     public BufferedImage loadImage() {
         return image;
     }
-
-
-
-
-
 
 }
