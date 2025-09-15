@@ -5,9 +5,9 @@ import java.awt.*;
 
 public class RootPanel extends JPanel {
     public RootPanel() {
-        setLayout(null);
+        setLayout(new BorderLayout());
         setBounds(0,0,GameWindow.WINDOW_WIDTH,GameWindow.WINDOW_HEIGHT);
         setBackground(Color.WHITE);
-        setBorder(BorderFactory.createLineBorder(Color.RED, 10));
+//        setBorder(BorderFactory.createLineBorder(Color.RED, 10));
     }
 }

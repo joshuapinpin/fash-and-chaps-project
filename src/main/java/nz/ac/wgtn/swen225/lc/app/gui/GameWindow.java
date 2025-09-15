@@ -25,6 +25,8 @@ public class GameWindow extends JFrame {
 
     // Panels
     private JPanel rootPanel;
+    private JPanel titlePanel;
+    private JPanel infoPanel;
     private JPanel statusPanel; // Reference to StatusPanel
     private JPanel gamePanel;// Reference to GamePanel (from renderer)
     private JPanel menuPanel;
@@ -44,9 +46,9 @@ public class GameWindow extends JFrame {
     private void setupWindow(){
         addKeyListener(inputController);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(null); // Using absolute positioning
         getContentPane().setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
         pack();
+//        setLayout(null);
         setFocusable(true);
         requestFocusInWindow();
 //        setResizable(false);
@@ -55,17 +57,26 @@ public class GameWindow extends JFrame {
     }
 
     private void setupPanels(){
+        titlePanel = new TitlePanel(this);
+        this.add(titlePanel, BorderLayout.NORTH);
+        System.out.println("Initialised Title Panel");
+
+
+        menuPanel = new MenuPanel(this);
+        this.add(menuPanel, BorderLayout.SOUTH);
+        System.out.println("Initialised Menu Panel");
+
         rootPanel = new RootPanel();
         this.add(rootPanel);
         System.out.println("Initialised Root Panel");
 
         statusPanel = new StatusPanel(this);
-        rootPanel.add(statusPanel);
+        rootPanel.add(statusPanel, BorderLayout.WEST);
         System.out.println("Initialised Panels");
 
-        menuPanel = new MenuPanel(this);
-        rootPanel.add(menuPanel);
-        System.out.println("Initialised Menu Panel");
+        infoPanel = new InfoPanel(this);
+        rootPanel.add(infoPanel, BorderLayout.EAST);
+        System.out.println("Initialised Info Panel");
 
         gamePanel = new GamePanel(this);
         rootPanel.add(gamePanel);
