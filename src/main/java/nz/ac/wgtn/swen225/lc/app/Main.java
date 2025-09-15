@@ -17,6 +17,6 @@ public class Main {
         catch (Exception e) {e.printStackTrace();}
 
         // Start the UI on the Event Dispatch Thread
-        SwingUtilities.invokeLater(GameController::new);
+        SwingUtilities.invokeLater(GameController::of);
     }
 }
