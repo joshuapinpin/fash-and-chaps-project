@@ -74,6 +74,8 @@ public class GameWindow extends JFrame {
 
     public void showHelpDialog() {
     }
+    public void removePauseDialog() {
+    }
 
     public void showErrorDialog(String message) {
     }

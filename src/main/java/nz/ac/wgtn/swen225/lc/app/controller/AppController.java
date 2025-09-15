@@ -4,6 +4,7 @@ import nz.ac.wgtn.swen225.lc.app.state.*;
 import nz.ac.wgtn.swen225.lc.app.gui.*;
 import nz.ac.wgtn.swen225.lc.app.util.*;
 import nz.ac.wgtn.swen225.lc.app.util.Renderer;
+import nz.ac.wgtn.swen225.lc.domain.Direction;
 
 /**
  * Central controller for game logic and flow.
@@ -50,18 +51,38 @@ public class AppController implements GameController {
         window = new GameWindow(this, inputController);
     }
 
+    // ========== Game Controller Implementation ==========
     /**
      * Handles a user input (e.g., move, pause, save, etc).
      */
     public void handleInput(Input input) {
-        if(input == Input.MOVE_UP) {}
-        else if(input == Input.MOVE_DOWN) {}
-        else if(input == Input.MOVE_LEFT) {}
-        else if(input == Input.MOVE_RIGHT) {}
-
+        switch(input){
+            case MOVE_UP -> {
+                domain.move(Direction.UP);
+                updateView();
+            }
+            case MOVE_DOWN -> {
+                domain.move(Direction.DOWN);
+                updateView();
+            }
+            case MOVE_LEFT -> {
+                domain.move(Direction.LEFT);
+                updateView();
+            }
+            case MOVE_RIGHT -> {
+                domain.move(Direction.RIGHT);
+                updateView();
+            }
+            case PAUSE -> pauseGame();
+            case RESUME -> resumeGame();
+            case SAVE -> saveGame();
+            case LOAD_LEVEL_1 -> startNewGame(1);
+            case LOAD_LEVEL_2 -> startNewGame(2);
+            case EXIT -> exitGame();
+            case ESCAPE -> window.removePauseDialog();
+            default -> showError("Unhandled input: " + input);
+        }
     }
-
-    // ===== UPDATING VIEW =====
 
     private void updateView(){
         if(domain == null || renderer == null){
@@ -75,8 +96,6 @@ public class AppController implements GameController {
         // Update UI status display
         window.updateStatus();
     }
-
-    // ===== HANDLING GAME FUNCTIONALITY CHANGES =====
 
     /**
      * Starts a new game at the given level.
