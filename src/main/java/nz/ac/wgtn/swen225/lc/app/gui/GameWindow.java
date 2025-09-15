@@ -27,6 +27,7 @@ public class GameWindow extends JFrame {
     private JPanel rootPanel;
     private JPanel statusPanel; // Reference to StatusPanel
     private JPanel gamePanel;// Reference to GamePanel (from renderer)
+    private JPanel menuPanel;
 
     public GameWindow(GameController controller, InputController inputController) {
         // TODO: Set up window, menus, status bar, and embed MazePanel
@@ -48,7 +49,7 @@ public class GameWindow extends JFrame {
         pack();
         setFocusable(true);
         requestFocusInWindow();
-        setResizable(false);
+//        setResizable(false);
         setVisible(true);
         System.out.println("Initialised Game Window (JFrame)");
     }
@@ -62,9 +63,14 @@ public class GameWindow extends JFrame {
         rootPanel.add(statusPanel);
         System.out.println("Initialised Panels");
 
+        menuPanel = new MenuPanel(this);
+        rootPanel.add(menuPanel);
+        System.out.println("Initialised Menu Panel");
+
         gamePanel = new GamePanel(this);
         rootPanel.add(gamePanel);
         System.out.println("Initialised Game Panel");
+
     }
 
     // ===== INTERACTIONS WITH CONTROLLER =====

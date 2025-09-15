@@ -10,7 +10,7 @@ import java.io.IOException;
 public class GamePanel extends JPanel {
     // Game Panel Fields
     public static final int PANEL_WIDTH = (GameWindow.WINDOW_HEIGHT / 4) * 3;
-    public static final int PANEL_HEIGHT = (GameWindow.WINDOW_HEIGHT / 4) * 3;;
+    public static final int PANEL_HEIGHT = (GameWindow.WINDOW_HEIGHT / 4) * 3;
     public static final int PANEL_X = (GameWindow.WINDOW_WIDTH - PANEL_WIDTH) / 2;
     public static final int PANEL_Y = (GameWindow.WINDOW_HEIGHT - PANEL_HEIGHT) / 2;
 
@@ -35,7 +35,7 @@ public class GamePanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        int num = 15;
+        int num = 9;
         int size = PANEL_HEIGHT/num;
         for(int row = 0; row < num; row++){
             for(int col = 0; col < num; col++){
