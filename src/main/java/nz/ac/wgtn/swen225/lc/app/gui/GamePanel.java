@@ -18,6 +18,8 @@ public class GamePanel extends JPanel {
     public GamePanel(GameWindow window) {
         this.window = window;
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
+        setMinimumSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
+        setMaximumSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
 //        setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
         loadImage();
     }

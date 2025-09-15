@@ -5,7 +5,7 @@ import java.awt.*;
 
 public class InfoPanel extends JPanel {
 
-    public static final int PANEL_WIDTH = (GameWindow.WINDOW_HEIGHT / 8) * 3;
+    public static final int PANEL_WIDTH = (GameWindow.WINDOW_WIDTH / 4) ;
     public static final int PANEL_HEIGHT = (GameWindow.WINDOW_HEIGHT / 4) * 3;
 
     private GameWindow window;

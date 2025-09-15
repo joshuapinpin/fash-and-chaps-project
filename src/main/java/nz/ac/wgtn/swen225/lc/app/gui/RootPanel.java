@@ -4,10 +4,11 @@ import javax.swing.*;
 import java.awt.*;
 
 public class RootPanel extends JPanel {
+
+
     public RootPanel() {
-        setLayout(new BorderLayout());
-        setBounds(0,0,GameWindow.WINDOW_WIDTH,GameWindow.WINDOW_HEIGHT);
-        setBackground(Color.WHITE);
+        setLayout(new FlowLayout(FlowLayout.CENTER, 25,0));
+//        setBackground(Color.BLACK);
 //        setBorder(BorderFactory.createLineBorder(Color.RED, 10));
     }
 }
