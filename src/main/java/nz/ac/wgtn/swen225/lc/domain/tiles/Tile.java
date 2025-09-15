@@ -1,4 +1,7 @@
-package nz.ac.wgtn.swen225.lc.domain;
+package nz.ac.wgtn.swen225.lc.domain.tiles;
+
+import nz.ac.wgtn.swen225.lc.domain.Player;
+import nz.ac.wgtn.swen225.lc.domain.Position;
 
 /**
  * Abstract Tile class representing a tile in the game
@@ -18,7 +21,7 @@ public abstract class Tile {
      * Getter for tile position
      * @return position of the tile
      */
-    public Position getPos(){return null;}
+    public Position getPos(){return pos;}
 
     /**
      * Check if the tile is accessible

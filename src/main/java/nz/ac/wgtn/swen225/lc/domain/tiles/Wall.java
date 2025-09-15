@@ -1,11 +1,14 @@
-package nz.ac.wgtn.swen225.lc.domain;
+package nz.ac.wgtn.swen225.lc.domain.tiles;
+
+import nz.ac.wgtn.swen225.lc.domain.Player;
+import nz.ac.wgtn.swen225.lc.domain.Position;
 
 /**
  * Wall class representing a wall tile in the game
  * Wall is impassable and does not allow player movement
  * Inherits from Tile class
  */
-public class Wall extends Tile{
+public class Wall extends Tile {
     /**
      * Constructor for wall tile with specified position
      * @param pos position of the wall tile
@@ -28,6 +31,6 @@ public class Wall extends Tile{
      */
     @Override
     public void onEnter(Player p){
-        throw new UnsupportedOperationException();
+        throw new IllegalArgumentException("Player cannot enter a wall tile");
     }
 }
