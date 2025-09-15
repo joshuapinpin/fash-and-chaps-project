@@ -12,7 +12,7 @@ import nz.ac.wgtn.swen225.lc.app.util.Renderer;
  *
  * @author Joshua Pinpin (Student ID: 300662880)
  */
-public class GameControllerImpl implements GameController {
+public class AppController implements GameController {
     // MODEL  (Domain module)
     private Domain domain; // Reference to the domain model
 
@@ -29,9 +29,15 @@ public class GameControllerImpl implements GameController {
     // Reference to persistence object
     // Reference to recorder object
 
-    public GameControllerImpl() {
+    // Constructor with Singleton Pattern
+    private static AppController INSTANCE;
+    private AppController() {
         initialiseControllerComponents();
         startNewGame(1);
+    }
+    public static AppController getInstance() {
+        if(INSTANCE == null) INSTANCE = new AppController();
+        return INSTANCE;
     }
 
     private void initialiseControllerComponents() {
@@ -117,11 +123,9 @@ public class GameControllerImpl implements GameController {
 
     public void timeUp() {
     }
-    
+
     @Override
-    public GameWindow getGameWindow() {
-        return null;
-    }
+    public GameWindow getGameWindow() {return window;}
 
 
     private void showError(String message) {window.showErrorDialog(message);}

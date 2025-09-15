@@ -1,6 +1,6 @@
 package nz.ac.wgtn.swen225.lc.app;
 
-import nz.ac.wgtn.swen225.lc.app.controller.GameControllerImpl;
+import nz.ac.wgtn.swen225.lc.app.controller.GameController;
 
 import javax.swing.*;
 
@@ -17,6 +17,6 @@ public class Main {
         catch (Exception e) {e.printStackTrace();}
 
         // Start the UI on the Event Dispatch Thread
-        SwingUtilities.invokeLater(GameControllerImpl::new);
+        SwingUtilities.invokeLater(GameController::of);
     }
 }
