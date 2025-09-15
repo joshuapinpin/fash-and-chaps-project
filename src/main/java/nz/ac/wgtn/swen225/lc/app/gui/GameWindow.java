@@ -51,7 +51,7 @@ public class GameWindow extends JFrame {
 //        setLayout(null);
         setFocusable(true);
         requestFocusInWindow();
-//        setResizable(false);
+        setResizable(false);
         setVisible(true);
         System.out.println("Initialised Game Window (JFrame)");
     }
