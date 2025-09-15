@@ -1,19 +1,24 @@
 package nz.ac.wgtn.swen225.lc.renderer;
 
 import nz.ac.wgtn.swen225.lc.renderer.imgs.Drawable;
+import nz.ac.wgtn.swen225.lc.renderer.imgs.TileDummy;
 
 import javax.swing.*;
+import java.util.List;
 
 /**
  * Helps to control what to call etc
  */
 public class Renderer {
     //call Josh's methods
-    static double X_PANEL_WIDTH = 1000;
-    static double Y_PANEL_HEIGHT = 900;
+    public static int X_PANEL_WIDTH = 540;
+    public static int Y_PANEL_HEIGHT = 540;
+
+
 
 
     public static void main(String[] args) {
+
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Test Image Display");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

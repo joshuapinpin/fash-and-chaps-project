@@ -1,4 +1,5 @@
 package nz.ac.wgtn.swen225.lc.renderer.imgs;
 
-public record TileDummy() {
-}
+import nz.ac.wgtn.swen225.lc.domain.Tile;
+
+public record TileDummy(String name, int x, int y){ }

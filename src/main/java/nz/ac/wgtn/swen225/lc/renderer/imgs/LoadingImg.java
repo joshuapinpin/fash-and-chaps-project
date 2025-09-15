@@ -20,8 +20,8 @@ public enum LoadingImg {
     Door("door.png"),
     ExitLock("exitLock.png"),
     Info("info.png"),
-    Wall("wall.png"),
-    FreeTile("sand.png");
+    Rock("wall.png"),
+    Sand("sand.png");
 
 
     private final String filename;

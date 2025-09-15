@@ -1,5 +1,7 @@
 package nz.ac.wgtn.swen225.lc.renderer.imgs;
+import nz.ac.wgtn.swen225.lc.renderer.Renderer;
 
+import nz.ac.wgtn.swen225.lc.domain.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,22 +10,68 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg.FreeTile;
+
 
 /**
  * Creates a JPanel of all tiles needed to be loaded
  * Parses through List of tiles, checking which images to show
  */
 public class Drawable extends JPanel{
-    Map<Class<?>, LoadingImg> tileIdentities = Map.of(); // lookup table, see what tiles match to which image
-    List<TileDummy> allTiles = new ArrayList<TileDummy>(); // list of all tiles in current screen
+
+//    Map<Class<?>, LoadingImg> tileIdentities = Map.of( // lookup table, see what tiles match to which image
+//            Door.class, LoadingImg.Door,
+//            Exit.class, LoadingImg.Exit,
+//            ExitLock.class, LoadingImg.ExitLock,
+//            Free.class, LoadingImg.Sand,
+//            Info.class, LoadingImg.Info,
+//            Key.class, LoadingImg.Key,
+//            Wall.class, LoadingImg.Rock
+//            Player.class.Direction??, LoadingImg.playerLeft,
+//            Player.class.Direction??, LoadingImg.playerRight,
+//            Player.class.Direction??, LoadingImg.playerForward,
+//            Player.class.Direction??, LoadingImg.playerBackward
+//
+
+//    );
+
+
+
+    Map<String, LoadingImg> tileIdentities = Map.of( //testing lookup table
+            "Sand", LoadingImg.Sand,
+            "Rock", LoadingImg.Rock
+    );
 
 
     /*
-     * Finds the correct image to use
+     * Testing world map
      */
-    public void findTileImage(){
+    public List<TileDummy> getAllTiles(){
+        ArrayList<TileDummy> tiles = new ArrayList<>();
 
+        for(int i = 0; i <= 8; i++) {
+            for (int j = 0; j <= 8; j++) {
+                tiles.add(new TileDummy("Rock", i, j));
+            }
+        }
+
+        for(int i = 1; i <= 7; i++) {
+            for (int j = 1; j <= 7; j++) {
+                tiles.add(new TileDummy("Sand", i, j));
+            }
+        }
+        return tiles;
+    }
+
+
+    List<TileDummy> allTiles = getAllTiles(); // list of all tiles in current screen
+
+
+    /*
+     * Testing to get correct JFRAME/JPANEL SIZE
+     */
+    @Override
+    public Dimension getPreferredSize() {
+        return new Dimension(Renderer.X_PANEL_WIDTH, Renderer.Y_PANEL_HEIGHT);
     }
 
 
@@ -34,15 +82,14 @@ public class Drawable extends JPanel{
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
+        int COLS = 9;
+        int ROWS = 9;
+        int SIZE = getWidth() / ROWS;
 
-        for(TileDummy tile : allTiles){
-            //check what thing the tile contains
-            //
+        for (TileDummy tile : allTiles) {
+            int x = tile.x();
+            int y = tile.y();
+            g.drawImage(tileIdentities.get(tile.name()).loadImage(), x * SIZE, y * SIZE, SIZE, SIZE, null);
         }
-        g.drawImage(LoadingImg.Wall.loadImage(), 50, 50, null);
     }
-
-
-
-
 }
