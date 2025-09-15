@@ -1,4 +1,8 @@
-package nz.ac.wgtn.swen225.lc.domain;
+package nz.ac.wgtn.swen225.lc.domain.tiles;
+
+import nz.ac.wgtn.swen225.lc.domain.Entity;
+import nz.ac.wgtn.swen225.lc.domain.Player;
+import nz.ac.wgtn.swen225.lc.domain.Position;
 
 import java.util.Optional;
 
@@ -7,7 +11,7 @@ import java.util.Optional;
  * Free tiles can optionally contain a collectable entity (Key, Door, ExitLock or Treasure)
  * Inherits from Tile class
  */
-public class Free extends Tile{
+public class Free extends Tile {
     private Optional<Entity> collectable = Optional.empty(); // Optional collectable entity on the tile
 
     /**
@@ -25,7 +29,10 @@ public class Free extends Tile{
      */
     @Override
     public void onEnter(Player p){
-        throw new UnsupportedOperationException();
+        collectable.ifPresent(entity-> {
+            entity.onInteract(p);
+            collectable = Optional.empty(); // Remove the entity after collection
+        });
     }
 
     /**
@@ -33,7 +40,8 @@ public class Free extends Tile{
      * @param collectable entity to be placed on the tile (Key, Door, ExitLock or Treasure)
      */
     public void setCollectable(Entity collectable){
-        throw new UnsupportedOperationException();
+        if(collectable==null){throw new IllegalArgumentException("Collectable cannot be null");}
+        this.collectable = Optional.of(collectable);
     }
 
     /**
@@ -41,6 +49,6 @@ public class Free extends Tile{
      * @return Optional containing the collectable entity if present, otherwise empty
      */
     public Optional<Entity> getCollectable(){
-        throw new UnsupportedOperationException();
+        return collectable;
     }
 }

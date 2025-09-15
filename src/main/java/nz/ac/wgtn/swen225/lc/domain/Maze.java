@@ -1,5 +1,7 @@
 package nz.ac.wgtn.swen225.lc.domain;
 
+import nz.ac.wgtn.swen225.lc.domain.tiles.Tile;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,7 +13,7 @@ import java.util.Map;
  * Provides methods to load maze from file and get tiles at positions
  */
 public class Maze {
-    private Map<Position,Tile> tileMap = new HashMap<>(); //map of positions to tiles
+    private Map<Position, Tile> tileMap = new HashMap<>(); //map of positions to tiles
     private List<Tile> allTiles = new ArrayList<>(); //list of all tiles in maze
     private Player player; //reference to player in maze
     private int rows; int cols; //dimensions of maze
