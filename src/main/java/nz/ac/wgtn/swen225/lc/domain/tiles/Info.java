@@ -1,12 +1,16 @@
-package nz.ac.wgtn.swen225.lc.domain;
+package nz.ac.wgtn.swen225.lc.domain.tiles;
+
+import nz.ac.wgtn.swen225.lc.app.controller.GameController;
+import nz.ac.wgtn.swen225.lc.domain.Player;
+import nz.ac.wgtn.swen225.lc.domain.Position;
 
 /**
  * Info class representing an informational tile in the game
  * When the player enters this tile, a message is displayed
  * Inherits from Tile class
  */
-public class Info extends Tile{
-    private String message;
+public class Info extends Tile {
+    private final String message;
 
     /**
      * Constructor for info tile with specified message and position
@@ -25,7 +29,9 @@ public class Info extends Tile{
      */
     @Override
     public void onEnter(Player p){
-        throw new UnsupportedOperationException();
+        //Need to sort out with app to access this
+        //e.g. GameController.showMessage(message, "Info Field");
+        //but not sure what tha method is for exactly
     }
 
     /**
@@ -33,6 +39,6 @@ public class Info extends Tile{
      * @return informational message
      */
     public String getMessage(){
-        throw new UnsupportedOperationException();
+        return message;
     }
 }
