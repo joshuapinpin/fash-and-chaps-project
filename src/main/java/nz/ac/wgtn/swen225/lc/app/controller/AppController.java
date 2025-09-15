@@ -46,7 +46,7 @@ public class AppController implements GameController {
         domain = Domain.of();
         renderer = Renderer.of();
 
-        inputController = new InputController(this);
+        //inputController = new InputController(this);
         timerController = new TimerController(this);
         window = new GameWindow(this, inputController);
     }
@@ -90,7 +90,7 @@ public class AppController implements GameController {
             return;
         }
 
-        // Tell renderer to renderer current domain state
+        // Tell renderer the current domain state
 //        renderer.render();
 
         // Update UI status display
