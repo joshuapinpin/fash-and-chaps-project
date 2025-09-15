@@ -12,6 +12,7 @@ import java.util.Map;
 
 public class Drawable extends JPanel{
     Map<TileDummy, LoadingImg> tileIdentities = Map.of();
+    List allTiles = new List();
 
     @Override
     protected void paintComponent(Graphics g) {
