@@ -89,5 +89,11 @@ public class GameWindow extends JFrame {
         // TODO: Update status bar with current game info
     }
 
+    // Getters
+    public static int getWindowWidth() {return WINDOW_WIDTH;}
+    public static int getWindowHeight() {return WINDOW_HEIGHT;}
+    public static int getGamePanelWidth() {return GamePanel.PANEL_WIDTH;}
+    public static int getGamePanelHeight() {return GamePanel.PANEL_HEIGHT;}
+
 
 }

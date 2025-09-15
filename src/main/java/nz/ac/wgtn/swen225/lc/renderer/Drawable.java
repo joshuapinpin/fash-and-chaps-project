@@ -5,13 +5,14 @@ import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Drawable extends JPanel{
     Map<TileDummy, LoadingImg> tileIdentities = Map.of();
-    List allTiles = new List();
+    List<TileDummy> allTiles = new ArrayList<>();
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -21,6 +22,4 @@ public class Drawable extends JPanel{
     }
 }
 
-// Delete this later, i just needed it for compiling purposes - Josh
-interface Tile{}
 
