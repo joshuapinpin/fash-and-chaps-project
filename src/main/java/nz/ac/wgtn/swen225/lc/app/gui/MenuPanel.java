@@ -31,10 +31,10 @@ public class MenuPanel extends JPanel implements ActionListener {
 
     private void setupButtons(){
         buttonRunnableMap = new HashMap<>();
-        setupSingleButton("Save", this::saveButtonAction);
-        setupSingleButton("Pause", this::pauseButtonAction);
-        setupSingleButton("Resume", this::resumeButtonAction);
-        setupSingleButton("Exit", this::exitButtonAction);
+        setupSingleButton("Save", () -> controller.saveGame());
+        setupSingleButton("Pause", () -> controller.pauseGame());
+        setupSingleButton("Resume", () -> controller.resumeGame());
+        setupSingleButton("Exit", () -> controller.exitGame());
     }
 
     private void setupSingleButton(String label, Runnable action){
@@ -43,23 +43,6 @@ public class MenuPanel extends JPanel implements ActionListener {
         button.setFocusable(false);
         buttonRunnableMap.put(button, action);
         add(button);
-    }
-
-    private void pauseButtonAction(){
-        System.out.println("Pause button pressed");
-    }
-
-    private void saveButtonAction(){
-        System.out.println("Save button pressed");
-    }
-
-    private void exitButtonAction(){
-        System.out.println("Exit button pressed");
-        System.exit(0);
-    }
-
-    private void resumeButtonAction(){
-        System.out.println("Resume button pressed");
     }
 
     @Override

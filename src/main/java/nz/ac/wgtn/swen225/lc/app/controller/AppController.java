@@ -142,7 +142,7 @@ public class AppController implements GameController {
      */
     public void pauseGame() {
         // TODO: Implement pause logic
-
+        System.out.println("Game Paused");
     }
 
     /**
@@ -150,7 +150,7 @@ public class AppController implements GameController {
      */
     public void resumeGame() {
         // TODO: Implement resume logic
-
+        System.out.println("Game Resumed");
     }
 
     /**
@@ -159,10 +159,12 @@ public class AppController implements GameController {
     public void saveGame(){
         if(domain == null){showError("No game to save!"); return;}
         //TODO: get Persistence to create a "save current game" method
+        System.out.println("Game Saved!");
     }
 
     public void loadGame(){
         // TODO: get Persistence to create a "load saved game" method, which returns a Domain object
+        System.out.println("Game Loaded!");
     }
 
     /**
