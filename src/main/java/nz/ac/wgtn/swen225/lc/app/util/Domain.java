@@ -9,5 +9,8 @@ public class Domain {
     public void move(Direction dir){
 
     }
+    public void getAllTiles(){
+
+    }
 }
 

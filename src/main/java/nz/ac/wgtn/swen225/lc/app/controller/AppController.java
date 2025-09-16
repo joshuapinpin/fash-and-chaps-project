@@ -6,6 +6,9 @@ import nz.ac.wgtn.swen225.lc.app.util.*;
 import nz.ac.wgtn.swen225.lc.app.util.Renderer;
 import nz.ac.wgtn.swen225.lc.domain.Direction;
 
+import java.util.Map;
+import java.util.HashMap;
+
 /**
  * Central controller for game logic and flow.
  * Handles user input, updates the domain model, and triggers view updates.
@@ -25,6 +28,7 @@ public class AppController implements GameController {
     private GameState state;
     private InputController inputController;
     private TimerController timerController;
+    private Map<Input, Runnable> inputMap;
 
     // GAME MANAGEMENT Components
     // Reference to persistence object
@@ -34,6 +38,7 @@ public class AppController implements GameController {
     private static AppController INSTANCE;
     private AppController() {
         initialiseControllerComponents();
+        initialiseInputMap();
         startNewGame(1);
     }
     public static AppController getInstance() {
@@ -51,39 +56,40 @@ public class AppController implements GameController {
         window = new GameWindow(this, inputController);
     }
 
+    private void initialiseInputMap(){
+        // Initialize input to input map
+        inputMap = new HashMap<>();
+        inputMap.put(Input.MOVE_UP, this::moveUp);
+        inputMap.put(Input.MOVE_DOWN, this::moveDown);
+        inputMap.put(Input.MOVE_LEFT, this::moveLeft);
+        inputMap.put(Input.MOVE_RIGHT, this::moveRight);
+        inputMap.put(Input.PAUSE, this::pauseGame);
+        inputMap.put(Input.RESUME, this::resumeGame);
+        inputMap.put(Input.SAVE, this::saveGame);
+        inputMap.put(Input.LOAD_LEVEL_1, () -> startNewGame(1));
+        inputMap.put(Input.LOAD_LEVEL_2, () -> startNewGame(2));
+        inputMap.put(Input.EXIT, this::exitGame);
+        inputMap.put(Input.ESCAPE, window::removePauseDialog);
+    }
+
     // ========== Game Controller Implementation ==========
     /**
      * Handles a user input (e.g., move, pause, save, etc).
      */
     public void handleInput(Input input) {
-        switch(input){
-            case MOVE_UP -> {
-                domain.move(Direction.UP);
-                updateView();
-            }
-            case MOVE_DOWN -> {
-                domain.move(Direction.DOWN);
-                updateView();
-            }
-            case MOVE_LEFT -> {
-                domain.move(Direction.LEFT);
-                updateView();
-            }
-            case MOVE_RIGHT -> {
-                domain.move(Direction.RIGHT);
-                updateView();
-            }
-            case PAUSE -> pauseGame();
-            case RESUME -> resumeGame();
-            case SAVE -> saveGame();
-            case LOAD_LEVEL_1 -> startNewGame(1);
-            case LOAD_LEVEL_2 -> startNewGame(2);
-            case EXIT -> exitGame();
-            case ESCAPE -> window.removePauseDialog();
-            default -> showError("Unhandled input: " + input);
-        }
+        if(inputMap.containsKey(input)) inputMap.get(input).run();
+        else throw new IllegalArgumentException("Invalid input");
     }
 
+    private void moveUp(){domain.move(Direction.UP); updateView();}
+    private void moveDown(){domain.move(Direction.DOWN); updateView();}
+    private void moveLeft(){domain.move(Direction.LEFT); updateView();}
+    private void moveRight(){domain.move(Direction.RIGHT); updateView();}
+
+    // ===== View Methods =====
+    /**
+     * Updates the view based on the current state of the domain model.
+     */
     private void updateView(){
         if(domain == null || renderer == null){
             showError("Cannot update view: Domain or Renderer is null.");
