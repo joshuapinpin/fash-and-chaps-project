@@ -11,7 +11,7 @@ variables:
     --show-version
     --no-transfer-progress
 
-image: maven:3.9.6-eclipse-temurin-24
+image: maven:3.9.11-eclipse-temurin-24
 
 cache:
   paths:
