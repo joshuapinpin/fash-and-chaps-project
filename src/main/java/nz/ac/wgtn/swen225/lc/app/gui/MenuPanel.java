@@ -26,6 +26,7 @@ public class MenuPanel extends JPanel implements ActionListener {
         setLayout(new GridLayout(1, 4, BUTTON_GAP, BUTTON_GAP));
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         setBorder(BorderFactory.createEmptyBorder(BUTTON_GAP, BUTTON_GAP, BUTTON_GAP, BUTTON_GAP));
+        setBackground(Color.red);
         setupButtons();
     }
 

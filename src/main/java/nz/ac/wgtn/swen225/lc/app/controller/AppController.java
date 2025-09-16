@@ -171,7 +171,8 @@ public class AppController implements GameController {
      * Exits the current game.
      */
     public void exitGame() {
-
+        System.out.println("Exiting Game...");
+        System.exit(0);
     }
 
     public void timeUp() {

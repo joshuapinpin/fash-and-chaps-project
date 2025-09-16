@@ -1,6 +1,7 @@
 package nz.ac.wgtn.swen225.lc.app.gui;
 
 import nz.ac.wgtn.swen225.lc.app.controller.GameController;
+import nz.ac.wgtn.swen225.lc.app.util.Renderer;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -14,7 +15,6 @@ public class GamePanel extends JPanel {
     public static final int PANEL_WIDTH = (GameWindow.WINDOW_HEIGHT / 4) * 3;
     public static final int PANEL_HEIGHT = (GameWindow.WINDOW_HEIGHT / 4) * 3;
 
-    BufferedImage image;
     private GameController controller;
 
     public GamePanel(GameController controller) {
@@ -22,20 +22,11 @@ public class GamePanel extends JPanel {
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         setMinimumSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         setMaximumSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
-        setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
-        loadImage();
+//        setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
     }
 
-    private void loadImage(){
-        try {
-            image = ImageIO.read(new File(
-                    "src/main/java/nz/ac/wgtn/swen225/lc/renderer/imgs/sand.png"
-            ));
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        }
-    }
+
+    BufferedImage image = Renderer.image;
 
     @Override
     protected void paintComponent(Graphics g) {

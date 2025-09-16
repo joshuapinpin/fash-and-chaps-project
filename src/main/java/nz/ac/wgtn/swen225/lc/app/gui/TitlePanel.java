@@ -14,5 +14,6 @@ public class TitlePanel extends JPanel {
     TitlePanel(GameController controller){
         this.controller = controller;
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
+        setBackground(Color.yellow);
     }
 }
