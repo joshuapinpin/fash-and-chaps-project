@@ -14,7 +14,6 @@ import java.util.*;
 public class InputController implements KeyListener {
     private final GameController controller;
     private final Map<KeyCombo, KeyAction> inputs;
-    // Track currently pressed key codes to prevent repeat events
     private final Set<Integer> pressedKeys = new HashSet<>();
 
     /**
@@ -58,7 +57,7 @@ public class InputController implements KeyListener {
         var keyText = KeyEvent.getKeyText(keyCode);
         if (action != null) {
             action.execute(controller);
-            System.out.println("Key Pressed: " + keyText + (ctrl ? " (CTRL)" : ""));
+//            System.out.println("Key Pressed: " + keyText + (ctrl ? " (CTRL)" : ""));
         }
         // else System.out.println("Key Pressed (no action): " + keyText + (ctrl ? " (CTRL)" : ""));
     }

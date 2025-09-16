@@ -28,7 +28,7 @@ public class AppController implements GameController {
     private GameState state;
     private InputController inputController;
     private TimerController timerController;
-    private Map<Input, Runnable> inputMap;
+    private Map<Input, Runnable> inputRunnableMap;
 
     // GAME MANAGEMENT Components
     // Reference to persistence object
@@ -51,25 +51,25 @@ public class AppController implements GameController {
         domain = Domain.of();
         renderer = Renderer.of();
 
-        //inputController = new InputController(this);
+        inputController = new InputController(this);
         timerController = new TimerController(this);
         window = new GameWindow(this, inputController);
     }
 
     private void initialiseInputMap(){
         // Initialize input to input map
-        inputMap = new HashMap<>();
-        inputMap.put(Input.MOVE_UP, this::moveUp);
-        inputMap.put(Input.MOVE_DOWN, this::moveDown);
-        inputMap.put(Input.MOVE_LEFT, this::moveLeft);
-        inputMap.put(Input.MOVE_RIGHT, this::moveRight);
-        inputMap.put(Input.PAUSE, this::pauseGame);
-        inputMap.put(Input.RESUME, this::resumeGame);
-        inputMap.put(Input.SAVE, this::saveGame);
-        inputMap.put(Input.LOAD_LEVEL_1, () -> startNewGame(1));
-        inputMap.put(Input.LOAD_LEVEL_2, () -> startNewGame(2));
-        inputMap.put(Input.EXIT, this::exitGame);
-        inputMap.put(Input.ESCAPE, window::removePauseDialog);
+        inputRunnableMap = new HashMap<>();
+        inputRunnableMap.put(Input.MOVE_UP, this::moveUp);
+        inputRunnableMap.put(Input.MOVE_DOWN, this::moveDown);
+        inputRunnableMap.put(Input.MOVE_LEFT, this::moveLeft);
+        inputRunnableMap.put(Input.MOVE_RIGHT, this::moveRight);
+        inputRunnableMap.put(Input.PAUSE, this::pauseGame);
+        inputRunnableMap.put(Input.RESUME, this::resumeGame);
+        inputRunnableMap.put(Input.SAVE, this::saveGame);
+        inputRunnableMap.put(Input.LOAD_LEVEL_1, () -> startNewGame(1));
+        inputRunnableMap.put(Input.LOAD_LEVEL_2, () -> startNewGame(2));
+        inputRunnableMap.put(Input.EXIT, this::exitGame);
+        inputRunnableMap.put(Input.ESCAPE, window::removePauseDialog);
     }
 
     // ========== Game Controller Implementation ==========
@@ -77,14 +77,30 @@ public class AppController implements GameController {
      * Handles a user input (e.g., move, pause, save, etc).
      */
     public void handleInput(Input input) {
-        if(inputMap.containsKey(input)) inputMap.get(input).run();
+        if(inputRunnableMap.containsKey(input)) inputRunnableMap.get(input).run();
         else throw new IllegalArgumentException("Invalid input");
     }
 
-    private void moveUp(){domain.move(Direction.UP); updateView();}
-    private void moveDown(){domain.move(Direction.DOWN); updateView();}
-    private void moveLeft(){domain.move(Direction.LEFT); updateView();}
-    private void moveRight(){domain.move(Direction.RIGHT); updateView();}
+    private void moveUp(){
+//        domain.move(Direction.UP);
+        updateView();
+        System.out.println("Moved Up");
+    }
+    private void moveDown(){
+//        domain.move(Direction.DOWN);
+        updateView();
+        System.out.println("Moved Down");
+    }
+    private void moveLeft(){
+//        domain.move(Direction.LEFT);
+        updateView();
+        System.out.println("Moved Left");
+    }
+    private void moveRight(){
+//        domain.move(Direction.RIGHT);
+        updateView();
+        System.out.println("Moved Right");
+    }
 
     // ===== View Methods =====
     /**

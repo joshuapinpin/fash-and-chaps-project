@@ -1,6 +1,5 @@
 package nz.ac.wgtn.swen225.lc.app.gui;
 
-import nz.ac.wgtn.swen225.lc.app.util.Input;
 import nz.ac.wgtn.swen225.lc.app.util.Renderer;
 import nz.ac.wgtn.swen225.lc.app.controller.GameController;
 import nz.ac.wgtn.swen225.lc.app.controller.InputController;
@@ -26,7 +25,7 @@ public class GameWindow extends JFrame {
     // Panels
     private JPanel rootPanel;
     private JPanel titlePanel;
-    private JPanel infoPanel;
+    private JPanel inventoryPanel;
     private JPanel statusPanel; // Reference to StatusPanel
     private JPanel gamePanel;// Reference to GamePanel (from renderer)
     private JPanel menuPanel;
@@ -48,7 +47,7 @@ public class GameWindow extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
         pack();
-//        setLayout(null);
+        setLayout(new BorderLayout());
         setFocusable(true);
         requestFocusInWindow();
         setResizable(false);
@@ -62,17 +61,16 @@ public class GameWindow extends JFrame {
         rootPanel = new RootPanel();
         statusPanel = new StatusPanel(this);
         gamePanel = new GamePanel(this);
-        infoPanel = new InfoPanel(this);
+        inventoryPanel = new InventoryPanel(this);
 
         add(titlePanel, BorderLayout.NORTH);
         add(menuPanel, BorderLayout.SOUTH);
         add(rootPanel);
         rootPanel.add(statusPanel);
         rootPanel.add(gamePanel);
-        rootPanel.add(infoPanel);
+        rootPanel.add(inventoryPanel);
 
         System.out.println("Initialised Panels");
-
     }
 
     // ===== INTERACTIONS WITH CONTROLLER =====
@@ -91,8 +89,6 @@ public class GameWindow extends JFrame {
     public void showMessageDialog(String message, String title) {
     }
 
-    public void setRenderer(Renderer renderer) {
-    }
 
     // TODO: Must decide what things are needed to be updated in the status bar
     public void updateStatus() {

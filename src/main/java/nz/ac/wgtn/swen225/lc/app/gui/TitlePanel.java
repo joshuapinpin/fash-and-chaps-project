@@ -9,7 +9,7 @@ public class TitlePanel extends JPanel {
     public static int PANEL_HEIGHT = GameWindow.WINDOW_HEIGHT / 8;
     TitlePanel(GameWindow window){
         this.window = window;
-        setBackground(Color.cyan);
+//        setBackground(Color.white);
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
     }
 }
