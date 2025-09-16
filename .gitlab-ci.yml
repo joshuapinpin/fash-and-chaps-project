@@ -1,3 +1,4 @@
+
 stages:
   - build
   - test
@@ -10,7 +11,7 @@ variables:
     --show-version
     --no-transfer-progress
 
-image: maven:3.9.6-eclipse-temurin-24
+image: maven:3.9.11-eclipse-temurin-24
 
 cache:
   paths:
@@ -18,11 +19,13 @@ cache:
 
 build:
   stage: build
+  tags: [docker]
   script:
     - mvn $MAVEN_CLI_OPTS clean compile
 
 test:
   stage: test
+  tags: [docker]
   script:
     - mvn $MAVEN_CLI_OPTS test jacoco:report
   artifacts:
