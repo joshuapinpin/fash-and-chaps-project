@@ -1,0 +1,37 @@
+
+stages:
+  - build
+  - test
+
+variables:
+  MAVEN_CLI_OPTS: >-
+    --batch-mode
+    --errors
+    --fail-at-end
+    --show-version
+    --no-transfer-progress
+
+image: maven:3.9.11-eclipse-temurin-24
+
+cache:
+  paths:
+    - .m2/repository
+
+build:
+  stage: build
+  tags: [docker]
+  script:
+    - mvn $MAVEN_CLI_OPTS clean compile
+
+test:
+  stage: test
+  tags: [docker]
+  script:
+    - mvn $MAVEN_CLI_OPTS test jacoco:report
+  artifacts:
+    when: always
+    reports:
+      junit: target/surefire-reports/TEST-*.xml
+    paths:
+      - target/site/jacoco/
+  coverage: '/Total.*?([0-9]{1,3})%/'
