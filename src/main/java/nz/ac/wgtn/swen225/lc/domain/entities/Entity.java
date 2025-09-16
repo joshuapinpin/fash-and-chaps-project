@@ -1,4 +1,6 @@
-package nz.ac.wgtn.swen225.lc.domain;
+package nz.ac.wgtn.swen225.lc.domain.entities;
+
+import nz.ac.wgtn.swen225.lc.domain.Player;
 
 /**
  * Represents an interactable entity in the maze
