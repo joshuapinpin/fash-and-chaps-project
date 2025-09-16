@@ -12,18 +12,20 @@ variables:
     --no-transfer-progress
 
 image: maven:3.9.6-eclipse-temurin-24
-#remember to tag the docker.
+
 cache:
   paths:
     - .m2/repository
 
 build:
   stage: build
+  tags: [docker]
   script:
     - mvn $MAVEN_CLI_OPTS clean compile
 
 test:
   stage: test
+  tags: [docker]
   script:
     - mvn $MAVEN_CLI_OPTS test jacoco:report
   artifacts:
