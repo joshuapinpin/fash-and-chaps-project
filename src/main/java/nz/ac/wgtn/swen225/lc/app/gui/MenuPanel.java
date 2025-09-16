@@ -2,7 +2,7 @@ package nz.ac.wgtn.swen225.lc.app.gui;
 
 import javax.swing.*;
 
-import java.awt.Dimension;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Map;
@@ -12,6 +12,7 @@ public class MenuPanel extends JPanel implements ActionListener {
     // Size fields
     public static final int PANEL_WIDTH = GameWindow.WINDOW_WIDTH;
     public static final int PANEL_HEIGHT = GameWindow.WINDOW_HEIGHT / 8;
+    public static final int BUTTON_GAP = 10;
 
     // Buttons: Pause, Save, Exit, Resume
     private Map<JButton, Runnable> buttonRunnableMap;
@@ -19,40 +20,28 @@ public class MenuPanel extends JPanel implements ActionListener {
     private GameWindow window;
     MenuPanel(GameWindow window){
         this.window = window;
+//        setLayout(new FlowLayout(FlowLayout.CENTER, 10, 40));
+        setLayout(new GridLayout(1, 4, BUTTON_GAP, BUTTON_GAP));
 //        setBackground(Color.green);
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
+        setBorder(BorderFactory.createEmptyBorder(BUTTON_GAP, BUTTON_GAP, BUTTON_GAP, BUTTON_GAP));
         setupButtons();
     }
 
     private void setupButtons(){
-        JButton pauseButton = new JButton("Pause");
-        JButton saveButton = new JButton("Save");
-        JButton exitButton = new JButton("Exit");
-        JButton resumeButton = new JButton("Resume");
-
-        pauseButton.addActionListener(this);
-        saveButton.addActionListener(this);
-        exitButton.addActionListener(this);
-        resumeButton.addActionListener(this);
-
         buttonRunnableMap = new HashMap<>();
-        buttonRunnableMap.put(pauseButton, this::pauseButtonAction);
-        buttonRunnableMap.put(saveButton, this::saveButtonAction);
-        buttonRunnableMap.put(exitButton, this::exitButtonAction);
-        buttonRunnableMap.put(resumeButton, this::resumeButtonAction);
-
-        add(saveButton);
-        add(pauseButton);
-        add(resumeButton);
-        add(exitButton);
+        setupSingleButton("Save", this::saveButtonAction);
+        setupSingleButton("Pause", this::pauseButtonAction);
+        setupSingleButton("Resume", this::resumeButtonAction);
+        setupSingleButton("Exit", this::exitButtonAction);
     }
 
-//    private void setupSingleButton(String label, Runnable action){
-//
-//        button.addActionListener(this);
-//        buttonRunnableMap.put(button, action);
-//        add(button);
-//    }
+    private void setupSingleButton(String label, Runnable action){
+        JButton button = new JButton(label);
+        button.addActionListener(this);
+        buttonRunnableMap.put(button, action);
+        add(button);
+    }
 
     private void pauseButtonAction(){
         System.out.println("Pause button pressed");
