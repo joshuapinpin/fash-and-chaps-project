@@ -10,18 +10,16 @@ import java.util.List;
  * It coordinates with the App package, which calls
  * the addMovement method, passes an Input object
  * every time the character moves.
+ * Need to change the algorithm and use the observer pattern.
  *
  * @author Arushi Bhatnagar Stewart
  */
 public class Save{
     private static final List<Input> movements = new ArrayList<>();
-    final static ObjectMapper mapper = new ObjectMapper();
-    private static final Save instance = new Save();
-    private Save() {}// Private constructor to prevent instantiation
-    /** Singleton pattern, as we don't need multiple Save objects. */
-    public static Save instance() { return instance; }
+    static final ObjectMapper mapper = new ObjectMapper();
     /** Method to add the Input objects (the directions/movements)
      * of the character to the movements list.
+     *
      */
     public static void addMovement(Input direction) {
         movements.add(direction);
@@ -39,7 +37,6 @@ public class Save{
         try {
             mapper.writeValue(playerMovements, movements);
         } catch(IOException e){
-            // rethrows checked exception as error
             throw new Error(e);
         }
     }
