@@ -1,5 +1,7 @@
 package nz.ac.wgtn.swen225.lc.domain;
 
+import nz.ac.wgtn.swen225.lc.domain.entities.Key;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,6 +75,14 @@ public class Player{
      * @return current direction
      */
     public Direction getDirection(){
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Get the list of keys the player has collected
+     * @return list of keys
+     */
+    public List<Key> getKeys(){
         throw new UnsupportedOperationException();
     }
 
