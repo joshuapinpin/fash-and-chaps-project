@@ -1,6 +1,7 @@
 package nz.ac.wgtn.swen225.lc.app.controller;
 
 import nz.ac.wgtn.swen225.lc.app.gui.GameWindow;
+import nz.ac.wgtn.swen225.lc.app.state.GameState;
 import nz.ac.wgtn.swen225.lc.app.util.Input;
 
 public interface GameController {
@@ -8,6 +9,10 @@ public interface GameController {
         return AppController.getInstance();
     }
     void handleInput(Input input);
+    void setState(GameState state);
+    GameState getState();
+
+    // Game Actions
     void startNewGame(int level);
     void saveGame();
     void loadGame();

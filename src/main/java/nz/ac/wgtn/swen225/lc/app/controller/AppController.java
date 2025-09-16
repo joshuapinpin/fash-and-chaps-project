@@ -81,6 +81,16 @@ public class AppController implements GameController {
         else throw new IllegalArgumentException("Invalid input");
     }
 
+    @Override
+    public void setState(GameState state) {
+
+    }
+
+    @Override
+    public GameState getState() {
+        return null;
+    }
+
     private void moveUp(){
 //        domain.move(Direction.UP);
         updateView();
