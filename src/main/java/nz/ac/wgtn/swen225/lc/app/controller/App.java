@@ -4,8 +4,8 @@ import nz.ac.wgtn.swen225.lc.app.state.*;
 import nz.ac.wgtn.swen225.lc.app.gui.*;
 import nz.ac.wgtn.swen225.lc.app.util.*;
 import nz.ac.wgtn.swen225.lc.app.util.Renderer;
-import nz.ac.wgtn.swen225.lc.domain.Direction;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -16,7 +16,7 @@ import java.util.HashMap;
  *
  * @author Joshua Pinpin (Student ID: 300662880)
  */
-public class AppController implements GameController {
+public class App implements GameController {
     // MODEL  (Domain module)
     private Domain domain; // Reference to the domain model
 
@@ -35,14 +35,14 @@ public class AppController implements GameController {
     // Reference to recorder object
 
     // Constructor with Singleton Pattern
-    private static AppController INSTANCE;
-    private AppController() {
+    private static App INSTANCE;
+    private App() {
         initialiseControllerComponents();
         initialiseInputMap();
         startNewGame(1);
     }
-    public static AppController getInstance() {
-        if(INSTANCE == null) INSTANCE = new AppController();
+    public static App getInstance() {
+        if(INSTANCE == null) INSTANCE = new App();
         return INSTANCE;
     }
 
@@ -69,26 +69,35 @@ public class AppController implements GameController {
         inputRunnableMap.put(Input.LOAD_LEVEL_1, () -> startNewGame(1));
         inputRunnableMap.put(Input.LOAD_LEVEL_2, () -> startNewGame(2));
         inputRunnableMap.put(Input.EXIT, this::exitGame);
-        inputRunnableMap.put(Input.ESCAPE, window::removePauseDialog);
+        inputRunnableMap.put(Input.ESCAPE, this::continueGame);
     }
 
     // ========== Game Controller Implementation ==========
+
+
+    // ===== View Methods =====
+    /**
+     * Updates the view based on the current state of the domain model.
+     */
+    private void updateView(){
+        if(domain == null || renderer == null)
+            throw new RuntimeException("Cannot update view: Domain or Renderer is null.");
+
+        // Tell renderer the current domain state
+//        renderer.render();
+
+        // Update UI status display
+        window.updateStatus();
+    }
+
     /**
      * Handles a user input (e.g., move, pause, save, etc).
      */
     public void handleInput(Input input) {
-        if(inputRunnableMap.containsKey(input)) inputRunnableMap.get(input).run();
-        else throw new IllegalArgumentException("Invalid input");
-    }
-
-    @Override
-    public void setState(GameState state) {
-
-    }
-
-    @Override
-    public GameState getState() {
-        return null;
+        if(state == null) throw new RuntimeException("Game state is null.");
+        state.handleInput(this, input);
+//        if(inputRunnableMap.containsKey(input)) inputRunnableMap.get(input).run();
+//        else throw new IllegalArgumentException("Invalid input");
     }
 
     private void moveUp(){
@@ -112,28 +121,12 @@ public class AppController implements GameController {
         System.out.println("Moved Right");
     }
 
-    // ===== View Methods =====
-    /**
-     * Updates the view based on the current state of the domain model.
-     */
-    private void updateView(){
-        if(domain == null || renderer == null){
-            showError("Cannot update view: Domain or Renderer is null.");
-            return;
-        }
-
-        // Tell renderer the current domain state
-//        renderer.render();
-
-        // Update UI status display
-        window.updateStatus();
-    }
-
     /**
      * Starts a new game at the given level.
      */
     public void startNewGame(int level) {
-
+        setState(new PlayState());
+        System.out.println("Starting New Game at Level " + level);
 
     }
 
@@ -142,6 +135,7 @@ public class AppController implements GameController {
      */
     public void pauseGame() {
         // TODO: Implement pause logic
+        setState(new PausedState());
         System.out.println("Game Paused");
     }
 
@@ -153,11 +147,17 @@ public class AppController implements GameController {
         System.out.println("Game Resumed");
     }
 
+    @Override
+    public void continueGame() {
+        setState(new PlayState());
+        System.out.println("Continuing Game");
+    }
+
     /**
      * Saves the current game state.
      */
     public void saveGame(){
-        if(domain == null){showError("No game to save!"); return;}
+        if(domain == null) throw new RuntimeException("Cannot save game: Domain is null.");
         //TODO: get Persistence to create a "save current game" method
         System.out.println("Game Saved!");
     }
@@ -178,11 +178,12 @@ public class AppController implements GameController {
     public void timeUp() {
     }
 
-    @Override
-    public GameWindow getGameWindow() {return window;}
+    @Override public void setState(GameState state) {this.state = state;}
 
+    @Override public GameWindow getGameWindow() {return window;}
+    @Override public GameState getState() {return state;}
+    @Override public Map<Input, Runnable> getInputRunnableMap(){
+        return Collections.unmodifiableMap(inputRunnableMap);    }
 
-    private void showError(String message) {window.showErrorDialog(message);}
-    private void showMessage(String message, String title) {window.showMessageDialog(message, title);}
 
 }
