@@ -56,12 +56,12 @@ public class GameWindow extends JFrame {
     }
 
     private void setupPanels(){
-        titlePanel = new TitlePanel(this);
-        menuPanel = new MenuPanel(this);
-        rootPanel = new RootPanel();
-        statusPanel = new StatusPanel(this);
-        gamePanel = new GamePanel(this);
-        inventoryPanel = new InventoryPanel(this);
+        titlePanel = new TitlePanel(controller);
+        menuPanel = new MenuPanel(controller);
+        rootPanel = new RootPanel(controller);
+        statusPanel = new StatusPanel(controller);
+        gamePanel = new GamePanel(controller);
+        inventoryPanel = new InventoryPanel(controller);
 
         add(titlePanel, BorderLayout.NORTH);
         add(menuPanel, BorderLayout.SOUTH);

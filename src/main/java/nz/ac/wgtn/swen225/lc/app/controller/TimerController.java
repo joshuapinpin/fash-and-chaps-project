@@ -66,12 +66,13 @@ public class TimerController implements ActionListener {
      * Resets the timer.
      */
     public void reset(int newTime) {
-        // TODO: Reset timer
-        throw new Error("Not yet implemented");
+        this.timeLeft = newTime;
+        timer.restart();
     }
 
     public void startTimer(int timeLimit) {
-        throw new Error("Not yet implemented");
+        this.timeLeft = timeLimit;
+        timer.restart();
     }
 
     public void stopTimer() {

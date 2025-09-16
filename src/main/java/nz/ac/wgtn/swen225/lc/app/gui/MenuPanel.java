@@ -1,5 +1,7 @@
 package nz.ac.wgtn.swen225.lc.app.gui;
 
+import nz.ac.wgtn.swen225.lc.app.controller.GameController;
+
 import javax.swing.*;
 
 import java.awt.*;
@@ -17,12 +19,11 @@ public class MenuPanel extends JPanel implements ActionListener {
     // Buttons: Pause, Save, Exit, Resume
     private Map<JButton, Runnable> buttonRunnableMap;
 
-    private GameWindow window;
-    MenuPanel(GameWindow window){
-        this.window = window;
-//        setLayout(new FlowLayout(FlowLayout.CENTER, 10, 40));
+    private GameController controller;
+
+    MenuPanel(GameController controller){
+        this.controller = controller;
         setLayout(new GridLayout(1, 4, BUTTON_GAP, BUTTON_GAP));
-//        setBackground(Color.green);
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         setBorder(BorderFactory.createEmptyBorder(BUTTON_GAP, BUTTON_GAP, BUTTON_GAP, BUTTON_GAP));
         setupButtons();
@@ -39,6 +40,7 @@ public class MenuPanel extends JPanel implements ActionListener {
     private void setupSingleButton(String label, Runnable action){
         JButton button = new JButton(label);
         button.addActionListener(this);
+        button.setFocusable(false);
         buttonRunnableMap.put(button, action);
         add(button);
     }

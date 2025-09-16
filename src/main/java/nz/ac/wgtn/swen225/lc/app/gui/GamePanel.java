@@ -1,5 +1,7 @@
 package nz.ac.wgtn.swen225.lc.app.gui;
 
+import nz.ac.wgtn.swen225.lc.app.controller.GameController;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -13,10 +15,10 @@ public class GamePanel extends JPanel {
     public static final int PANEL_HEIGHT = (GameWindow.WINDOW_HEIGHT / 4) * 3;
 
     BufferedImage image;
-    private GameWindow window;
+    private GameController controller;
 
-    public GamePanel(GameWindow window) {
-        this.window = window;
+    public GamePanel(GameController controller) {
+        this.controller = controller;
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         setMinimumSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         setMaximumSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));

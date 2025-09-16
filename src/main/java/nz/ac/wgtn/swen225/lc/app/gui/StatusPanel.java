@@ -1,6 +1,8 @@
 package nz.ac.wgtn.swen225.lc.app.gui;
 
 
+import nz.ac.wgtn.swen225.lc.app.controller.GameController;
+
 import javax.swing.JPanel;
 import java.awt.*;
 
@@ -18,10 +20,10 @@ public class StatusPanel extends JPanel {
     public static final int PANEL_WIDTH = (GameWindow.WINDOW_WIDTH / 4);
     public static final int PANEL_HEIGHT = (GameWindow.WINDOW_HEIGHT / 4) * 3;;
 
-    private GameWindow window;
+    private GameController controller;
 
-    public StatusPanel(GameWindow window) {
-        this.window = window;
+    public StatusPanel(GameController controller) {
+        this.controller = controller;
         setBackground(Color.blue);
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
     }
