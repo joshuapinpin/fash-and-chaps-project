@@ -39,7 +39,8 @@ public class Door implements Entity {
      * Check if the door is open
      * @return true if door is open, false otherwise
      */
-    public boolean isOpen() {
+    @Override
+    public boolean removeEntity() {
         return isOpen;
     }
 }

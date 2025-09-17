@@ -25,13 +25,16 @@ public class Free extends Tile {
     /**
      * Method to handle player entering the free tile
      * If there is a collectable entity, the player interacts with it
+     * Checks to see if the entity should be removed after interaction
      * @param p player entering the free tile
      */
     @Override
     public void onEnter(Player p){
         collectable.ifPresent(entity-> {
             entity.onInteract(p);
-            collectable = Optional.empty(); // Remove the entity after collection
+            if(entity.removeEntity()) {
+                collectable = Optional.empty(); // Remove the entity after collection
+            }
         });
     }
 

@@ -13,4 +13,11 @@ public interface Entity {
      * @param player the player interacting with the entity
      */
     void onInteract(Player player);
+
+    /**
+     * Defines whether the entity should be removed from the tile after interaction
+     * e.g. Keys and Treasures are removed after collection, Doors and ExitLocks depend on their state
+     * @return true if the entity should be removed, false otherwise
+     */
+    default boolean removeEntity(){return true;}
 }

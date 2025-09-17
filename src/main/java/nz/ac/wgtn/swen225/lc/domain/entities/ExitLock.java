@@ -27,4 +27,13 @@ public class ExitLock implements Entity {
             isPassable = true;
         }
     }
+
+    /**
+     * Check if the exit lock is passable
+     * @return true if exit lock is passable, false otherwise
+     */
+    @Override
+    public boolean removeEntity() {
+        return isPassable;
+    }
 }
