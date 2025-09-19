@@ -1,4 +1,6 @@
-package nz.ac.wgtn.swen225.lc.domain;
+package nz.ac.wgtn.swen225.lc.domain.entities;
+
+import nz.ac.wgtn.swen225.lc.domain.Player;
 
 /**
  * Key class representing a key entity in the game
@@ -6,13 +8,13 @@ package nz.ac.wgtn.swen225.lc.domain;
  * Implements Entity interface for interaction
  */
 public class Key implements Entity {
-    private String color;
+    private final String color;
 
     /**
      * Constructor for key with specified color
      * @param color color of the key
      */
-    Key(String color){throw new UnsupportedOperationException();}
+    Key(String color){this.color = color;}
 
     /**
      * Method to handle player interaction with the key
@@ -21,7 +23,7 @@ public class Key implements Entity {
      */
     @Override
     public void onInteract(Player p){
-        throw new UnsupportedOperationException();
+        p.addKey(this);
     }
 
     /**
@@ -29,6 +31,6 @@ public class Key implements Entity {
      * @return color of the key
      */
     public String getColor(){
-        throw new UnsupportedOperationException();
+        return color;
     }
 }

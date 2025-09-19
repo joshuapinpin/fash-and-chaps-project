@@ -1,16 +1,18 @@
-package nz.ac.wgtn.swen225.lc.domain;
+package nz.ac.wgtn.swen225.lc.domain.entities;
+
+import nz.ac.wgtn.swen225.lc.domain.Player;
 
 /**
  * Treasure class representing a treasure entity in the game
  * Treasures can be collected by the player to decrease the treasure count
  * Implements Entity interface for interaction
  */
-public class Treasure implements Entity{
+public class Treasure implements Entity {
     /**
      * Constructor for treasure
      * Subject to change in terms of parameters
      */
-    Treasure(){throw new UnsupportedOperationException();}
+    Treasure(){}
 
     /**
      * Method to handle player interaction with the treasure
@@ -19,6 +21,6 @@ public class Treasure implements Entity{
      */
     @Override
     public void onInteract(Player p){
-        throw new UnsupportedOperationException();
+        p.collectTreasure();
     }
 }
