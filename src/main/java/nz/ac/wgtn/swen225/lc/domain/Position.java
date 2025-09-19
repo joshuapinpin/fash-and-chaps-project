@@ -13,30 +13,37 @@ public class Position {
      * @param x x-coordinate
      * @param y y-coordinate
      */
-    public Position(int x, int y){}
+    public Position(int x, int y){
+        this.x = x;
+        this.y = y;
+    }
 
     /**
      * Getter for x-coordinate
      * @return x-coordinate
      */
-    public int getX(){return 0;}
+    public int getX(){return this.x;}
 
     /**
      * Getter for y-coordinate
      * @return y-coordinate
      */
-    public int getY(){return 0;}
+    public int getY(){return this.y;}
 
     /**
      * Set the x-coordinate
      * @param i new x-coordinate
      */
-    public void setX(int i){}
+    public void setX(int i){
+        this.x = i;
+    }
 
     /**
      * Set the y-coordinate
      * @param i new y-coordinate
      */
-    public void setY(int i){}
+    public void setY(int i){
+        this.y = i;
+    }
 
 }
