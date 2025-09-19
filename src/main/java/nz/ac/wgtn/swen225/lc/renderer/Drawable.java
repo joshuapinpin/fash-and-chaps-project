@@ -20,6 +20,7 @@ public class Drawable extends JPanel{
         g.drawImage(LoadingImg.FreeTile.loadImage(), 50, 50, null);
     }
 
-
+    
 }
+
 

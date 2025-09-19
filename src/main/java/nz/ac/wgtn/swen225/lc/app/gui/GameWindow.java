@@ -16,49 +16,82 @@ import java.awt.*;
  */
 public class GameWindow extends JFrame {
     // Game Window Fields
-    private static final int WINDOW_WIDTH = 1280;
-    private static final int WINDOW_HEIGHT = 720;
+    public static final int WINDOW_WIDTH = 1280;
+    public static final int WINDOW_HEIGHT = 720;
 
+    // Controllers
     private GameController controller; // Reference to GameController
-    private StatusPanel statusPanel; // Reference to StatusPanel
-    // Reference to MazePanel (from renderer)
     private InputController inputController;
 
-    public int x = 40, y = 40;
+    // Panels
+    private JPanel rootPanel;
+    private JPanel titlePanel;
+    private JPanel infoPanel;
+    private JPanel statusPanel; // Reference to StatusPanel
+    private JPanel gamePanel;// Reference to GamePanel (from renderer)
+    private JPanel menuPanel;
 
     public GameWindow(GameController controller, InputController inputController) {
         // TODO: Set up window, menus, status bar, and embed MazePanel
-        super("Chaps Challenge");
+        super("Fash and Chaps :D");
         this.controller = controller;
         this.inputController = inputController;
         setupWindow();
         setupPanels();
     }
 
+    /**
+     * Sets up the main game window (JFrame) properties.
+     */
     private void setupWindow(){
         addKeyListener(inputController);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(null); // temporary, for testing purposes only.
-        setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+        getContentPane().setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
+        pack();
+//        setLayout(null);
         setFocusable(true);
         requestFocusInWindow();
+        setResizable(false);
         setVisible(true);
         System.out.println("Initialised Game Window (JFrame)");
     }
 
     private void setupPanels(){
-        statusPanel = new StatusPanel();
-        statusPanel.setBackground(Color.red);
-        statusPanel.setBounds(x,y,40,40);
-        this.add(statusPanel);
+        titlePanel = new TitlePanel(this);
+        this.add(titlePanel, BorderLayout.NORTH);
+        System.out.println("Initialised Title Panel");
+
+
+        menuPanel = new MenuPanel(this);
+        this.add(menuPanel, BorderLayout.SOUTH);
+        System.out.println("Initialised Menu Panel");
+
+        rootPanel = new RootPanel();
+        this.add(rootPanel);
+        System.out.println("Initialised Root Panel");
+
+        statusPanel = new StatusPanel(this);
+        rootPanel.add(statusPanel);
         System.out.println("Initialised Panels");
+
+        gamePanel = new GamePanel(this);
+        rootPanel.add(gamePanel);
+        System.out.println("Initialised Game Panel");
+
+        infoPanel = new InfoPanel(this);
+        rootPanel.add(infoPanel);
+        System.out.println("Initialised Info Panel");
+
     }
 
-    public void updateStatusPanel(int x, int y){
-        statusPanel.setBounds(this.x += x, this.y += y, 40, 40);
-    }
+    // ===== INTERACTIONS WITH CONTROLLER =====
 
     public void showPauseDialog() {
+    }
+
+    public void showHelpDialog() {
+    }
+    public void removePauseDialog() {
     }
 
     public void showErrorDialog(String message) {
@@ -74,5 +107,12 @@ public class GameWindow extends JFrame {
     public void updateStatus() {
         // TODO: Update status bar with current game info
     }
+
+    // Getters
+    public static int getWindowWidth() {return WINDOW_WIDTH;}
+    public static int getWindowHeight() {return WINDOW_HEIGHT;}
+    public static int getGamePanelWidth() {return GamePanel.PANEL_WIDTH;}
+    public static int getGamePanelHeight() {return GamePanel.PANEL_HEIGHT;}
+
 
 }
