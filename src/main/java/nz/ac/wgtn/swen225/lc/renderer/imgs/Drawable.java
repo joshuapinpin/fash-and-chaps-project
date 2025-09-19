@@ -38,7 +38,9 @@ public class Drawable extends JPanel{
 
     Map<String, LoadingImg> tileIdentities = Map.of( //testing lookup table
             "Sand", LoadingImg.Sand,
-            "Rock", LoadingImg.Rock
+            "Rock", LoadingImg.Rock,
+            "Water", LoadingImg.Water,
+            "RedKey",LoadingImg.RedKey
     );
 
 
@@ -59,6 +61,15 @@ public class Drawable extends JPanel{
                 tiles.add(new TileDummy("Sand", i, j));
             }
         }
+
+        tiles.add(new TileDummy("Water", 6, 7));
+        tiles.add(new TileDummy("Water", 7, 7));
+
+        tiles.add(new TileDummy("Water", 4, 5));
+        tiles.add(new TileDummy("Water", 4, 4));
+        tiles.add(new TileDummy("RedKey",5, 0));
+
+
         return tiles;
     }
 

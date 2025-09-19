@@ -16,12 +16,13 @@ public enum LoadingImg {
     PlayerLeft("playerLeft.png"),
     PlayerRight("playerRight.png"),
     Treasure("treasure.png"),
-    Key("key.png"),
+    RedKey("redkey.png"),
     Door("door.png"),
-    ExitLock("exitLock.png"),
+    ExitLock("exitLock.png" ),
     Info("info.png"),
     Rock("wall.png"),
-    Sand("sand.png");
+    Sand("sand.png"),
+    Water("water.png");
 
 
     private final String filename;
