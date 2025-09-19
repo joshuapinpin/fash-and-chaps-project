@@ -37,4 +37,19 @@ public class Maze {
         return tileGrid[y][x];
     }
 
+    /**
+     * Move player in specified direction if target tile is accessible
+     * The direction dependent on what user input is
+     * @param direction direction to move player
+     */
+    public void movePlayer(Direction direction){
+        //find tile in the direction player wants to move
+        Position toMove = direction.apply(player.getPos());
+        Tile targetTile = getTileAt(toMove);
+
+        if(targetTile.isAccessible(this.player)){
+            player.move(direction);
+            targetTile.onEnter(player);
+        }
+    }
 }

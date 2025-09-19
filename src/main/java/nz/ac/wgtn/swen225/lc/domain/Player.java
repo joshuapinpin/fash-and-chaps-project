@@ -43,10 +43,11 @@ public class Player{
     /**
      * Method to move the player in a specified direction
      * Updates position and direction accordingly
-     * @param d direction to move in
+     * @param direction direction to move in
      */
-    public void move(Direction d){
-        throw new UnsupportedOperationException();
+    public void move(Direction direction){
+        this.direction = direction;
+        this.pos = direction.apply(this.pos); //strategy pattern via enum
     }
 
     /**

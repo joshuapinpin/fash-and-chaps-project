@@ -22,6 +22,16 @@ public enum Direction {
     Direction(int dx, int dy){throw new UnsupportedOperationException();}
 
     /**
+     * Apply this direction to a given position
+     * Returns a new Position with updated coordinates
+     * @param pos original position of player
+     * @return new position after applying direction
+     */
+    public Position apply(Position pos){
+        return new Position(pos.getX()+dx, pos.getY()+dy);
+    }
+
+    /**
      * Getter for change in x
      * @return change in x
      */
