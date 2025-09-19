@@ -82,7 +82,7 @@ public class Play {
 
     public static void main(String[] args) {
         setSpeed(2);
-        GameController x = new GameController();
+        GameController x = GameController.of();
         stepByStep(x);
         stepByStep(x);
         stepByStep(x);
