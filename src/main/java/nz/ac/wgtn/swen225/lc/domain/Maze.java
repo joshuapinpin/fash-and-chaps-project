@@ -26,6 +26,14 @@ public class Maze {
     }
 
     /**
+     * Get 2D array of tiles in maze
+     * @return 2D array of tiles
+     */
+    public Tile[][] getTileGrid() {
+        return tileGrid;
+    }
+
+    /**
      * Get tile at specified position
      * @param p position to get tile at
      * @return tile at position
