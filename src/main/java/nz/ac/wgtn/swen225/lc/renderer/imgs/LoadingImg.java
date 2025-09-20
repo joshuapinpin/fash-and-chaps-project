@@ -11,8 +11,8 @@ import java.io.InputStream;
  * Saves images as enum objects to be used throughout game
  */
 public enum LoadingImg {
-    PlayerForward("playerForward.png"),
-    PlayerBackward("playerBackward.png"),
+    PlayerUp("playerUp.png"),
+    PlayerDown("playerDown.png"),
     PlayerLeft("playerLeft.png"),
     PlayerRight("playerRight.png"),
 

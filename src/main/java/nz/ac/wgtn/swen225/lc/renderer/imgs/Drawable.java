@@ -1,12 +1,14 @@
 package nz.ac.wgtn.swen225.lc.renderer.imgs;
+import nz.ac.wgtn.swen225.lc.domain.Direction;
 import nz.ac.wgtn.swen225.lc.renderer.Renderer;
 
 import nz.ac.wgtn.swen225.lc.renderer.dummyTest;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 
 
 /**
@@ -14,6 +16,8 @@ import java.util.List;
  * Parses through List of tiles, checking which images to show
  */
 public class Drawable extends JPanel{
+
+    //Map<Direction, LoadingImg> map = new Map.of();
 
 //    Map<Class<?>, LoadingImg> tileIdentities = Map.of( // lookup table, see what tiles match to which image
 //            Door.class, LoadingImg.Door,
