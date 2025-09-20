@@ -22,15 +22,13 @@ public class Wall extends Tile {
      * @return false always
      */
     @Override
-    public boolean isAccessible(){return false;}
+    public boolean isAccessible(Player p){return false;}
 
     /**
      * Method to handle player entering the wall tile
-     * Wall is impassable, so this method should not be called
+     * Wall is impassable, so this method has no implementation
      * @param p player attempting to enter the wall tile
      */
     @Override
-    public void onEnter(Player p){
-        throw new IllegalArgumentException("Player cannot enter a wall tile");
-    }
+    public void onEnter(Player p){}
 }

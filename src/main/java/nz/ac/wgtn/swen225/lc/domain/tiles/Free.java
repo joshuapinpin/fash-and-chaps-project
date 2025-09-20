@@ -39,6 +39,19 @@ public class Free extends Tile {
     }
 
     /**
+     * Free tile is accessible unless it contains an impassable entity (ExitLock or closed Door)
+     * Used to check if the player can move onto the tile beforehand
+     * @return true if the tile is accessible, false otherwise
+     */
+    @Override
+    public boolean isAccessible(Player p){
+        if(collectable.isPresent()){
+            return collectable.get().canInteract(p);
+        }
+        return true;
+    }
+
+    /**
      * Setter for the collectable entity on the tile
      * @param collectable entity to be placed on the tile (Key, Door, ExitLock or Treasure)
      */

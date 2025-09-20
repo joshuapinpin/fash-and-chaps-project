@@ -43,4 +43,14 @@ public class Door implements Entity {
     public boolean removeEntity() {
         return isOpen;
     }
+
+    /**
+     * Check if the door can be interacted with (pre interaction check)
+     * Door can be interacted with if it is open or if the player has a matching key
+     * @return true if the door can be interacted with, false otherwise
+     */
+    @Override
+    public boolean canInteract(Player p) {
+        return isOpen || p.getKeys().stream().anyMatch(key -> key.getColor().equals(this.color));
+    }
 }
