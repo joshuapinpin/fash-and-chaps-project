@@ -26,7 +26,9 @@ public class StatusPanel extends JPanel {
 
     public StatusPanel(GameController controller) {
         this.controller = controller;
-        setBackground(Color.blue);
+//        setBackground(Color.blue);
+
+        setOpaque(false);
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
     }
 }

@@ -54,23 +54,12 @@ public class App implements GameController {
 
     // ========== Game Controller Implementation ==========
 
-
-    // ===== View Methods =====
-    /**
-     * Updates the view based on the current state of the domain model.
-     */
-    private void updateRenderer(){
-        // TODO
-        if(domain == null || renderer == null)
-            throw new RuntimeException("Cannot update view: Domain or Renderer is null.");
-        window.updateStatus();
-    }
-
     /**
      * Handles a user input (e.g., move, pause, save, etc).
      */
     public void handleInput(Input input) {
         if(state == null) throw new RuntimeException("Game state is null.");
+
         try {state.handleInput(this, input);}
         catch(UnsupportedOperationException e){
             System.out.println(
@@ -78,7 +67,9 @@ public class App implements GameController {
                     + state.getClass().getSimpleName()
             );
         }
-        updateRenderer();
+
+        window.updateStatus();
+        //renderer.update();
     }
 
     /**
@@ -149,4 +140,7 @@ public class App implements GameController {
     @Override public void setState(GameState state) {this.state = state;}
     @Override public GameWindow getGameWindow() {return window;}
     @Override public GameState getState() {return state;}
+
+    public Maze getDomain() {return domain;}
+    public Renderer getRenderer() {return renderer;}
 }
