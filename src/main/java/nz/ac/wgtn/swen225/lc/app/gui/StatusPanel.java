@@ -1,7 +1,9 @@
 package nz.ac.wgtn.swen225.lc.app.gui;
 
 
-import javax.swing.JPanel;
+import nz.ac.wgtn.swen225.lc.app.controller.GameController;
+
+import javax.swing.*;
 import java.awt.*;
 
 /**
@@ -12,16 +14,18 @@ import java.awt.*;
  * @author Joshua Pinpin (Student ID: 300662880)
  */
 public class StatusPanel extends JPanel {
-    // TODO: Add fields and methods to display game status
-
     // Size fields
     public static final int PANEL_WIDTH = (GameWindow.WINDOW_WIDTH / 4);
     public static final int PANEL_HEIGHT = (GameWindow.WINDOW_HEIGHT / 4) * 3;;
 
-    private GameWindow window;
+    private JLabel levelLabel;
+    private JLabel timerLabel;
+    private JButton helpButton;
 
-    public StatusPanel(GameWindow window) {
-        this.window = window;
+    private GameController controller;
+
+    public StatusPanel(GameController controller) {
+        this.controller = controller;
         setBackground(Color.blue);
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
     }

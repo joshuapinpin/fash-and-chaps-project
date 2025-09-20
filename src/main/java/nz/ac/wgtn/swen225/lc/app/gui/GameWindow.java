@@ -1,7 +1,5 @@
 package nz.ac.wgtn.swen225.lc.app.gui;
 
-import nz.ac.wgtn.swen225.lc.app.util.Input;
-import nz.ac.wgtn.swen225.lc.app.util.Renderer;
 import nz.ac.wgtn.swen225.lc.app.controller.GameController;
 import nz.ac.wgtn.swen225.lc.app.controller.InputController;
 
@@ -26,7 +24,7 @@ public class GameWindow extends JFrame {
     // Panels
     private JPanel rootPanel;
     private JPanel titlePanel;
-    private JPanel infoPanel;
+    private JPanel inventoryPanel;
     private JPanel statusPanel; // Reference to StatusPanel
     private JPanel gamePanel;// Reference to GamePanel (from renderer)
     private JPanel menuPanel;
@@ -48,7 +46,7 @@ public class GameWindow extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
         pack();
-//        setLayout(null);
+        setLayout(new BorderLayout());
         setFocusable(true);
         requestFocusInWindow();
         setResizable(false);
@@ -57,31 +55,21 @@ public class GameWindow extends JFrame {
     }
 
     private void setupPanels(){
-        titlePanel = new TitlePanel(this);
-        this.add(titlePanel, BorderLayout.NORTH);
-        System.out.println("Initialised Title Panel");
+        titlePanel = new TitlePanel(controller);
+        menuPanel = new MenuPanel(controller);
+        rootPanel = new RootPanel(controller);
+        statusPanel = new StatusPanel(controller);
+        gamePanel = new GamePanel(controller);
+        inventoryPanel = new InventoryPanel(controller);
 
-
-        menuPanel = new MenuPanel(this);
-        this.add(menuPanel, BorderLayout.SOUTH);
-        System.out.println("Initialised Menu Panel");
-
-        rootPanel = new RootPanel();
-        this.add(rootPanel);
-        System.out.println("Initialised Root Panel");
-
-        statusPanel = new StatusPanel(this);
+        add(titlePanel, BorderLayout.NORTH);
+        add(menuPanel, BorderLayout.SOUTH);
+        add(rootPanel);
         rootPanel.add(statusPanel);
-        System.out.println("Initialised Panels");
-
-        gamePanel = new GamePanel(this);
         rootPanel.add(gamePanel);
-        System.out.println("Initialised Game Panel");
+        rootPanel.add(inventoryPanel);
 
-        infoPanel = new InfoPanel(this);
-        rootPanel.add(infoPanel);
-        System.out.println("Initialised Info Panel");
-
+        System.out.println("Initialised Panels");
     }
 
     // ===== INTERACTIONS WITH CONTROLLER =====
@@ -100,8 +88,6 @@ public class GameWindow extends JFrame {
     public void showMessageDialog(String message, String title) {
     }
 
-    public void setRenderer(Renderer renderer) {
-    }
 
     // TODO: Must decide what things are needed to be updated in the status bar
     public void updateStatus() {

@@ -14,7 +14,6 @@ import java.util.*;
 public class InputController implements KeyListener {
     private final GameController controller;
     private final Map<KeyCombo, KeyAction> inputs;
-    // Track currently pressed key codes to prevent repeat events
     private final Set<Integer> pressedKeys = new HashSet<>();
 
     /**
@@ -41,7 +40,7 @@ public class InputController implements KeyListener {
         inputs.put(new KeyCombo(KeyEvent.VK_LEFT, false), c -> c.handleInput(Input.MOVE_LEFT));
         inputs.put(new KeyCombo(KeyEvent.VK_RIGHT, false), c -> c.handleInput(Input.MOVE_RIGHT));
         inputs.put(new KeyCombo(KeyEvent.VK_SPACE, false), c -> c.handleInput(Input.PAUSE));
-        inputs.put(new KeyCombo(KeyEvent.VK_ESCAPE, false), c -> c.handleInput(Input.ESCAPE));
+        inputs.put(new KeyCombo(KeyEvent.VK_ESCAPE, false), c -> c.handleInput(Input.CONTINUE));
     }
 
     @Override public void keyPressed(KeyEvent e) {
@@ -58,7 +57,7 @@ public class InputController implements KeyListener {
         var keyText = KeyEvent.getKeyText(keyCode);
         if (action != null) {
             action.execute(controller);
-            System.out.println("Key Pressed: " + keyText + (ctrl ? " (CTRL)" : ""));
+//            System.out.println("Key Pressed: " + keyText + (ctrl ? " (CTRL)" : ""));
         }
         // else System.out.println("Key Pressed (no action): " + keyText + (ctrl ? " (CTRL)" : ""));
     }
