@@ -16,8 +16,8 @@ public class dummyTest {
          Map.entry("Water", LoadingImg.Water),
          Map.entry("PlayerL", LoadingImg.PlayerLeft),
          Map.entry("PlayerR", LoadingImg.PlayerRight),
-         Map.entry("PlayerF", LoadingImg.PlayerForward),
-         Map.entry("PlayerB", LoadingImg.PlayerBackward),
+         Map.entry("PlayerU", LoadingImg.PlayerUp),
+         Map.entry("PlayerD", LoadingImg.PlayerDown),
          Map.entry("orangeKey", LoadingImg.OrangeKey),
          Map.entry("orangeDoor", LoadingImg.OrangeDoor),
          Map.entry("treasure", LoadingImg.Treasure),
@@ -51,8 +51,8 @@ public class dummyTest {
      tiles.add(new TileDummy("Water", 4, 5));
      tiles.add(new TileDummy("Water", 4, 4));
 
-     tiles.add(new TileDummy("PlayerB", 4, 4));
-     tiles.add(new TileDummy("PlayerF", 2, 4));
+     tiles.add(new TileDummy("PlayerU", 4, 4));
+     tiles.add(new TileDummy("PlayerD", 2, 4));
      tiles.add(new TileDummy("PlayerR", 6, 4));
      tiles.add(new TileDummy("PlayerL", 7, 4));
 
