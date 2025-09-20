@@ -1,6 +1,8 @@
 package nz.ac.wgtn.swen225.lc.domain;
 
+import nz.ac.wgtn.swen225.lc.domain.entities.*;
 import nz.ac.wgtn.swen225.lc.domain.tiles.Tile;
+import nz.ac.wgtn.swen225.lc.domain.tiles.*;
 
 /**
  * Maze class representing the maze structure
@@ -94,5 +96,68 @@ public class Maze {
      */
     public void setPlayer(Player player){
         this.player = player;
+    }
+
+    /**
+     * Getter for player reference in maze
+     * @return player in maze
+     */
+    public Player getPlayer(){
+        return this.player;
+    }
+
+    /**
+     * String representation of maze for debugging in JUnit tests
+     * Going through each tile in maze dimensions and getting symbol for it
+     * @return string representation of maze
+     */
+    public String toString(){
+        String result = "";
+        for(int r = 0; r < rows; r++){
+            for(int c = 0; c < cols; c++){
+                Position pos = new Position(c, r);
+                String symbol = getSymbol(pos);
+                result += symbol + " ";
+            }
+            result += "\n";
+        }
+        return result;
+    }
+
+    /**
+     * Get symbol for tile at specified position for string representation
+     * P = Player, K = Key, D = Door, T = Treasure, L = ExitLock
+     * ~ = Water, W = Wall, F = Free, E = Exit, I = Info
+     * @param pos position to get symbol for
+     * @return symbol representing tile at position
+     */
+    public String getSymbol(Position pos) {
+        if (player != null && player.getPos().equals(pos)) return "P";
+        Tile tile = getTileAt(pos);
+
+        if (tile instanceof Wall) {
+            return "W";
+        } else if (tile instanceof Free) {
+            Free freeTile = (Free) tile;
+            if (freeTile.getCollectable().isPresent()) {
+                Entity entity = freeTile.getCollectable().get();
+                if (entity instanceof Key) {
+                    return "K";
+                } else if (entity instanceof Door) {
+                    return "D";
+                } else if (entity instanceof Treasure) {
+                    return "T";
+                } else if (entity instanceof ExitLock) {
+                    return "L";
+                }
+            }
+        } else if (tile instanceof Exit) {
+            return "E";
+        } else if (tile instanceof Water) {
+            return "~";
+        } else if (tile instanceof Info){
+            return "I";
+        }
+        return "F";
     }
 }
