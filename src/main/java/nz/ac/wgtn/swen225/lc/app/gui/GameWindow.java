@@ -14,20 +14,35 @@ import java.awt.*;
  */
 public class GameWindow extends JFrame {
     // Game Window Fields
-    public static final int WINDOW_WIDTH = 1280;
+    public static final int WINDOW_WIDTH = 1260;
     public static final int WINDOW_HEIGHT = 720;
+    public static final int SQUARE_SIZE = ((WINDOW_HEIGHT / 4) * 3) / 9; // 60 pixels
 
     // Controllers
     private GameController controller; // Reference to GameController
     private InputController inputController;
 
-    // Panels
-    private JPanel rootPanel;
+    // PANELS
+    // Top
     private JPanel titlePanel;
-    private JPanel inventoryPanel;
-    private JPanel statusPanel; // Reference to StatusPanel
-    private JPanel gamePanel;// Reference to GamePanel (from renderer)
+    
+    // Middle
+    private JPanel rootPanel;
+    private JPanel gamePanel;// Reference to MazePanel (from renderer)
+    
+    // Left
+    private JPanel leftPanel; // Reference to LeftPanel
+    private JPanel levelPanel;
+    private JPanel timerPanel;
+    
+    // Right
+    private JPanel rightPanel;
+    private JPanel keysPanel;
+    private JPanel treasurePanel;
+    
+    // Bottom
     private JPanel menuPanel;
+    
 
     public GameWindow(GameController controller, InputController inputController) {
         // TODO: Set up window, menus, status bar, and embed MazePanel
@@ -36,6 +51,8 @@ public class GameWindow extends JFrame {
         this.inputController = inputController;
         setupWindow();
         setupPanels();
+        //setupDialogs();
+
     }
 
     /**
@@ -58,18 +75,29 @@ public class GameWindow extends JFrame {
         titlePanel = new TitlePanel(controller);
         menuPanel = new MenuPanel(controller);
         rootPanel = new RootPanel(controller);
-        statusPanel = new StatusPanel(controller);
-        gamePanel = new GamePanel(controller);
-        inventoryPanel = new InventoryPanel(controller);
+        leftPanel = new LeftPanel(controller);
+        rightPanel = new RightPanel(controller);
+        gamePanel = setupMazePanel();
 
         add(titlePanel, BorderLayout.NORTH);
         add(menuPanel, BorderLayout.SOUTH);
         add(rootPanel);
-        rootPanel.add(statusPanel);
+        rootPanel.add(leftPanel);
         rootPanel.add(gamePanel);
-        rootPanel.add(inventoryPanel);
+        rootPanel.add(rightPanel);
 
         System.out.println("Initialised Panels");
+    }
+
+    private JPanel setupMazePanel(){
+        JPanel panel = new MazePanel(controller);
+        int panelSize = (GameWindow.WINDOW_HEIGHT / 4) * 3;
+        panel.setPreferredSize(new Dimension(panelSize, panelSize));
+        panel.setMinimumSize(new Dimension(panelSize, panelSize));
+        panel.setMaximumSize(new Dimension(panelSize, panelSize));
+        panel.setBorder(BorderFactory.createLineBorder(new Color(0x362702), 5));
+        return panel;
+        //return controller.getRenderer().getPanel();
     }
 
     // ===== INTERACTIONS WITH CONTROLLER =====
@@ -94,11 +122,15 @@ public class GameWindow extends JFrame {
         // TODO: Update status bar with current game info
     }
 
+    public void updateInventory(){
+
+    }
+
     // Getters
     public static int getWindowWidth() {return WINDOW_WIDTH;}
     public static int getWindowHeight() {return WINDOW_HEIGHT;}
-    public static int getGamePanelWidth() {return GamePanel.PANEL_WIDTH;}
-    public static int getGamePanelHeight() {return GamePanel.PANEL_HEIGHT;}
+    public static int getGamePanelWidth() {return MazePanel.PANEL_WIDTH;}
+    public static int getGamePanelHeight() {return MazePanel.PANEL_HEIGHT;}
 
 
 }
