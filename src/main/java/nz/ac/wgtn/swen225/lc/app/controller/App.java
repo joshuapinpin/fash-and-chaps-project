@@ -31,6 +31,8 @@ public class App implements GameController {
     // Reference to persistence
     // Reference to recorder
 
+    private int level;
+
     // Constructor with Singleton Pattern
     private static App INSTANCE;
     private App() {
@@ -101,6 +103,7 @@ public class App implements GameController {
      */
     public void startNewGame(int level) {
         setState(new PlayState());
+        this.level = level;
         System.out.println("Starting New Game at Level " + level);
     }
 
@@ -195,4 +198,5 @@ public class App implements GameController {
     public GameState getState() {return state;}
     public Maze getDomain() {return domain;}
     public Renderer getRenderer() {return renderer;}
+    public int getLevel() {return level;}
 }

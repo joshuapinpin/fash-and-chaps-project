@@ -41,4 +41,5 @@ public interface GameController {
     AppWindow getGameWindow();
     Maze getDomain();
     Renderer getRenderer();
+    int getLevel();
 }

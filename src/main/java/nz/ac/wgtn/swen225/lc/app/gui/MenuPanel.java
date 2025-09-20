@@ -19,7 +19,7 @@ public class MenuPanel extends JPanel implements ActionListener, GamePanel{
     public static final int PANEL_WIDTH = AppWindow.WINDOW_WIDTH;
     public static final int PANEL_HEIGHT = AppWindow.HEADER_HEIGHT;
     public static final int BUTTON_GAP = 20;
-    public static final int FONT_SIZE = 20;
+    public static final int FONT_SIZE = 30;
 
     // Buttons: Pause, Save, Exit, Resume
     private Map<JButton, Runnable> buttonRunnableMap;
