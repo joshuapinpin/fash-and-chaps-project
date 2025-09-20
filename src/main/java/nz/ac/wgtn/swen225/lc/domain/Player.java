@@ -11,10 +11,10 @@ import java.util.List;
  * Player has position, direction, keys collection, and treasure count
  * Provides methods to move, collect treasure, and manage keys
  *
- * Player starts in the center of the maze at (7,7) for 15x15 maze
+ * Player starts in the center of the maze, based on maze size from rows and cols
  */
 public class Player{
-    private static final Player INSTANCE = new Player(new Position(7,7)); //singleton instance
+    private static final Player INSTANCE = new Player(); //singleton instance
 
     private List<Key> keys = new ArrayList<>(); //collection of keys the player has
     private Position pos; //current position of the player
@@ -24,12 +24,21 @@ public class Player{
     /**
      * Constructor for player with specified starting position
      * Made private for singleton pattern
-     * @param pos starting position of the player
      */
-    private Player(Position pos){
-        this.pos = pos;
+    private Player(){
+        this.pos = new Position(0,0); //default starting position, to be set when maze is loaded
         this.direction = Direction.DOWN; //default starting direction
         this.treasuresLeft = -1; //to be set when maze is loaded (check via assert when loading)
+    }
+
+    /**
+     * Set the player's starting position to the center of the maze
+     * Called when maze is loaded, based on maze dimensions
+     * @param rows number of rows in maze
+     * @param cols number of columns in maze
+     */
+    public void initialiseStartPos(int rows, int cols){
+        this.pos = new Position(cols/2, rows/2);
     }
 
     /**
