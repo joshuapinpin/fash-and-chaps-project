@@ -90,12 +90,13 @@ public class GameWindow extends JFrame {
     }
 
     private JPanel setupMazePanel(){
-        JPanel panel = new MazePanel(controller);
+        JPanel panel = controller.getRenderer().getPanel();
+
         int panelSize = (GameWindow.WINDOW_HEIGHT / 4) * 3;
-        panel.setPreferredSize(new Dimension(panelSize, panelSize));
-        panel.setMinimumSize(new Dimension(panelSize, panelSize));
-        panel.setMaximumSize(new Dimension(panelSize, panelSize));
-        panel.setBorder(BorderFactory.createLineBorder(new Color(0x362702), 5));
+//        panel.setPreferredSize(new Dimension(panelSize, panelSize));
+//        panel.setMinimumSize(new Dimension(panelSize, panelSize));
+//        panel.setMaximumSize(new Dimension(panelSize, panelSize));
+//        panel.setBorder(BorderFactory.createLineBorder(new Color(0x362702), 5));
         return panel;
         //return controller.getRenderer().getPanel();
     }

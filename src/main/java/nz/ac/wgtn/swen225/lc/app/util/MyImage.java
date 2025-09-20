@@ -12,7 +12,7 @@ public class MyImage {
     public MyImage(String filename){
         this.filename = filename;
         try{
-            InputStream stream = MyImage.class.getResourceAsStream("/" + filename + ".png");
+            InputStream stream = MyImage.class.getResourceAsStream("/imgs/" + filename + ".png");
             if(stream == null) {throw new RuntimeException("Cannot find the image file: " + filename);}
             this.image = ImageIO.read(stream);
             stream.close();

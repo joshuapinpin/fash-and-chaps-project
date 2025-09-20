@@ -22,7 +22,7 @@ public class Drawable extends JPanel{
 
     Tile[][] allTiles;
     private final int ROWS = 9;
-    private final int SIZE = getWidth()/ROWS;
+    private final int SIZE = 60;
     Player player;
     int centerX;
     int centerY;
@@ -59,6 +59,10 @@ public class Drawable extends JPanel{
             "green", LoadingImg.GreenDoor
     );
 
+    public Drawable(Tile[][] currentTiles, Player player){
+        setAllTiles(currentTiles, player);
+    }
+
 
     /**
      * Gets all the tiles in the world and player
@@ -67,7 +71,7 @@ public class Drawable extends JPanel{
      */
     public void setAllTiles(Tile[][] currentTiles, Player player){
         allTiles = currentTiles;
-        player = player;
+        this.player = player;
         Position p = player.getPos();
         centerX = p.getX();
         centerY = p.getY();
@@ -105,6 +109,7 @@ public class Drawable extends JPanel{
                 g.drawImage(image, screenX, screenY, SIZE, SIZE, null);
             }
         }
+        g.drawImage(directionLookUpTable.get(player.getDirection()).loadImage(),4*SIZE, 4*SIZE, SIZE, SIZE, null);
     }
 
 
@@ -158,6 +163,6 @@ public class Drawable extends JPanel{
         super.paintComponent(g);
         //dummyTest.drawTiles(g, this);
         drawCurrentImage(g);
-        g.drawImage(directionLookUpTable.get(player.getDirection()).loadImage(),centerX, centerY, SIZE, SIZE, null);
+
     }
 }

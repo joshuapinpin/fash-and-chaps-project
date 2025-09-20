@@ -5,6 +5,11 @@ import nz.ac.wgtn.swen225.lc.app.gui.*;
 import nz.ac.wgtn.swen225.lc.app.util.*;
 import nz.ac.wgtn.swen225.lc.domain.Direction;
 import nz.ac.wgtn.swen225.lc.domain.Maze;
+import nz.ac.wgtn.swen225.lc.domain.Player;
+import nz.ac.wgtn.swen225.lc.domain.Position;
+import nz.ac.wgtn.swen225.lc.domain.entities.Key;
+import nz.ac.wgtn.swen225.lc.domain.tiles.Free;
+import nz.ac.wgtn.swen225.lc.domain.tiles.Wall;
 import nz.ac.wgtn.swen225.lc.renderer.Renderer;
 
 /**
@@ -42,10 +47,14 @@ public class App implements GameController {
         return INSTANCE;
     }
 
+
     private void initialiseControllerComponents() {
         // Initialize domain model, renderer, and controllers
-        domain = new Maze(23, 23);
-        renderer = new Renderer();
+        domain = new Maze(10,9);
+        domain.addTiles();
+        renderer = new Renderer(domain.getTileGrid(), domain.getPlayer());
+        int size = (GameWindow.WINDOW_HEIGHT / 4) * 3;
+        renderer.setDimensions(size, size);
         inputController = new InputController(this);
         timerController = new TimerController(this);
         window = new GameWindow(this, inputController);
@@ -68,8 +77,9 @@ public class App implements GameController {
             );
         }
 
-        window.updateStatus();
-        //renderer.update();
+        //window.updateStatus();
+        renderer.getPanel().setAllTiles(domain.getTileGrid(), domain.getPlayer());
+        renderer.getPanel().repaint();
     }
 
     /**
