@@ -27,9 +27,6 @@ public class Maze {
         //initialise player and set start position
         this.player = Player.getInstance();
         this.player.initialiseStartPos(rows, cols);
-
-        //default tiles for testing integration
-        addTiles();
     }
 
     /**
