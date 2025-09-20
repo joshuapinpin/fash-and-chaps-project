@@ -2,7 +2,6 @@ package nz.ac.wgtn.swen225.lc.renderer.imgs;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -11,33 +10,33 @@ import java.io.InputStream;
  * Saves images as enum objects to be used throughout game
  */
 public enum LoadingImg {
-    PlayerUp("playerUp.png"),
-    PlayerDown("playerDown.png"),
-    PlayerLeft("playerLeft.png"),
-    PlayerRight("playerRight.png"),
+    PlayerUp("imgs/playerUp.png"),
+    PlayerDown("imgs/playerDown.png"),
+    PlayerLeft("imgs/playerLeft.png"),
+    PlayerRight("imgs/playerRight.png"),
 
-    enemyCrab("enemyCrab.png"),
+    enemyCrab("imgs/enemyCrab.png"),
 
-    Treasure("treasure.png"),
-    PurpleKey("purpleKey.png"),
-    PinkKey("pinkKey.png"),
-    OrangeKey("orangeKey.png"),
-    BlueKey("blueKey.png"),
-    GreenKey("greenKey.png"),
+    Treasure("imgs/treasure.png"),
+    PurpleKey("imgs/purpleKey.png"),
+    PinkKey("imgs/pinkKey.png"),
+    OrangeKey("imgs/orangeKey.png"),
+    BlueKey("imgs/blueKey.png"),
+    GreenKey("imgs/greenKey.png"),
 
-    PurpleDoor("purpleDoor.png"),
-    PinkDoor("pinkDoor.png"),
-    OrangeDoor("orangeDoor.png"),
-    BlueDoor("blueDoor.png"),
-    GreenDoor("greenDoor.png"),
+    PurpleDoor("imgs/purpleDoor.png"),
+    PinkDoor("imgs/pinkDoor.png"),
+    OrangeDoor("imgs/orangeDoor.png"),
+    BlueDoor("imgs/blueDoor.png"),
+    GreenDoor("imgs/greenDoor.png"),
 
-    Exit("exit.png"),
-    ExitLock("exitLock.png" ),
-    Info("info.png"),
+    Exit("imgs/exit.png"),
+    ExitLock("imgs/exitLock.png"),
+    Info("imgs/info.png"),
 
-    Rock("wall.png"),
-    Sand("sand.png"),
-    Water("water.png");
+    Rock("imgs/wall.png"),
+    Sand("imgs/sand.png"),
+    Water("imgs/water.png");
 
 
     private final String filename;

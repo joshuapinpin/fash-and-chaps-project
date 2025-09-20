@@ -156,7 +156,8 @@ public class Drawable extends JPanel{
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        drawCurrentImage(g);
-        g.drawImage(directionLookUpTable.get(player.getDirection()).loadImage(),centerX, centerY, SIZE, SIZE, null);
+        dummyTest.drawTiles(g, this);
+        //drawCurrentImage(g);
+        //g.drawImage(directionLookUpTable.get(player.getDirection()).loadImage(),centerX, centerY, SIZE, SIZE, null);
     }
 }
