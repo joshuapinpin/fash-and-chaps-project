@@ -23,6 +23,10 @@ public class Maze {
         this.rows = rows;
         this.cols = cols;
         this.tileGrid = new Tile[rows][cols];
+
+        //initialise player and set start position
+        this.player = Player.getInstance();
+        this.player.initialiseStartPos(rows, cols);
     }
 
     /**
@@ -73,6 +77,10 @@ public class Maze {
      */
     public void movePlayer(Direction direction){
         //find tile in the direction player wants to move
+        if(player == null){
+            throw new NullPointerException("Player not set in maze");
+        }
+
         Position toMove = direction.apply(player.getPos());
         Tile targetTile = getTileAt(toMove);
 
@@ -119,6 +127,7 @@ public class Maze {
      * Going through each tile in maze dimensions and getting symbol for it
      * @return string representation of maze
      */
+    @Override
     public String toString(){
         String result = "";
         for(int r = 0; r < rows; r++){
