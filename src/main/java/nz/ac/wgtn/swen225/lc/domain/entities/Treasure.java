@@ -15,6 +15,14 @@ public class Treasure implements Entity {
     Treasure(){}
 
     /**
+     * Static factory method to create a treasure
+     * @return new Treasure instance
+     */
+    public static Treasure of(){
+        return new Treasure();
+    }
+
+    /**
      * Method to handle player interaction with the treasure
      * To be able to collect the treasure
      * @param p player interacting with the treasure

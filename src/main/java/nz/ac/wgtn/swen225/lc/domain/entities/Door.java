@@ -18,6 +18,15 @@ public class Door implements Entity {
     Door(String color){this.color = color;}
 
     /**
+     * Static factory method to create a door with specified color
+     * @param color color of the door
+     * @return new Door instance
+     */
+    public static Door of(String color){
+        return new Door(color);
+    }
+
+    /**
      * Method to handle player interaction with the door
      * To be able to unlock door with the correct key
      * @param p player interacting with the door

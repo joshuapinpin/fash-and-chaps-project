@@ -23,6 +23,16 @@ public class Info extends Tile {
     }
 
     /**
+     * Static factory method to create an info tile with specified message and position
+     * @param message informational message to display
+     * @param pos position of the info tile
+     * @return new Info instance
+     */
+    public static Info of(String message, Position pos){
+        return new Info(message, pos);
+    }
+
+    /**
      * Method to handle player entering the info tile
      * Displays the informational message to the player
      * @param p player entering the info tile

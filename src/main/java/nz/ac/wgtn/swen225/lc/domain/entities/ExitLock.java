@@ -17,6 +17,14 @@ public class ExitLock implements Entity {
     ExitLock(){}
 
     /**
+     * Static factory method to create an exit lock
+     * @return new ExitLock instance
+     */
+    public static ExitLock of(){
+        return new ExitLock();
+    }
+
+    /**
      * Method to handle player interaction with the exit lock
      * To be able to pass through if all treasures are collected
      * @param p player interacting with the exit lock

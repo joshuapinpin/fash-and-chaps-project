@@ -18,6 +18,15 @@ public class Wall extends Tile {
     }
 
     /**
+     * Static factory method to create a wall tile with specified position
+     * @param pos position of the wall tile
+     * @return new Wall instance
+     */
+    public static Wall of(Position pos){
+        return new Wall(pos);
+    }
+
+    /**
      * Wall is not accessible by the player
      * @return false always
      */
