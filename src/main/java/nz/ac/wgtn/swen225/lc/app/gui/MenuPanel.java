@@ -15,7 +15,7 @@ import java.util.HashMap;
 public class MenuPanel extends JPanel implements ActionListener {
     // Size fields
     public static final int PANEL_WIDTH = GameWindow.WINDOW_WIDTH;
-    public static final int PANEL_HEIGHT = GameWindow.WINDOW_HEIGHT / 8;
+    public static final int PANEL_HEIGHT = GameWindow.HEADER_HEIGHT;
     public static final int BUTTON_GAP = 10;
 
     // Buttons: Pause, Save, Exit, Resume
@@ -27,7 +27,7 @@ public class MenuPanel extends JPanel implements ActionListener {
 
     public MenuPanel(GameController controller){
         this.controller = controller;
-        setLayout(new GridLayout(1, 4, BUTTON_GAP, BUTTON_GAP));
+        setLayout(new GridLayout(1, 5, BUTTON_GAP, BUTTON_GAP));
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         setBorder(BorderFactory.createEmptyBorder(BUTTON_GAP, BUTTON_GAP, BUTTON_GAP, BUTTON_GAP));
         setBackground(Color.red);
@@ -39,8 +39,9 @@ public class MenuPanel extends JPanel implements ActionListener {
     private void setupButtons(){
         buttonRunnableMap = new HashMap<>();
         setupSingleButton("Save", () -> controller.saveGame());
-        setupSingleButton("Pause", () -> controller.pauseGame());
+        setupSingleButton("Load", () -> controller.loadGame());
         setupSingleButton("Play", () -> controller.continueGame());
+        setupSingleButton("Pause", () -> controller.pauseGame());
         setupSingleButton("Exit", () -> controller.exitGame());
     }
 

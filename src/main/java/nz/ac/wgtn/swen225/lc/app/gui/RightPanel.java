@@ -8,8 +8,9 @@ import java.awt.*;
 
 public class RightPanel extends JPanel {
 
-    public static final int PANEL_WIDTH = (GameWindow.WINDOW_WIDTH / 4) ;
-    public static final int PANEL_HEIGHT = (GameWindow.WINDOW_HEIGHT / 4) * 3;
+//    public static final int PANEL_WIDTH = (GameWindow.WINDOW_WIDTH / 4) ;
+    public static final int PANEL_WIDTH = GameWindow.SQUARE_SIZE * 4 ;
+    public static final int PANEL_HEIGHT = GameWindow.MAZE_SIZE;
 
     private GameController controller;
 
@@ -20,7 +21,7 @@ public class RightPanel extends JPanel {
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
 
         JLabel label = new JLabel("Inventory");
-        label.setFont(new MyFont("pixel-font", 40).getFont());
+        label.setFont(MyFont.PIXEL.getFont(40));
         label.setForeground(Color.white);
         add(label);
     }

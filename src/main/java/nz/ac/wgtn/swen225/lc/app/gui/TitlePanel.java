@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage;
 
 public class TitlePanel extends JPanel {
     public static int PANEL_WIDTH = GameWindow.WINDOW_WIDTH;
-    public static int PANEL_HEIGHT = GameWindow.WINDOW_HEIGHT / 8;
+    public static int PANEL_HEIGHT = GameWindow.HEADER_HEIGHT;
 
     private BufferedImage bgImg;
 

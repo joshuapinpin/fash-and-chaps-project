@@ -14,9 +14,11 @@ import java.awt.*;
  */
 public class GameWindow extends JFrame {
     // Game Window Fields
+    public static final int SQUARE_SIZE = 60; // 60 pixels
     public static final int WINDOW_WIDTH = 1260;
-    public static final int WINDOW_HEIGHT = 720;
-    public static final int SQUARE_SIZE = ((WINDOW_HEIGHT / 4) * 3) / 9; // 60 pixels
+    public static final int WINDOW_HEIGHT = 780;
+    public static final int MAZE_SIZE = SQUARE_SIZE * 9;
+    public static final int HEADER_HEIGHT = SQUARE_SIZE * 2;
 
     // Controllers
     private GameController controller; // Reference to GameController
@@ -25,20 +27,10 @@ public class GameWindow extends JFrame {
     // PANELS
     // Top
     private JPanel titlePanel;
-    
-    // Middle
     private JPanel rootPanel;
     private JPanel gamePanel;// Reference to MazePanel (from renderer)
-    
-    // Left
     private JPanel leftPanel; // Reference to LeftPanel
-    private JPanel levelPanel;
-    private JPanel timerPanel;
-    
-    // Right
     private JPanel rightPanel;
-    private JPanel keysPanel;
-    private JPanel treasurePanel;
     
     // Bottom
     private JPanel menuPanel;
@@ -51,6 +43,7 @@ public class GameWindow extends JFrame {
         this.inputController = inputController;
         setupWindow();
         setupPanels();
+        delegatePanels();
         //setupDialogs();
 
     }
@@ -72,31 +65,44 @@ public class GameWindow extends JFrame {
     }
 
     private void setupPanels(){
+        // Main Panels
         titlePanel = new TitlePanel(controller);
         menuPanel = new MenuPanel(controller);
         rootPanel = new RootPanel(controller);
-        leftPanel = new LeftPanel(controller);
-        rightPanel = new RightPanel(controller);
         gamePanel = setupMazePanel();
 
-        add(titlePanel, BorderLayout.NORTH);
-        add(menuPanel, BorderLayout.SOUTH);
-        add(rootPanel);
-        rootPanel.add(leftPanel);
-        rootPanel.add(gamePanel);
-        rootPanel.add(rightPanel);
+        // Left Panels
+        leftPanel = new LeftPanel(controller);
+//        levelPanel = new LevelPanel(controller);
+//        timerPanel = new TimerPanel(controller);
+//        keysPanel = new KeysPanel(controller);
+//        treasurePanel = new TreasurePanel(controller);
+
+        // Right Panels
+        rightPanel = new RightPanel(controller);
 
         System.out.println("Initialised Panels");
     }
 
+    private void delegatePanels(){
+        // Main Frame
+        add(titlePanel, BorderLayout.NORTH);
+        add(menuPanel, BorderLayout.SOUTH);
+        add(rootPanel);
+
+        // Middle
+        rootPanel.add(leftPanel);
+        rootPanel.add(gamePanel);
+        rootPanel.add(rightPanel);
+
+    }
+
     private JPanel setupMazePanel(){
         JPanel panel = controller.getRenderer().getPanel();
-
-        int panelSize = (GameWindow.WINDOW_HEIGHT / 4) * 3;
-//        panel.setPreferredSize(new Dimension(panelSize, panelSize));
-//        panel.setMinimumSize(new Dimension(panelSize, panelSize));
-//        panel.setMaximumSize(new Dimension(panelSize, panelSize));
-//        panel.setBorder(BorderFactory.createLineBorder(new Color(0x362702), 5));
+        panel.setPreferredSize(new Dimension(MAZE_SIZE, MAZE_SIZE));
+        panel.setMinimumSize(new Dimension(MAZE_SIZE, MAZE_SIZE));
+        panel.setMaximumSize(new Dimension(MAZE_SIZE, MAZE_SIZE));
+        panel.setBorder(BorderFactory.createLineBorder(new Color(0x362702), 5));
         return panel;
         //return controller.getRenderer().getPanel();
     }
@@ -130,8 +136,6 @@ public class GameWindow extends JFrame {
     // Getters
     public static int getWindowWidth() {return WINDOW_WIDTH;}
     public static int getWindowHeight() {return WINDOW_HEIGHT;}
-    public static int getGamePanelWidth() {return MazePanel.PANEL_WIDTH;}
-    public static int getGamePanelHeight() {return MazePanel.PANEL_HEIGHT;}
 
 
 }
