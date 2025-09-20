@@ -22,13 +22,27 @@ public class GameWindow extends JFrame {
     private GameController controller; // Reference to GameController
     private InputController inputController;
 
-    // Panels
-    private JPanel rootPanel;
+    // PANELS
+    // Top
     private JPanel titlePanel;
-    private JPanel inventoryPanel;
-    private JPanel statusPanel; // Reference to StatusPanel
-    private JPanel menuPanel;
+    
+    // Middle
+    private JPanel rootPanel;
     private JPanel gamePanel;// Reference to MazePanel (from renderer)
+    
+    // Left
+    private JPanel leftPanel; // Reference to LeftPanel
+    private JPanel levelPanel;
+    private JPanel timerPanel;
+    
+    // Right
+    private JPanel rightPanel;
+    private JPanel keysPanel;
+    private JPanel treasurePanel;
+    
+    // Bottom
+    private JPanel menuPanel;
+    
 
     public GameWindow(GameController controller, InputController inputController) {
         // TODO: Set up window, menus, status bar, and embed MazePanel
@@ -61,16 +75,16 @@ public class GameWindow extends JFrame {
         titlePanel = new TitlePanel(controller);
         menuPanel = new MenuPanel(controller);
         rootPanel = new RootPanel(controller);
-        statusPanel = new StatusPanel(controller);
-        inventoryPanel = new InventoryPanel(controller);
+        leftPanel = new LeftPanel(controller);
+        rightPanel = new RightPanel(controller);
         gamePanel = setupMazePanel();
 
         add(titlePanel, BorderLayout.NORTH);
         add(menuPanel, BorderLayout.SOUTH);
         add(rootPanel);
-        rootPanel.add(statusPanel);
+        rootPanel.add(leftPanel);
         rootPanel.add(gamePanel);
-        rootPanel.add(inventoryPanel);
+        rootPanel.add(rightPanel);
 
         System.out.println("Initialised Panels");
     }

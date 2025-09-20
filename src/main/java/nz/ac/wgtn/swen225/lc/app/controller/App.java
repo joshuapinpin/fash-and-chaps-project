@@ -135,12 +135,13 @@ public class App implements GameController {
     }
 
     public void timeUp() {
+        setState(new DeadState());
+        System.out.println("Time's Up! Game Over.");
     }
 
-    @Override public void setState(GameState state) {this.state = state;}
-    @Override public GameWindow getGameWindow() {return window;}
-    @Override public GameState getState() {return state;}
-
+    public void setState(GameState state) {this.state = state;}
+    public GameWindow getGameWindow() {return window;}
+    public GameState getState() {return state;}
     public Maze getDomain() {return domain;}
     public Renderer getRenderer() {return renderer;}
 }
