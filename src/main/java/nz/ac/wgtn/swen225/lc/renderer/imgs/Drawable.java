@@ -1,14 +1,11 @@
 package nz.ac.wgtn.swen225.lc.renderer.imgs;
 import nz.ac.wgtn.swen225.lc.renderer.Renderer;
 
-import nz.ac.wgtn.swen225.lc.domain.*;
+import nz.ac.wgtn.swen225.lc.renderer.dummyTest;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 
 
@@ -31,51 +28,10 @@ public class Drawable extends JPanel{
 //            Player.class.Direction??, LoadingImg.playerForward,
 //            Player.class.Direction??, LoadingImg.playerBackward
 //
-
 //    );
+    
 
-
-
-    Map<String, LoadingImg> tileIdentities = Map.of( //testing lookup table
-            "Sand", LoadingImg.Sand,
-            "Rock", LoadingImg.Rock,
-            "Water", LoadingImg.Water,
-            "RedKey",LoadingImg.RedKey
-    );
-
-
-    /*
-     * Testing world map
-     */
-    public List<TileDummy> getAllTiles(){
-        ArrayList<TileDummy> tiles = new ArrayList<>();
-
-        for(int i = 0; i <= 8; i++) {
-            for (int j = 0; j <= 8; j++) {
-                tiles.add(new TileDummy("Rock", i, j));
-            }
-        }
-
-        for(int i = 1; i <= 7; i++) {
-            for (int j = 1; j <= 7; j++) {
-                tiles.add(new TileDummy("Sand", i, j));
-            }
-        }
-
-        tiles.add(new TileDummy("Water", 6, 7));
-        tiles.add(new TileDummy("Water", 7, 7));
-
-        tiles.add(new TileDummy("Water", 4, 5));
-        tiles.add(new TileDummy("Water", 4, 4));
-        tiles.add(new TileDummy("RedKey",5, 0));
-
-
-        return tiles;
-    }
-
-
-    List<TileDummy> allTiles = getAllTiles(); // list of all tiles in current screen
-
+    List<TileDummy> allTiles = dummyTest.getTiles(); // list of all tiles in current screen
 
     /*
      * Testing to get correct JFRAME/JPANEL SIZE
@@ -92,15 +48,6 @@ public class Drawable extends JPanel{
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-
-        int COLS = 9;
-        int ROWS = 9;
-        int SIZE = getWidth() / ROWS;
-
-        for (TileDummy tile : allTiles) {
-            int x = tile.x();
-            int y = tile.y();
-            g.drawImage(tileIdentities.get(tile.name()).loadImage(), x * SIZE, y * SIZE, SIZE, SIZE, null);
-        }
+        dummyTest.drawTiles(g, this);
     }
 }
