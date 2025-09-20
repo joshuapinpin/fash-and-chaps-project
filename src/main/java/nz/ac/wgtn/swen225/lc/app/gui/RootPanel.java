@@ -14,7 +14,7 @@ public class RootPanel extends JPanel {
 
     public RootPanel(GameController controller) {
         this.controller = controller;
-        setLayout(new FlowLayout(FlowLayout.CENTER, 25,0));
+        setLayout(new FlowLayout(FlowLayout.CENTER, GameWindow.SQUARE_SIZE,0));
         setBackground(Color.BLACK);
 //        setBorder(BorderFactory.createLineBorder(Color.RED, 10));
         bgImg = new MyImage("water").getImage();

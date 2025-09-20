@@ -52,9 +52,11 @@ public class App implements GameController {
         // Initialize domain model, renderer, and controllers
         domain = new Maze(10,9);
         domain.addTiles();
+
         renderer = new Renderer(domain.getTileGrid(), domain.getPlayer());
-        int size = (GameWindow.WINDOW_HEIGHT / 4) * 3;
+        int size = GameWindow.MAZE_SIZE;
         renderer.setDimensions(size, size);
+
         inputController = new InputController(this);
         timerController = new TimerController(this);
         window = new GameWindow(this, inputController);
@@ -65,6 +67,8 @@ public class App implements GameController {
 
     /**
      * Handles a user input (e.g., move, pause, save, etc).
+     * Delegates to the current game state for processing.
+     * @param input The user input to handle
      */
     public void handleInput(Input input) {
         if(state == null) throw new RuntimeException("Game state is null.");
@@ -76,8 +80,13 @@ public class App implements GameController {
                     + state.getClass().getSimpleName()
             );
         }
+        window.updateStatus();
 
-        //window.updateStatus();
+        // Update the renderer with the latest domain state
+        if(domain == null)
+            throw new RuntimeException("Cannot update renderer: Domain is null.");
+        if(renderer == null)
+            throw new RuntimeException("Cannot update renderer: Renderer is null.");
         renderer.getPanel().setAllTiles(domain.getTileGrid(), domain.getPlayer());
         renderer.getPanel().repaint();
     }
@@ -93,6 +102,7 @@ public class App implements GameController {
 
     /**
      * Starts a new game at the given level.
+     * @param level The level to start the new game at
      */
     public void startNewGame(int level) {
         setState(new PlayState());
@@ -116,7 +126,9 @@ public class App implements GameController {
         System.out.println("Game Resumed");
     }
 
-    @Override
+    /**
+     * Continues the game from a paused state.
+     */
     public void continueGame() {
         setState(new PlayState());
         System.out.println("Continuing Game");
@@ -131,6 +143,11 @@ public class App implements GameController {
         System.out.println("Game Saved!");
     }
 
+    /**
+     * Loads a saved game state.
+     * Opens a file chooser to select the saved game file.
+     * Uses Persistence to retrieve the saved state and update the domain model.
+     */
     public void loadGame(){
         // TODO: get Persistence to create a "load saved game" method, which returns a Domain object
         System.out.println("Game Loaded!");

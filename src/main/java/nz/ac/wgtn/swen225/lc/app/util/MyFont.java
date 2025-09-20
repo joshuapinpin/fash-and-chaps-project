@@ -3,22 +3,35 @@ package nz.ac.wgtn.swen225.lc.app.util;
 import java.awt.*;
 import java.io.InputStream;
 
-public class MyFont {
-    private Font font;
-    private String filename;
 
-    public MyFont(String name, float size) {
-        this.filename = name;
-        try {
-            InputStream is = MyFont.class.getResourceAsStream("/fonts/" + filename + ".ttf");
-            if(is==null) {throw new RuntimeException("Cannot find the font file: " + filename);}
-            font = Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(size);
+public enum MyFont {
+    PIXEL("pixel-font"),
+    ARIAL("Arial");
+
+    private final String filename;
+    private Font font;
+
+    MyFont(String filename) {
+        this.filename = filename;
+        loadFont();
+    }
+
+    private void loadFont() {
+        if ("Arial".equals(filename)) {
+            font = new Font("Arial", Font.PLAIN, 12); // Default size, can be changed with deriveFont
+            return;
+        }
+        try (InputStream is = MyFont.class.getResourceAsStream("/fonts/" + filename + ".ttf")) {
+            if (is == null) throw new RuntimeException("Cannot find the font file: " + filename);
+            font = Font.createFont(Font.TRUETYPE_FONT, is);
             System.out.println("Loading font: " + filename);
         } catch (Exception e) {
-            font = new Font("Arial", Font.PLAIN, (int) size);
+            font = new Font("Arial", Font.PLAIN, 12);
             System.out.println("Error loading font: " + e.getMessage());
         }
     }
 
-    public Font getFont() {return font;}
+    public Font getFont(float size) {
+        return font.deriveFont(size);
+    }
 }
