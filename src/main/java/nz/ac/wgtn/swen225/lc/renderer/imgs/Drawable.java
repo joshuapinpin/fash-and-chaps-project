@@ -33,14 +33,21 @@ public class Drawable extends JPanel{
 //
 
 //    );
-
-
-
-    Map<String, LoadingImg> tileIdentities = Map.of( //testing lookup table
-            "Sand", LoadingImg.Sand,
-            "Rock", LoadingImg.Rock,
-            "Water", LoadingImg.Water,
-            "RedKey",LoadingImg.RedKey
+    
+    Map<String, LoadingImg> tileIdentities = Map.ofEntries(
+            Map.entry("Sand", LoadingImg.Sand),
+            Map.entry("Rock", LoadingImg.Rock),
+            Map.entry("Water", LoadingImg.Water),
+            Map.entry("PlayerL", LoadingImg.PlayerLeft),
+            Map.entry("PlayerR", LoadingImg.PlayerRight),
+            Map.entry("PlayerF", LoadingImg.PlayerForward),
+            Map.entry("PlayerB", LoadingImg.PlayerBackward),
+            Map.entry("orangeKey", LoadingImg.OrangeKey),
+            Map.entry("orangeDoor", LoadingImg.OrangeDoor),
+            Map.entry("treasure", LoadingImg.Treasure),
+            Map.entry("exitLock", LoadingImg.ExitLock),
+            Map.entry("exit", LoadingImg.Exit),
+            Map.entry("enemyCrab", LoadingImg.enemyCrab)
     );
 
 
@@ -67,7 +74,22 @@ public class Drawable extends JPanel{
 
         tiles.add(new TileDummy("Water", 4, 5));
         tiles.add(new TileDummy("Water", 4, 4));
-        tiles.add(new TileDummy("RedKey",5, 0));
+
+        tiles.add(new TileDummy("PlayerB", 4, 4));
+        tiles.add(new TileDummy("PlayerF", 2, 4));
+        tiles.add(new TileDummy("PlayerR", 6, 4));
+        tiles.add(new TileDummy("PlayerL", 7, 4));
+
+        tiles.add(new TileDummy("enemyCrab", 3, 2));
+
+        tiles.add(new TileDummy("exitLock", 4, 7));
+        tiles.add(new TileDummy("exit", 4, 8));
+
+
+        tiles.add(new TileDummy("orangeKey", 6, 2));
+        tiles.add(new TileDummy("orangeDoor", 2, 2));
+
+        tiles.add(new TileDummy("treasure", 6, 6));
 
 
         return tiles;

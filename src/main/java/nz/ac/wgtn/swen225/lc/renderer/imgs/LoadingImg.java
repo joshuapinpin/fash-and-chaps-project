@@ -15,11 +15,26 @@ public enum LoadingImg {
     PlayerBackward("playerBackward.png"),
     PlayerLeft("playerLeft.png"),
     PlayerRight("playerRight.png"),
+
+    enemyCrab("enemyCrab.png"),
+
     Treasure("treasure.png"),
-    RedKey("redkey.png"),
-    Door("door.png"),
+    PurpleKey("purpleKey.png"),
+    PinkKey("pinkKey.png"),
+    OrangeKey("orangeKey.png"),
+    BlueKey("blueKey.png"),
+    GreenKey("greenKey.png"),
+
+    PurpleDoor("purpleDoor.png"),
+    PinkDoor("pinkDoor.png"),
+    OrangeDoor("orangeDoor.png"),
+    BlueDoor("blueDoor.png"),
+    GreenDoor("greenDoor.png"),
+
+    Exit("exit.png"),
     ExitLock("exitLock.png" ),
     Info("info.png"),
+
     Rock("wall.png"),
     Sand("sand.png"),
     Water("water.png");
