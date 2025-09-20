@@ -2,8 +2,10 @@ package nz.ac.wgtn.swen225.lc.app.controller;
 
 import nz.ac.wgtn.swen225.lc.app.state.*;
 import nz.ac.wgtn.swen225.lc.app.gui.*;
-import nz.ac.wgtn.swen225.lc.app.util.*;
-import nz.ac.wgtn.swen225.lc.app.util.Renderer;
+import nz.ac.wgtn.swen225.lc.app.util.Input;
+import nz.ac.wgtn.swen225.lc.domain.Direction;
+import nz.ac.wgtn.swen225.lc.domain.Maze;
+import nz.ac.wgtn.swen225.lc.renderer.Renderer;
 
 import java.util.Collections;
 import java.util.Map;
@@ -18,7 +20,7 @@ import java.util.HashMap;
  */
 public class App implements GameController {
     // MODEL  (Domain module)
-    private Domain domain; // Reference to the domain model
+    private Maze domain; // Reference to the domain model
 
     // VIEW (Renderer module)
     private Renderer renderer;// Reference to the renderer/view
@@ -38,7 +40,6 @@ public class App implements GameController {
     private static App INSTANCE;
     private App() {
         initialiseControllerComponents();
-        initialiseInputMap();
         startNewGame(1);
     }
     public static App getInstance() {
@@ -48,29 +49,13 @@ public class App implements GameController {
 
     private void initialiseControllerComponents() {
         // Initialize domain model, renderer, and controllers
-        domain = Domain.of();
-        renderer = Renderer.of();
-
+        domain = new Maze(20, 20);
+        renderer = new Renderer();
         inputController = new InputController(this);
         timerController = new TimerController(this);
         window = new GameWindow(this, inputController);
     }
 
-    private void initialiseInputMap(){
-        // Initialize input to input map
-        inputRunnableMap = new HashMap<>();
-        inputRunnableMap.put(Input.MOVE_UP, this::moveUp);
-        inputRunnableMap.put(Input.MOVE_DOWN, this::moveDown);
-        inputRunnableMap.put(Input.MOVE_LEFT, this::moveLeft);
-        inputRunnableMap.put(Input.MOVE_RIGHT, this::moveRight);
-        inputRunnableMap.put(Input.PAUSE, this::pauseGame);
-        inputRunnableMap.put(Input.RESUME, this::resumeGame);
-        inputRunnableMap.put(Input.SAVE, this::saveGame);
-        inputRunnableMap.put(Input.LOAD_LEVEL_1, () -> startNewGame(1));
-        inputRunnableMap.put(Input.LOAD_LEVEL_2, () -> startNewGame(2));
-        inputRunnableMap.put(Input.EXIT, this::exitGame);
-        inputRunnableMap.put(Input.ESCAPE, this::continueGame);
-    }
 
     // ========== Game Controller Implementation ==========
 
@@ -79,7 +64,7 @@ public class App implements GameController {
     /**
      * Updates the view based on the current state of the domain model.
      */
-    private void updateView(){
+    private void updateRenderer(){
         if(domain == null || renderer == null)
             throw new RuntimeException("Cannot update view: Domain or Renderer is null.");
 
@@ -95,30 +80,21 @@ public class App implements GameController {
      */
     public void handleInput(Input input) {
         if(state == null) throw new RuntimeException("Game state is null.");
-        state.handleInput(this, input);
-//        if(inputRunnableMap.containsKey(input)) inputRunnableMap.get(input).run();
-//        else throw new IllegalArgumentException("Invalid input");
+        try {state.handleInput(this, input);}
+        catch(UnsupportedOperationException e){
+            String stateName = state.getClass().getSimpleName();
+            System.out.println("Input " + input + " not valid in current state: " + stateName);
+        }
+        updateRenderer();
     }
 
-    private void moveUp(){
-//        domain.move(Direction.UP);
-        updateView();
-        System.out.println("Moved Up");
-    }
-    private void moveDown(){
-//        domain.move(Direction.DOWN);
-        updateView();
-        System.out.println("Moved Down");
-    }
-    private void moveLeft(){
-//        domain.move(Direction.LEFT);
-        updateView();
-        System.out.println("Moved Left");
-    }
-    private void moveRight(){
-//        domain.move(Direction.RIGHT);
-        updateView();
-        System.out.println("Moved Right");
+    /**
+     * Moves the player in the specified direction.
+     * @param dir
+     */
+    public void movePlayer(Direction dir){
+        if(domain == null) throw new RuntimeException("Cannot move player: Domain is null.");
+        domain.movePlayer(dir);
     }
 
     /**
@@ -127,7 +103,6 @@ public class App implements GameController {
     public void startNewGame(int level) {
         setState(new PlayState());
         System.out.println("Starting New Game at Level " + level);
-
     }
 
     /**

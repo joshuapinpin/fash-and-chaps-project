@@ -40,7 +40,7 @@ public class InputController implements KeyListener {
         inputs.put(new KeyCombo(KeyEvent.VK_LEFT, false), c -> c.handleInput(Input.MOVE_LEFT));
         inputs.put(new KeyCombo(KeyEvent.VK_RIGHT, false), c -> c.handleInput(Input.MOVE_RIGHT));
         inputs.put(new KeyCombo(KeyEvent.VK_SPACE, false), c -> c.handleInput(Input.PAUSE));
-        inputs.put(new KeyCombo(KeyEvent.VK_ESCAPE, false), c -> c.handleInput(Input.ESCAPE));
+        inputs.put(new KeyCombo(KeyEvent.VK_ESCAPE, false), c -> c.handleInput(Input.CONTINUE));
     }
 
     @Override public void keyPressed(KeyEvent e) {

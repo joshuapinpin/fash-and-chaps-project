@@ -11,5 +11,5 @@ public enum Input {
     EXIT,
     LOAD_LEVEL_2,
     LOAD_LEVEL_1,
-    ESCAPE;
+    CONTINUE
 }

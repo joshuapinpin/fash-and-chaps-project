@@ -1,14 +1,9 @@
 package nz.ac.wgtn.swen225.lc.app.gui;
 
 import nz.ac.wgtn.swen225.lc.app.controller.GameController;
-import nz.ac.wgtn.swen225.lc.app.util.Renderer;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
 public class InventoryPanel extends JPanel {
 
@@ -27,17 +22,10 @@ public class InventoryPanel extends JPanel {
         add(label);
     }
 
-    BufferedImage image = Renderer.image;
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        int square = 100;
-        for(int col = 0; col < 2; col++){
-            for(int row = 0; row < 4; row++){
-
-            }
-        }
     }
 }

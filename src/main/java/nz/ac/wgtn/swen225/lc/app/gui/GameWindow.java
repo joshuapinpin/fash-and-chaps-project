@@ -1,6 +1,5 @@
 package nz.ac.wgtn.swen225.lc.app.gui;
 
-import nz.ac.wgtn.swen225.lc.app.util.Renderer;
 import nz.ac.wgtn.swen225.lc.app.controller.GameController;
 import nz.ac.wgtn.swen225.lc.app.controller.InputController;
 
