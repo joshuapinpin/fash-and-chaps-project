@@ -156,9 +156,38 @@ public class App implements GameController {
         System.exit(0);
     }
 
+    @Override
+    public void help() {
+        System.out.println("Displaying Help/Rules...");
+    }
+
     public void timeUp() {
         setState(new DeadState());
         System.out.println("Time's Up! Game Over.");
+    }
+
+    @Override
+    public void startRecording() {
+        System.out.println("Started Recording");
+
+    }
+
+    @Override
+    public void stopRecording() {
+        System.out.println("Stopped Recording");
+
+    }
+
+    @Override
+    public void autoPlay() {
+        System.out.println("Auto-Playing");
+
+    }
+
+    @Override
+    public void stepByStep() {
+        System.out.println("Step-By-Step Playing");
+
     }
 
     public void setState(GameState state) {this.state = state;}
