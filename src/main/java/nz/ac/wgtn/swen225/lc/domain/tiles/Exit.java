@@ -22,6 +22,15 @@ public class Exit extends Tile {
     }
 
     /**
+     * Static factory method to create an exit tile with specified position
+     * @param pos position of the exit tile
+     * @return new Exit instance
+     */
+    public static Exit of(Position pos){
+        return new Exit(pos);
+    }
+
+    /**
      * Method to handle player entering the exit tile
      * Triggers level completion when the player enters this tile
      * @param p player entering the exit tile

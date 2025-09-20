@@ -130,5 +130,12 @@
                 <version>3.5.1</version>
             </plugin>
         </plugins>
+
+        <!-- Just a safeguard for the resources directory -->
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
     </build>
 </project>

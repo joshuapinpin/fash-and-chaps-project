@@ -19,17 +19,35 @@ public enum Direction {
      * @param dx change in x
      * @param dy change in y
      */
-    Direction(int dx, int dy){throw new UnsupportedOperationException();}
+    Direction(int dx, int dy){
+        this.dx = dx;
+        this.dy = dy;
+    }
+
+    /**
+     * Apply this direction to a given position
+     * Returns a new Position with updated coordinates
+     * Using the strategy pattern
+     * @param pos original position of player
+     * @return new position after applying direction
+     */
+    public Position apply(Position pos){
+        return new Position(pos.getX()+dx, pos.getY()+dy);
+    }
 
     /**
      * Getter for change in x
      * @return change in x
      */
-    public int getDx(){throw new UnsupportedOperationException();}
+    public int getDx(){
+        return this.dx;
+    }
 
     /**
      * Getter for change in y
      * @return change in y
      */
-    public int getDy(){throw new UnsupportedOperationException();}
+    public int getDy(){
+        return this.dy;
+    }
 }

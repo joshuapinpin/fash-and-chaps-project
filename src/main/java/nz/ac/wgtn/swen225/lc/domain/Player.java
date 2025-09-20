@@ -3,14 +3,19 @@ package nz.ac.wgtn.swen225.lc.domain;
 import nz.ac.wgtn.swen225.lc.domain.entities.Key;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * Player class representing the player in the game
  * Player has position, direction, keys collection, and treasure count
  * Provides methods to move, collect treasure, and manage keys
+ *
+ * Player starts in the center of the maze at (7,7) for 15x15 maze
  */
 public class Player{
+    private static final Player INSTANCE = new Player(new Position(7,7)); //singleton instance
+
     private List<Key> keys = new ArrayList<>(); //collection of keys the player has
     private Position pos; //current position of the player
     private Direction direction; //current direction the player is facing, enum Direction
@@ -18,17 +23,31 @@ public class Player{
 
     /**
      * Constructor for player with specified starting position
+     * Made private for singleton pattern
      * @param pos starting position of the player
      */
-    Player(Position pos){throw new UnsupportedOperationException();}
+    private Player(Position pos){
+        this.pos = pos;
+        this.direction = Direction.DOWN; //default starting direction
+        this.treasuresLeft = -1; //to be set when maze is loaded (check via assert when loading)
+    }
+
+    /**
+     * Get the singleton instance of the player
+     * @return singleton player instance
+     */
+    public static Player getInstance() {
+        return INSTANCE;
+    }
 
     /**
      * Method to move the player in a specified direction
      * Updates position and direction accordingly
-     * @param d direction to move in
+     * @param direction direction to move in
      */
-    public void move(Direction d){
-        throw new UnsupportedOperationException();
+    public void move(Direction direction){
+        this.direction = direction;
+        this.pos = direction.apply(this.pos); //strategy pattern via enum
     }
 
     /**
@@ -36,14 +55,16 @@ public class Player{
      * @param k key to add
      */
     public void addKey(Key k){
-        throw new UnsupportedOperationException();
+        keys.add(k);
     }
 
     /**
      * Method to decrement the treasure count when a treasure is collected
      */
     public void collectTreasure(){
-        throw new UnsupportedOperationException();
+        if(treasuresLeft > 0){
+            treasuresLeft--;
+        }
     }
 
     /**
@@ -51,7 +72,7 @@ public class Player{
      * @param pos new position
      */
     public void setPos(Position pos){
-        throw new UnsupportedOperationException();
+        this.pos = pos;
     }
 
     /**
@@ -59,7 +80,16 @@ public class Player{
      * @param d new direction
      */
     public void setDirection(Direction d){
-        throw new UnsupportedOperationException();
+        this.direction = d;
+    }
+
+    /**
+     * Set the number of treasures left to collect in the maze
+     * @param i number of treasures left
+     */
+    public void setTreasuresLeft(int i){
+        assert i >= 0 : "Treasures left cannot be negative";
+        this.treasuresLeft = i;
     }
 
     /**
@@ -67,7 +97,7 @@ public class Player{
      * @return current position
      */
     public Position getPos(){
-        throw new UnsupportedOperationException();
+        return pos;
     }
 
     /**
@@ -75,7 +105,7 @@ public class Player{
      * @return current direction
      */
     public Direction getDirection(){
-        throw new UnsupportedOperationException();
+        return direction;
     }
 
     /**
@@ -83,7 +113,7 @@ public class Player{
      * @return list of keys
      */
     public List<Key> getKeys(){
-        throw new UnsupportedOperationException();
+        return Collections.unmodifiableList(keys);
     }
 
     /**
@@ -92,7 +122,8 @@ public class Player{
      * @return true if all treasures collected, false otherwise
      */
     public boolean allTreasuresCollected(){
-        throw new UnsupportedOperationException();
+        assert treasuresLeft >=0 : "Treasures left cannot be negative";
+        return treasuresLeft == 0;
     }
 
 }

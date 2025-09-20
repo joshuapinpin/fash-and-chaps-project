@@ -23,6 +23,15 @@ public class Free extends Tile {
     }
 
     /**
+     * Static factory method to create a free tile with specified position
+     * @param pos position of the free tile
+     * @return new Free instance
+     */
+    public static Free of(Position pos){
+        return new Free(pos);
+    }
+
+    /**
      * Method to handle player entering the free tile
      * If there is a collectable entity, the player interacts with it
      * Checks to see if the entity should be removed after interaction
@@ -36,6 +45,19 @@ public class Free extends Tile {
                 collectable = Optional.empty(); // Remove the entity after collection
             }
         });
+    }
+
+    /**
+     * Free tile is accessible unless it contains an impassable entity (ExitLock or closed Door)
+     * Used to check if the player can move onto the tile beforehand
+     * @return true if the tile is accessible, false otherwise
+     */
+    @Override
+    public boolean isAccessible(Player p){
+        if(collectable.isPresent()){
+            return collectable.get().canInteract(p);
+        }
+        return true;
     }
 
     /**

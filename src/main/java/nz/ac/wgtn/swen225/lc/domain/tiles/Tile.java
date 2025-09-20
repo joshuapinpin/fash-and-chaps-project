@@ -15,7 +15,7 @@ public abstract class Tile {
      * Constructor for tile with specified position
      * @param pos position of the tile
      */
-    public Tile(Position pos){}
+    public Tile(Position pos){this.pos = pos;}
 
     /**
      * Getter for tile position
@@ -25,10 +25,9 @@ public abstract class Tile {
 
     /**
      * Check if the tile is accessible
-     * Only to be overridden by impassable tiles like Wall
      * @return true if accessible, false otherwise
      */
-    public boolean isAccessible(){return true;}
+    public boolean isAccessible(Player p){return true;}
 
     /**
      * Abstract method to handle player entering the tile

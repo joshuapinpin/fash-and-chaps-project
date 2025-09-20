@@ -17,6 +17,15 @@ public class Key implements Entity {
     Key(String color){this.color = color;}
 
     /**
+     * Static factory method to create a key with specified color
+     * @param color color of the key
+     * @return new Key instance
+     */
+    public static Key of(String color){
+        return new Key(color);
+    }
+
+    /**
      * Method to handle player interaction with the key
      * To be able to collect the key
      * @param p player interacting with the key
