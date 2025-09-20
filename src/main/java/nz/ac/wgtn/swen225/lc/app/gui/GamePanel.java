@@ -22,22 +22,22 @@ public class GamePanel extends JPanel {
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         setMinimumSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         setMaximumSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
+        setBackground(Color.red);
 //        setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
     }
 
 
-    BufferedImage image = Renderer.image;
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        int num = 9;
-        int size = PANEL_HEIGHT/num;
-        for(int row = 0; row < num; row++){
-            for(int col = 0; col < num; col++){
-                g.drawImage(image, row * size,col * size,
-                        size, size, this);
-            }
-        }
+//        int num = 9;
+//        int size = PANEL_HEIGHT/num;
+//        for(int row = 0; row < num; row++){
+//            for(int col = 0; col < num; col++){
+//                g.drawImage(image, row * size,col * size,
+//                        size, size, this);
+//            }
+//        }
     }
 }

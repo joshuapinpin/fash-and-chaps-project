@@ -11,7 +11,7 @@ public class Renderer {
     }
     public static BufferedImage image;
     Renderer(){
-        loadImage();
+        //loadImage();
     }
     private static void loadImage(){
         try {
