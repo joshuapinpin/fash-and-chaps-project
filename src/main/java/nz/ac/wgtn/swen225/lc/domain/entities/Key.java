@@ -42,4 +42,18 @@ public class Key implements Entity {
     public String getColor(){
         return color;
     }
+
+    /**
+     * Override equals method to compare keys based on color
+     * @param obj object to compare with
+     * @return true if keys are equal, false otherwise
+     */
+    @Override
+    public boolean equals(Object obj){
+        if(obj == this) return true;
+        if(obj == null) return false;
+        if(this.getClass() != obj.getClass()) return false;
+        Key key = (Key) obj;
+        return this.color.equals(key.color);
+    }
 }

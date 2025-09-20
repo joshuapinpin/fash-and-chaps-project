@@ -49,4 +49,13 @@ public class Wall extends Tile {
      */
     @Override
     public void onEnter(Player p){}
+
+    @Override
+    public boolean equals(Object obj){
+        if(obj == this) return true;
+        if(obj == null) return false;
+        if(this.getClass() != obj.getClass()) return false;
+        Wall wall = (Wall) obj;
+        return this.getPos().equals(wall.getPos());
+    }
 }
