@@ -27,6 +27,128 @@ public class Maze {
         //initialise player and set start position
         this.player = Player.getInstance();
         this.player.initialiseStartPos(rows, cols);
+
+        //default tiles for testing integration
+        addTiles();
+    }
+
+    /**
+     * Add default tiles to maze for testing purposes for integration
+     * To delete later
+     * In a real implementation, tiles would be loaded from a file
+     */
+    public void addTiles(){
+        setTileAt(Free.of(new Position(0,0)));
+        setTileAt(Free.of(new Position(1,0)));
+        setTileAt(Wall.of(new Position(2,0)));
+        setTileAt(Free.of(new Position(3,0)));
+        setTileAt(Free.of(new Position(4,0)));
+        setTileAt(Free.of(new Position(5,0)));
+        setTileAt(Wall.of(new Position(6,0)));
+        setTileAt(Free.of(new Position(7,0)));
+        setTileAt(Free.of(new Position(8,0)));
+
+        Free tileWithTreasure = Free.of(new Position(0,1));
+        tileWithTreasure.setCollectable(Treasure.of());
+        setTileAt(tileWithTreasure);
+        setTileAt(Free.of(new Position(1,1)));
+        setTileAt(Wall.of(new Position(2,1)));
+        setTileAt(Free.of(new Position(3,1)));
+        setTileAt(Free.of(new Position(4,1)));
+        setTileAt(Free.of(new Position(5,1)));
+        setTileAt(Wall.of(new Position(6,1)));
+        setTileAt(Free.of(new Position(7,1)));
+        Free tileWithKey = Free.of(new Position(8,1));
+        tileWithKey.setCollectable(Key.of("orange"));
+        setTileAt(tileWithKey);
+
+        setTileAt(Wall.of(new Position(0,2)));
+        setTileAt(Wall.of(new Position(1,2)));
+        setTileAt(Wall.of(new Position(2,2)));
+        setTileAt(Free.of(new Position(3,2)));
+        setTileAt(Free.of(new Position(4,2)));
+        setTileAt(Free.of(new Position(5,2)));
+        setTileAt(Wall.of(new Position(6,2)));
+        setTileAt(Wall.of(new Position(7,2)));
+        setTileAt(Wall.of(new Position(8,2)));
+
+        setTileAt(Free.of(new Position(0,3)));
+        setTileAt(Wall.of(new Position(1,3)));
+        setTileAt(Free.of(new Position(2,3)));
+        setTileAt(Free.of(new Position(3,3)));
+        setTileAt(Free.of(new Position(4,3)));
+        setTileAt(Free.of(new Position(5,3)));
+        setTileAt(Free.of(new Position(6,3)));
+        setTileAt(Wall.of(new Position(7,3)));
+        setTileAt(Free.of(new Position(8,3)));
+
+        setTileAt(Free.of(new Position(0,4)));
+        Free tileWithDoor = Free.of(new Position(1,4));
+        tileWithDoor.setCollectable(Door.of("orange"));
+        setTileAt(tileWithDoor);
+        setTileAt(Free.of(new Position(2,4)));
+        setTileAt(Free.of(new Position(3,4)));
+        setTileAt(Info.of("Info", new Position(4,4)));
+        setTileAt(Free.of(new Position(5,4)));
+        setTileAt(Free.of(new Position(6,4)));
+        Free tileWithDoor2 = Free.of(new Position(7,4));
+        tileWithDoor2.setCollectable(Door.of("orange"));
+        setTileAt(tileWithDoor2);
+        setTileAt(Free.of(new Position(8,4)));
+
+        setTileAt(Free.of(new Position(0,5)));
+        setTileAt(Wall.of(new Position(1,5)));
+        setTileAt(Free.of(new Position(2,5)));
+        setTileAt(Free.of(new Position(3,5)));
+        setTileAt(Free.of(new Position(4,5)));
+        setTileAt(Free.of(new Position(5,5)));
+        setTileAt(Free.of(new Position(6,5)));
+        setTileAt(Wall.of(new Position(7,5)));
+        setTileAt(Free.of(new Position(8,5)));
+
+        setTileAt(Free.of(new Position(0,6)));
+        setTileAt(Wall.of(new Position(1,6)));
+        setTileAt(Wall.of(new Position(2,6)));
+        setTileAt(Free.of(new Position(3,6)));
+        setTileAt(Free.of(new Position(4,6)));
+        setTileAt(Free.of(new Position(5,6)));
+        setTileAt(Wall.of(new Position(6,6)));
+        setTileAt(Wall.of(new Position(7,6)));
+        setTileAt(Free.of(new Position(8,6)));
+
+        setTileAt(Free.of(new Position(0,7)));
+        setTileAt(Wall.of(new Position(1,7)));
+        setTileAt(Free.of(new Position(2,7)));
+        setTileAt(Free.of(new Position(3,7)));
+        setTileAt(Free.of(new Position(4,7)));
+        setTileAt(Free.of(new Position(5,7)));
+        Free tileWithTreasure2 = Free.of(new Position(6,7));
+        tileWithTreasure2.setCollectable(Treasure.of());
+        setTileAt(tileWithTreasure2);
+        setTileAt(Wall.of(new Position(7,7)));
+        setTileAt(Free.of(new Position(8,7)));
+
+        setTileAt(Free.of(new Position(0,8)));
+        setTileAt(Wall.of(new Position(1,8)));
+        setTileAt(Free.of(new Position(2,8)));
+        setTileAt(Free.of(new Position(3,8)));
+        setTileAt(Free.of(new Position(4,8)));
+        setTileAt(Free.of(new Position(5,8)));
+        setTileAt(Free.of(new Position(6,8)));
+        setTileAt(Wall.of(new Position(7,8)));
+        setTileAt(Free.of(new Position(8,8)));
+
+        setTileAt(Free.of(new Position(0,9)));
+        setTileAt(Wall.of(new Position(1,9)));
+        setTileAt(Free.of(new Position(2,9)));
+        setTileAt(Wall.of(new Position(3,9)));
+        Tile tileWithExitLock = Free.of(new Position(4,9));
+        ((Free) tileWithExitLock).setCollectable(ExitLock.of());
+        setTileAt(tileWithExitLock);
+        setTileAt(Wall.of(new Position(5,9)));
+        setTileAt(Free.of(new Position(6,9)));
+        setTileAt(Wall.of(new Position(7,9)));
+        setTileAt(Free.of(new Position(8,9)));
     }
 
     /**
