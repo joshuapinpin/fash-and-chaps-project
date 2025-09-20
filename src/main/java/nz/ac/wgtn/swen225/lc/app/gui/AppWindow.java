@@ -6,13 +6,14 @@ import nz.ac.wgtn.swen225.lc.app.controller.InputController;
 import javax.swing.*;
 import javax.swing.JPanel;
 import java.awt.*;
+import java.util.List;
 
 /**
  * Main application window/frame. Contains UI components and embeds the game panel from renderer.
  *
  * @author Joshua Pinpin (Student ID: 300662880)
  */
-public class GameWindow extends JFrame {
+public class AppWindow extends JFrame {
     // Game Window Fields
     public static final int SQUARE_SIZE = 60; // 60 pixels
     public static final int WINDOW_WIDTH = 1260;
@@ -25,7 +26,7 @@ public class GameWindow extends JFrame {
     private InputController inputController;
 
     // PANELS
-    // Top
+    private List<JPanel> allPanels;
     private JPanel titlePanel;
     private JPanel rootPanel;
     private JPanel gamePanel;// Reference to MazePanel (from renderer)
@@ -36,14 +37,13 @@ public class GameWindow extends JFrame {
     private JPanel menuPanel;
     
 
-    public GameWindow(GameController controller, InputController inputController) {
+    public AppWindow(GameController controller, InputController inputController) {
         // TODO: Set up window, menus, status bar, and embed MazePanel
         super("Fash and Chaps :D");
         this.controller = controller;
         this.inputController = inputController;
         setupWindow();
         setupPanels();
-        delegatePanels();
         //setupDialogs();
 
     }
@@ -70,21 +70,11 @@ public class GameWindow extends JFrame {
         menuPanel = new MenuPanel(controller);
         rootPanel = new RootPanel(controller);
         gamePanel = setupMazePanel();
-
-        // Left Panels
         leftPanel = new LeftPanel(controller);
-//        levelPanel = new LevelPanel(controller);
-//        timerPanel = new TimerPanel(controller);
-//        keysPanel = new KeysPanel(controller);
-//        treasurePanel = new TreasurePanel(controller);
-
-        // Right Panels
         rightPanel = new RightPanel(controller);
 
-        System.out.println("Initialised Panels");
-    }
+        allPanels = List.of(titlePanel, menuPanel, rootPanel, gamePanel, leftPanel, rightPanel);
 
-    private void delegatePanels(){
         // Main Frame
         add(titlePanel, BorderLayout.NORTH);
         add(menuPanel, BorderLayout.SOUTH);
@@ -94,7 +84,7 @@ public class GameWindow extends JFrame {
         rootPanel.add(leftPanel);
         rootPanel.add(gamePanel);
         rootPanel.add(rightPanel);
-
+        System.out.println("Initialised Panels");
     }
 
     private JPanel setupMazePanel(){
@@ -123,15 +113,17 @@ public class GameWindow extends JFrame {
     public void showMessageDialog(String message, String title) {
     }
 
+    public void updateWindow(){
+        allPanels.forEach(JPanel::repaint);
+    }
+
 
     // TODO: Must decide what things are needed to be updated in the status bar
     public void updateStatus() {
         // TODO: Update status bar with current game info
     }
 
-    public void updateInventory(){
 
-    }
 
     // Getters
     public static int getWindowWidth() {return WINDOW_WIDTH;}

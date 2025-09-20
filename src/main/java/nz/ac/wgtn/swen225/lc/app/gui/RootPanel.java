@@ -7,14 +7,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class RootPanel extends JPanel {
+public class RootPanel extends JPanel implements GamePanel{
 
     private GameController controller;
     private BufferedImage bgImg;
 
     public RootPanel(GameController controller) {
         this.controller = controller;
-        setLayout(new FlowLayout(FlowLayout.CENTER, GameWindow.SQUARE_SIZE,0));
+        setLayout(new FlowLayout(FlowLayout.CENTER, AppWindow.SQUARE_SIZE,0));
         setBackground(Color.BLACK);
 //        setBorder(BorderFactory.createLineBorder(Color.RED, 10));
         bgImg = new MyImage("water").getImage();
@@ -25,13 +25,18 @@ public class RootPanel extends JPanel {
         super.paintComponent(g);
         int squareSize = 60;
         int x = 0, y = 0;
-        while(x < GameWindow.WINDOW_WIDTH){
-            while(y < GameWindow.WINDOW_HEIGHT){
+        while(x < AppWindow.WINDOW_WIDTH){
+            while(y < AppWindow.WINDOW_HEIGHT){
                 g.drawImage(bgImg, x, y, squareSize, squareSize, this);
                 y += squareSize;
             }
             y = 0;
             x += squareSize;
         }
+    }
+
+    @Override
+    public void update() {
+
     }
 }

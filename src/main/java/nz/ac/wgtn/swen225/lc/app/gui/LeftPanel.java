@@ -3,11 +3,11 @@ package nz.ac.wgtn.swen225.lc.app.gui;
 
 import nz.ac.wgtn.swen225.lc.app.controller.GameController;
 import nz.ac.wgtn.swen225.lc.app.util.MyFont;
-import nz.ac.wgtn.swen225.lc.app.util.MyImage;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.List;
 
 /**
@@ -17,18 +17,16 @@ import java.util.List;
  *
  * @author Joshua Pinpin (Student ID: 300662880)
  */
-public class LeftPanel extends JPanel {
+public class LeftPanel extends JPanel implements GamePanel{
     // Size fields
-//    public static final int PANEL_WIDTH = (GameWindow.WINDOW_WIDTH / 4);
-    public static final int PANEL_WIDTH = GameWindow.SQUARE_SIZE * 4;
-    public static final int PANEL_HEIGHT = GameWindow.MAZE_SIZE;
+//    public static final int PANEL_WIDTH = (AppWindow.WINDOW_WIDTH / 4);
+    public static final int PANEL_WIDTH = AppWindow.SQUARE_SIZE * 4;
+    public static final int PANEL_HEIGHT = AppWindow.MAZE_SIZE;
     public static final int FONT_SIZE = 40;
 
     private List<JPanel> allPanels;
     private JPanel levelPanel, timerPanel, keysPanel, treasurePanel;
     private GameController controller;
-
-
 
     public LeftPanel(GameController controller) {
         this.controller = controller;
@@ -45,19 +43,28 @@ public class LeftPanel extends JPanel {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
+                int keysLeft = controller.getDomain().getPlayer().getKeysLeft();
+                BufferedImage img;
                 for(int i = 0; i < 4; i++){
-                    g.drawImage(LoadingImg.Sand.loadImage(),i * GameWindow.SQUARE_SIZE, 0,
-                            GameWindow.SQUARE_SIZE, GameWindow.SQUARE_SIZE, this);
+                    if(i < keysLeft) img = LoadingImg.OrangeKey.loadImage();
+                    else img = LoadingImg.Sand.loadImage();
+                    g.drawImage(img,i * AppWindow.SQUARE_SIZE, 0,
+                            AppWindow.SQUARE_SIZE, AppWindow.SQUARE_SIZE, this);
                 }
             }
         };
+
         treasurePanel = new JPanel(new GridLayout(4,1)){
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 for(int i = 0; i < 4; i++){
-                    g.drawImage(LoadingImg.Sand.loadImage(),i * GameWindow.SQUARE_SIZE, 0,
-                            GameWindow.SQUARE_SIZE, GameWindow.SQUARE_SIZE, this);
+                    int treasures = controller.getDomain().getPlayer().getTreasuresLeft();
+                    BufferedImage img;
+                    if(i < treasures) img = LoadingImg.Treasure.loadImage();
+                    else img = LoadingImg.Sand.loadImage();
+                    g.drawImage(img,i * AppWindow.SQUARE_SIZE, 0,
+                            AppWindow.SQUARE_SIZE, AppWindow.SQUARE_SIZE, this);
                 }
             }
         };
@@ -75,5 +82,10 @@ public class LeftPanel extends JPanel {
         label.setVerticalAlignment(SwingConstants.CENTER);
         add(label);
         add(panel);
+    }
+
+    @Override
+    public void update() {
+        allPanels.forEach(JPanel::repaint);
     }
 }
