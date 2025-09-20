@@ -38,6 +38,23 @@ public class Maze {
     }
 
     /**
+     * Add tile to 2D tile array at specified position
+     * @param pos position to set tile at
+     * @param tile tile to set
+     */
+    public void setTileAt(Position pos, Tile tile) {
+        assert tile != null : "Tile cannot be null";
+        int x = pos.getX();
+        int y = pos.getY();
+        if (x < 0 || x >= cols || y < 0 || y >= rows) {
+            throw new IndexOutOfBoundsException("Position out of maze bounds: " + pos);
+        }
+        tileGrid[y][x] = tile;
+
+        assert getTileAt(pos) == tile : "Tile was not set correctly at position: " + pos;
+    }
+
+    /**
      * Move player in specified direction if target tile is accessible
      * The direction dependent on what user input is
      * @param direction direction to move player
