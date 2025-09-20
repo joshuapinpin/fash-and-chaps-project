@@ -39,11 +39,13 @@ public class Maze {
 
     /**
      * Add tile to 2D tile array at specified position
-     * @param pos position to set tile at
      * @param tile tile to set
      */
-    public void setTileAt(Position pos, Tile tile) {
+    public void setTileAt(Tile tile) {
         assert tile != null : "Tile cannot be null";
+        Position pos = tile.getPos();
+        assert pos != null : "Tile position cannot be null";
+
         int x = pos.getX();
         int y = pos.getY();
         if (x < 0 || x >= cols || y < 0 || y >= rows) {
@@ -68,5 +70,29 @@ public class Maze {
             player.move(direction);
             targetTile.onEnter(player);
         }
+    }
+
+    /**
+     * Getter for number of rows in maze
+     * @return number of rows
+     */
+    public int getRows(){
+        return this.rows;
+    }
+
+    /**
+     * Getter for number of columns in maze
+     * @return number of columns
+     */
+    public int getCols(){
+        return this.cols;
+    }
+
+    /**
+     * Setter for player reference in maze
+     * @param player player to set
+     */
+    public void setPlayer(Player player){
+        this.player = player;
     }
 }

@@ -46,4 +46,18 @@ public class Position {
         this.y = i;
     }
 
+    /**
+     * Override equals method for position comparison
+     * @param obj object to compare with
+     * @return true if positions are equal, false otherwise
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if(obj == null) return false;
+        if (this.getClass() != obj.getClass()) return false;
+        Position position = (Position) obj;
+        return x == position.x && y == position.y;
+    }
+
 }
