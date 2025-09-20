@@ -5,14 +5,17 @@ import nz.ac.wgtn.swen225.lc.app.util.MyFont;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
-public class RightPanel extends JPanel {
+public class RightPanel extends JPanel implements GamePanel{
 
-//    public static final int PANEL_WIDTH = (GameWindow.WINDOW_WIDTH / 4) ;
-    public static final int PANEL_WIDTH = GameWindow.SQUARE_SIZE * 4 ;
-    public static final int PANEL_HEIGHT = GameWindow.MAZE_SIZE;
+//    public static final int PANEL_WIDTH = (AppWindow.WINDOW_WIDTH / 4) ;
+    public static final int PANEL_WIDTH = AppWindow.SQUARE_SIZE * 4 ;
+    public static final int PANEL_HEIGHT = AppWindow.MAZE_SIZE;
+    public static final int FONT_SIZE = 40;
 
     private GameController controller;
+    private List<JPanel> allPanels;
 
     public RightPanel(GameController controller){
         this.controller = controller;
@@ -20,8 +23,8 @@ public class RightPanel extends JPanel {
         setOpaque(false);
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
 
-        JLabel label = new JLabel("Inventory");
-        label.setFont(MyFont.PIXEL.getFont(40));
+        JLabel label = new JLabel("Recorder");
+        label.setFont(MyFont.PIXEL.getFont(FONT_SIZE));
         label.setForeground(Color.white);
         add(label);
     }
@@ -35,5 +38,10 @@ public class RightPanel extends JPanel {
     private void drawKeys(Graphics g){
         int keys = controller.getDomain().getPlayer().getKeys().size();
 
+    }
+
+    @Override
+    public void update() {
+        allPanels.forEach(JPanel::repaint);
     }
 }
