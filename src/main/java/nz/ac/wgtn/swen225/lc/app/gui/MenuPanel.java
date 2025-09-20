@@ -1,6 +1,8 @@
 package nz.ac.wgtn.swen225.lc.app.gui;
 
 import nz.ac.wgtn.swen225.lc.app.controller.GameController;
+import nz.ac.wgtn.swen225.lc.app.util.MyButton;
+import nz.ac.wgtn.swen225.lc.app.util.MyFont;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;
 
 import javax.swing.*;
@@ -16,7 +18,8 @@ public class MenuPanel extends JPanel implements ActionListener, GamePanel{
     // Size fields
     public static final int PANEL_WIDTH = AppWindow.WINDOW_WIDTH;
     public static final int PANEL_HEIGHT = AppWindow.HEADER_HEIGHT;
-    public static final int BUTTON_GAP = 10;
+    public static final int BUTTON_GAP = 20;
+    public static final int FONT_SIZE = 20;
 
     // Buttons: Pause, Save, Exit, Resume
     private Map<JButton, Runnable> buttonRunnableMap;
@@ -43,7 +46,10 @@ public class MenuPanel extends JPanel implements ActionListener, GamePanel{
     }
 
     private void setupSingleButton(String label, Runnable action){
-        JButton button = new JButton(label);
+        JButton button = MyButton.of(label, PANEL_WIDTH, PANEL_HEIGHT, FONT_SIZE,
+                LoadingImg.Rock.loadImage());
+
+
         button.addActionListener(this);
         button.setFocusable(false);
         buttonRunnableMap.put(button, action);
