@@ -5,6 +5,11 @@ import nz.ac.wgtn.swen225.lc.app.gui.*;
 import nz.ac.wgtn.swen225.lc.app.util.*;
 import nz.ac.wgtn.swen225.lc.domain.Direction;
 import nz.ac.wgtn.swen225.lc.domain.Maze;
+import nz.ac.wgtn.swen225.lc.domain.Player;
+import nz.ac.wgtn.swen225.lc.domain.Position;
+import nz.ac.wgtn.swen225.lc.domain.entities.Key;
+import nz.ac.wgtn.swen225.lc.domain.tiles.Free;
+import nz.ac.wgtn.swen225.lc.domain.tiles.Wall;
 import nz.ac.wgtn.swen225.lc.renderer.Renderer;
 
 /**
@@ -34,6 +39,7 @@ public class App implements GameController {
     // Constructor with Singleton Pattern
     private static App INSTANCE;
     private App() {
+        setup();
         initialiseControllerComponents();
         startNewGame(1);
     }
@@ -42,10 +48,40 @@ public class App implements GameController {
         return INSTANCE;
     }
 
+    Maze maze;
+    Player player;
+
+    void setup() {
+        // Initialize maze and player for testing
+        maze = new Maze(3, 3);
+        player = Player.getInstance();
+        player.initialiseStartPos(3,3);
+
+        maze.setPlayer(player);
+
+        //setting tiles in the maze
+        maze.setTileAt(Wall.of(new Position(0,0)));
+        maze.setTileAt(Wall.of(new Position(0,1)));
+        maze.setTileAt(Wall.of(new Position(0,2)));
+        maze.setTileAt(Free.of(new Position(1,0)));
+        maze.setTileAt(Free.of(new Position(1,1)));
+        maze.setTileAt(Free.of(new Position(1,2)));
+        maze.setTileAt(Free.of(new Position(2,0)));
+
+        //adding key with tile
+        Free tileWithKey = Free.of(new Position(2,1));
+        tileWithKey.setCollectable(Key.of("Red"));
+        maze.setTileAt(tileWithKey);
+
+        maze.setTileAt(Free.of(new Position(2,2)));
+    }
+
     private void initialiseControllerComponents() {
         // Initialize domain model, renderer, and controllers
-        domain = new Maze(23, 23);
+        domain = maze;
         renderer = new Renderer();
+        int size = (GameWindow.WINDOW_HEIGHT / 4) * 3;
+        renderer.setDimensions(size, size);
         inputController = new InputController(this);
         timerController = new TimerController(this);
         window = new GameWindow(this, inputController);
@@ -68,8 +104,9 @@ public class App implements GameController {
             );
         }
 
-        window.updateStatus();
-        //renderer.update();
+        //window.updateStatus();
+        renderer.getPanel().setAllTiles(domain.getTileGrid(), domain.getPlayer());
+        renderer.getPanel().repaint();
     }
 
     /**
