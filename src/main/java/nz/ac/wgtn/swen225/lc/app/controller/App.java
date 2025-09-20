@@ -39,7 +39,6 @@ public class App implements GameController {
     // Constructor with Singleton Pattern
     private static App INSTANCE;
     private App() {
-        setup();
         initialiseControllerComponents();
         startNewGame(1);
     }
@@ -48,38 +47,12 @@ public class App implements GameController {
         return INSTANCE;
     }
 
-    Maze maze;
-    Player player;
-
-    void setup() {
-        // Initialize maze and player for testing
-        maze = new Maze(3, 3);
-        player = Player.getInstance();
-        player.initialiseStartPos(3,3);
-
-        maze.setPlayer(player);
-
-        //setting tiles in the maze
-        maze.setTileAt(Wall.of(new Position(0,0)));
-        maze.setTileAt(Wall.of(new Position(0,1)));
-        maze.setTileAt(Wall.of(new Position(0,2)));
-        maze.setTileAt(Free.of(new Position(1,0)));
-        maze.setTileAt(Free.of(new Position(1,1)));
-        maze.setTileAt(Free.of(new Position(1,2)));
-        maze.setTileAt(Free.of(new Position(2,0)));
-
-        //adding key with tile
-        Free tileWithKey = Free.of(new Position(2,1));
-        tileWithKey.setCollectable(Key.of("Red"));
-        maze.setTileAt(tileWithKey);
-
-        maze.setTileAt(Free.of(new Position(2,2)));
-    }
 
     private void initialiseControllerComponents() {
         // Initialize domain model, renderer, and controllers
-        domain = maze;
-        renderer = new Renderer();
+        domain = new Maze(10,9);
+        domain.addTiles();
+        renderer = new Renderer(domain.getTileGrid(), domain.getPlayer());
         int size = (GameWindow.WINDOW_HEIGHT / 4) * 3;
         renderer.setDimensions(size, size);
         inputController = new InputController(this);
