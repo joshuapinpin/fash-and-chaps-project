@@ -71,7 +71,7 @@ public class AppWindow extends JFrame {
         rootPanel = new RootPanel(controller);
         gamePanel = setupMazePanel();
         leftPanel = new LeftPanel(controller);
-        rightPanel = new RightPanel(controller);
+        rightPanel = new RightPanel(controller, inputController);
 
         allPanels = List.of(titlePanel, menuPanel, rootPanel, gamePanel, leftPanel, rightPanel);
 

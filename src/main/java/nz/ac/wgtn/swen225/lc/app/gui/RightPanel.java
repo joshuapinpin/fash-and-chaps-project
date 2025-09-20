@@ -1,6 +1,7 @@
 package nz.ac.wgtn.swen225.lc.app.gui;
 
 import nz.ac.wgtn.swen225.lc.app.controller.GameController;
+import nz.ac.wgtn.swen225.lc.app.controller.InputController;
 import nz.ac.wgtn.swen225.lc.app.util.MyButton;
 import nz.ac.wgtn.swen225.lc.app.util.MyFont;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;
@@ -22,11 +23,13 @@ public class RightPanel extends JPanel implements ActionListener, ChangeListener
     public static final int FONT_SIZE = 40;
 
     private GameController controller;
+    private InputController inputController;
     private List<JPanel> allPanels;
     private Map<JButton, Runnable> buttonRunnableMap;
 
-    public RightPanel(GameController controller){
+    public RightPanel(GameController controller, InputController inputController){
         this.controller = controller;
+        this.inputController = inputController;
 //        setBackground(Color.green);
         setOpaque(false);
         setLayout(new GridLayout(9,1, 0, 10));
@@ -70,7 +73,10 @@ public class RightPanel extends JPanel implements ActionListener, ChangeListener
         slider.setPaintTicks(true);
         slider.setPaintLabels(false);
         slider.setOpaque(false); // transparent background if you want
-        slider.addChangeListener(this); // so stateChanged() will be called
+        slider.addChangeListener(e -> {
+            stateChanged(e);
+            controller.getGameWindow().requestFocusInWindow();
+        });
         add(slider);
     }
 
