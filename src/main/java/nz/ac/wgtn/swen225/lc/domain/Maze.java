@@ -52,12 +52,12 @@ public class Maze {
         setTileAt(Wall.of(new Position(2,1)));
         setTileAt(Free.of(new Position(3,1)));
         setTileAt(Free.of(new Position(4,1)));
-        setTileAt(Free.of(new Position(5,1)));
-        setTileAt(Wall.of(new Position(6,1)));
-        setTileAt(Free.of(new Position(7,1)));
-        Free tileWithKey = Free.of(new Position(8,1));
+        Free tileWithKey = Free.of(new Position(5,1));
         tileWithKey.setCollectable(Key.of("orange"));
         setTileAt(tileWithKey);
+        setTileAt(Wall.of(new Position(6,1)));
+        setTileAt(Free.of(new Position(7,1)));
+        setTileAt(Free.of(new Position(8,1)));
 
         setTileAt(Wall.of(new Position(0,2)));
         setTileAt(Wall.of(new Position(1,2)));
@@ -81,7 +81,7 @@ public class Maze {
 
         setTileAt(Free.of(new Position(0,4)));
         Free tileWithDoor = Free.of(new Position(1,4));
-        tileWithDoor.setCollectable(Door.of("orange"));
+        tileWithDoor.setCollectable(Door.of("purple"));
         setTileAt(tileWithDoor);
         setTileAt(Free.of(new Position(2,4)));
         setTileAt(Free.of(new Position(3,4)));
@@ -133,7 +133,9 @@ public class Maze {
         setTileAt(Free.of(new Position(5,8)));
         setTileAt(Free.of(new Position(6,8)));
         setTileAt(Wall.of(new Position(7,8)));
-        setTileAt(Free.of(new Position(8,8)));
+        Free tileWithKey2 = Free.of(new Position(8,8));
+        tileWithKey2.setCollectable(Key.of("purple"));
+        setTileAt(tileWithKey2);
 
         setTileAt(Free.of(new Position(0,9)));
         setTileAt(Wall.of(new Position(1,9)));
@@ -207,6 +209,7 @@ public class Maze {
             player.move(direction);
             targetTile.onEnter(player);
         }
+        player.setDirection(direction); //update player direction regardless of move success
     }
 
     /**
