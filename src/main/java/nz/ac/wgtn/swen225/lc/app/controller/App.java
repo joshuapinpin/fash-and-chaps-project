@@ -2,14 +2,10 @@ package nz.ac.wgtn.swen225.lc.app.controller;
 
 import nz.ac.wgtn.swen225.lc.app.state.*;
 import nz.ac.wgtn.swen225.lc.app.gui.*;
-import nz.ac.wgtn.swen225.lc.app.util.Input;
+import nz.ac.wgtn.swen225.lc.app.util.*;
 import nz.ac.wgtn.swen225.lc.domain.Direction;
 import nz.ac.wgtn.swen225.lc.domain.Maze;
 import nz.ac.wgtn.swen225.lc.renderer.Renderer;
-
-import java.util.Collections;
-import java.util.Map;
-import java.util.HashMap;
 
 /**
  * Central controller for game logic and flow.
@@ -30,11 +26,10 @@ public class App implements GameController {
     private GameState state;
     private InputController inputController;
     private TimerController timerController;
-    private Map<Input, Runnable> inputRunnableMap;
 
     // GAME MANAGEMENT Components
-    // Reference to persistence object
-    // Reference to recorder object
+    // Reference to persistence
+    // Reference to recorder
 
     // Constructor with Singleton Pattern
     private static App INSTANCE;
@@ -49,7 +44,7 @@ public class App implements GameController {
 
     private void initialiseControllerComponents() {
         // Initialize domain model, renderer, and controllers
-        domain = new Maze(20, 20);
+        domain = new Maze(23, 23);
         renderer = new Renderer();
         inputController = new InputController(this);
         timerController = new TimerController(this);
@@ -65,13 +60,9 @@ public class App implements GameController {
      * Updates the view based on the current state of the domain model.
      */
     private void updateRenderer(){
+        // TODO
         if(domain == null || renderer == null)
             throw new RuntimeException("Cannot update view: Domain or Renderer is null.");
-
-        // Tell renderer the current domain state
-//        renderer.render();
-
-        // Update UI status display
         window.updateStatus();
     }
 
@@ -82,15 +73,17 @@ public class App implements GameController {
         if(state == null) throw new RuntimeException("Game state is null.");
         try {state.handleInput(this, input);}
         catch(UnsupportedOperationException e){
-            String stateName = state.getClass().getSimpleName();
-            System.out.println("Input " + input + " not valid in current state: " + stateName);
+            System.out.println(
+                    "Input " + input + " not valid in current state: "
+                    + state.getClass().getSimpleName()
+            );
         }
         updateRenderer();
     }
 
     /**
      * Moves the player in the specified direction.
-     * @param dir
+     * @param dir Direction to move the player
      */
     public void movePlayer(Direction dir){
         if(domain == null) throw new RuntimeException("Cannot move player: Domain is null.");
@@ -154,11 +147,6 @@ public class App implements GameController {
     }
 
     @Override public void setState(GameState state) {this.state = state;}
-
     @Override public GameWindow getGameWindow() {return window;}
     @Override public GameState getState() {return state;}
-    @Override public Map<Input, Runnable> getInputRunnableMap(){
-        return Collections.unmodifiableMap(inputRunnableMap);    }
-
-
 }

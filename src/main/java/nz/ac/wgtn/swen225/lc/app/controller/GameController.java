@@ -26,5 +26,4 @@ public interface GameController {
     void exitGame();
     void timeUp();
     GameWindow getGameWindow();
-    Map<Input, Runnable> getInputRunnableMap();
 }
