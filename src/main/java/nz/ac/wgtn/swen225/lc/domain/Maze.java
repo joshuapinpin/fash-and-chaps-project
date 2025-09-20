@@ -142,8 +142,8 @@ public class Maze {
         setTileAt(Wall.of(new Position(1,9)));
         setTileAt(Free.of(new Position(2,9)));
         setTileAt(Wall.of(new Position(3,9)));
-        Tile tileWithExitLock = Free.of(new Position(4,9));
-        ((Free) tileWithExitLock).setCollectable(ExitLock.of());
+        Free tileWithExitLock = Free.of(new Position(4,9));
+        tileWithExitLock.setCollectable(ExitLock.of());
         setTileAt(tileWithExitLock);
         setTileAt(Wall.of(new Position(5,9)));
         setTileAt(Free.of(new Position(6,9)));
