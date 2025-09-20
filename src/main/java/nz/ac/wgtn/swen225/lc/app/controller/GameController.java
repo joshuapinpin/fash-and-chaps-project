@@ -22,11 +22,20 @@ public interface GameController {
     void startNewGame(int level);
     void saveGame();
     void loadGame();
-    void pauseGame();
+
+    // Menu Components
     void resumeGame();
+    void pauseGame();
     void continueGame();
     void exitGame();
+    void help();
     void timeUp();
+
+    // Recorder Components
+    void startRecording();
+    void stopRecording();
+    void autoPlay();
+    void stepByStep();
 
     // Controller Componentws
     AppWindow getGameWindow();
