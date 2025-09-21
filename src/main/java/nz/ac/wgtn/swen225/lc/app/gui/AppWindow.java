@@ -28,15 +28,16 @@ public class AppWindow extends JFrame {
     // PANELS
     private List<JPanel> allPanels;
     private JPanel titlePanel;
-    private JPanel rootPanel;
     private JPanel gamePanel;// Reference to MazePanel (from renderer)
     private JPanel leftPanel; // Reference to LeftPanel
     private JPanel rightPanel;
-    
-    // Bottom
     private JPanel menuPanel;
-    
 
+    /**
+     * Constructor to initialize the main application window.
+     * @param controller
+     * @param inputController
+     */
     public AppWindow(GameController controller, InputController inputController) {
         // TODO: Set up window, menus, status bar, and embed MazePanel
         super("Fash and Chaps :D");
@@ -68,22 +69,18 @@ public class AppWindow extends JFrame {
         // Main Panels
         titlePanel = new TitlePanel(controller);
         menuPanel = new MenuPanel(controller);
-        rootPanel = new RootPanel(controller);
         gamePanel = setupMazePanel();
         leftPanel = new LeftPanel(controller);
         rightPanel = new RightPanel(controller, inputController);
 
-        allPanels = List.of(titlePanel, menuPanel, rootPanel, gamePanel, leftPanel, rightPanel);
+        allPanels = List.of(titlePanel, menuPanel, gamePanel, leftPanel, rightPanel);
 
         // Main Frame
         add(titlePanel, BorderLayout.NORTH);
         add(menuPanel, BorderLayout.SOUTH);
-        add(rootPanel);
-
-        // Middle
-        rootPanel.add(leftPanel);
-        rootPanel.add(gamePanel);
-        rootPanel.add(rightPanel);
+        add(leftPanel, BorderLayout.WEST);
+        add(gamePanel, BorderLayout.CENTER);
+        add(rightPanel, BorderLayout.EAST);
         System.out.println("Initialised Panels");
     }
 
@@ -92,6 +89,7 @@ public class AppWindow extends JFrame {
         panel.setPreferredSize(new Dimension(MAZE_SIZE, MAZE_SIZE));
         panel.setMinimumSize(new Dimension(MAZE_SIZE, MAZE_SIZE));
         panel.setMaximumSize(new Dimension(MAZE_SIZE, MAZE_SIZE));
+        panel.setOpaque(false);
 //        panel.setBorder(BorderFactory.createLineBorder(new Color(0x362702), 5));
         return panel;
         //return controller.getRenderer().getPanel();

@@ -3,6 +3,7 @@ package nz.ac.wgtn.swen225.lc.app.gui;
 
 import nz.ac.wgtn.swen225.lc.app.controller.GameController;
 import nz.ac.wgtn.swen225.lc.app.util.MyFont;
+import nz.ac.wgtn.swen225.lc.app.util.MyImage;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;
 
 import javax.swing.*;
@@ -20,13 +21,14 @@ import java.util.List;
 public class LeftPanel extends JPanel implements GamePanel{
     // Size fields
 //    public static final int PANEL_WIDTH = (AppWindow.WINDOW_WIDTH / 4);
-    public static final int PANEL_WIDTH = AppWindow.SQUARE_SIZE * 4;
+    public static final int PANEL_WIDTH = AppWindow.SQUARE_SIZE * 6;
     public static final int PANEL_HEIGHT = AppWindow.MAZE_SIZE;
     public static final int FONT_SIZE = 40;
 
     private List<JPanel> allPanels;
     private JPanel levelPanel, timerPanel, keysPanel, treasurePanel;
     private GameController controller;
+    private BufferedImage bgImg;
 
     public LeftPanel(GameController controller) {
         this.controller = controller;
@@ -34,6 +36,7 @@ public class LeftPanel extends JPanel implements GamePanel{
         setOpaque(false);
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         setupComponents();
+        bgImg = new MyImage("water").getImage();
     }
 
     private void setupComponents(){
@@ -48,7 +51,7 @@ public class LeftPanel extends JPanel implements GamePanel{
                 for(int i = 0; i < 4; i++){
                     if(i < keysLeft) img = LoadingImg.OrangeKey.loadImage();
                     else img = LoadingImg.Sand.loadImage();
-                    g.drawImage(img,i * AppWindow.SQUARE_SIZE, 0,
+                    g.drawImage(img,AppWindow.SQUARE_SIZE + i * AppWindow.SQUARE_SIZE, 0,
                             AppWindow.SQUARE_SIZE, AppWindow.SQUARE_SIZE, this);
                 }
             }
@@ -63,7 +66,7 @@ public class LeftPanel extends JPanel implements GamePanel{
                     BufferedImage img;
                     if(i < treasures) img = LoadingImg.Treasure.loadImage();
                     else img = LoadingImg.Sand.loadImage();
-                    g.drawImage(img,i * AppWindow.SQUARE_SIZE, 0,
+                    g.drawImage(img,AppWindow.SQUARE_SIZE + i * AppWindow.SQUARE_SIZE, 0,
                             AppWindow.SQUARE_SIZE, AppWindow.SQUARE_SIZE, this);
                 }
             }
@@ -80,6 +83,7 @@ public class LeftPanel extends JPanel implements GamePanel{
         label.setForeground(Color.white);
         label.setHorizontalAlignment(SwingConstants.CENTER);
         label.setVerticalAlignment(SwingConstants.CENTER);
+        panel.setOpaque(false);
         add(label);
         add(panel);
     }
@@ -87,5 +91,20 @@ public class LeftPanel extends JPanel implements GamePanel{
     @Override
     public void update() {
         allPanels.forEach(JPanel::repaint);
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        int squareSize = AppWindow.SQUARE_SIZE;
+        int x = 0, y = 0;
+        while(x < PANEL_WIDTH){
+            while(y < PANEL_HEIGHT){
+                g.drawImage(bgImg, x, y, squareSize, squareSize, this);
+                y += squareSize;
+            }
+            y = 0;
+            x += squareSize;
+        }
     }
 }
