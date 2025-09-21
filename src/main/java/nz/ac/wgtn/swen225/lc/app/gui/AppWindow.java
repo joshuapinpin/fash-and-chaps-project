@@ -2,6 +2,7 @@ package nz.ac.wgtn.swen225.lc.app.gui;
 
 import nz.ac.wgtn.swen225.lc.app.controller.GameController;
 import nz.ac.wgtn.swen225.lc.app.controller.InputController;
+import nz.ac.wgtn.swen225.lc.app.controller.TimerController;
 
 import javax.swing.*;
 import javax.swing.JPanel;
@@ -24,6 +25,7 @@ public class AppWindow extends JFrame {
     // Controllers
     private GameController controller; // Reference to GameController
     private InputController inputController;
+    private TimerController timerController;
 
     // PANELS
     private List<JPanel> allPanels;
@@ -38,11 +40,13 @@ public class AppWindow extends JFrame {
      * @param controller
      * @param inputController
      */
-    public AppWindow(GameController controller, InputController inputController) {
+    public AppWindow(GameController controller, InputController inputController,
+            TimerController timerController) {
         // TODO: Set up window, menus, status bar, and embed MazePanel
         super("Fash and Chaps :D");
         this.controller = controller;
         this.inputController = inputController;
+        this.timerController = timerController;
         setupWindow();
         setupPanels();
         //setupDialogs();
@@ -70,7 +74,7 @@ public class AppWindow extends JFrame {
         titlePanel = new TitlePanel(controller);
         menuPanel = new MenuPanel(controller);
         gamePanel = setupMazePanel();
-        leftPanel = new LeftPanel(controller);
+        leftPanel = new LeftPanel(controller, timerController);
         rightPanel = new RightPanel(controller, inputController);
 
         allPanels = List.of(titlePanel, menuPanel, gamePanel, leftPanel, rightPanel);
@@ -112,6 +116,9 @@ public class AppWindow extends JFrame {
     }
 
     public void updateWindow(){
+        allPanels.forEach(panel -> {
+            if(panel instanceof GamePanel updatable) updatable.updatePanel();
+        });
         allPanels.forEach(JPanel::repaint);
     }
 
