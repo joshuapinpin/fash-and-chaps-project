@@ -2,7 +2,7 @@ package nz.ac.wgtn.swen225.lc.app.state;
 
 import nz.ac.wgtn.swen225.lc.app.controller.GameController;
 
-public class PausedState implements GameState {
+public record PausedState() implements GameState {
     public void resume(GameController c){c.resumeGame();}
     public void save(GameController c){c.saveGame();}
     public void startNewGame(GameController c, int level){c.startNewGame(level);}
