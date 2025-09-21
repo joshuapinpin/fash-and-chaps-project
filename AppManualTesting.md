@@ -1,6 +1,6 @@
 # App Manual Testing
 
-| Functiounality | Commit |
-| ------ | ------ |
-|        |        |
-|        |        |
+| Commit ID | Functionality | Outcome | Issues Opened | 
+| ------ | ------ |------ | ------ |
+|        |        |        |        |
+|        |        |        |        |
