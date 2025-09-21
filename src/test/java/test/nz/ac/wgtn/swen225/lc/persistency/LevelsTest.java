@@ -27,7 +27,14 @@ public class LevelsTest {
     @Test
     public void testValid() {
         Maze result = Levels.load(67, LevelsTest::mapper);
-        assertEquals(new Maze(67, 67), result); // RELIES ON MAZE EQUALS TO PASS
+        String expected =
+                        "F F F F F F \n"+
+                        "F F F F F F \n"+
+                        "F F F F F F \n"+
+                        "F F F P F F \n"+
+                        "F F F F F F \n"+
+                        "F F F F F F \n";
+        assertEquals(expected, result.toString());
     }
 
     @Test
