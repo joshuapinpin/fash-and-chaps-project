@@ -6,6 +6,10 @@ import nz.ac.wgtn.swen225.lc.domain.*;
 import java.util.Map;
 import java.util.function.Supplier;
 
+/**
+ * Creates/loads level from human friendly JSON format.
+ * @author Thomas Ru - 300658840
+ */
 public class LevelMaker {
     private static Map<String, Supplier<Tile>> legend;
     static {
