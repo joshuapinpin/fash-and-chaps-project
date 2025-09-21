@@ -43,20 +43,23 @@ public enum Levels {
     }
 
     /**
+     * Utility method for testing.
      * Given a level number and way to map from InputStream to Maze,
      * loads the associated level from JSON file.
      * @param i - the level number.
      * @param mapper - the mapping function.
      * @return - the Maze instance loaded from file.
      */
-    public Maze load(int i, Function<InputStream, Maze> mapper) {
+    public static Maze load(int i, Function<InputStream, Maze> mapper) {
+        assert mapper != null : "Mapper cannot be null";
+
         String location = defaultPath+i+".json";
         try (InputStream in = Levels.class.getResourceAsStream(location)) {
             if (in == null) {throw new IOException("Level "+i+" not found, "+location);}
             return mapper.apply(in);
         }
         catch (IOException e) {
-            throw new Error("Level loading failed: Level "+levelNumber, e);
+            throw new Error("Level loading failed: Level "+i, e);
         }
     }
 
