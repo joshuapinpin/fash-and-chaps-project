@@ -44,8 +44,28 @@ public class LeftPanel extends JPanel implements GamePanel{
     }
 
     private void setupComponents(){
-        levelPanel = new JPanel();
-        timerPanel = new JPanel();
+        levelPanel = new JPanel(){
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                BufferedImage img = LoadingImg.Sand.loadImage();
+                for(int i = 0; i < 4; i++){
+                    g.drawImage(img,AppWindow.SQUARE_SIZE + i * AppWindow.SQUARE_SIZE, 0,
+                            AppWindow.SQUARE_SIZE, AppWindow.SQUARE_SIZE, this);
+                }
+            }
+        };
+        timerPanel = new JPanel(){
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                BufferedImage img = LoadingImg.Sand.loadImage();
+                for(int i = 0; i < 4; i++){
+                    g.drawImage(img,AppWindow.SQUARE_SIZE + i * AppWindow.SQUARE_SIZE, 0,
+                            AppWindow.SQUARE_SIZE, AppWindow.SQUARE_SIZE, this);
+                }
+            }
+        };
         keysPanel = new JPanel(){
             @Override
             protected void paintComponent(Graphics g) {
@@ -81,6 +101,7 @@ public class LeftPanel extends JPanel implements GamePanel{
         setupLabelWithPanel("Treasure", MyFont.PIXEL, treasurePanel);
         allPanels = List.of(levelPanel, timerPanel, keysPanel, treasurePanel);
     }
+
     private void setupLabelWithPanel(String name, MyFont font, JPanel panel){
         JLabel label = new JLabel(name);
         label.setFont(font.getFont(FONT_SIZE));
