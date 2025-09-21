@@ -56,7 +56,7 @@ public class App implements GameController {
 
         inputController = new InputController(this);
         timerController = new TimerController(this);
-        window = new AppWindow(this, inputController);
+        window = new AppWindow(this, inputController, timerController);
     }
 
 
@@ -104,6 +104,7 @@ public class App implements GameController {
     public void startNewGame(int level) {
         setState(new PlayState());
         this.level = level;
+        timerController.startTimer(TimerController.getTimeLimitForLevel(level));
         System.out.println("Starting New Game at Level " + level);
     }
 

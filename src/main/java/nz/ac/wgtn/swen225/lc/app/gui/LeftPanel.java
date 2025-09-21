@@ -2,6 +2,7 @@ package nz.ac.wgtn.swen225.lc.app.gui;
 
 
 import nz.ac.wgtn.swen225.lc.app.controller.GameController;
+import nz.ac.wgtn.swen225.lc.app.controller.TimerController;
 import nz.ac.wgtn.swen225.lc.app.util.MyFont;
 import nz.ac.wgtn.swen225.lc.app.util.MyImage;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;
@@ -27,11 +28,14 @@ public class LeftPanel extends JPanel implements GamePanel{
 
     private List<JPanel> allPanels;
     private JPanel levelPanel, timerPanel, keysPanel, treasurePanel;
+    private JLabel timerLabel, levelLabel;
     private GameController controller;
+    private TimerController timerController;
     private BufferedImage bgImg;
 
-    public LeftPanel(GameController controller) {
+    public LeftPanel(GameController controller, TimerController timerController){
         this.controller = controller;
+        this.timerController = timerController;
         setLayout(new GridLayout(9, 1));
         setOpaque(false);
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
@@ -84,12 +88,31 @@ public class LeftPanel extends JPanel implements GamePanel{
         label.setHorizontalAlignment(SwingConstants.CENTER);
         label.setVerticalAlignment(SwingConstants.CENTER);
         panel.setOpaque(false);
+
+        if(panel == timerPanel){
+            timerLabel = new JLabel("0");
+            timerLabel.setFont(font.getFont(FONT_SIZE));
+            timerLabel.setForeground(Color.white);
+            timerLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            timerLabel.setVerticalAlignment(SwingConstants.CENTER);
+            panel.add(timerLabel);
+        } else if(panel == levelPanel){
+            levelLabel = new JLabel(controller.getLevel() + "");
+            levelLabel.setFont(font.getFont(FONT_SIZE));
+            levelLabel.setForeground(Color.white);
+            levelLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            levelLabel.setVerticalAlignment(SwingConstants.CENTER);
+            panel.add(levelLabel);
+        }
+
         add(label);
         add(panel);
     }
 
     @Override
-    public void update() {
+    public void updatePanel() {
+        int timeLeft = timerController.getTimeLeft();
+        timerLabel.setText(timeLeft + "");
         allPanels.forEach(JPanel::repaint);
     }
 
