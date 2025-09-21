@@ -5,11 +5,6 @@ import nz.ac.wgtn.swen225.lc.app.gui.*;
 import nz.ac.wgtn.swen225.lc.app.util.*;
 import nz.ac.wgtn.swen225.lc.domain.Direction;
 import nz.ac.wgtn.swen225.lc.domain.Maze;
-import nz.ac.wgtn.swen225.lc.domain.Player;
-import nz.ac.wgtn.swen225.lc.domain.Position;
-import nz.ac.wgtn.swen225.lc.domain.entities.Key;
-import nz.ac.wgtn.swen225.lc.domain.tiles.Free;
-import nz.ac.wgtn.swen225.lc.domain.tiles.Wall;
 import nz.ac.wgtn.swen225.lc.renderer.Renderer;
 
 /**
@@ -27,7 +22,7 @@ public class App implements GameController {
     private Renderer renderer;// Reference to the renderer/view
 
     // CONTROLLER Components
-    private GameWindow window; // Reference to the main application window
+    private AppWindow window; // Reference to the main application window
     private GameState state;
     private InputController inputController;
     private TimerController timerController;
@@ -35,6 +30,8 @@ public class App implements GameController {
     // GAME MANAGEMENT Components
     // Reference to persistence
     // Reference to recorder
+
+    private int level;
 
     // Constructor with Singleton Pattern
     private static App INSTANCE;
@@ -52,12 +49,14 @@ public class App implements GameController {
         // Initialize domain model, renderer, and controllers
         domain = new Maze(10,9);
         domain.addTiles();
+
         renderer = new Renderer(domain.getTileGrid(), domain.getPlayer());
-        int size = (GameWindow.WINDOW_HEIGHT / 4) * 3;
+        int size = AppWindow.MAZE_SIZE;
         renderer.setDimensions(size, size);
+
         inputController = new InputController(this);
         timerController = new TimerController(this);
-        window = new GameWindow(this, inputController);
+        window = new AppWindow(this, inputController);
     }
 
 
@@ -65,6 +64,8 @@ public class App implements GameController {
 
     /**
      * Handles a user input (e.g., move, pause, save, etc).
+     * Delegates to the current game state for processing.
+     * @param input The user input to handle
      */
     public void handleInput(Input input) {
         if(state == null) throw new RuntimeException("Game state is null.");
@@ -76,8 +77,13 @@ public class App implements GameController {
                     + state.getClass().getSimpleName()
             );
         }
+        window.updateWindow();
 
-        //window.updateStatus();
+        // Update the renderer with the latest domain state
+        if(domain == null)
+            throw new RuntimeException("Cannot update renderer: Domain is null.");
+        if(renderer == null)
+            throw new RuntimeException("Cannot update renderer: Renderer is null.");
         renderer.getPanel().setAllTiles(domain.getTileGrid(), domain.getPlayer());
         renderer.getPanel().repaint();
     }
@@ -93,9 +99,11 @@ public class App implements GameController {
 
     /**
      * Starts a new game at the given level.
+     * @param level The level to start the new game at
      */
     public void startNewGame(int level) {
         setState(new PlayState());
+        this.level = level;
         System.out.println("Starting New Game at Level " + level);
     }
 
@@ -116,7 +124,9 @@ public class App implements GameController {
         System.out.println("Game Resumed");
     }
 
-    @Override
+    /**
+     * Continues the game from a paused state.
+     */
     public void continueGame() {
         setState(new PlayState());
         System.out.println("Continuing Game");
@@ -131,6 +141,11 @@ public class App implements GameController {
         System.out.println("Game Saved!");
     }
 
+    /**
+     * Loads a saved game state.
+     * Opens a file chooser to select the saved game file.
+     * Uses Persistence to retrieve the saved state and update the domain model.
+     */
     public void loadGame(){
         // TODO: get Persistence to create a "load saved game" method, which returns a Domain object
         System.out.println("Game Loaded!");
@@ -144,14 +159,44 @@ public class App implements GameController {
         System.exit(0);
     }
 
+    @Override
+    public void help() {
+        System.out.println("Displaying Help/Rules...");
+    }
+
     public void timeUp() {
         setState(new DeadState());
         System.out.println("Time's Up! Game Over.");
     }
 
+    @Override
+    public void startRecording() {
+        System.out.println("Started Recording");
+
+    }
+
+    @Override
+    public void stopRecording() {
+        System.out.println("Stopped Recording");
+
+    }
+
+    @Override
+    public void autoPlay() {
+        System.out.println("Auto-Playing");
+
+    }
+
+    @Override
+    public void stepByStep() {
+        System.out.println("Step-By-Step Playing");
+
+    }
+
     public void setState(GameState state) {this.state = state;}
-    public GameWindow getGameWindow() {return window;}
+    public AppWindow getGameWindow() {return window;}
     public GameState getState() {return state;}
     public Maze getDomain() {return domain;}
     public Renderer getRenderer() {return renderer;}
+    public int getLevel() {return level;}
 }

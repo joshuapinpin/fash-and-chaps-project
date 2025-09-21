@@ -1,7 +1,9 @@
 package nz.ac.wgtn.swen225.lc.app.gui;
 
 import nz.ac.wgtn.swen225.lc.app.controller.GameController;
-import nz.ac.wgtn.swen225.lc.app.util.MyImage;
+import nz.ac.wgtn.swen225.lc.app.util.MyButton;
+import nz.ac.wgtn.swen225.lc.app.util.MyFont;
+import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;
 
 import javax.swing.*;
 
@@ -12,40 +14,42 @@ import java.awt.image.BufferedImage;
 import java.util.Map;
 import java.util.HashMap;
 
-public class MenuPanel extends JPanel implements ActionListener {
+public class MenuPanel extends JPanel implements ActionListener, GamePanel{
     // Size fields
-    public static final int PANEL_WIDTH = GameWindow.WINDOW_WIDTH;
-    public static final int PANEL_HEIGHT = GameWindow.WINDOW_HEIGHT / 8;
-    public static final int BUTTON_GAP = 10;
+    public static final int PANEL_WIDTH = AppWindow.WINDOW_WIDTH;
+    public static final int PANEL_HEIGHT = AppWindow.HEADER_HEIGHT;
+    public static final int BUTTON_GAP = 20;
+    public static final int FONT_SIZE = 30;
 
     // Buttons: Pause, Save, Exit, Resume
     private Map<JButton, Runnable> buttonRunnableMap;
-
     private GameController controller;
-
     private BufferedImage bgImg;
 
     public MenuPanel(GameController controller){
         this.controller = controller;
-        setLayout(new GridLayout(1, 4, BUTTON_GAP, BUTTON_GAP));
+        setLayout(new GridLayout(1, 5, BUTTON_GAP, BUTTON_GAP));
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         setBorder(BorderFactory.createEmptyBorder(BUTTON_GAP, BUTTON_GAP, BUTTON_GAP, BUTTON_GAP));
         setBackground(Color.red);
         setupButtons();
-
-        bgImg = new MyImage("wall").getImage();
+        bgImg = LoadingImg.Water.loadImage();
     }
 
     private void setupButtons(){
         buttonRunnableMap = new HashMap<>();
         setupSingleButton("Save", () -> controller.saveGame());
-        setupSingleButton("Pause", () -> controller.pauseGame());
+        setupSingleButton("Load", () -> controller.loadGame());
         setupSingleButton("Play", () -> controller.continueGame());
+        setupSingleButton("Pause", () -> controller.pauseGame());
         setupSingleButton("Exit", () -> controller.exitGame());
     }
 
     private void setupSingleButton(String label, Runnable action){
-        JButton button = new JButton(label);
+        JButton button = MyButton.of(label, PANEL_WIDTH, PANEL_HEIGHT, FONT_SIZE,
+                LoadingImg.Rock.loadImage());
+
+
         button.addActionListener(this);
         button.setFocusable(false);
         buttonRunnableMap.put(button, action);
@@ -63,15 +67,20 @@ public class MenuPanel extends JPanel implements ActionListener {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        int size = GameWindow.SQUARE_SIZE;
+        int size = AppWindow.SQUARE_SIZE;
         int x = 0, y = 0;
-        while(x < GameWindow.WINDOW_WIDTH){
-            while(y < GameWindow.WINDOW_HEIGHT){
+        while(x < AppWindow.WINDOW_WIDTH){
+            while(y < AppWindow.HEADER_HEIGHT){
                 g.drawImage(bgImg, x, y, size, size, this);
                 y += size;
             }
             y = 0;
             x += size;
         }
+    }
+
+    @Override
+    public void update() {
+
     }
 }

@@ -1,13 +1,11 @@
 package nz.ac.wgtn.swen225.lc.app.controller;
 
-import nz.ac.wgtn.swen225.lc.app.gui.GameWindow;
+import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
 import nz.ac.wgtn.swen225.lc.app.state.GameState;
 import nz.ac.wgtn.swen225.lc.app.util.Input;
 import nz.ac.wgtn.swen225.lc.domain.Direction;
 import nz.ac.wgtn.swen225.lc.domain.Maze;
 import nz.ac.wgtn.swen225.lc.renderer.Renderer;
-
-import java.util.Map;
 
 public interface GameController {
     static GameController of() {
@@ -24,14 +22,24 @@ public interface GameController {
     void startNewGame(int level);
     void saveGame();
     void loadGame();
-    void pauseGame();
+
+    // Menu Components
     void resumeGame();
+    void pauseGame();
     void continueGame();
     void exitGame();
+    void help();
     void timeUp();
 
+    // Recorder Components
+    void startRecording();
+    void stopRecording();
+    void autoPlay();
+    void stepByStep();
+
     // Controller Componentws
-    GameWindow getGameWindow();
+    AppWindow getGameWindow();
     Maze getDomain();
     Renderer getRenderer();
+    int getLevel();
 }

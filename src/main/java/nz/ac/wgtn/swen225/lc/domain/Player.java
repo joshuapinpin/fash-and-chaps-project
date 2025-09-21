@@ -135,4 +135,16 @@ public class Player{
         return treasuresLeft == 0;
     }
 
+    /**
+     * Get the number of treasures left to collect
+     * @return
+     */
+    public int getTreasuresLeft() {return treasuresLeft;}
+
+    /**
+     * Get the number of keys the player has collected
+     * @return
+     */
+    public int getKeysLeft(){return keys.size();}
+
 }
