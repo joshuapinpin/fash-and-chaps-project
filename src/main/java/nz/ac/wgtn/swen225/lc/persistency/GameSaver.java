@@ -8,6 +8,7 @@ import java.io.File;
 /**
  * Game saving and loading API,
  * for saving current game board as JSON and loading previously saved game boards from JSON.
+ * @author Thomas Ru - 300658840
  */
 public class GameSaver {
     /**
