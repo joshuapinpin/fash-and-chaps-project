@@ -46,6 +46,7 @@ public class TimerController implements ActionListener {
             timer.stop();
             controller.timeUp();
         }
+        controller.getGameWindow().updateWindow();
     }
 
     /**
@@ -79,5 +80,7 @@ public class TimerController implements ActionListener {
         pause();
     }
 
-
+    public int getTimeLeft() {
+        return timeLeft;
+    }
 }

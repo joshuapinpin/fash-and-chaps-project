@@ -2,6 +2,7 @@ package nz.ac.wgtn.swen225.lc.app.gui;
 
 import nz.ac.wgtn.swen225.lc.app.controller.GameController;
 import nz.ac.wgtn.swen225.lc.app.controller.InputController;
+import nz.ac.wgtn.swen225.lc.app.controller.TimerController;
 
 import javax.swing.*;
 import javax.swing.JPanel;
@@ -24,24 +25,28 @@ public class AppWindow extends JFrame {
     // Controllers
     private GameController controller; // Reference to GameController
     private InputController inputController;
+    private TimerController timerController;
 
     // PANELS
     private List<JPanel> allPanels;
     private JPanel titlePanel;
-    private JPanel rootPanel;
     private JPanel gamePanel;// Reference to MazePanel (from renderer)
     private JPanel leftPanel; // Reference to LeftPanel
     private JPanel rightPanel;
-    
-    // Bottom
     private JPanel menuPanel;
-    
 
-    public AppWindow(GameController controller, InputController inputController) {
+    /**
+     * Constructor to initialize the main application window.
+     * @param controller
+     * @param inputController
+     */
+    public AppWindow(GameController controller, InputController inputController,
+            TimerController timerController) {
         // TODO: Set up window, menus, status bar, and embed MazePanel
         super("Fash and Chaps :D");
         this.controller = controller;
         this.inputController = inputController;
+        this.timerController = timerController;
         setupWindow();
         setupPanels();
         //setupDialogs();
@@ -68,22 +73,18 @@ public class AppWindow extends JFrame {
         // Main Panels
         titlePanel = new TitlePanel(controller);
         menuPanel = new MenuPanel(controller);
-        rootPanel = new RootPanel(controller);
         gamePanel = setupMazePanel();
-        leftPanel = new LeftPanel(controller);
+        leftPanel = new LeftPanel(controller, timerController);
         rightPanel = new RightPanel(controller, inputController);
 
-        allPanels = List.of(titlePanel, menuPanel, rootPanel, gamePanel, leftPanel, rightPanel);
+        allPanels = List.of(titlePanel, menuPanel, gamePanel, leftPanel, rightPanel);
 
         // Main Frame
         add(titlePanel, BorderLayout.NORTH);
         add(menuPanel, BorderLayout.SOUTH);
-        add(rootPanel);
-
-        // Middle
-        rootPanel.add(leftPanel);
-        rootPanel.add(gamePanel);
-        rootPanel.add(rightPanel);
+        add(leftPanel, BorderLayout.WEST);
+        add(gamePanel, BorderLayout.CENTER);
+        add(rightPanel, BorderLayout.EAST);
         System.out.println("Initialised Panels");
     }
 
@@ -92,6 +93,7 @@ public class AppWindow extends JFrame {
         panel.setPreferredSize(new Dimension(MAZE_SIZE, MAZE_SIZE));
         panel.setMinimumSize(new Dimension(MAZE_SIZE, MAZE_SIZE));
         panel.setMaximumSize(new Dimension(MAZE_SIZE, MAZE_SIZE));
+        panel.setOpaque(false);
 //        panel.setBorder(BorderFactory.createLineBorder(new Color(0x362702), 5));
         return panel;
         //return controller.getRenderer().getPanel();
@@ -114,6 +116,9 @@ public class AppWindow extends JFrame {
     }
 
     public void updateWindow(){
+        allPanels.forEach(panel -> {
+            if(panel instanceof GamePanel updatable) updatable.updatePanel();
+        });
         allPanels.forEach(JPanel::repaint);
     }
 

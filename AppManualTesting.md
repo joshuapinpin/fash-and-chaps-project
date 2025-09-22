@@ -1,6 +1,0 @@
-# App Manual Testing
-
-| Functiounality | Commit |
-| ------ | ------ |
-|        |        |
-|        |        |

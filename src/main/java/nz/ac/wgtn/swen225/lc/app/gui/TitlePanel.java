@@ -49,7 +49,7 @@ public class TitlePanel extends JPanel implements GamePanel{
     }
 
     @Override
-    public void update() {
+    public void updatePanel() {
 
     }
 }

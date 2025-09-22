@@ -80,7 +80,7 @@ public class MenuPanel extends JPanel implements ActionListener, GamePanel{
     }
 
     @Override
-    public void update() {
+    public void updatePanel() {
 
     }
 }
