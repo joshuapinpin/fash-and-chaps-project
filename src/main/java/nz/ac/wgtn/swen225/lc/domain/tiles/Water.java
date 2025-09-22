@@ -6,6 +6,12 @@ import nz.ac.wgtn.swen225.lc.domain.Position;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Water class representing a water tile in the game
+ * Water is impassable and causes the player to drown (to be implemented in level 2)
+ * Inherits from Tile class
+ * @author Hayley Far
+ */
 public class Water extends Tile{
     private record WaterKey(Position pos){}
     private static final Map<WaterKey,Water> cache = new HashMap<>();
@@ -38,5 +44,18 @@ public class Water extends Tile{
     public void onEnter(Player player) {
         //to be implemented for level 2 when player drowns
         throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Override equals method to compare water tiles based on position
+     * @param obj object to compare with
+     * @return true if water tiles are equal, false otherwise
+     */
+    @Override
+    public boolean equals(Object obj){
+        if(this == obj) return true;
+        if(obj == null) return false;
+        if(!(obj instanceof Water other)) return false;
+        return this.getPos().equals(other.getPos());
     }
 }

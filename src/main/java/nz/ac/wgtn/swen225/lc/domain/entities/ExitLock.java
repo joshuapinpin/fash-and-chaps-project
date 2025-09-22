@@ -6,6 +6,7 @@ import nz.ac.wgtn.swen225.lc.domain.Player;
  * ExitLock class representing the exit lock entity in the game
  * ExitLock is impassable until all treasures are collected
  * Implements Entity interface for interaction
+ * @author Hayley Far
  */
 public class ExitLock implements Entity {
     private boolean isPassable = false; //state of the exit lock
@@ -53,5 +54,19 @@ public class ExitLock implements Entity {
     @Override
     public boolean canInteract(Player p) {
         return isPassable || p.allTreasuresCollected();
+    }
+
+    /**
+     * Override equals method to compare exit locks
+     * @param obj object to compare with
+     * @return true if exit locks are equal, false otherwise
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (obj == null) return false;
+        if (this.getClass() != obj.getClass()) return false;
+        ExitLock exitLock = (ExitLock) obj;
+        return this.isPassable == exitLock.isPassable;
     }
 }

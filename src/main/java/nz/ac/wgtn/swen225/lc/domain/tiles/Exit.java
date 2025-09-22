@@ -8,6 +8,7 @@ import nz.ac.wgtn.swen225.lc.domain.Position;
  * Exit class representing the exit tile in the game
  * The player can enter this tile to finish the level
  * Extends Tile class to inherit tile properties
+ * @author Hayley Far
  */
 public class Exit extends Tile {
 
@@ -49,5 +50,19 @@ public class Exit extends Tile {
         }
         //GameController.startNewGame();**/
         throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Override equals method to compare exit tiles based on position
+     * @param obj object to compare with
+     * @return true if exit tiles are equal, false otherwise
+     */
+    @Override
+    public boolean equals(Object obj){
+        if(this == obj) return true;
+        if(obj == null) return false;
+        if(this.getClass() != obj.getClass()) return false;
+        Exit exit = (Exit) obj;
+        return this.getPos().equals(exit.getPos());
     }
 }

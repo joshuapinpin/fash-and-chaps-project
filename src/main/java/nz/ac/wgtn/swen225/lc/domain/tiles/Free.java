@@ -10,6 +10,7 @@ import java.util.Optional;
  * Free class representing a free tile in the game
  * Free tiles can optionally contain a collectable entity (Key, Door, ExitLock or Treasure)
  * Inherits from Tile class
+ * @author Hayley Far
  */
 public class Free extends Tile {
     private Optional<Entity> collectable = Optional.empty(); // Optional collectable entity on the tile
@@ -75,5 +76,19 @@ public class Free extends Tile {
      */
     public Optional<Entity> getCollectable(){
         return collectable;
+    }
+
+    /**
+     * Override equals method to compare free tiles based on position and collectable entity
+     * @param obj object to compare with
+     * @return true if free tiles are equal, false otherwise
+     */
+    @Override
+    public boolean equals(Object obj){
+        if(obj == this) return true;
+        if(obj == null) return false;
+        if(this.getClass() != obj.getClass()) return false;
+        Free free = (Free) obj;
+        return this.getPos().equals(free.getPos()) && this.collectable.equals(free.collectable);
     }
 }

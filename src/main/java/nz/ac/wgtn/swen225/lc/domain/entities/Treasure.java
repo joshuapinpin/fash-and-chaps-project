@@ -6,6 +6,7 @@ import nz.ac.wgtn.swen225.lc.domain.Player;
  * Treasure class representing a treasure entity in the game
  * Treasures can be collected by the player to decrease the treasure count
  * Implements Entity interface for interaction
+ * @author Hayley Far
  */
 public class Treasure implements Entity {
     /**
@@ -30,5 +31,17 @@ public class Treasure implements Entity {
     @Override
     public void onInteract(Player p){
         p.collectTreasure();
+    }
+
+    /**
+     * Treasures can always be collected, so they are always removable
+     * @return true
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == this) return true;
+        if(obj == null) return false;
+        if(this.getClass() != obj.getClass()) return false;
+        return true; // All treasures are considered equal
     }
 }
