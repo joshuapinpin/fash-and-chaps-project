@@ -12,6 +12,8 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * DomainTest class for testing domain classes, JUnits
  * Sets up a maze and player for testing purposes
+ * Tests player movement, tile interactions, and maze layout
+ * @author Hayley Far
  */
 public class DomainTest {
     private Maze maze;
@@ -37,7 +39,7 @@ public class DomainTest {
 
         //adding key with tile
         Free tileWithKey = Free.of(new Position(2,1));
-        tileWithKey.setCollectable(Key.of("Red"));
+        tileWithKey.setCollectable(Key.of(Color.PINK));
         maze.setTileAt(tileWithKey);
 
         maze.setTileAt(Free.of(new Position(2,2)));
@@ -94,7 +96,7 @@ public class DomainTest {
 
         // Check if player has collected the key
         assertEquals(1, player.getKeys().size());
-        assertTrue(player.getKeys().contains(Key.of("Red")));
+        assertTrue(player.getKeys().contains(Key.of(Color.PINK)));
     }
 
     @Test

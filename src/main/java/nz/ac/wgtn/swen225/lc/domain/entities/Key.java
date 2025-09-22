@@ -6,23 +6,26 @@ import nz.ac.wgtn.swen225.lc.domain.Player;
  * Key class representing a key entity in the game
  * Keys have a color and can be collected by the player
  * Implements Entity interface for interaction
+ * @author Hayley Far
  */
 public class Key implements Entity {
-    private final String color;
+    private final Color keyColor;
 
     /**
      * Constructor for key with specified color
-     * @param color color of the key
+     * @param keyColor color of the key
      */
-    Key(String color){this.color = color;}
+    Key(Color keyColor){
+        this.keyColor = keyColor;
+    }
 
     /**
      * Static factory method to create a key with specified color
-     * @param color color of the key
+     * @param keyColor color of the key
      * @return new Key instance
      */
-    public static Key of(String color){
-        return new Key(color);
+    public static Key of(Color keyColor){
+        return new Key(keyColor);
     }
 
     /**
@@ -39,8 +42,8 @@ public class Key implements Entity {
      * Getter for key color
      * @return color of the key
      */
-    public String getColor(){
-        return color;
+    public Color getColor(){
+        return keyColor;
     }
 
     /**
@@ -54,6 +57,6 @@ public class Key implements Entity {
         if(obj == null) return false;
         if(this.getClass() != obj.getClass()) return false;
         Key key = (Key) obj;
-        return this.color.equals(key.color);
+        return this.keyColor == key.keyColor;
     }
 }

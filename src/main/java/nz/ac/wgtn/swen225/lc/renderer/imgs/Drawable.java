@@ -3,6 +3,7 @@ import nz.ac.wgtn.swen225.lc.domain.Direction;
 import nz.ac.wgtn.swen225.lc.domain.Player;
 import nz.ac.wgtn.swen225.lc.domain.Position;
 import nz.ac.wgtn.swen225.lc.domain.entities.*;
+import nz.ac.wgtn.swen225.lc.domain.entities.Color;
 import nz.ac.wgtn.swen225.lc.domain.tiles.*;
 import nz.ac.wgtn.swen225.lc.renderer.Renderer;
 
@@ -44,19 +45,19 @@ public class Drawable extends JPanel{
             Treasure.class, LoadingImg.Treasure,
             ExitLock.class, LoadingImg.ExitLock
     );
-    Map<String, LoadingImg> keyLookUpTable = Map.of(    //lookup table for key entities (to see colour)
-            "purple", LoadingImg.PurpleKey,
-            "orange", LoadingImg.OrangeKey,
-            "blue", LoadingImg.BlueKey,
-            "pink", LoadingImg.PinkKey,
-            "green", LoadingImg.GreenKey
+    Map<Color, LoadingImg> keyLookUpTable = Map.of(    //lookup table for key entities (to see colour)
+            Color.PURPLE, LoadingImg.PurpleKey,
+            Color.ORANGE, LoadingImg.OrangeKey,
+            Color.BLUE, LoadingImg.BlueKey,
+            Color.PINK, LoadingImg.PinkKey,
+            Color.GREEN, LoadingImg.GreenKey
     );
-    Map<String, LoadingImg> doorLookUpTable = Map.of(   //lookup table for door entities (to see colour)
-            "purple", LoadingImg.PurpleDoor,
-            "orange", LoadingImg.OrangeDoor,
-            "blue", LoadingImg.BlueDoor,
-            "pink", LoadingImg.PinkDoor,
-            "green", LoadingImg.GreenDoor
+    Map<Color, LoadingImg> doorLookUpTable = Map.of(   //lookup table for door entities (to see colour)
+            Color.PURPLE, LoadingImg.PurpleDoor,
+            Color.ORANGE, LoadingImg.OrangeDoor,
+            Color.BLUE, LoadingImg.BlueDoor,
+            Color.PINK, LoadingImg.PinkDoor,
+            Color.GREEN, LoadingImg.GreenDoor
     );
 
     public Drawable(Tile[][] currentTiles, Player player){
