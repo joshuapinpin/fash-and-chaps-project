@@ -8,6 +8,7 @@ import nz.ac.wgtn.swen225.lc.domain.Position;
  * Info class representing an informational tile in the game
  * When the player enters this tile, a message is displayed
  * Inherits from Tile class
+ * @author Hayley Far
  */
 public class Info extends Tile {
     private final String message;
@@ -50,5 +51,19 @@ public class Info extends Tile {
      */
     public String getMessage(){
         return message;
+    }
+
+    /**
+     * Override equals method to compare info tiles based on position and message
+     * @param obj object to compare with
+     * @return true if info tiles are equal, false otherwise
+     */
+    @Override
+    public boolean equals(Object obj){
+        if(obj == this) return true;
+        if(obj == null) return false;
+        if(this.getClass() != obj.getClass()) return false;
+        Info info = (Info) obj;
+        return this.getPos().equals(info.getPos()) && this.message.equals(info.message);
     }
 }

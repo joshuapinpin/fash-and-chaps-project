@@ -10,6 +10,7 @@ import java.util.Map;
  * Wall class representing a wall tile in the game
  * Wall is impassable and does not allow player movement
  * Inherits from Tile class
+ * @author Hayley Far
  */
 public class Wall extends Tile {
     private record WallKey(Position pos){}
@@ -50,6 +51,11 @@ public class Wall extends Tile {
     @Override
     public void onEnter(Player p){}
 
+    /**
+     * Override equals method to compare wall tiles based on position
+     * @param obj object to compare with
+     * @return true if wall tiles are equal, false otherwise
+     */
     @Override
     public boolean equals(Object obj){
         if(obj == this) return true;

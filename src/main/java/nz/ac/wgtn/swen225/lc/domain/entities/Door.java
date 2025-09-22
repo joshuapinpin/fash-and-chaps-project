@@ -65,4 +65,18 @@ public class Door implements Entity {
     public boolean canInteract(Player p) {
         return isOpen || p.getKeys().stream().anyMatch(key -> key.getColor().equals(this.doorColor));
     }
+
+    /**
+     * Override equals method to compare doors based on color and state
+     * @param obj object to compare with
+     * @return true if doors are equal, false otherwise
+     */
+    @Override
+    public boolean equals(Object obj){
+        if(this == obj) return true;
+        if(obj == null) return false;
+        if(this.getClass() != obj.getClass()) return false;
+        Door door = (Door) obj;
+        return this.doorColor == door.doorColor && this.isOpen == door.isOpen;
+    }
 }
