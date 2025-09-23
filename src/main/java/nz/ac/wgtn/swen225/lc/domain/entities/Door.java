@@ -6,24 +6,27 @@ import nz.ac.wgtn.swen225.lc.domain.Player;
  * Door class representing a door entity in the game
  * Doors have a color and can be opened with a matching key
  * Implements Entity interface for interaction
+ * @author Hayley Far
  */
 public class Door implements Entity {
-    private String color;
+    private final Color doorColor;
     private boolean isOpen = false; //state of the door
 
     /**
      * Constructor for door with specified color
-     * @param color color of the door
+     * @param doorColor color of the door
      */
-    Door(String color){this.color = color;}
+    Door(Color doorColor){
+        this.doorColor = doorColor;
+    }
 
     /**
      * Static factory method to create a door with specified color
-     * @param color color of the door
+     * @param doorColor color of the door
      * @return new Door instance
      */
-    public static Door of(String color){
-        return new Door(color);
+    public static Door of(Color doorColor){
+        return new Door(doorColor);
     }
 
     /**
@@ -33,7 +36,7 @@ public class Door implements Entity {
     */
     @Override
     public void onInteract(Player p){
-        if(p.getKeys().stream().anyMatch(key -> key.getColor().equals(this.color))){
+        if(p.getKeys().stream().anyMatch(key -> key.getColor().equals(this.doorColor))){
             isOpen = true;
         }
     }
@@ -42,7 +45,7 @@ public class Door implements Entity {
      * Getter for door color
      * @return color of the door
      */
-    public String getColor(){return color;}
+    public Color getColor(){return doorColor;}
 
     /**
      * Check if the door is open
@@ -60,6 +63,20 @@ public class Door implements Entity {
      */
     @Override
     public boolean canInteract(Player p) {
-        return isOpen || p.getKeys().stream().anyMatch(key -> key.getColor().equals(this.color));
+        return isOpen || p.getKeys().stream().anyMatch(key -> key.getColor().equals(this.doorColor));
+    }
+
+    /**
+     * Override equals method to compare doors based on color and state
+     * @param obj object to compare with
+     * @return true if doors are equal, false otherwise
+     */
+    @Override
+    public boolean equals(Object obj){
+        if(this == obj) return true;
+        if(obj == null) return false;
+        if(this.getClass() != obj.getClass()) return false;
+        Door door = (Door) obj;
+        return this.doorColor == door.doorColor && this.isOpen == door.isOpen;
     }
 }

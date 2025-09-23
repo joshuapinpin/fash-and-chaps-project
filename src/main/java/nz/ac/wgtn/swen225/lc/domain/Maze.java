@@ -8,6 +8,7 @@ import nz.ac.wgtn.swen225.lc.domain.tiles.*;
  * Maze class representing the maze structure
  * Contains tiles, player reference, and dimensions
  * Provides methods to load maze from file and get tiles at positions
+ * @author Hayley Far
  */
 public class Maze {
     private Tile[][] tileGrid; //2D array of tiles: [rows][cols]
@@ -53,7 +54,7 @@ public class Maze {
         setTileAt(Free.of(new Position(3,1)));
         setTileAt(Free.of(new Position(4,1)));
         Free tileWithKey = Free.of(new Position(5,1));
-        tileWithKey.setCollectable(Key.of("orange"));
+        tileWithKey.setCollectable(Key.of(Color.ORANGE));
         setTileAt(tileWithKey);
         setTileAt(Wall.of(new Position(6,1)));
         setTileAt(Free.of(new Position(7,1)));
@@ -81,7 +82,7 @@ public class Maze {
 
         setTileAt(Free.of(new Position(0,4)));
         Free tileWithDoor = Free.of(new Position(1,4));
-        tileWithDoor.setCollectable(Door.of("purple"));
+        tileWithDoor.setCollectable(Door.of(Color.PURPLE));
         setTileAt(tileWithDoor);
         setTileAt(Free.of(new Position(2,4)));
         setTileAt(Free.of(new Position(3,4)));
@@ -89,7 +90,7 @@ public class Maze {
         setTileAt(Free.of(new Position(5,4)));
         setTileAt(Free.of(new Position(6,4)));
         Free tileWithDoor2 = Free.of(new Position(7,4));
-        tileWithDoor2.setCollectable(Door.of("orange"));
+        tileWithDoor2.setCollectable(Door.of(Color.ORANGE));
         setTileAt(tileWithDoor2);
         setTileAt(Free.of(new Position(8,4)));
 
@@ -134,7 +135,7 @@ public class Maze {
         setTileAt(Free.of(new Position(6,8)));
         setTileAt(Wall.of(new Position(7,8)));
         Free tileWithKey2 = Free.of(new Position(8,8));
-        tileWithKey2.setCollectable(Key.of("purple"));
+        tileWithKey2.setCollectable(Key.of(Color.PURPLE));
         setTileAt(tileWithKey2);
 
         setTileAt(Free.of(new Position(0,9)));
@@ -167,6 +168,7 @@ public class Maze {
         int x = p.getX();
         int y = p.getY();
         if (x < 0 || x >= cols || y < 0 || y >= rows) {
+            //may need to look at this with more testing
             throw new IndexOutOfBoundsException("Position out of maze bounds: " + p);
         }
         return tileGrid[y][x];
