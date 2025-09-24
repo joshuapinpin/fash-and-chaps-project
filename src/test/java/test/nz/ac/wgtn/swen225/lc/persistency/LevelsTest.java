@@ -1,15 +1,13 @@
 package test.nz.ac.wgtn.swen225.lc.persistency;
 
-import nz.ac.wgtn.swen225.lc.persistency.LevelMaker;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import nz.ac.wgtn.swen225.lc.domain.Maze;
-import nz.ac.wgtn.swen225.lc.persistency.Levels;
+import nz.ac.wgtn.swen225.lc.persistency.levelloader.Levels;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UncheckedIOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;

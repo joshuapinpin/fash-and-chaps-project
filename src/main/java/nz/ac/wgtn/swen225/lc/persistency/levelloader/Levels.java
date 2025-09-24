@@ -1,7 +1,8 @@
-package nz.ac.wgtn.swen225.lc.persistency;
+package nz.ac.wgtn.swen225.lc.persistency.levelloader;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import nz.ac.wgtn.swen225.lc.domain.Maze;
+import nz.ac.wgtn.swen225.lc.persistency.levelloader.parse.LevelMaker;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,6 +33,14 @@ public enum Levels {
     Levels(int i) {
         assert i > 0 : "Level must be positive";
         levelNumber = i;
+    }
+
+    /**
+     * Gets the default path where levels are stored.
+     * @return - the default path as a String.
+     */
+    public static String defaultPath() {
+        return defaultPath;
     }
 
     /**
