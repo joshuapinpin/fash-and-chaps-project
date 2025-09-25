@@ -52,7 +52,7 @@ public class App implements GameController {
 
         inputController = new InputController(this);
         timerController = new TimerController(this);
-        recorderController = new RecorderController(this);
+        recorderController = new RecorderController(this, timerController);
         window = new AppWindow(this, inputController,
                 timerController, recorderController);
     }

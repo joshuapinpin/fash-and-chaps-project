@@ -215,4 +215,7 @@ buildNumber.properties
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
 
+### Custom Files ###
+movements.json
+
 # End of https://www.toptal.com/developers/gitignore/api/intellij,eclipse,bluej,macos,maven

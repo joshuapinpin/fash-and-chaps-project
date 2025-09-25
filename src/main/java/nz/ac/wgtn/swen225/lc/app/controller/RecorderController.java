@@ -15,13 +15,15 @@ public class RecorderController {
     Maze domainCopy;
     boolean isRecording = false;
     GameController controller;
+    TimerController timerController;
 
     /**
      * Initialise the recorder controller with references to play and save classes.
      * @param controller GameController to interact with the game state.
      */
-    public RecorderController(GameController controller) {
+    public RecorderController(GameController controller, TimerController timerController) {
         this.controller = controller;
+        this.timerController = timerController;
         play = new Play();
         save = new Save();
     }
@@ -48,15 +50,15 @@ public class RecorderController {
     public void stepByStep() {
         System.out.println("Step-By-Step Playing");
         controller.setState(new StepReplayState());
-        play.stepByStep(controller);
+        if(!play.stepByStep(controller))
+            controller.setState(new PausedState(timerController));
     }
 
     public void autoPlay() {
         System.out.println("Auto-Playing");
-        GameState prevState = controller.getState();
         controller.setState(new AutoReplayState());
         play.autoPlay(controller);
-        controller.setState(prevState);
+        controller.setState(new PausedState(timerController));
     }
 
     public void addMovement(Input dir){
