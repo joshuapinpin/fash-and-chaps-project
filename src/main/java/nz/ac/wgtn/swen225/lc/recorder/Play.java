@@ -3,8 +3,8 @@ import nz.ac.wgtn.swen225.lc.app.controller.*;
 import nz.ac.wgtn.swen225.lc.app.util.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +21,7 @@ public class Play {
     private static int pos; // count for step by step playing
     final ObjectMapper mapper;
     private static List<Input> movements;
+    private InputStream fileStream;
 
     public Play(){
         movements = new ArrayList<>();
@@ -28,11 +29,27 @@ public class Play {
         pos = 0;
         speed = 1;
     }
+    public void setSpeed(int s) {
+        System.out.println("*DEBUG* Inside of the Recorder Package Now");
+        // speed needs to be 1-6
+        assert s > 0 : "Speed must me greater than zero";
+        speed = s;
+    }
+    public void LoadingFile(String filename){
+        try{
+            // putting a bracket in front of filename means it looks for file from root of classpath
+            // InputStream object used to read file contents
+            fileStream = Play.class.getResourceAsStream("/" + filename);
+            if(fileStream == null) {throw new RuntimeException("Cannot find recording: " + filename);}
+            fileStream.close();
+        } catch(IOException e){ throw new RuntimeException("Error loading the recording: " + filename, e);}
+    }
     /**
      * This methods reads the list of movements from the json file
      * and assigns it to our movement arraylist field.
      */
-    private List<Input> getData() {
+    private List<Input> getData(String filename) {
+        LoadingFile(filename);
         /*
         using new TypeReference<List<MyObject>>() {} to create
         an anonymous subclass of TypeReference,
@@ -40,7 +57,7 @@ public class Play {
         in its class signature. Can't do List.class.
          */
         try {
-            movements = mapper.readValue(new File("movements.json"), new TypeReference<List<Input>>() {
+            movements = mapper.readValue(fileStream, new TypeReference<List<Input>>() {
             });
         } catch (IOException e) {
             // rethrows checked exception as error
@@ -49,24 +66,18 @@ public class Play {
         return movements;
     }
 
-    public void setSpeed(int s) {
-        System.out.println("*DEBUG* Inside of the Recorder Package Now");
-        // speed needs to be 1-6
-        assert s > 0 : "Speed must me greater than zero";
-        speed = s;
-    }
-
     /**
      * Very basic implementation of step by step. Reads one input
      * from the list, everytime method is called.
      * Need to use the observer pattern.
      */
-    public boolean stepByStep(GameController gm) {
+    public boolean stepByStep(GameController gm, String filename) {
+        System.out.println("*DEBUG* Inside of the Recorder Package Now");
         // make the method return true while we still have positions to go
         if(pos == movements.size()){pos = 0; return false;}
-        System.out.println("*DEBUG* Inside of the Recorder Package Now");
+        getData(filename);
         // call in case data has changed
-        getData();
+        getData(filename);
         if (movements.isEmpty()) throw new IllegalArgumentException("Character has not moved yet");
         Input direction = movements.get(pos);
         // pass direction to app method
@@ -82,9 +93,9 @@ public class Play {
      * Currently, doesn't implement speed.
      * Need to use the observer pattern.
      */
-    public void autoPlay(GameController gm) {
+    public void autoPlay(GameController gm, String filename) {
         System.out.println("*DEBUG* Inside of the Recorder Package Now");
-        getData();
+        getData(filename);
         if (movements.isEmpty()) throw new IllegalArgumentException("Character has not moved yet");
         for (int frame = 0; frame < movements.size(); frame++) {
             System.out.println("autoplay position: " + frame);
@@ -97,11 +108,11 @@ public class Play {
         Play p = new Play();
         p.setSpeed(2);
         GameController x = GameController.of();
-        p.stepByStep(x);
-        p.stepByStep(x);
-        p.stepByStep(x);
-        p.stepByStep(x);
-        p.autoPlay(x);
+        p.stepByStep(x, "movements.json");
+        p.stepByStep(x, "movements.json");
+        p.stepByStep(x, "movements.json");
+        p.stepByStep(x, "movements.json");
+        p.autoPlay(x, "movements.json");
     }
 }
 

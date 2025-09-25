@@ -2,8 +2,12 @@ package nz.ac.wgtn.swen225.lc.recorder;
 import nz.ac.wgtn.swen225.lc.app.controller.GameController;
 import nz.ac.wgtn.swen225.lc.app.util.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;
+
+import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 /**
@@ -18,6 +22,7 @@ import java.util.List;
 public class Save{
     private final List<Input> movements;
     final ObjectMapper mapper;
+    private String filename;
     /** Method to add the Input objects (the directions/movements)
      * of the character to the movements list.
      *
@@ -47,6 +52,7 @@ public class Save{
             throw new Error(e);
         }
     }
+
     public static void main(String[] args) {
         Save s = new Save();
         s.addMovement(Input.MOVE_UP);
