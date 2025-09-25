@@ -69,13 +69,13 @@ public enum EntityParser {
         throw new IllegalArgumentException("Expected '"+entityName()+"' but got '"+entity+"'");
     }
 
-    Entity parseWithColor(String entity, Function<Color, Entity> creator) {
+    Entity parseWithColor(String entity, Function<EntityColor, Entity> creator) {
         String[] split = entity.split(separator);
         assert split.length == 2;
         if (!split[0].equals(entityName())) {
             throw new IllegalArgumentException("Expected '"+entityName()+"' but got '"+entity+"'");
         }
 
-        return creator.apply(Color.valueOf(split[1]));
+        return creator.apply(EntityColor.valueOf(split[1]));
     }
 }
