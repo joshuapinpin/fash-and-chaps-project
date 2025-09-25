@@ -99,11 +99,19 @@ public class RightPanel extends JPanel implements ActionListener, ChangeListener
         setupSingleButton("HELP", controller::help);
     }
 
+    /**
+     * Update all components in the panel
+     */
     @Override
     public void updatePanel() {
         allComps.forEach(JComponent::repaint);
     }
 
+    /**
+     * Invoked when button is pressed
+     * Runs the methods assigned to the button
+     * @param e the event to be processed (button)
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         JButton button = (JButton) e.getSource();
@@ -111,16 +119,19 @@ public class RightPanel extends JPanel implements ActionListener, ChangeListener
         else System.out.println("No action assigned to this button.");
     }
 
+    /**
+     * Invoked when the slider is changed.
+     * Changes and sets speed for recorder
+     * @param e  a ChangeEvent object
+     */
     @Override
     public void stateChanged(ChangeEvent e) {
         if (e.getSource() instanceof JSlider slider) {
             int value = slider.getValue();
-            // Do something with the value, e.g.:
-            System.out.println("Slider value: " + value);
             recorderController.setSpeed(value);
+            System.out.println("Slider value: " + value);
         }
     }
-
 
     @Override
     protected void paintComponent(Graphics g) {

@@ -15,22 +15,18 @@ import nz.ac.wgtn.swen225.lc.renderer.Renderer;
  * @author Joshua Pinpin (Student ID: 300662880)
  */
 public class App implements GameController {
-    // MODEL  (Domain module)
     private Maze domain; // Reference to the domain model
-
-    // VIEW (Renderer module)
     private Renderer renderer;// Reference to the renderer/view
 
     // CONTROLLER Components
-    private AppWindow window; // Reference to the main application window
-    private GameState state;
     private InputController inputController;
     private TimerController timerController;
-
-    // GAME MANAGEMENT Components
     private RecorderController recorderController;
     // Reference to persistence
 
+    // GAME MANAGEMENT Components
+    private AppWindow window; // Reference to the main application window
+    private GameState state;
     private int level;
 
     // Constructor with Singleton Pattern
@@ -47,7 +43,7 @@ public class App implements GameController {
 
     private void initialiseControllerComponents() {
         // Initialize domain model, renderer, and controllers
-        domain = new Maze(10,9);
+        setDomain(new Maze(10,9));
         domain.addTiles();
 
         renderer = new Renderer(domain.getTileGrid(), domain.getPlayer());
@@ -59,6 +55,10 @@ public class App implements GameController {
         recorderController = new RecorderController(this);
         window = new AppWindow(this, inputController,
                 timerController, recorderController);
+    }
+
+    public void setDomain(Maze domain) {
+        this.domain = domain;
     }
 
 
@@ -112,6 +112,7 @@ public class App implements GameController {
         domain = new Maze(10, 9);
         domain.addTiles();
         this.level = level;
+        recorderController.stopRecording();
         System.out.println("Starting New Game at Level " + level);
     }
 
@@ -175,27 +176,6 @@ public class App implements GameController {
     public void timeUp() {
         setState(new DeadState(timerController));
         System.out.println("Time's Up! Game Over.");
-    }
-
-    @Override
-    public void startRecording() {
-
-
-    }
-
-    @Override
-    public void stopRecording() {
-
-    }
-
-    @Override
-    public void autoPlay() {
-
-    }
-
-    @Override
-    public void stepByStep() {
-
     }
 
     public void setState(GameState state) {this.state = state;}

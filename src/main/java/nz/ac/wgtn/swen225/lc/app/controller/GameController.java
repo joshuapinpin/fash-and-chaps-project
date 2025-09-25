@@ -31,12 +31,6 @@ public interface GameController {
     void help();
     void timeUp();
 
-    // Recorder Components
-    void startRecording();
-    void stopRecording();
-    void autoPlay();
-    void stepByStep();
-
     // Controller Componentws
     AppWindow getGameWindow();
     Maze getDomain();
