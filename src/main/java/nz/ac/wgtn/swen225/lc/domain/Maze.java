@@ -29,7 +29,7 @@ public class Maze {
         this.tileGrid = new Tile[rows][cols];
 
         //initialise player and set start position
-        this.player = Player.getInstance();
+        this.player = Player.of();
         this.player.initialiseStartPos(rows, cols);
         this.player.setTotalTreasures(4); //for testing purposes, to be set when maze is loaded
 

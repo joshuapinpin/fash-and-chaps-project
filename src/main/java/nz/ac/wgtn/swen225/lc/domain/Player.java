@@ -15,21 +15,22 @@ import java.util.List;
  * @author Hayley Far
  */
 public class Player{
-    private static final Player INSTANCE = new Player(); //singleton instance
+    //private static final Player INSTANCE = new Player(); //singleton instance
 
-    private List<Key> keys = new ArrayList<>(); //collection of keys the player has
+    private List<Key> keys; //collection of keys the player has
     private Position pos; //current position of the player
-    private Direction direction; //current direction the player is facing, enum Direction
+    private Direction direction = Direction.DOWN; //current direction the player is facing, enum Direction
     private int totalTreasures; //total number of treasures in the maze level
-    private int treasuresCollected = 0; //number of treasures collected by player
+    private int treasuresCollected; //number of treasures collected by player
 
     /**
      * Constructor for player with specified starting position
-     * Made private for singleton pattern
      */
-    private Player(){
+    Player(){
         this.pos = new Position(0,0); //default starting position, to be set when maze is loaded
-        this.direction = Direction.DOWN; //default starting direction
+        this.keys = new ArrayList<>();
+        this.totalTreasures = 0; //default to be set using setter
+        this.treasuresCollected = 0;
     }
 
     /**
@@ -46,11 +47,11 @@ public class Player{
     }
 
     /**
-     * Get the singleton instance of the player
-     * @return singleton player instance
+     * Static factory method to get a new Player instance
+     * @return new Player instance
      */
-    public static Player getInstance() {
-        return INSTANCE;
+    public static Player of() {
+        return new Player();
     }
 
     /**
