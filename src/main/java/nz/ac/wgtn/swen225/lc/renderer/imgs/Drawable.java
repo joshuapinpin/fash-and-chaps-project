@@ -46,14 +46,12 @@ public class Drawable extends JPanel{
     Map<EntityColor, LoadingImg> keyLookUpTable = Map.of(    //lookup table for key entities (to see colour)
             EntityColor.PURPLE, LoadingImg.PurpleKey,
             EntityColor.ORANGE, LoadingImg.OrangeKey,
-            EntityColor.BLUE, LoadingImg.BlueKey,
             EntityColor.PINK, LoadingImg.PinkKey,
             EntityColor.GREEN, LoadingImg.GreenKey
     );
     Map<EntityColor, LoadingImg> doorLookUpTable = Map.of(   //lookup table for door entities (to see colour)
             EntityColor.PURPLE, LoadingImg.PurpleDoor,
             EntityColor.ORANGE, LoadingImg.OrangeDoor,
-            EntityColor.BLUE, LoadingImg.BlueDoor,
             EntityColor.PINK, LoadingImg.PinkDoor,
             EntityColor.GREEN, LoadingImg.GreenDoor
     );
