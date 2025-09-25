@@ -3,23 +3,17 @@ package nz.ac.wgtn.swen225.lc.renderer;
 import nz.ac.wgtn.swen225.lc.domain.Player;
 import nz.ac.wgtn.swen225.lc.domain.tiles.Tile;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.Drawable;
-import nz.ac.wgtn.swen225.lc.renderer.imgs.TileDummy;
 
 import javax.swing.*;
-import java.util.List;
+
 
 /**
- * Helps to control what to call etc
+ * Controls how panels and tiles within the game
  */
 public class Renderer {
-    //call Josh's methods
     public static int X_PANEL_WIDTH;
     public static int Y_PANEL_HEIGHT;
-    Drawable drawable;
-
-//    public static Renderer of() {
-//        return new Renderer();
-//    }
+    Drawable drawable; //current JPanel to be drawn
 
     /**
      * Gets the dimensions of the JPanel
@@ -46,7 +40,9 @@ public class Renderer {
         return drawable;
     }
 
-
+    /*
+    * Testing main to see if drawing are displayed.
+     */
     public static void main(String[] args) {
         Renderer renderer = new Renderer(null, null);
         SwingUtilities.invokeLater(() -> {
