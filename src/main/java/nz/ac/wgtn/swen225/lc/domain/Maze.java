@@ -43,6 +43,7 @@ public class Maze {
      * In a real implementation, tiles would be loaded from a file
      */
     public void addTiles(){
+        this.tileGrid = new Tile[rows][cols];
         setTileAt(Free.of(new Position(0,0)));
         setTileAt(Free.of(new Position(1,0)));
         setTileAt(Wall.of(new Position(2,0)));

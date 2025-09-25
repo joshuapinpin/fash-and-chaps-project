@@ -102,9 +102,9 @@ public class App implements GameController {
      * @param level The level to start the new game at
      */
     public void startNewGame(int level) {
-        setState(new PlayState());
-        this.level = level;
         timerController.startTimer(TimerController.getTimeLimitForLevel(level));
+        setState(new PlayState(timerController));
+        this.level = level;
         System.out.println("Starting New Game at Level " + level);
     }
 
@@ -113,7 +113,7 @@ public class App implements GameController {
      */
     public void pauseGame() {
         // TODO: Implement pause logic
-        setState(new PausedState());
+        setState(new PausedState(timerController));
         System.out.println("Game Paused");
     }
 
@@ -129,7 +129,7 @@ public class App implements GameController {
      * Continues the game from a paused state.
      */
     public void continueGame() {
-        setState(new PlayState());
+        setState(new PlayState(timerController));
         System.out.println("Continuing Game");
     }
 
@@ -166,7 +166,7 @@ public class App implements GameController {
     }
 
     public void timeUp() {
-        setState(new DeadState());
+        setState(new DeadState(timerController));
         System.out.println("Time's Up! Game Over.");
     }
 

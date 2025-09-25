@@ -1,13 +1,17 @@
 package nz.ac.wgtn.swen225.lc.app.state;
 
 import nz.ac.wgtn.swen225.lc.app.controller.GameController;
+import nz.ac.wgtn.swen225.lc.app.controller.TimerController;
 import nz.ac.wgtn.swen225.lc.domain.Direction;
 
 /**
  * State representing the game being actively played.
  * @author Joshua Pinpin
  */
-public record PlayState() implements GameState {
+public record PlayState(TimerController timerController) implements GameState {
+    public PlayState{
+        timerController.start();
+    }
     public void moveUp(GameController c) { c.movePlayer(Direction.UP);}
     public void moveDown(GameController c) { c.movePlayer(Direction.DOWN);}
     public void moveLeft(GameController c) { c.movePlayer(Direction.LEFT);}
