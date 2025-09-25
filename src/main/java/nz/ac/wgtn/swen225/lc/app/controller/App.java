@@ -6,6 +6,7 @@ import nz.ac.wgtn.swen225.lc.app.util.*;
 import nz.ac.wgtn.swen225.lc.domain.Direction;
 import nz.ac.wgtn.swen225.lc.domain.Maze;
 import nz.ac.wgtn.swen225.lc.renderer.Renderer;
+import nz.ac.wgtn.swen225.lc.persistency.levelloader.*;
 
 /**
  * Central controller for game logic and flow.
@@ -43,8 +44,7 @@ public class App implements GameController {
 
     private void initialiseControllerComponents() {
         // Initialize domain model, renderer, and controllers
-        setDomain(new Maze(10,9));
-        domain.addTiles();
+        domain = Levels.LevelOne.load();
 
         renderer = new Renderer(domain.getTileGrid(), domain.getPlayer());
         int size = AppWindow.MAZE_SIZE;
@@ -57,10 +57,6 @@ public class App implements GameController {
                 timerController, recorderController);
     }
 
-    public void setDomain(Maze domain) {
-        this.domain = domain;
-    }
-
 
     // ========== Game Controller Implementation ==========
 
@@ -70,6 +66,7 @@ public class App implements GameController {
      * @param input The user input to handle
      */
     public void handleInput(Input input) {
+        System.out.println("*DEBUG* Inside of the App Package Now");
         if(state == null) throw new RuntimeException("Game state is null.");
 
         try {
@@ -109,8 +106,11 @@ public class App implements GameController {
     public void startNewGame(int level) {
         timerController.startTimer(TimerController.getTimeLimitForLevel(level));
         setState(new PlayState(timerController));
-        domain = new Maze(10, 9);
-        domain.addTiles();
+
+        if(level == 1) domain = Levels.LevelOne.load();
+//        else if(level == 2) domain = Levels.LevelTwo.load();
+        else throw new IllegalArgumentException("Invalid level: " + level);
+
         this.level = level;
         recorderController.stopRecording();
         System.out.println("Starting New Game at Level " + level);

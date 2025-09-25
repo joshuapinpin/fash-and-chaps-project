@@ -48,6 +48,7 @@ public enum Levels {
      * @return - the Maze instance loaded from file.
      */
     public Maze load() {
+        System.out.println("*DEBUG* Inside of the Persistency Package Now");
         return load(levelNumber, Levels::inputStreamToMaze);
     }
 

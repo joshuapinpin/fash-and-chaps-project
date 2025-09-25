@@ -98,7 +98,7 @@ public class AppWindow extends JFrame {
         panel.setMinimumSize(new Dimension(MAZE_SIZE, MAZE_SIZE));
         panel.setMaximumSize(new Dimension(MAZE_SIZE, MAZE_SIZE));
         panel.setOpaque(false);
-//        panel.setBorder(BorderFactory.createLineBorder(new Color(0x362702), 5));
+        panel.setBorder(BorderFactory.createLineBorder(Color.white, 5));
         return panel;
         //return controller.getRenderer().getPanel();
     }
@@ -137,6 +137,7 @@ public class AppWindow extends JFrame {
     // Getters
     public static int getWindowWidth() {return WINDOW_WIDTH;}
     public static int getWindowHeight() {return WINDOW_HEIGHT;}
+
 
 
 }
