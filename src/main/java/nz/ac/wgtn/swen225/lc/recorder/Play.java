@@ -63,7 +63,7 @@ public class Play {
      */
     public boolean stepByStep(GameController gm) {
         // make the method return true while we still have positions to go
-        if(pos == movements.size()){pos = 0; return true;}
+        if(pos == movements.size()){pos = 0; return false;}
         System.out.println("*DEBUG* Inside of the Recorder Package Now");
         // call in case data has changed
         getData();
@@ -74,7 +74,7 @@ public class Play {
         System.out.println("step-by-step position: " + pos);
         System.out.println("step-by-step direction: " + direction);
         pos++;
-        return false;
+        return true;
     }
 
     /**
