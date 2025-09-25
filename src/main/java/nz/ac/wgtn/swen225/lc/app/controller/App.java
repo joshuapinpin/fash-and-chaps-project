@@ -15,36 +15,30 @@ import nz.ac.wgtn.swen225.lc.renderer.Renderer;
  * @author Joshua Pinpin (Student ID: 300662880)
  */
 public class App implements GameController {
-    // MODEL  (Domain module)
     private Maze domain; // Reference to the domain model
-
-    // VIEW (Renderer module)
     private Renderer renderer;// Reference to the renderer/view
-
-    // CONTROLLER Components
     private AppWindow window; // Reference to the main application window
     private GameState state;
     private InputController inputController;
     private TimerController timerController;
-
-    // GAME MANAGEMENT Components
     // Reference to persistence
     // Reference to recorder
-
     private int level;
-
-    // Constructor with Singleton Pattern
     private static App INSTANCE;
+
+    /**
+     * Private constructor for App
+     * Follows the Singleton pattern to ensure only one app instance exits.
+     */
     private App() {
         initialiseControllerComponents();
         startNewGame(1);
     }
-    public static App getInstance() {
-        if(INSTANCE == null) INSTANCE = new App();
-        return INSTANCE;
-    }
 
-
+    /**
+     * Initializes the main components of the controller.
+     * Sets up the domain model, renderer, input controller, timer controller, and main window
+     */
     private void initialiseControllerComponents() {
         // Initialize domain model, renderer, and controllers
         domain = new Maze(10,9);
@@ -194,10 +188,16 @@ public class App implements GameController {
 
     }
 
+    public static App getInstance() {
+        if(INSTANCE == null) INSTANCE = new App();
+        return INSTANCE;
+    }
+
     public void setState(GameState state) {this.state = state;}
     public AppWindow getGameWindow() {return window;}
     public GameState getState() {return state;}
     public Maze getDomain() {return domain;}
     public Renderer getRenderer() {return renderer;}
     public int getLevel() {return level;}
+
 }
