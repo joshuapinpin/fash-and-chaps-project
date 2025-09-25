@@ -1,17 +1,16 @@
-package nz.ac.wgtn.swen225.lc.persistency.levelloader.parse;
+package nz.ac.wgtn.swen225.lc.persistency.levelloader.parse.tile;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.util.DefaultIndenter;
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import nz.ac.wgtn.swen225.lc.domain.*;
+import nz.ac.wgtn.swen225.lc.persistency.levelloader.BoardSerializer;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Creates/loads level from human friendly JSON format.
@@ -20,8 +19,10 @@ import java.util.stream.Collectors;
 public class LevelMaker {
     private final int rows;
     private final int cols;
-    private final String[][] board;
     private final Map<String, TileParser> legend = new HashMap<>();
+
+    @JsonSerialize(using = BoardSerializer.class)
+    private final String[][] board;
 
     /**
      * Create LevelMaker object from ASCII art type array representing the board.
@@ -30,12 +31,21 @@ public class LevelMaker {
      * @param rows - the positive integer number of rows on the game board.
      * @param cols - the positive integer number of columns on the game board.
      */
-    public LevelMaker(int rows, int cols) {
+    @JsonCreator
+    public LevelMaker(
+            @JsonProperty("rows") int rows,
+            @JsonProperty("cols") int cols) {
         assert rows > 0 && cols > 0 : "Game board must be at least 1x1 in size.";
         this.rows = rows;
         this.cols = cols;
         board = new String[rows][cols];
+        initialiseParsers();
+    }
 
+    /**
+     * Sets all the mappings between String symbols and TileParsers in the legend.
+     */
+    private void initialiseParsers() {
         TileParserFactory factory = new TileParserFactory();
         setParser(factory.createParser("F", FreeParser::new));
         setParser(factory.createParser("W", WallParser::new));
@@ -57,6 +67,7 @@ public class LevelMaker {
 
     /**
      * Gets the board with String symbols representing each tile.
+     * Used by Jackson to infer serialisation.
      * @return - the String[][] board, as a deep copy for safety.
      */
     public String[][] getBoard() {
@@ -69,17 +80,19 @@ public class LevelMaker {
 
     /**
      * Get number of rows in game board.
+     * Used by Jackson to infer serialisation.
      * @return - integer number of rows.
      */
-    public int rows() {
+    public int getRows() {
         return rows;
     }
 
     /**
      * Get number of columns in game board.
+     * Used by Jackson to infer serialisation.
      * @return - integer number of columns.
      */
-    public int cols() {
+    public int getCols() {
         return cols;
     }
 
@@ -97,9 +110,11 @@ public class LevelMaker {
         // parse String symbol at each board position
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                symbol = board[i][j].split(TileParser.separator)[0];
+                symbol = board[i][j];
                 assert !symbol.isEmpty() : "Symbol cannot be empty.";
-                parser = legend.get(symbol);
+                parser = legend.get(symbol.split(TileParser.separator)[0]);
+
+                assert parser != null : "Unknown symbol: " + symbol;
                 position = new Position(i, j);
                 maze.setTileAt(parser.parse(this, symbol, position));
             }
@@ -114,7 +129,7 @@ public class LevelMaker {
      */
     public static void main(String[] args) {
         int mapSize = 23;
-        String defaultSymbol = "F";
+        String defaultSymbol = "~";
 
         // default board
         LevelMaker bootstrap =  new LevelMaker(mapSize, mapSize);
@@ -126,10 +141,13 @@ public class LevelMaker {
         Path path = Paths.get(System.getProperty("user.home"), "bootstrap.json");
         try {
             ObjectMapper mapper = new ObjectMapper();
-            mapper.writeValue(path.toFile(), bootstrap.board);
+            mapper.writerWithDefaultPrettyPrinter().writeValue(path.toFile(), bootstrap);
+            LevelMaker deserialised = mapper.readValue(path.toFile(), LevelMaker.class);
+            System.out.println(deserialised.loadLevel());
         } catch (IOException e) {
             throw new Error("Unable to serialize bootstrap level", e);
         }
+
         System.out.println("Wrote file to: " + path.toAbsolutePath());
     }
 }

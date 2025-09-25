@@ -1,4 +1,4 @@
-package nz.ac.wgtn.swen225.lc.persistency.levelloader.parse;
+package nz.ac.wgtn.swen225.lc.persistency.levelloader.parse.tile;
 
 import nz.ac.wgtn.swen225.lc.domain.Position;
 import nz.ac.wgtn.swen225.lc.domain.tiles.Tile;

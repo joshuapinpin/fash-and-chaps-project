@@ -12,6 +12,8 @@ import java.io.InputStream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+record TestData(int number){}
+
 public class LevelsTest {
     private static Maze mapper(InputStream in){
         try {
@@ -61,4 +63,4 @@ public class LevelsTest {
     }
 }
 
-record TestData(int number){}
+

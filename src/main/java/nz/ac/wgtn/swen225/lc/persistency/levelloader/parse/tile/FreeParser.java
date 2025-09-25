@@ -1,4 +1,4 @@
-package nz.ac.wgtn.swen225.lc.persistency.levelloader.parse;
+package nz.ac.wgtn.swen225.lc.persistency.levelloader.parse.tile;
 
 import nz.ac.wgtn.swen225.lc.domain.Position;
 import nz.ac.wgtn.swen225.lc.domain.entities.Entity;
@@ -6,6 +6,7 @@ import nz.ac.wgtn.swen225.lc.domain.entities.ExitLock;
 import nz.ac.wgtn.swen225.lc.domain.entities.Treasure;
 import nz.ac.wgtn.swen225.lc.domain.tiles.Free;
 import nz.ac.wgtn.swen225.lc.domain.tiles.Tile;
+import nz.ac.wgtn.swen225.lc.persistency.levelloader.parse.entity.EntityParser;
 
 import java.util.Objects;
 
@@ -25,28 +26,37 @@ record FreeParser(String symbol) implements TileParser {
     @Override
     public Tile parse(LevelMaker surroundings, String tile, Position position) {
         String[] split = tile.split(separator);
+        assert split.length > 0;
         assert split[0].equals(symbol);
         Free free = Free.of(Objects.requireNonNull(position, "Position cannot be null."));
 
-        if (split.length == 1) {
-            return free;
-        }
-        else if (split.length == 2) {
-            Entity entity = parseEntity(split[1]);
-            free.setCollectable(entity);
-            return free;
-        }
-        else {
+        if (split.length > 2) {
             throw new IllegalArgumentException("Expected 'F' or 'F:Entity-PROPERTY' but got"+tile);
         }
+
+        if (split.length == 2) {
+            Entity entity = parseEntity(split[1]);
+            free.setCollectable(entity);
+        }
+        return free;
     }
 
     //TODO: make this more maintainable.
     private Entity parseEntity(String entity) {
-        return switch(entity) {
-            case "ExitLock"->ExitLock.of();
-            case "Treasure"->Treasure.of();
-            default -> throw new IllegalArgumentException("yo");
-        };
+        if (entity.contains("Door")) {
+            return EntityParser.DoorParser.parse(entity);
+        }
+        else if (entity.contains("Key")) {
+            return EntityParser.KeyParser.parse(entity);
+        }
+        else if (entity.contains("ExitLock")) {
+            return EntityParser.ExitLockParser.parse(entity);
+        }
+        else if (entity.contains("Treasure")) {
+            return EntityParser.TreasureParser.parse(entity);
+        }
+        else {
+            throw new IllegalArgumentException("Not an entity: "+entity);
+        }
     }
 }

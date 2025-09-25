@@ -1,4 +1,4 @@
-package nz.ac.wgtn.swen225.lc.persistency.levelloader.parse;
+package nz.ac.wgtn.swen225.lc.persistency.levelloader.parse.tile;
 
 import java.util.HashSet;
 import java.util.Objects;
