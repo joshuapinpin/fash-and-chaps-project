@@ -33,15 +33,15 @@ public class Treasure implements Entity {
         if(p == null){
             throw new IllegalArgumentException("Player cannot be null");
         }
-        if(p.getTreasuresLeft() <= 0){
-            throw new IllegalStateException("No treasures left to collect");
+        if(p.getTreasuresCollected() == p.getTotalTreasures()){
+            throw new IllegalStateException("All treasures have already been collected");
         }
 
-        int oldSize = p.getTreasuresLeft();
+        int oldSize = p.getTreasuresCollected();
         p.collectTreasure();
 
-        assert p.getTreasuresLeft() == oldSize - 1;
-        assert p.getTreasuresLeft() >= 0;
+        assert p.getTreasuresCollected() == oldSize + 1;
+        assert p.getTreasuresCollected() >= 0;
 
     }
 

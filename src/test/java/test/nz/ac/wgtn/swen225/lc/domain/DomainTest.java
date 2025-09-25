@@ -22,7 +22,7 @@ public class DomainTest {
     void setup() {
         // Initialize maze and player for testing
         maze = new Maze(3, 3);
-        player = Player.getInstance();
+        player = Player.of();
         player.initialiseStartPos(3,3);
 
         maze.setPlayer(player);
