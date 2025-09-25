@@ -38,6 +38,9 @@ public class Exit extends Tile {
      */
     @Override
     public void onEnter(Player p){
+        if(p == null){
+            throw new IllegalArgumentException("Player cannot be null");
+        }
         //Drafted but need more information
         //Need game controller? and to find what level we on
         /**

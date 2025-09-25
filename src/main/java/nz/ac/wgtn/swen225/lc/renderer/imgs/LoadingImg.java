@@ -21,13 +21,11 @@ public enum LoadingImg {
     PurpleKey("imgs/purpleKey.png"),
     PinkKey("imgs/pinkKey.png"),
     OrangeKey("imgs/orangeKey.png"),
-    BlueKey("imgs/blueKey.png"),
     GreenKey("imgs/greenKey.png"),
 
     PurpleDoor("imgs/purpleDoor.png"),
     PinkDoor("imgs/pinkDoor.png"),
     OrangeDoor("imgs/orangeDoor.png"),
-    BlueDoor("imgs/blueDoor.png"),
     GreenDoor("imgs/greenDoor.png"),
 
     Exit("imgs/exit.png"),
@@ -50,11 +48,11 @@ public enum LoadingImg {
     LoadingImg(String filename){
         this.filename = filename;
         try{
-            InputStream stream = LoadingImg.class.getResourceAsStream("/" + filename);
+            InputStream stream = LoadingImg.class.getResourceAsStream("/" + filename); //gets the image path as stream
             if(stream == null) {throw new RuntimeException("Cannot find the image file: " + filename);}
             this.image = ImageIO.read(stream);
             stream.close();
-        } catch(IOException e){ throw new RuntimeException("Error loading: " + filename, e);}
+        } catch(IOException e){ throw new RuntimeException("Error loading the image: " + filename, e);}
     }
 
     /*
