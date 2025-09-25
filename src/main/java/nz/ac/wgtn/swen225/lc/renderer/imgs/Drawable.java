@@ -1,4 +1,5 @@
 package nz.ac.wgtn.swen225.lc.renderer.imgs;
+import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
 import nz.ac.wgtn.swen225.lc.domain.Direction;
 import nz.ac.wgtn.swen225.lc.domain.Player;
 import nz.ac.wgtn.swen225.lc.domain.Position;
@@ -18,9 +19,9 @@ import java.util.Map;
  */
 public class Drawable extends JPanel{
 
-    Tile[][] allTiles;
-    private final int ROWS = 9;
-    private final int SIZE = 60;
+    Tile[][] allTiles; //array of all the tiles in the world
+    private final int ROWS = AppWindow.MAZE_SIZE/AppWindow.SQUARE_SIZE; //
+    private final int SIZE = AppWindow.SQUARE_SIZE;
     Player player;
     int centerX;
     int centerY;
@@ -68,6 +69,7 @@ public class Drawable extends JPanel{
      * @param player - the player
      */
     public void setAllTiles(Tile[][] currentTiles, Player player){
+        System.out.println("*DEBUG* Inside of the Renderer Package Now");
         allTiles = currentTiles;
         this.player = player;
         Position p = player.getPos();
@@ -86,7 +88,7 @@ public class Drawable extends JPanel{
 
     /**
      * Draws the 9x9 world
-     * @param g
+     * @param g - the current graphic to be drawn
      */
     public void drawCurrentImage(Graphics g){
         for (int dy = -4; dy <= 4; dy++) {
@@ -94,20 +96,20 @@ public class Drawable extends JPanel{
                 int worldX = centerX + dx;
                 int worldY = centerY + dy;
 
-                if (worldX < 0 || worldX >= allTiles[0].length || worldY < 0 || worldY >= allTiles.length) {
-                    continue;
-                }
+                //ensures its within bounds
+                if (worldX < 0 || worldX >= allTiles[0].length || worldY < 0 || worldY >= allTiles.length) {continue;}
 
-                Tile tile = allTiles[worldY][worldX];
-                BufferedImage image = findImage(tile);
+                Tile tile = allTiles[worldY][worldX];//gets the current tile
+                BufferedImage image = findImage(tile);//gets the image for that tile
 
+                //calculates the pos of this tile in screen view
                 int screenX = (dx + 4) * SIZE;
                 int screenY = (dy + 4) * SIZE;
 
-                g.drawImage(image, screenX, screenY, SIZE, SIZE, null);
+                g.drawImage(image, screenX, screenY, SIZE, SIZE, null); //draws the tile
             }
         }
-        g.drawImage(directionLookUpTable.get(player.getDirection()).loadImage(),4*SIZE, 4*SIZE, SIZE, SIZE, null);
+        g.drawImage(directionLookUpTable.get(player.getDirection()).loadImage(),4*SIZE, 4*SIZE, SIZE, SIZE, null);// draws the player
     }
 
 
