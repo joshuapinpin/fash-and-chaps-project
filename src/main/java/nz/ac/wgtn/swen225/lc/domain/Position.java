@@ -15,7 +15,7 @@ public class Position {
      */
     public Position(int x, int y){
         if(x < 0 || y < 0){
-            throw new IllegalArgumentException("Coordinates cannot be negative");
+            throw new IndexOutOfBoundsException("Coordinates cannot be negative");
         }
         this.x = x;
         this.y = y;
