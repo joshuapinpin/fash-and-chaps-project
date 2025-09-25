@@ -57,7 +57,8 @@ public class App implements GameController {
         inputController = new InputController(this);
         timerController = new TimerController(this);
         recorderController = new RecorderController(this);
-        window = new AppWindow(this, inputController, timerController);
+        window = new AppWindow(this, inputController,
+                timerController, recorderController);
     }
 
 
@@ -71,7 +72,10 @@ public class App implements GameController {
     public void handleInput(Input input) {
         if(state == null) throw new RuntimeException("Game state is null.");
 
-        try {state.handleInput(this, input);}
+        try {
+            state.handleInput(this, input);
+            recorderController.addMovement(input);
+        }
         catch(UnsupportedOperationException e){
             System.out.println(
                     "Input " + input + " not valid in current state: "
@@ -175,25 +179,22 @@ public class App implements GameController {
 
     @Override
     public void startRecording() {
-        System.out.println("Started Recording");
+
 
     }
 
     @Override
     public void stopRecording() {
-        System.out.println("Stopped Recording");
 
     }
 
     @Override
     public void autoPlay() {
-        System.out.println("Auto-Playing");
 
     }
 
     @Override
     public void stepByStep() {
-        System.out.println("Step-By-Step Playing");
 
     }
 

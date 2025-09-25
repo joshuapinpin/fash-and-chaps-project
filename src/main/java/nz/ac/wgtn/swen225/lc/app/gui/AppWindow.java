@@ -2,6 +2,7 @@ package nz.ac.wgtn.swen225.lc.app.gui;
 
 import nz.ac.wgtn.swen225.lc.app.controller.GameController;
 import nz.ac.wgtn.swen225.lc.app.controller.InputController;
+import nz.ac.wgtn.swen225.lc.app.controller.RecorderController;
 import nz.ac.wgtn.swen225.lc.app.controller.TimerController;
 
 import javax.swing.*;
@@ -26,6 +27,7 @@ public class AppWindow extends JFrame {
     private GameController controller; // Reference to GameController
     private InputController inputController;
     private TimerController timerController;
+    private RecorderController recorderController;
 
     // PANELS
     private List<JPanel> allPanels;
@@ -41,12 +43,14 @@ public class AppWindow extends JFrame {
      * @param inputController
      */
     public AppWindow(GameController controller, InputController inputController,
-            TimerController timerController) {
+            TimerController timerController, RecorderController recorderController) {
         // TODO: Set up window, menus, status bar, and embed MazePanel
         super("Fash and Chaps :D");
         this.controller = controller;
         this.inputController = inputController;
         this.timerController = timerController;
+        this.recorderController = recorderController;
+
         setupWindow();
         setupPanels();
         //setupDialogs();
@@ -75,7 +79,7 @@ public class AppWindow extends JFrame {
         menuPanel = new MenuPanel(controller);
         gamePanel = setupMazePanel();
         leftPanel = new LeftPanel(controller, timerController);
-        rightPanel = new RightPanel(controller, inputController);
+        rightPanel = new RightPanel(controller, recorderController);
 
         allPanels = List.of(titlePanel, menuPanel, gamePanel, leftPanel, rightPanel);
 

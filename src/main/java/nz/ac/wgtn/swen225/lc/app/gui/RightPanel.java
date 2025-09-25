@@ -2,6 +2,7 @@ package nz.ac.wgtn.swen225.lc.app.gui;
 
 import nz.ac.wgtn.swen225.lc.app.controller.GameController;
 import nz.ac.wgtn.swen225.lc.app.controller.InputController;
+import nz.ac.wgtn.swen225.lc.app.controller.RecorderController;
 import nz.ac.wgtn.swen225.lc.app.util.MyButton;
 import nz.ac.wgtn.swen225.lc.app.util.MyFont;
 import nz.ac.wgtn.swen225.lc.app.util.MyImage;
@@ -25,14 +26,14 @@ public class RightPanel extends JPanel implements ActionListener, ChangeListener
     public static final int FONT_SIZE = 40;
 
     private GameController controller;
-    private InputController inputController;
+    private RecorderController recorderController;
     private List<JComponent> allComps;
     private Map<JButton, Runnable> buttonRunnableMap;
     private BufferedImage bgImg;
 
-    public RightPanel(GameController controller, InputController inputController){
+    public RightPanel(GameController controller, RecorderController recorderController){
         this.controller = controller;
-        this.inputController = inputController;
+        this.recorderController = recorderController;
         allComps = new ArrayList<>();
         setupUI();
         setupComponents();
@@ -60,10 +61,10 @@ public class RightPanel extends JPanel implements ActionListener, ChangeListener
     }
     private void setupRecorderButtons(){
         buttonRunnableMap = new HashMap<>();
-        setupSingleButton("Start Recorder", () -> controller.startRecording());
-        setupSingleButton("Stop Recorder", () -> controller.stopRecording());
-        setupSingleButton("Auto-Play", () -> controller.autoPlay());
-        setupSingleButton("Step-By-Step", () -> controller.stepByStep());
+        setupSingleButton("Start Recorder", () -> recorderController.startRecording());
+        setupSingleButton("Stop Recorder", () -> recorderController.stopRecording());
+        setupSingleButton("Auto-Play", () -> recorderController.autoPlay());
+        setupSingleButton("Step-By-Step", () -> recorderController.stepByStep());
 
     }
     private void setupSingleButton(String name, Runnable action){
@@ -116,7 +117,7 @@ public class RightPanel extends JPanel implements ActionListener, ChangeListener
             int value = slider.getValue();
             // Do something with the value, e.g.:
             System.out.println("Slider value: " + value);
-            // You can call a controller method here if needed
+            recorderController.setSpeed(value);
         }
     }
 
