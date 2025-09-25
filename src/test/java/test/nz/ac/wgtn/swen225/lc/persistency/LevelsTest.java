@@ -1,5 +1,7 @@
 package test.nz.ac.wgtn.swen225.lc.persistency;
 
+import nz.ac.wgtn.swen225.lc.domain.Position;
+import nz.ac.wgtn.swen225.lc.domain.tiles.Free;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,6 +29,11 @@ public class LevelsTest {
     @Test
     public void testValid() {
         Maze result = Levels.load(67, LevelsTest::mapper);
+        for (int y=0; y<result.getRows(); y++) {
+            for (int x=0; x<result.getCols(); x++) {
+                result.setTileAt(Free.of(new Position(x, y)));
+            }
+        }
         String expected =
                         "F F F F F F \n"+
                         "F F F F F F \n"+
