@@ -8,7 +8,6 @@ package nz.ac.wgtn.swen225.lc.domain.entities;
 public enum EntityColor {
     ORANGE,
     GREEN,
-    BLUE,
     PURPLE,
     PINK;
 }
