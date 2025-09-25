@@ -28,8 +28,8 @@ public class App implements GameController {
     private TimerController timerController;
 
     // GAME MANAGEMENT Components
+    private RecorderController recorderController;
     // Reference to persistence
-    // Reference to recorder
 
     private int level;
 
@@ -56,6 +56,7 @@ public class App implements GameController {
 
         inputController = new InputController(this);
         timerController = new TimerController(this);
+        recorderController = new RecorderController(this);
         window = new AppWindow(this, inputController, timerController);
     }
 
@@ -104,6 +105,8 @@ public class App implements GameController {
     public void startNewGame(int level) {
         timerController.startTimer(TimerController.getTimeLimitForLevel(level));
         setState(new PlayState(timerController));
+        domain = new Maze(10, 9);
+        domain.addTiles();
         this.level = level;
         System.out.println("Starting New Game at Level " + level);
     }
