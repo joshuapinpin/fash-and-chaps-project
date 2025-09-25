@@ -9,14 +9,14 @@ import nz.ac.wgtn.swen225.lc.domain.Player;
  * @author Hayley Far
  */
 public class Door implements Entity {
-    private final Color doorColor;
+    private final EntityColor doorColor;
     private boolean isOpen = false; //state of the door
 
     /**
      * Constructor for door with specified color
      * @param doorColor color of the door
      */
-    Door(Color doorColor){
+    Door(EntityColor doorColor){
         this.doorColor = doorColor;
     }
 
@@ -25,7 +25,7 @@ public class Door implements Entity {
      * @param doorColor color of the door
      * @return new Door instance
      */
-    public static Door of(Color doorColor){
+    public static Door of(EntityColor doorColor){
         return new Door(doorColor);
     }
 
@@ -45,7 +45,7 @@ public class Door implements Entity {
      * Getter for door color
      * @return color of the door
      */
-    public Color getColor(){return doorColor;}
+    public EntityColor getColor(){return doorColor;}
 
     /**
      * Check if the door is open

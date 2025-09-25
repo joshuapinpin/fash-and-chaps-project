@@ -54,7 +54,7 @@ public class Maze {
         setTileAt(Free.of(new Position(3,1)));
         setTileAt(Free.of(new Position(4,1)));
         Free tileWithKey = Free.of(new Position(5,1));
-        tileWithKey.setCollectable(Key.of(Color.ORANGE));
+        tileWithKey.setCollectable(Key.of(EntityColor.ORANGE));
         setTileAt(tileWithKey);
         setTileAt(Wall.of(new Position(6,1)));
         setTileAt(Free.of(new Position(7,1)));
@@ -82,7 +82,7 @@ public class Maze {
 
         setTileAt(Free.of(new Position(0,4)));
         Free tileWithDoor = Free.of(new Position(1,4));
-        tileWithDoor.setCollectable(Door.of(Color.PURPLE));
+        tileWithDoor.setCollectable(Door.of(EntityColor.PURPLE));
         setTileAt(tileWithDoor);
         setTileAt(Free.of(new Position(2,4)));
         setTileAt(Free.of(new Position(3,4)));
@@ -90,7 +90,7 @@ public class Maze {
         setTileAt(Free.of(new Position(5,4)));
         setTileAt(Free.of(new Position(6,4)));
         Free tileWithDoor2 = Free.of(new Position(7,4));
-        tileWithDoor2.setCollectable(Door.of(Color.ORANGE));
+        tileWithDoor2.setCollectable(Door.of(EntityColor.ORANGE));
         setTileAt(tileWithDoor2);
         setTileAt(Free.of(new Position(8,4)));
 
@@ -135,7 +135,7 @@ public class Maze {
         setTileAt(Free.of(new Position(6,8)));
         setTileAt(Wall.of(new Position(7,8)));
         Free tileWithKey2 = Free.of(new Position(8,8));
-        tileWithKey2.setCollectable(Key.of(Color.PURPLE));
+        tileWithKey2.setCollectable(Key.of(EntityColor.PURPLE));
         setTileAt(tileWithKey2);
 
         setTileAt(Free.of(new Position(0,9)));

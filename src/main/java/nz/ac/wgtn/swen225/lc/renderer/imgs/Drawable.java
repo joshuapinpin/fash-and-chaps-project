@@ -3,16 +3,13 @@ import nz.ac.wgtn.swen225.lc.domain.Direction;
 import nz.ac.wgtn.swen225.lc.domain.Player;
 import nz.ac.wgtn.swen225.lc.domain.Position;
 import nz.ac.wgtn.swen225.lc.domain.entities.*;
-import nz.ac.wgtn.swen225.lc.domain.entities.Color;
+import nz.ac.wgtn.swen225.lc.domain.entities.EntityColor;
 import nz.ac.wgtn.swen225.lc.domain.tiles.*;
 import nz.ac.wgtn.swen225.lc.renderer.Renderer;
-
-import nz.ac.wgtn.swen225.lc.renderer.dummyTest;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -45,19 +42,19 @@ public class Drawable extends JPanel{
             Treasure.class, LoadingImg.Treasure,
             ExitLock.class, LoadingImg.ExitLock
     );
-    Map<Color, LoadingImg> keyLookUpTable = Map.of(    //lookup table for key entities (to see colour)
-            Color.PURPLE, LoadingImg.PurpleKey,
-            Color.ORANGE, LoadingImg.OrangeKey,
-            Color.BLUE, LoadingImg.BlueKey,
-            Color.PINK, LoadingImg.PinkKey,
-            Color.GREEN, LoadingImg.GreenKey
+    Map<EntityColor, LoadingImg> keyLookUpTable = Map.of(    //lookup table for key entities (to see colour)
+            EntityColor.PURPLE, LoadingImg.PurpleKey,
+            EntityColor.ORANGE, LoadingImg.OrangeKey,
+            EntityColor.BLUE, LoadingImg.BlueKey,
+            EntityColor.PINK, LoadingImg.PinkKey,
+            EntityColor.GREEN, LoadingImg.GreenKey
     );
-    Map<Color, LoadingImg> doorLookUpTable = Map.of(   //lookup table for door entities (to see colour)
-            Color.PURPLE, LoadingImg.PurpleDoor,
-            Color.ORANGE, LoadingImg.OrangeDoor,
-            Color.BLUE, LoadingImg.BlueDoor,
-            Color.PINK, LoadingImg.PinkDoor,
-            Color.GREEN, LoadingImg.GreenDoor
+    Map<EntityColor, LoadingImg> doorLookUpTable = Map.of(   //lookup table for door entities (to see colour)
+            EntityColor.PURPLE, LoadingImg.PurpleDoor,
+            EntityColor.ORANGE, LoadingImg.OrangeDoor,
+            EntityColor.BLUE, LoadingImg.BlueDoor,
+            EntityColor.PINK, LoadingImg.PinkDoor,
+            EntityColor.GREEN, LoadingImg.GreenDoor
     );
 
     public Drawable(Tile[][] currentTiles, Player player){
