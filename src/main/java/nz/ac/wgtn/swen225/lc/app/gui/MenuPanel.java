@@ -30,8 +30,8 @@ public class MenuPanel extends JPanel implements ActionListener, GamePanel{
         this.controller = controller;
         setLayout(new GridLayout(1, 5, BUTTON_GAP, BUTTON_GAP));
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
+        setOpaque(false);
         setBorder(BorderFactory.createEmptyBorder(BUTTON_GAP, BUTTON_GAP, BUTTON_GAP, BUTTON_GAP));
-        setBackground(Color.red);
         setupButtons();
         bgImg = LoadingImg.Water.loadImage();
     }

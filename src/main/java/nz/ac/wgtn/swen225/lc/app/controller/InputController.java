@@ -1,5 +1,7 @@
 package nz.ac.wgtn.swen225.lc.app.controller;
 
+import nz.ac.wgtn.swen225.lc.app.state.AutoReplayState;
+import nz.ac.wgtn.swen225.lc.app.state.StepReplayState;
 import nz.ac.wgtn.swen225.lc.app.util.Input;
 
 import java.awt.event.KeyEvent;
@@ -44,10 +46,14 @@ public class InputController implements KeyListener {
     }
 
     @Override public void keyPressed(KeyEvent e) {
+        if(controller.getState().equals(new StepReplayState())
+                || controller.getState().equals(new AutoReplayState())) return;
+
+
         int keyCode = e.getKeyCode();
-        // Only process if not already pressed
         if (pressedKeys.contains(keyCode)) return;
         pressedKeys.add(keyCode);
+
         // Map key presses to game actions and delegate to controller
         boolean ctrl = (e.getModifiersEx() & KeyEvent.CTRL_DOWN_MASK) != 0;
         KeyCombo combo = new KeyCombo(keyCode, ctrl);
@@ -55,11 +61,7 @@ public class InputController implements KeyListener {
 
         // Displays the key pressed for debugging on terminal
         var keyText = KeyEvent.getKeyText(keyCode);
-        if (action != null) {
-            action.execute(controller);
-//            System.out.println("Key Pressed: " + keyText + (ctrl ? " (CTRL)" : ""));
-        }
-        // else System.out.println("Key Pressed (no action): " + keyText + (ctrl ? " (CTRL)" : ""));
+        if (action != null) action.execute(controller);
     }
     @Override public void keyTyped(KeyEvent e) {}
     @Override public void keyReleased(KeyEvent e) {
