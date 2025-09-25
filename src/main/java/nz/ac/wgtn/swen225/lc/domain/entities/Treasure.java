@@ -56,4 +56,16 @@ public class Treasure implements Entity {
         if(this.getClass() != obj.getClass()) return false;
         return true; // All treasures are considered equal
     }
+
+    /**
+     * Treasures can always be collected, so they are always removable
+     * @return true
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == this) return true;
+        if(obj == null) return false;
+        if(this.getClass() != obj.getClass()) return false;
+        return true; // All treasures are considered equal
+    }
 }

@@ -9,13 +9,21 @@ import nz.ac.wgtn.swen225.lc.domain.Player;
  * @author Hayley Far
  */
 public class Key implements Entity {
+<<<<<<< HEAD
     private final EntityColor keyColor;
+=======
+    private final Color keyColor;
+>>>>>>> 102d9c53670d59a807add360581fce7bcfb1ad47
 
     /**
      * Constructor for key with specified color
      * @param keyColor color of the key
      */
+<<<<<<< HEAD
     Key(EntityColor keyColor){
+=======
+    Key(Color keyColor){
+>>>>>>> 102d9c53670d59a807add360581fce7bcfb1ad47
         this.keyColor = keyColor;
     }
 
@@ -24,7 +32,11 @@ public class Key implements Entity {
      * @param keyColor color of the key
      * @return new Key instance
      */
+<<<<<<< HEAD
     public static Key of(EntityColor keyColor){
+=======
+    public static Key of(Color keyColor){
+>>>>>>> 102d9c53670d59a807add360581fce7bcfb1ad47
         return new Key(keyColor);
     }
 
@@ -47,7 +59,11 @@ public class Key implements Entity {
      * Getter for key color
      * @return color of the key
      */
+<<<<<<< HEAD
     public EntityColor getColor(){
+=======
+    public Color getColor(){
+>>>>>>> 102d9c53670d59a807add360581fce7bcfb1ad47
         return keyColor;
     }
 

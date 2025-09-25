@@ -61,7 +61,11 @@ public class Maze {
         setTileAt(Free.of(new Position(3,1)));
         setTileAt(Free.of(new Position(4,1)));
         Free tileWithKey = Free.of(new Position(5,1));
+<<<<<<< HEAD
         tileWithKey.setCollectable(Key.of(EntityColor.ORANGE));
+=======
+        tileWithKey.setCollectable(Key.of(Color.ORANGE));
+>>>>>>> 102d9c53670d59a807add360581fce7bcfb1ad47
         setTileAt(tileWithKey);
         setTileAt(Wall.of(new Position(6,1)));
         setTileAt(Free.of(new Position(7,1)));
@@ -89,7 +93,11 @@ public class Maze {
 
         setTileAt(Free.of(new Position(0,4)));
         Free tileWithDoor = Free.of(new Position(1,4));
+<<<<<<< HEAD
         tileWithDoor.setCollectable(Door.of(EntityColor.PURPLE));
+=======
+        tileWithDoor.setCollectable(Door.of(Color.PURPLE));
+>>>>>>> 102d9c53670d59a807add360581fce7bcfb1ad47
         setTileAt(tileWithDoor);
         setTileAt(Free.of(new Position(2,4)));
         setTileAt(Free.of(new Position(3,4)));
@@ -97,7 +105,11 @@ public class Maze {
         setTileAt(Free.of(new Position(5,4)));
         setTileAt(Free.of(new Position(6,4)));
         Free tileWithDoor2 = Free.of(new Position(7,4));
+<<<<<<< HEAD
         tileWithDoor2.setCollectable(Door.of(EntityColor.ORANGE));
+=======
+        tileWithDoor2.setCollectable(Door.of(Color.ORANGE));
+>>>>>>> 102d9c53670d59a807add360581fce7bcfb1ad47
         setTileAt(tileWithDoor2);
         setTileAt(Free.of(new Position(8,4)));
 
@@ -142,7 +154,11 @@ public class Maze {
         setTileAt(Free.of(new Position(6,8)));
         setTileAt(Wall.of(new Position(7,8)));
         Free tileWithKey2 = Free.of(new Position(8,8));
+<<<<<<< HEAD
         tileWithKey2.setCollectable(Key.of(EntityColor.PURPLE));
+=======
+        tileWithKey2.setCollectable(Key.of(Color.PURPLE));
+>>>>>>> 102d9c53670d59a807add360581fce7bcfb1ad47
         setTileAt(tileWithKey2);
 
         setTileAt(Free.of(new Position(0,9)));
@@ -178,6 +194,7 @@ public class Maze {
         int x = p.getX();
         int y = p.getY();
         if (x < 0 || x >= cols || y < 0 || y >= rows) {
+            //may need to look at this with more testing
             throw new IndexOutOfBoundsException("Position out of maze bounds: " + p);
         }
         Tile tile = tileGrid[y][x];

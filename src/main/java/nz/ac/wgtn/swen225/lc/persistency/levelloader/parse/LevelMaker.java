@@ -2,15 +2,9 @@ package nz.ac.wgtn.swen225.lc.persistency.levelloader.parse;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import nz.ac.wgtn.swen225.lc.domain.*;
 import nz.ac.wgtn.swen225.lc.persistency.levelloader.BoardSerializer;
-import nz.ac.wgtn.swen225.lc.persistency.levelloader.Levels;
-
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 
 /**

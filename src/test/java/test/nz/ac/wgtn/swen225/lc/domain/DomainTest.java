@@ -38,7 +38,11 @@ public class DomainTest {
 
         //adding key with tile
         Free tileWithKey = Free.of(new Position(2,1));
+<<<<<<< HEAD
         tileWithKey.setCollectable(Key.of(EntityColor.PINK));
+=======
+        tileWithKey.setCollectable(Key.of(Color.PINK));
+>>>>>>> 102d9c53670d59a807add360581fce7bcfb1ad47
         maze.setTileAt(tileWithKey);
 
         maze.setTileAt(Free.of(new Position(2,2)));
@@ -95,7 +99,11 @@ public class DomainTest {
 
         // Check if player has collected the key
         assertEquals(1, player.getKeys().size());
+<<<<<<< HEAD
         assertTrue(player.getKeys().contains(Key.of(EntityColor.PINK)));
+=======
+        assertTrue(player.getKeys().contains(Key.of(Color.PINK)));
+>>>>>>> 102d9c53670d59a807add360581fce7bcfb1ad47
     }
 
     @Test
