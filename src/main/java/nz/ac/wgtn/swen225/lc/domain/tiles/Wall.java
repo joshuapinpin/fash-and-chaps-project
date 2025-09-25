@@ -31,7 +31,9 @@ public class Wall extends Tile {
      * @return Wall instance at the specified position
      */
     public static Wall of(Position pos){
-        assert pos != null : "Position cannot be null";
+        if(pos == null){
+            throw new IllegalArgumentException("Position cannot be null");
+        }
         var key = new WallKey(pos);
         return cache.computeIfAbsent(key, Wall::new);
     }

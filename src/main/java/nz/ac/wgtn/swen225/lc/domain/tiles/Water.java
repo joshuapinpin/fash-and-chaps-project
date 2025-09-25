@@ -30,7 +30,9 @@ public class Water extends Tile{
      * @return new Water instance
      */
     public static Water of(Position pos){
-        assert pos != null : "Position cannot be null";
+        if(pos == null){
+            throw new IllegalArgumentException("Position cannot be null");
+        }
         var key = new WaterKey(pos);
         return cache.computeIfAbsent(key, Water::new);
     }
@@ -42,6 +44,9 @@ public class Water extends Tile{
      */
     @Override
     public void onEnter(Player player) {
+        if(player == null){
+            throw new IllegalArgumentException("Player cannot be null");
+        }
         //to be implemented for level 2 when player drowns
         throw new UnsupportedOperationException();
     }
