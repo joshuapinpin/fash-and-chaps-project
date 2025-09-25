@@ -106,7 +106,7 @@ public class LeftPanel extends JPanel implements GamePanel{
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 for(int i = 0; i < 4; i++){
-                    int treasures = controller.getDomain().getPlayer().getTreasuresLeft();
+                    int treasures = controller.getDomain().getPlayer().getTreasuresCollected();
                     BufferedImage img;
                     if(i < treasures) img = LoadingImg.Treasure.loadImage();
                     else img = LoadingImg.Sand.loadImage();
