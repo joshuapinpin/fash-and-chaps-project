@@ -280,7 +280,7 @@ public class Maze {
         String result = "";
         for(int r = 0; r < rows; r++){
             for(int c = 0; c < cols; c++){
-                Position pos = new Position(r, c);
+                Position pos = new Position(c, r);
                 String symbol = getSymbol(pos);
                 result += symbol + " ";
             }
