@@ -215,6 +215,8 @@ public class Maze {
      * @param direction direction to move player
      */
     public void movePlayer(Direction direction){
+        System.out.println("*DEBUG* Inside of the Domain Package Now");
+
         //find tile in the direction player wants to move
         if(player == null || direction == null){
             throw new IllegalArgumentException("Player not set in maze");
@@ -278,7 +280,7 @@ public class Maze {
         String result = "";
         for(int r = 0; r < rows; r++){
             for(int c = 0; c < cols; c++){
-                Position pos = new Position(c, r);
+                Position pos = new Position(r, c);
                 String symbol = getSymbol(pos);
                 result += symbol + " ";
             }
