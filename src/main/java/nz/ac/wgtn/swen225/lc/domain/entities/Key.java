@@ -9,13 +9,13 @@ import nz.ac.wgtn.swen225.lc.domain.Player;
  * @author Hayley Far
  */
 public class Key implements Entity {
-    private final Color keyColor;
+    private final EntityColor keyColor;
 
     /**
      * Constructor for key with specified color
      * @param keyColor color of the key
      */
-    Key(Color keyColor){
+    Key(EntityColor keyColor){
         this.keyColor = keyColor;
     }
 
@@ -24,7 +24,7 @@ public class Key implements Entity {
      * @param keyColor color of the key
      * @return new Key instance
      */
-    public static Key of(Color keyColor){
+    public static Key of(EntityColor keyColor){
         return new Key(keyColor);
     }
 
@@ -42,7 +42,7 @@ public class Key implements Entity {
      * Getter for key color
      * @return color of the key
      */
-    public Color getColor(){
+    public EntityColor getColor(){
         return keyColor;
     }
 
