@@ -37,7 +37,7 @@ public class ExitLock implements Entity {
         }
 
         if(p.allTreasuresCollected()){
-            assert p.getTreasuresLeft() == 0;
+            assert p.getTreasuresCollected() == p.getTotalTreasures() : "Player should have collected all treasures";
             isPassable = true;
         }
     }

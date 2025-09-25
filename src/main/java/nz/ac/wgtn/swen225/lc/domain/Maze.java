@@ -31,7 +31,7 @@ public class Maze {
         //initialise player and set start position
         this.player = Player.getInstance();
         this.player.initialiseStartPos(rows, cols);
-        this.player.setTreasuresLeft(2); //for testing purposes, to be set when maze is loaded
+        this.player.setTotalTreasures(4); //for testing purposes, to be set when maze is loaded
 
         assert player != null : "Player instance is null";
         assert tileGrid != null : "Tile grid is null";

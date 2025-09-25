@@ -20,7 +20,8 @@ public class Player{
     private List<Key> keys = new ArrayList<>(); //collection of keys the player has
     private Position pos; //current position of the player
     private Direction direction; //current direction the player is facing, enum Direction
-    private int treasuresLeft; //number of treasures left to collect in the maze
+    private int totalTreasures; //total number of treasures in the maze level
+    private int treasuresCollected = 0; //number of treasures collected by player
 
     /**
      * Constructor for player with specified starting position
@@ -81,10 +82,10 @@ public class Player{
      * Method to decrement the treasure count when a treasure is collected
      */
     public void collectTreasure(){
-        if(treasuresLeft > 0){
-            treasuresLeft--;
+        if(treasuresCollected < totalTreasures){
+            treasuresCollected++;
         }
-        assert treasuresLeft >= 0 : "Treasures left cannot be negative";
+        assert treasuresCollected >= 0 : "Treasures left cannot be negative";
     }
 
     /**
@@ -104,12 +105,12 @@ public class Player{
     }
 
     /**
-     * Set the number of treasures left to collect in the maze
-     * @param i number of treasures left
+     * Set the total number of treasures to collect in the maze
+     * @param i number of treasures in maze
      */
-    public void setTreasuresLeft(int i){
-        assert i >= 0 : "Treasures left cannot be negative";
-        this.treasuresLeft = i;
+    public void setTotalTreasures(int i){
+        assert i >= 0 : "Treasures in game cannot be negative";
+        this.totalTreasures = i;
     }
 
     /**
@@ -142,21 +143,27 @@ public class Player{
      * @return true if all treasures collected, false otherwise
      */
     public boolean allTreasuresCollected(){
-        if(treasuresLeft < 0){
+        if(treasuresCollected < 0){
             throw new IllegalStateException("Treasures left not initialized");
         }
-        return treasuresLeft == 0;
+        return treasuresCollected == totalTreasures;
     }
 
     /**
-     * Get the number of treasures left to collect
-     * @return
+     * Get the number of treasures collected by the player
+     * @return number of treasures collected
      */
-    public int getTreasuresLeft() {return treasuresLeft;}
+    public int getTreasuresCollected() {return treasuresCollected;}
+
+    /**
+     * Get the total number of treasures in the maze level
+     * @return total treasures
+     */
+    public int getTotalTreasures(){ return totalTreasures; }
 
     /**
      * Get the number of keys the player has collected
-     * @return
+     * @return number of keys
      */
     public int getKeysLeft(){return keys.size();}
 
