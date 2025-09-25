@@ -14,6 +14,9 @@ public class Position {
      * @param y y-coordinate
      */
     public Position(int x, int y){
+        if(x < 0 || y < 0){
+            throw new IllegalArgumentException("Coordinates cannot be negative");
+        }
         this.x = x;
         this.y = y;
     }
@@ -35,6 +38,9 @@ public class Position {
      * @param i new x-coordinate
      */
     public void setX(int i){
+        if(i < 0){
+            throw new IllegalArgumentException("Coordinate cannot be negative");
+        }
         this.x = i;
     }
 
@@ -43,6 +49,9 @@ public class Position {
      * @param i new y-coordinate
      */
     public void setY(int i){
+        if(i < 0){
+            throw new IllegalArgumentException("Coordinate cannot be negative");
+        }
         this.y = i;
     }
 

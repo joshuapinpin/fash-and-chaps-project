@@ -21,6 +21,9 @@ public class Maze {
      * @param cols number of columns
      */
     public Maze(int rows, int cols){
+        if(rows <= 0 || cols <= 0){
+            throw new IllegalArgumentException("Maze dimensions must be positive");
+        }
         this.rows = rows;
         this.cols = cols;
         this.tileGrid = new Tile[rows][cols];
@@ -28,6 +31,10 @@ public class Maze {
         //initialise player and set start position
         this.player = Player.getInstance();
         this.player.initialiseStartPos(rows, cols);
+        this.player.setTreasuresLeft(2); //for testing purposes, to be set when maze is loaded
+
+        assert player != null : "Player instance is null";
+        assert tileGrid != null : "Tile grid is null";
     }
 
     /**
@@ -165,13 +172,18 @@ public class Maze {
      * @return tile at position
      */
     public Tile getTileAt(Position p){
+        if(p == null){
+            throw new IllegalArgumentException("Position cannot be null");
+        }
         int x = p.getX();
         int y = p.getY();
         if (x < 0 || x >= cols || y < 0 || y >= rows) {
-            //may need to look at this with more testing
             throw new IndexOutOfBoundsException("Position out of maze bounds: " + p);
         }
-        return tileGrid[y][x];
+        Tile tile = tileGrid[y][x];
+        assert tile != null : "Tile at position " + p + " is null";
+
+        return tile;
     }
 
     /**
@@ -179,9 +191,13 @@ public class Maze {
      * @param tile tile to set
      */
     public void setTileAt(Tile tile) {
-        assert tile != null : "Tile cannot be null";
+        if(tile == null){
+            throw new IllegalArgumentException("Tile cannot be null");
+        }
         Position pos = tile.getPos();
-        assert pos != null : "Tile position cannot be null";
+        if(pos == null){
+            throw new IllegalArgumentException("Tile position cannot be null");
+        }
 
         int x = pos.getX();
         int y = pos.getY();
@@ -200,8 +216,8 @@ public class Maze {
      */
     public void movePlayer(Direction direction){
         //find tile in the direction player wants to move
-        if(player == null){
-            throw new NullPointerException("Player not set in maze");
+        if(player == null || direction == null){
+            throw new IllegalArgumentException("Player not set in maze");
         }
 
         Position toMove = direction.apply(player.getPos());
@@ -210,8 +226,11 @@ public class Maze {
         if(targetTile.isAccessible(this.player)){
             player.move(direction);
             targetTile.onEnter(player);
+
+            assert player.getPos().equals(toMove) : "Player did not move to the correct position";
         }
         player.setDirection(direction); //update player direction regardless of move success
+        assert player.getDirection() == direction : "Player direction not updated correctly";
     }
 
     /**
@@ -235,6 +254,9 @@ public class Maze {
      * @param player player to set
      */
     public void setPlayer(Player player){
+        if(player == null){
+            throw new IllegalArgumentException("Player cannot be null");
+        }
         this.player = player;
     }
 

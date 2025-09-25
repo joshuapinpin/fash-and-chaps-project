@@ -4,6 +4,7 @@ package nz.ac.wgtn.swen225.lc.domain;
  * Enum for the Player movement directions in the game
  * Having UP, DOWN, LEFT and RIGHT movements
  * dx and dy fields represent how the Direction changes a Position
+ * @author Hayley Far
  */
 public enum Direction {
     UP(0,-1), //move player up by decreasing y coordinate
@@ -32,6 +33,9 @@ public enum Direction {
      * @return new position after applying direction
      */
     public Position apply(Position pos){
+        if(pos == null){
+            throw new IllegalArgumentException("Position cannot be null");
+        }
         return new Position(pos.getX()+dx, pos.getY()+dy);
     }
 

@@ -7,6 +7,7 @@ import nz.ac.wgtn.swen225.lc.domain.Position;
  * Abstract Tile class representing a tile in the game
  * Tiles can have different types and behaviors
  * Each tile has a position and accessibility status
+ * @author Hayley Far
  */
 public abstract class Tile {
     private Position pos; //position of the tile in the maze
@@ -15,7 +16,12 @@ public abstract class Tile {
      * Constructor for tile with specified position
      * @param pos position of the tile
      */
-    public Tile(Position pos){this.pos = pos;}
+    public Tile(Position pos){
+        if(pos == null){
+            throw new IllegalArgumentException("Position cannot be null");
+        }
+        this.pos = pos;
+    }
 
     /**
      * Getter for tile position

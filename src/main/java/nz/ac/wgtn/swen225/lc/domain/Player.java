@@ -12,6 +12,7 @@ import java.util.List;
  * Provides methods to move, collect treasure, and manage keys
  *
  * Player starts in the center of the maze, based on maze size from rows and cols
+ * @author Hayley Far
  */
 public class Player{
     private static final Player INSTANCE = new Player(); //singleton instance
@@ -28,7 +29,6 @@ public class Player{
     private Player(){
         this.pos = new Position(0,0); //default starting position, to be set when maze is loaded
         this.direction = Direction.DOWN; //default starting direction
-        this.treasuresLeft = -1; //to be set when maze is loaded (check via assert when loading)
     }
 
     /**
@@ -38,6 +38,9 @@ public class Player{
      * @param cols number of columns in maze
      */
     public void initialiseStartPos(int rows, int cols){
+        if(rows <= 0 || cols <= 0){
+            throw new IllegalArgumentException("Maze dimensions must be positive");
+        }
         this.pos = new Position(cols/2, rows/2);
     }
 
@@ -55,6 +58,9 @@ public class Player{
      * @param direction direction to move in
      */
     public void move(Direction direction){
+        if(direction == null){
+            throw new IllegalArgumentException("Direction cannot be null");
+        }
         this.direction = direction;
         this.pos = direction.apply(this.pos); //strategy pattern via enum
     }
@@ -64,7 +70,11 @@ public class Player{
      * @param k key to add
      */
     public void addKey(Key k){
+        if(k == null){
+            throw new IllegalArgumentException("Key cannot be null");
+        }
         keys.add(k);
+        assert keys.contains(k) : "Key should have been added to collection";
     }
 
     /**
@@ -74,6 +84,7 @@ public class Player{
         if(treasuresLeft > 0){
             treasuresLeft--;
         }
+        assert treasuresLeft >= 0 : "Treasures left cannot be negative";
     }
 
     /**
@@ -131,7 +142,9 @@ public class Player{
      * @return true if all treasures collected, false otherwise
      */
     public boolean allTreasuresCollected(){
-        assert treasuresLeft >=0 : "Treasures left cannot be negative";
+        if(treasuresLeft < 0){
+            throw new IllegalStateException("Treasures left not initialized");
+        }
         return treasuresLeft == 0;
     }
 
