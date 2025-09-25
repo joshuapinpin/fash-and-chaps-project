@@ -178,6 +178,7 @@ public class Maze {
         int x = p.getX();
         int y = p.getY();
         if (x < 0 || x >= cols || y < 0 || y >= rows) {
+            //may need to look at this with more testing
             throw new IndexOutOfBoundsException("Position out of maze bounds: " + p);
         }
         Tile tile = tileGrid[y][x];
