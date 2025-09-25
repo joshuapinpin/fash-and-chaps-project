@@ -1,12 +1,9 @@
-package nz.ac.wgtn.swen225.lc.persistency.levelloader.parse.tile;
+package nz.ac.wgtn.swen225.lc.persistency.levelloader.parse;
 
 import nz.ac.wgtn.swen225.lc.domain.Position;
 import nz.ac.wgtn.swen225.lc.domain.entities.Entity;
-import nz.ac.wgtn.swen225.lc.domain.entities.ExitLock;
-import nz.ac.wgtn.swen225.lc.domain.entities.Treasure;
 import nz.ac.wgtn.swen225.lc.domain.tiles.Free;
 import nz.ac.wgtn.swen225.lc.domain.tiles.Tile;
-import nz.ac.wgtn.swen225.lc.persistency.levelloader.parse.entity.EntityParser;
 
 import java.util.Objects;
 
@@ -35,28 +32,9 @@ record FreeParser(String symbol) implements TileParser {
         }
 
         if (split.length == 2) {
-            Entity entity = parseEntity(split[1]);
+            Entity entity = EntityParser.parseEntity(split[1]);
             free.setCollectable(entity);
         }
         return free;
-    }
-
-    //TODO: make this more maintainable.
-    private Entity parseEntity(String entity) {
-        if (entity.contains("Door")) {
-            return EntityParser.DoorParser.parse(entity);
-        }
-        else if (entity.contains("Key")) {
-            return EntityParser.KeyParser.parse(entity);
-        }
-        else if (entity.contains("ExitLock")) {
-            return EntityParser.ExitLockParser.parse(entity);
-        }
-        else if (entity.contains("Treasure")) {
-            return EntityParser.TreasureParser.parse(entity);
-        }
-        else {
-            throw new IllegalArgumentException("Not an entity: "+entity);
-        }
     }
 }

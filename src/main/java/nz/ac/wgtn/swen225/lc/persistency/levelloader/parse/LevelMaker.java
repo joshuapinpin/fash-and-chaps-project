@@ -1,4 +1,4 @@
-package nz.ac.wgtn.swen225.lc.persistency.levelloader.parse.tile;
+package nz.ac.wgtn.swen225.lc.persistency.levelloader.parse;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import nz.ac.wgtn.swen225.lc.domain.*;
 import nz.ac.wgtn.swen225.lc.persistency.levelloader.BoardSerializer;
+import nz.ac.wgtn.swen225.lc.persistency.levelloader.Levels;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -108,46 +109,17 @@ public class LevelMaker {
         Position position;
 
         // parse String symbol at each board position
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                symbol = board[i][j];
+        for (int y = 0; y < rows; y++) {
+            for (int x = 0; x < cols; x++) {
+                symbol = board[y][x];
                 assert !symbol.isEmpty() : "Symbol cannot be empty.";
                 parser = legend.get(symbol.split(TileParser.separator)[0]);
 
                 assert parser != null : "Unknown symbol: " + symbol;
-                position = new Position(i, j);
+                position = new Position(x, y);
                 maze.setTileAt(parser.parse(this, symbol, position));
             }
         }
         return maze;
-    }
-
-    /**
-     * Main function for bootstrapping. Use this to write a blank level to JSON, then
-     * edit the symbols in the JSON directly to create levels.
-     * @param args - unused CLI arguments.
-     */
-    public static void main(String[] args) {
-        int mapSize = 23;
-        String defaultSymbol = "~";
-
-        // default board
-        LevelMaker bootstrap =  new LevelMaker(mapSize, mapSize);
-        for (int i = 0; i < mapSize; i++) {
-            Arrays.fill(bootstrap.board[i], defaultSymbol);
-        }
-
-        // write default board to JSON file
-        Path path = Paths.get(System.getProperty("user.home"), "bootstrap.json");
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.writerWithDefaultPrettyPrinter().writeValue(path.toFile(), bootstrap);
-            LevelMaker deserialised = mapper.readValue(path.toFile(), LevelMaker.class);
-            System.out.println(deserialised.loadLevel());
-        } catch (IOException e) {
-            throw new Error("Unable to serialize bootstrap level", e);
-        }
-
-        System.out.println("Wrote file to: " + path.toAbsolutePath());
     }
 }

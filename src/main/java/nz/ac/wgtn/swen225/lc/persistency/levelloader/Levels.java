@@ -2,7 +2,7 @@ package nz.ac.wgtn.swen225.lc.persistency.levelloader;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import nz.ac.wgtn.swen225.lc.domain.Maze;
-import nz.ac.wgtn.swen225.lc.persistency.levelloader.parse.tile.LevelMaker;
+import nz.ac.wgtn.swen225.lc.persistency.levelloader.parse.LevelMaker;
 
 import java.io.IOException;
 import java.io.InputStream;
