@@ -32,7 +32,12 @@ public class ExitLock implements Entity {
      */
     @Override
     public void onInteract(Player p){
+        if(p == null){
+            throw new IllegalArgumentException("Player cannot be null");
+        }
+
         if(p.allTreasuresCollected()){
+            assert p.getTreasuresLeft() == 0;
             isPassable = true;
         }
     }
@@ -53,6 +58,9 @@ public class ExitLock implements Entity {
      */
     @Override
     public boolean canInteract(Player p) {
+        if(p == null){
+            throw new IllegalArgumentException("Player cannot be null");
+        }
         return isPassable || p.allTreasuresCollected();
     }
 

@@ -30,15 +30,35 @@ public class Door implements Entity {
     }
 
     /**
+     * Check if the player has the correct key for the door
+     * @param p player to check
+     * @return true if player has the correct key, false otherwise
+     */
+    public boolean hasCorrectKey(Player p) {
+        if(p == null){
+            throw new IllegalArgumentException("Player cannot be null");
+        }
+        return p.getKeys().stream().anyMatch(key -> key.getColor().equals(this.doorColor));
+    }
+
+    /**
      * Method to handle player interaction with the door
      * To be able to unlock door with the correct key
      * @param p player interacting with the door
     */
     @Override
     public void onInteract(Player p){
-        if(p.getKeys().stream().anyMatch(key -> key.getColor().equals(this.doorColor))){
-            isOpen = true;
+        if(p == null){
+            throw new IllegalArgumentException("Player cannot be null");
         }
+
+        boolean hasKey = hasCorrectKey(p);
+
+        if(!isOpen && !hasKey){
+            throw new IllegalStateException("Door is closed and player does not have the correct key");
+        }
+
+        if(hasKey){isOpen = true;}
     }
 
     /**
@@ -63,7 +83,10 @@ public class Door implements Entity {
      */
     @Override
     public boolean canInteract(Player p) {
-        return isOpen || p.getKeys().stream().anyMatch(key -> key.getColor().equals(this.doorColor));
+        if(p == null){
+            throw new IllegalArgumentException("Player cannot be null");
+        }
+        return isOpen || hasCorrectKey(p);
     }
 
     /**

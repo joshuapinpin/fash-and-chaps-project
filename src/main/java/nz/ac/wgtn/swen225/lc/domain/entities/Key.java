@@ -35,7 +35,12 @@ public class Key implements Entity {
      */
     @Override
     public void onInteract(Player p){
+        if(p == null){
+            throw new IllegalArgumentException("Player cannot be null");
+        }
         p.addKey(this);
+
+        assert p.getKeys().contains(this);
     }
 
     /**
