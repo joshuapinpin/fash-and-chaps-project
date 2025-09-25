@@ -27,6 +27,7 @@ public class Save{
         mapper = new ObjectMapper();
     }
     public void addMovement(Input direction) {
+        System.out.println("*DEBUG* Inside of the Recorder Package Now");
         movements.add(direction);
     }
     /** Returns movement list. */
@@ -38,6 +39,7 @@ public class Save{
      * elements in the movement list to the file
      */
     public void saveToFile(){
+        System.out.println("*DEBUG* Inside of the Recorder Package Now");
         File playerMovements = new File("movements.json");
         try {
             mapper.writeValue(playerMovements, movements);
