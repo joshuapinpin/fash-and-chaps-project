@@ -1,3 +1,4 @@
+// java
 package test.nz.ac.wgtn.swen225.lc.fuzz;
 
 import org.junit.jupiter.api.Assumptions;
@@ -7,8 +8,8 @@ import org.junit.jupiter.api.Timeout;
 import nz.ac.wgtn.swen225.lc.app.controller.GameController;
 import nz.ac.wgtn.swen225.lc.app.util.Input;
 
-import java.awt.*;
-import java.security.SecureRandom;
+import java.awt.*; // GraphicsEnvironment used to detect headless CI environments
+import java.security.SecureRandom; // Strong RNG; not seeded below for reproducibility (see comment in runFuzzer)
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
@@ -27,17 +28,22 @@ import java.util.Random;
  * - AssertionError
  * @author Al-Bara Al-Sakkaf
  */
-
 public class FuzzTest {
 
     @Test
     @Timeout(60)  // max 1 min runtime
     public void testLevel1() {
-
+        // In CI containers there is no GUI display (no X11/Wayland), so any attempt to create Swing windows
+        // will throw java.awt.HeadlessException. This assumption skips the test in that case to keep the
+        // pipeline green while still allowing the test to run locally with a desktop.
         Assumptions.assumeFalse(GraphicsEnvironment.isHeadless(), "Headless CI - skipping GUI fuzzer");
+
+        // Run the fuzzer against level 1 with a small time budget to keep tests fast and deterministic enough
+        // for CI stability.
         runFuzzer(1, 15_000); // ~15 seconds budget inside 60s test timeout
     }
 
+// Disabled level 2 for Integration Day as level 2 has not been implemented yet.
 //    @Test
 //    @Timeout(60)
 //    public void testLevel2() {
@@ -56,15 +62,20 @@ public class FuzzTest {
      * (which can be legitimate for unsupported inputs in states) and is considered a finding.
      */
     private void runFuzzer(int level, long durationMillis) {
-        // Repro seed: allow override via -Dfuzz.seed=...
+        // A seed value is captured (optionally override via -Dfuzz.seed) to allow reproducibility when needed.
+        // Note: The RNG below uses SecureRandom(), which ignores the seed. To reproduce a run exactly,
+        // replace SecureRandom with new Random(seed). Keeping SecureRandom favors input diversity over replay.
         long seed = Long.getLong("fuzz.seed", System.currentTimeMillis());
         Random rnd = new SecureRandom(); // SecureRandom for better distribution; could switch to new Random(seed)
 
+        // Optional logging of the seed to stdout so that a failing run can be investigated locally.
         boolean showSeed = Boolean.getBoolean("fuzz.logSeed");
         if(showSeed) System.out.println("[FUZZ] LEVEL="+level+" SEED="+seed);
 
+        // Build a controller via the regular factory. This path initializes the GUI in non-headless mode, which
+        // is why the headless assumption above is required to prevent failures on CI.
         GameController controller = GameController.of();
-        controller.startNewGame(level);
+        controller.startNewGame(level); // Ensure a clean game state before fuzzing begins.
 
         Instant end = Instant.now().plus(Duration.ofMillis(durationMillis));
 
@@ -73,6 +84,11 @@ public class FuzzTest {
         List<Input> meta = List.of(Input.PAUSE, Input.RESUME, Input.CONTINUE, Input.SAVE);
         List<Input> levelLoads = List.of(Input.LOAD_LEVEL_1, Input.LOAD_LEVEL_2);
 
+        // The main loop biases actions by bucket percentage:
+        //  - 0..69: movement (~70%)
+        //  - 70..84: meta actions (~15%)
+        //  - 85..94: level load actions (~10%)
+        //  - 95..99: rare action placeholder (~5%)
         int moves = 0;
         while(Instant.now().isBefore(end)) {
             Input next;
@@ -88,17 +104,27 @@ public class FuzzTest {
             }
 
             try {
+                // Drive the public controller API; any unexpected runtime exception here indicates a robustness issue.
                 controller.handleInput(next);
             } catch(UnsupportedOperationException | IllegalArgumentException ignored) {
-                // expected occasionally
+                // Some inputs may be legitimately unsupported in certain states; those are not test failures.
             }
 
             moves++;
-            if((moves % 25)==0) sleepQuiet(5 + (rnd.nextInt(10))); // throttle a little
+            if((moves % 25)==0) {
+                // Brief sleeps give the EDT time to process events and simulate more realistic user pacing.
+                // Keeping this small prevents the test from exceeding the overall timeout.
+                sleepQuiet(5 + (rnd.nextInt(10))); // throttle a little
+            }
         }
     }
 
     private void sleepQuiet(long millis) {
-        try { Thread.sleep(millis); } catch (InterruptedException ignored) { Thread.currentThread().interrupt(); }
+        // Best-effort sleep that preserves the interrupt flag if interrupted, avoiding swallowed interrupts.
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException ignored) {
+            Thread.currentThread().interrupt();
+        }
     }
 }
