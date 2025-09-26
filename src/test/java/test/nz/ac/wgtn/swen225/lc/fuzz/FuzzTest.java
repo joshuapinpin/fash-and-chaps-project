@@ -1,11 +1,13 @@
 package test.nz.ac.wgtn.swen225.lc.fuzz;
 
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
 import nz.ac.wgtn.swen225.lc.app.controller.GameController;
 import nz.ac.wgtn.swen225.lc.app.util.Input;
 
+import java.awt.*;
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.Instant;
@@ -31,6 +33,8 @@ public class FuzzTest {
     @Test
     @Timeout(60)  // max 1 min runtime
     public void testLevel1() {
+
+        Assumptions.assumeFalse(GraphicsEnvironment.isHeadless(), "Headless CI - skipping GUI fuzzer");
         runFuzzer(1, 15_000); // ~15 seconds budget inside 60s test timeout
     }
 
