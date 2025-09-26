@@ -30,15 +30,9 @@ public class App implements GameController {
     private GameState state;
     private int level;
 
-    // Constructor with Singleton Pattern
-    private static App INSTANCE;
-    private App() {
+    public App() {
         initialiseControllerComponents();
         startNewGame(1);
-    }
-    public static App getInstance() {
-        if(INSTANCE == null) INSTANCE = new App();
-        return INSTANCE;
     }
 
 
