@@ -6,6 +6,11 @@ import nz.ac.wgtn.swen225.lc.app.util.Input;
 import java.util.HashMap;
 
 public interface GameState{
+    /**
+     * Handles input based on the current game state.
+     * @param controller GameController
+     * @param input Input
+     */
     default void handleInput(GameController controller, Input input) {
         switch(input){
             case MOVE_UP -> moveUp(controller);
@@ -22,7 +27,6 @@ public interface GameState{
             default -> throw new IllegalArgumentException("Unexpected input: " + input);
         }
     }
-
     default void moveUp(GameController c){throw new UnsupportedOperationException();}
     default void moveDown(GameController c){throw new UnsupportedOperationException();}
     default void moveLeft(GameController c){throw new UnsupportedOperationException();}

@@ -30,6 +30,9 @@ public class App implements GameController {
     private GameState state;
     private int level;
 
+    /**
+     * Constructor initializes the game components and starts a new game.
+     */
     public App() {
         initialiseControllerComponents();
         startNewGame(1);
@@ -162,16 +165,23 @@ public class App implements GameController {
         System.exit(0);
     }
 
+    /**
+     * Displays help or game rules.
+     */
     @Override
     public void help() {
         System.out.println("Displaying Help/Rules...");
     }
 
+    /**
+     * Handles the event when time is up.
+     */
     public void timeUp() {
         setState(new DeadState(timerController));
         System.out.println("Time's Up! Game Over.");
     }
 
+    // ========== Getters and Setters ==========
     public void setState(GameState state) {this.state = state;}
     public AppWindow getGameWindow() {return window;}
     public GameState getState() {return state;}

@@ -15,6 +15,10 @@ public class TitlePanel extends JPanel implements GamePanel{
     private BufferedImage bgImg;
     private GameController controller;
 
+    /**
+     * Constructor for TitlePanel.
+     * @param controller GameController
+     */
     public TitlePanel(GameController controller){
         this.controller = controller;
         setLayout(new BorderLayout());

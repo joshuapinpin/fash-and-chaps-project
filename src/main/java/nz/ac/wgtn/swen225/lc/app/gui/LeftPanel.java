@@ -40,6 +40,11 @@ public class LeftPanel extends JPanel implements GamePanel{
 
     private List<JComponent> allComponents;
 
+    /**
+     * Constructor for LeftPanel.
+     * @param controller GameController
+     * @param timerController TimerController
+     */
     public LeftPanel(GameController controller, TimerController timerController){
         this.controller = controller;
         this.timerController = timerController;
@@ -151,6 +156,9 @@ public class LeftPanel extends JPanel implements GamePanel{
         allComponents.add(panel);
     }
 
+    /**
+     * Update the panel's components.
+     */
     @Override
     public void updatePanel() {
         int timeLeft = timerController.getTimeLeft();

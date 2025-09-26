@@ -56,10 +56,8 @@ public class AppWindow extends JFrame {
         //setupDialogs();
 
     }
+    // ===== SETUP METHODS =====
 
-    /**
-     * Sets up the main game window (JFrame) properties.
-     */
     private void setupWindow(){
         addKeyListener(inputController);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -105,20 +103,42 @@ public class AppWindow extends JFrame {
 
     // ===== INTERACTIONS WITH CONTROLLER =====
 
+    /**
+     * Show pause dialog (modal).
+     */
     public void showPauseDialog() {
     }
 
+    /**
+     * Show help dialog (modal).
+     */
     public void showHelpDialog() {
     }
+
+    /**
+     * Remove pause dialog (if any).
+     */
     public void removePauseDialog() {
     }
 
+    /**
+     * Show error dialog (modal).
+     * @param message The error message to display.
+     */
     public void showErrorDialog(String message) {
     }
 
+    /**
+     * Show message dialog (modal).
+     * @param message The message to display.
+     * @param title The title of the dialog.
+     */
     public void showMessageDialog(String message, String title) {
     }
 
+    /**
+     * Update the entire window (all panels).
+     */
     public void updateWindow(){
         allPanels.forEach(panel -> {
             if(panel instanceof GamePanel updatable) updatable.updatePanel();
@@ -127,13 +147,14 @@ public class AppWindow extends JFrame {
     }
 
 
+    /**
+     * Update the status bar with current game information.
+     */
     // TODO: Must decide what things are needed to be updated in the status bar
     public void updateStatus() {
         // TODO: Update status bar with current game info
     }
-
-
-
+    
     // Getters
     public static int getWindowWidth() {return WINDOW_WIDTH;}
     public static int getWindowHeight() {return WINDOW_HEIGHT;}
