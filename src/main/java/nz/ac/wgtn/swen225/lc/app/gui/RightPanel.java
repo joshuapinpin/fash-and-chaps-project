@@ -31,6 +31,11 @@ public class RightPanel extends JPanel implements ActionListener, ChangeListener
     private Map<JButton, Runnable> buttonRunnableMap;
     private BufferedImage bgImg;
 
+    /**
+     * Constructor for RightPanel.
+     * @param controller GameController
+     * @param recorderController RecorderController
+     */
     public RightPanel(GameController controller, RecorderController recorderController){
         this.controller = controller;
         this.recorderController = recorderController;

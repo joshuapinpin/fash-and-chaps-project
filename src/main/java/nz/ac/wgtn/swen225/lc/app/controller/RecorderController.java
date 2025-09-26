@@ -28,25 +28,43 @@ public class RecorderController {
         save = new Save();
     }
 
+    /**
+     * Start recording the player's movements.
+     */
     public void startRecording(){
         isRecording = true;
         System.out.println("Started Recording");
     }
 
+    /**
+     * Stop recording the player's movements and save to file.
+     */
     public void stopRecording(){
         isRecording = false;
         save.saveToFile();
         System.out.println("Stopped Recording");
     }
 
+    /**
+     * Check if currently recording.
+     * @return true if recording, false otherwise.
+     */
     public boolean isRecording(){
         return isRecording;
     }
 
+    /**
+     * Set the speed of playback.
+     * @param s Speed in milliseconds between moves.
+     */
     public void setSpeed(int s) {
         play.setSpeed(s);
     }
 
+    /**
+     * Play back the recorded movements step by step.
+     * If playback finishes, return to paused state.
+     */
     public void stepByStep() {
         System.out.println("Step-By-Step Playing");
         controller.setState(new StepReplayState());
@@ -54,6 +72,10 @@ public class RecorderController {
             controller.setState(new PausedState(timerController));
     }
 
+    /**
+     * Automatically play back the recorded movements.
+     * If playback finishes, return to paused state.
+     */
     public void autoPlay() {
         System.out.println("Auto-Playing");
         controller.setState(new AutoReplayState());
@@ -61,6 +83,10 @@ public class RecorderController {
         controller.setState(new PausedState(timerController));
     }
 
+    /**
+     * Add a movement to the recording.
+     * @param dir Direction of movement.
+     */
     public void addMovement(Input dir){
         if(!isRecording) return;
         save.addMovement(dir);

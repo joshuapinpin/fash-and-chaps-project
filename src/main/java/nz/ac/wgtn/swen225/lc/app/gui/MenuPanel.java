@@ -26,6 +26,10 @@ public class MenuPanel extends JPanel implements ActionListener, GamePanel{
     private GameController controller;
     private BufferedImage bgImg;
 
+    /**
+     * Constructor for MenuPanel.
+     * @param controller GameController
+     */
     public MenuPanel(GameController controller){
         this.controller = controller;
         setLayout(new GridLayout(1, 5, BUTTON_GAP, BUTTON_GAP));
