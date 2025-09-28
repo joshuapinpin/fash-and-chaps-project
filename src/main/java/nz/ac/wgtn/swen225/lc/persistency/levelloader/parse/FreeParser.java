@@ -6,6 +6,7 @@ import nz.ac.wgtn.swen225.lc.persistency.levelloader.LevelMaker;
 
 /**
  * Parses a String representation into a Free Tile, if possible.
+ * @author Thomas Ru - 300658840
  */
 class FreeParser extends TileParser<Free> {
     /**

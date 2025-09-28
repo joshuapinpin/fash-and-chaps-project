@@ -11,7 +11,7 @@ import java.util.function.Function;
 
 /**
  * Represents the mapping from a human-readable String symbol which represents a
- * particular Tile type to instances of that Tile. Strategy for LevelMaker.
+ * particular Tile type, to instances of that Tile. Strategy for LevelMaker.
  * All TileParsers should be registered under the TileParsers enum to ensure uniqueness.
  * @author Thomas Ru - 300658840
  */

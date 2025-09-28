@@ -8,6 +8,7 @@ import java.util.Objects;
 
 /**
  * Parses a String representation into an Info Tile, if possible.
+ * @author Thomas Ru - 300658840
  */
 class InfoParser extends TileParser<Info> {
     /**

@@ -9,6 +9,7 @@ import java.io.IOException;
 /**
  * Custom serialiser to convert a 2D String array into JSON, with each row
  * formatted on a different line for readability.
+ * @author Thomas Ru - 300658840
  */
 class BoardSerializer extends JsonSerializer<String[][]> {
     /**

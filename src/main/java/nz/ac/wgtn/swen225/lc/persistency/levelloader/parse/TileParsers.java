@@ -9,6 +9,7 @@ import java.util.*;
 /**
  * Stores and provides access to concrete TileParsers for each Tile type.
  * These parsers convert String representations of each Tile into Tile instances.
+ * @author Thomas Ru - 300658840
  */
 public enum TileParsers {
     /**

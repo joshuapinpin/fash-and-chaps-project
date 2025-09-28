@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 /**
  * Represents a parsing Strategy for an Entity, i.e.
  * gives a way for each Entity type to be parsed.
+ * @author Thomas Ru - 300658840
  */
 public enum EntityParsers {
     /**
