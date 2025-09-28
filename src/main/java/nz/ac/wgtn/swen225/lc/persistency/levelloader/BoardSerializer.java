@@ -6,7 +6,18 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 
 import java.io.IOException;
 
-public class BoardSerializer extends JsonSerializer<String[][]> {
+/**
+ * Custom serialiser to convert a 2D String array into JSON, with each row
+ * formatted on a different line for readability.
+ */
+class BoardSerializer extends JsonSerializer<String[][]> {
+    /**
+     * Given a JsonGenerator
+     * @param value - the String[][] array to serialise
+     * @param gen - the JsonGenerator JSON writer
+     * @param serializers - the SerializerProvider to serialise any context objects (unused)
+     * @throws IOException
+     */
     @Override
     public void serialize(String[][] value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
         gen.writeStartArray();

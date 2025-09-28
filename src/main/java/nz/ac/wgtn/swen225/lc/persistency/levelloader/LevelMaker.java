@@ -1,11 +1,14 @@
-package nz.ac.wgtn.swen225.lc.persistency.levelloader.parse;
+package nz.ac.wgtn.swen225.lc.persistency.levelloader;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import nz.ac.wgtn.swen225.lc.domain.*;
-import nz.ac.wgtn.swen225.lc.persistency.levelloader.BoardSerializer;
-import java.util.*;
+import nz.ac.wgtn.swen225.lc.domain.tiles.Tile;
+import nz.ac.wgtn.swen225.lc.persistency.levelloader.parse.TileParsers;
+
+import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * Creates/loads level from human friendly JSON format.
@@ -14,9 +17,8 @@ import java.util.*;
 public class LevelMaker {
     private final int rows;
     private final int cols;
-    private final Map<String, TileParser> legend = new HashMap<>();
 
-    @JsonSerialize(using = BoardSerializer.class)
+    @JsonSerialize(using = BoardSerializer.class) // for pretty 2D array printing
     private final String[][] board;
 
     /**
@@ -29,35 +31,16 @@ public class LevelMaker {
     @JsonCreator
     public LevelMaker(
             @JsonProperty("rows") int rows,
-            @JsonProperty("cols") int cols) {
-        assert rows > 0 && cols > 0 : "Game board must be at least 1x1 in size.";
+            @JsonProperty("cols") int cols
+    ) {
+        boolean minSize = rows > 0 && cols > 0;
+        if (!minSize) {
+            throw new IllegalArgumentException("Game board must be at least 1x1 in size.");
+        }
+
         this.rows = rows;
         this.cols = cols;
         board = new String[rows][cols];
-        initialiseParsers();
-    }
-
-    /**
-     * Sets all the mappings between String symbols and TileParsers in the legend.
-     */
-    private void initialiseParsers() {
-        TileParserFactory factory = new TileParserFactory();
-        setParser(factory.createParser("F", FreeParser::new));
-        setParser(factory.createParser("W", WallParser::new));
-        setParser(factory.createParser("~", WaterParser::new));
-        setParser(factory.createParser("I", InfoParser::new));
-        setParser(factory.createParser("E", ExitParser::new));
-    }
-
-    /**
-     * Alter the mappings between String symbols and the corresponding Tiles created.
-     * @param parser - the TileParser for a particular tile type.
-     */
-    private void setParser(TileParser parser) {
-        Objects.requireNonNull(parser, "Tile parser cannot be null.");
-        String symbol = Objects.requireNonNull(parser.symbol(), "Symbol cannot be null.");
-        assert !symbol.isEmpty() : "Symbol cannot be empty.";
-        legend.put(symbol, parser);
     }
 
     /**
@@ -67,8 +50,8 @@ public class LevelMaker {
      */
     public String[][] getBoard() {
         String[][] copy  = new String[rows][cols];
-        for (int i = 0; i < rows; i++) {
-            System.arraycopy(board[i], 0, copy[i], 0, cols);
+        for (int y = 0; y < rows; y++) {
+            System.arraycopy(board[y], 0, copy[y], 0, cols);
         }
         return copy;
     }
@@ -98,7 +81,6 @@ public class LevelMaker {
      */
     public Maze loadLevel() {
         Maze maze = new Maze(rows, cols);
-        TileParser parser;
         String symbol;
         Position position;
 
@@ -106,14 +88,54 @@ public class LevelMaker {
         for (int y = 0; y < rows; y++) {
             for (int x = 0; x < cols; x++) {
                 symbol = board[y][x];
-                assert !symbol.isEmpty() : "Symbol cannot be empty.";
-                parser = legend.get(symbol.split(TileParser.separator)[0]);
-
-                assert parser != null : "Unknown symbol: " + symbol;
+                if (symbol.isEmpty()) {
+                    throw new IllegalArgumentException("Symbol cannot be empty");
+                }
                 position = new Position(x, y);
-                maze.setTileAt(parser.parse(this, symbol, position));
+                Tile tile = TileParsers.parseTile(this, symbol, position);
+                maze.setTileAt(tile);
             }
         }
         return maze;
+    }
+
+    /**
+     * Gives the String representation of a LevelMaker's board.
+     * @return - a prettified version of the LevelMaker's 2D array board.
+     */
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        result.append("[\n");
+        for (String[] row : board) {
+            result.append(Arrays.toString(row));
+            result.append("\n");
+        }
+        result.append("]");
+        return result.toString();
+    }
+
+    /**
+     * Compare whether some object is structurally equal to a LevelMaker.
+     * @param obj - the reference object with which to compare.
+     * @return - true if they are equal, false otherwise.
+     */
+    @Override public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if(obj == null) return false;
+        if (this.getClass() != obj.getClass()) return false;
+        LevelMaker other = (LevelMaker) obj;
+        return rows==other.rows
+                && cols==other.cols
+                && Arrays.deepEquals(board, other.board);
+    }
+
+    /**
+     * Gives the hash of a LevelMaker, where equally sized boards with equal contents
+     * implies equal hashes.
+     * @return - the hash as an integer.
+     */
+    @Override public int hashCode() {
+        return Objects.hash(rows, cols, Arrays.deepHashCode(board));
     }
 }
