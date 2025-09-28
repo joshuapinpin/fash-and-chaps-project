@@ -63,5 +63,4 @@ public enum TileParsers {
     TileParsers(TileParser<?> parser) {
         this.parser = parser;
     }
-
 }
