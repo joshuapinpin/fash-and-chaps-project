@@ -46,8 +46,8 @@ public class App implements GameController {
         recorderController = new RecorderController(this, timerController);
 
         rendererController.setWindow(new AppWindow(this, inputController,
-                timerController, recorderController)
-        );
+                timerController, recorderController
+        ));
 
 
     }
@@ -112,7 +112,8 @@ public class App implements GameController {
     }
 
     /**
-     * Resumes the game.
+     * Resumes a saved game
+     * Load game from file selector.
      */
     public void resumeGame() {
         // TODO: Implement resume logic
@@ -171,9 +172,10 @@ public class App implements GameController {
 
     // ========== Getters and Setters ==========
     public void setState(GameState state) {this.state = state;}
-    public AppWindow getGameWindow() {return rendererController.window();}
+
+    public int getLevel() {return level;}
     public GameState getState() {return state;}
     public Maze getDomain() {return domainController.domain();}
     public Renderer getRenderer() {return rendererController.renderer();}
-    public int getLevel() {return level;}
+    public AppWindow getGameWindow() {return rendererController.window();}
 }

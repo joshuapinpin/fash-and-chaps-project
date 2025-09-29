@@ -40,16 +40,14 @@ public class RightPanel extends JPanel implements ActionListener, ChangeListener
         allComps = new ArrayList<>();
         setupUI();
         setupComponents();
-        setupRecorderButtons();
-        setupSlider();
-        setupHelp();
     }
 
     private void setupUI(){
         setOpaque(false);
         setLayout(new GridLayout(9,1, 0, 20));
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
-        setBorder(BorderFactory.createEmptyBorder(0, AppWindow.SQUARE_SIZE,
+        setBorder(BorderFactory.createEmptyBorder(
+                0, AppWindow.SQUARE_SIZE,
                 0, AppWindow.SQUARE_SIZE));
         setOpaque(false);
         bgImg = LoadingImg.Water.loadImage();
@@ -61,7 +59,15 @@ public class RightPanel extends JPanel implements ActionListener, ChangeListener
         label.setForeground(Color.white);
         add(label);
         allComps.add(label);
+
+        setupRecorderButtons();
+        setupSlider();
+
+        JLabel helpLabel = new JLabel();
+        allComps.add(helpLabel);
+        setupSingleButton("HELP", controller::help);
     }
+
     private void setupRecorderButtons(){
         buttonRunnableMap = new HashMap<>();
         setupSingleButton("Start Recorder", () -> recorderController.startRecording());
@@ -94,12 +100,6 @@ public class RightPanel extends JPanel implements ActionListener, ChangeListener
         });
         add(slider);
         allComps.add(slider);
-    }
-
-    private void setupHelp(){
-        JLabel label = new JLabel();
-        allComps.add(label);
-        setupSingleButton("HELP", controller::help);
     }
 
     /**
