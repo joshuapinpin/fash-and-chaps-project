@@ -5,12 +5,16 @@ import nz.ac.wgtn.swen225.lc.app.controller.GameController;
 import nz.ac.wgtn.swen225.lc.app.controller.TimerController;
 import nz.ac.wgtn.swen225.lc.app.util.MyFont;
 import nz.ac.wgtn.swen225.lc.app.util.MyImage;
+import nz.ac.wgtn.swen225.lc.domain.entities.EntityColor;
+import nz.ac.wgtn.swen225.lc.domain.entities.Key;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Displays time left (countdown), current level, keys collected, and treasures remaining.
@@ -26,13 +30,21 @@ public class LeftPanel extends JPanel implements GamePanel{
     public static final int PANEL_HEIGHT = AppWindow.MAZE_SIZE;
     public static final int FONT_SIZE = 40;
 
-    private List<JPanel> allPanels;
     private JPanel levelPanel, timerPanel, keysPanel, treasurePanel;
     private JLabel timerLabel, levelLabel;
     private GameController controller;
     private TimerController timerController;
     private BufferedImage bgImg;
 
+    private Map<EntityColor, BufferedImage> imageMap;
+
+    private List<JComponent> allComponents;
+
+    /**
+     * Constructor for LeftPanel.
+     * @param controller GameController
+     * @param timerController TimerController
+     */
     public LeftPanel(GameController controller, TimerController timerController){
         this.controller = controller;
         this.timerController = timerController;
@@ -41,9 +53,16 @@ public class LeftPanel extends JPanel implements GamePanel{
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         setupComponents();
         bgImg = new MyImage("water").getImage();
+        imageMap = Map.of(
+            EntityColor.PINK, LoadingImg.PinkKey.loadImage(),
+            EntityColor.ORANGE, LoadingImg.OrangeKey.loadImage(),
+            EntityColor.GREEN, LoadingImg.GreenKey.loadImage(),
+            EntityColor.PURPLE, LoadingImg.PurpleKey.loadImage()
+        );
     }
 
     private void setupComponents(){
+        allComponents = new ArrayList<>();
         levelPanel = new JPanel(){
             @Override
             protected void paintComponent(Graphics g) {
@@ -70,10 +89,16 @@ public class LeftPanel extends JPanel implements GamePanel{
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                int keysLeft = controller.getDomain().getPlayer().getKeysLeft();
+                List<Key> keys = controller.getDomain().getPlayer().getKeys();
+                int keysLeft = keys.size();
+
+
                 BufferedImage img;
                 for(int i = 0; i < 4; i++){
-                    if(i < keysLeft) img = LoadingImg.OrangeKey.loadImage();
+                    if(i < keysLeft){
+                        EntityColor keyColor = keys.get(i).getColor();
+                        img = imageMap.get(keyColor);
+                    }
                     else img = LoadingImg.Sand.loadImage();
                     g.drawImage(img,AppWindow.SQUARE_SIZE + i * AppWindow.SQUARE_SIZE, 0,
                             AppWindow.SQUARE_SIZE, AppWindow.SQUARE_SIZE, this);
@@ -99,7 +124,6 @@ public class LeftPanel extends JPanel implements GamePanel{
         setupLabelWithPanel("Timer", MyFont.PIXEL, timerPanel);
         setupLabelWithPanel("Keys", MyFont.PIXEL, keysPanel);
         setupLabelWithPanel("Treasure", MyFont.PIXEL, treasurePanel);
-        allPanels = List.of(levelPanel, timerPanel, keysPanel, treasurePanel);
     }
 
     private void setupLabelWithPanel(String name, MyFont font, JPanel panel){
@@ -128,13 +152,20 @@ public class LeftPanel extends JPanel implements GamePanel{
 
         add(label);
         add(panel);
+        allComponents.add(label);
+        allComponents.add(panel);
     }
 
+    /**
+     * Update the panel's components.
+     */
     @Override
     public void updatePanel() {
         int timeLeft = timerController.getTimeLeft();
         timerLabel.setText(timeLeft + "");
-        allPanels.forEach(JPanel::repaint);
+        int level = controller.getLevel();
+        levelLabel.setText(level + "");
+        allComponents.forEach(JComponent::repaint);
     }
 
     @Override
