@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 record TestData(int number){}
 
+// TODO: move Level67.json to test/resources
 public class LevelsTest {
     private static Maze mapper(InputStream in){
         try {
