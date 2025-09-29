@@ -3,6 +3,7 @@ package nz.ac.wgtn.swen225.lc.app.controller;
 import nz.ac.wgtn.swen225.lc.domain.*;
 import nz.ac.wgtn.swen225.lc.domain.entities.*;
 
+import java.util.Collections;
 import java.util.List;
 
 public class DomainController {
@@ -17,4 +18,8 @@ public class DomainController {
     }
 
 
+    // ========== GETTERS AND SETTERS ==========
+    public Maze getMaze() {return maze;}
+    public Player getPlayer() {return player;}
+    public List<Key> getKeysList() {return Collections.unmodifiableList(keysList);}
 }

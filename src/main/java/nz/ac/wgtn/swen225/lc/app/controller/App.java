@@ -19,11 +19,14 @@ public class App implements GameController {
     private Maze domain; // Reference to the domain model
     private Renderer renderer;// Reference to the renderer/view
 
-    // CONTROLLER Components
+    // CONTROLLERS
     private InputController inputController;
     private TimerController timerController;
+
     private RecorderController recorderController;
-    // Reference to persistence
+    private PersistencyController persistencyController;
+    private DomainController domainController;
+    private RendererController rendererController;
 
     // GAME MANAGEMENT Components
     private AppWindow window; // Reference to the main application window
@@ -34,22 +37,27 @@ public class App implements GameController {
      * Constructor initializes the game components and starts a new game.
      */
     public App() {
-        initialiseControllerComponents();
+        initialiseComponents();
+        initialiseControllers();
         startNewGame(1);
     }
 
+    private void initialiseControllers(){
+        inputController = new InputController(this);
+        timerController = new TimerController(this);
 
-    private void initialiseControllerComponents() {
+        domainController = new DomainController(domain);
+        recorderController = new RecorderController(this, timerController);
+
+    }
+
+
+    private void initialiseComponents() {
         // Initialize domain model, renderer, and controllers
         domain = Levels.LevelOne.load();
-
         renderer = new Renderer(domain.getTileGrid(), domain.getPlayer());
         int size = AppWindow.MAZE_SIZE;
         renderer.setDimensions(size, size);
-
-        inputController = new InputController(this);
-        timerController = new TimerController(this);
-        recorderController = new RecorderController(this, timerController);
         window = new AppWindow(this, inputController,
                 timerController, recorderController);
     }
@@ -66,6 +74,7 @@ public class App implements GameController {
         System.out.println("*DEBUG* Inside of the App Package Now");
         if(state == null) throw new RuntimeException("Game state is null.");
 
+        // Handle Input, send to recorder if valid
         try {
             state.handleInput(this, input);
             recorderController.addMovement(input);
@@ -76,6 +85,12 @@ public class App implements GameController {
                     + state.getClass().getSimpleName()
             );
         }
+
+        rendererController.updateGui();
+
+        // Update the window to render changes
+        // Update Game Panel.
+
         window.updateWindow();
 
         // Update the renderer with the latest domain state
