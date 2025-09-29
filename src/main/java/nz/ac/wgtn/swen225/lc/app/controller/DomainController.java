@@ -11,6 +11,9 @@ import java.util.List;
 public class DomainController {
     GameController controller;
     Maze domain;
+    Player player;
+    List<Key> keysList;
+    Tile[][] tileGrid;
 
     /**
      * Initializes the DomainController
@@ -29,6 +32,10 @@ public class DomainController {
         if(level == 1) this.domain = Levels.LevelOne.load();
         else if(level == 2) this.domain = Levels.LevelTwo.load();
         else throw new IllegalArgumentException("Invalid level: " + level);
+        this.tileGrid = domain.getTileGrid();
+        this.player = domain.getPlayer();
+        this.keysList = player.getKeys();
+
     }
 
     /**
@@ -43,9 +50,7 @@ public class DomainController {
 
     // ========== GETTERS AND SETTERS ==========
     public Maze domain() {return domain;}
-    public Player player() {return domain.getPlayer();}
-    public Tile[][] tileGrid() {return domain.getTileGrid();}
-    public List<Key> keysList() {
-        return Collections.unmodifiableList(player().getKeys());
-    }
+    public Player player() {return player;}
+    public Tile[][] tileGrid() {return tileGrid;}
+    public List<Key> keysList() {return Collections.unmodifiableList(keysList);}
 }

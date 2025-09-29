@@ -5,7 +5,7 @@ import nz.ac.wgtn.swen225.lc.app.controller.TimerController;
 
 public record PausedState(TimerController timerController) implements GameState {
     public PausedState{
-        timerController.stopTimer();
+        timerController.pause();
     }
     public void resume(GameController c){c.resumeGame();}
     public void save(GameController c){c.saveGame();}

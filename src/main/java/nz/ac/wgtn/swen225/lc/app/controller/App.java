@@ -15,10 +15,11 @@ import nz.ac.wgtn.swen225.lc.renderer.Renderer;
  * @author Joshua Pinpin (Student ID: 300662880)
  */
 public class App implements GameController {
-    // CONTROLLERS
+    // APP CONTROLLERS
     private InputController inputController;
     private TimerController timerController;
 
+    // MODULE CONTROLLERS
     private RecorderController recorderController;
     private PersistencyController persistencyController;
     private DomainController domainController;
@@ -37,24 +38,27 @@ public class App implements GameController {
     }
 
     private void initialiseControllers(){
-        domainController = new DomainController(this);
-        rendererController = new RendererController(this, domainController);
         inputController = new InputController(this);
         timerController = new TimerController(this);
+
+        domainController = new DomainController(this);
+        rendererController = new RendererController(this, domainController);
         recorderController = new RecorderController(this, timerController);
 
         rendererController.setWindow(new AppWindow(this, inputController,
                 timerController, recorderController)
         );
 
-    }
 
+    }
 
     // ========== Game Controller Implementation ==========
 
     /**
-     * Handles a user input (e.g., move, pause, save, etc).
+     * Handles a user input (e.g., move, pause, save, etc.).
      * Delegates to the current game state for processing.
+     * Updates the GUI after processing input.
+     * App -> Domain -> App -> Renderer
      * @param input The user input to handle
      */
     public void handleInput(Input input) {
@@ -91,7 +95,7 @@ public class App implements GameController {
      */
     public void startNewGame(int level) {
         setState(new PlayState(timerController));
-        timerController.startTimer(TimerController.getTimeLimitForLevel(level));
+        timerController.startTimer(level);
         domainController.initialiseDomain(level);
         recorderController.stopRecording();
         this.level = level;

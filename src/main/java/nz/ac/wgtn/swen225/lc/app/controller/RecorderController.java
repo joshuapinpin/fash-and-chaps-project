@@ -41,7 +41,6 @@ public class RecorderController {
      */
     public void stopRecording(){
         isRecording = false;
-        save.saveToFile();
         System.out.println("Stopped Recording");
     }
 
@@ -59,6 +58,14 @@ public class RecorderController {
      */
     public void setSpeed(int s) {
         play.setSpeed(s);
+    }
+
+    /**
+     * Save the recorded movements to a file.
+     */
+    public void saveToFile(){
+        isRecording = false;
+        save.saveToFile();
     }
 
     /**

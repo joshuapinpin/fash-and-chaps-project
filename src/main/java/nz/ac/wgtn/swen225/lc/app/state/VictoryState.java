@@ -5,7 +5,7 @@ import nz.ac.wgtn.swen225.lc.app.controller.TimerController;
 
 public record VictoryState(TimerController timerController) implements GameState {
     public VictoryState{
-        timerController.stopTimer();
+        timerController.pause();
     }
     public void exit(GameController c) { c.exitGame(); }
     public void startNewGame(GameController c, int level) { c.startNewGame(level); }

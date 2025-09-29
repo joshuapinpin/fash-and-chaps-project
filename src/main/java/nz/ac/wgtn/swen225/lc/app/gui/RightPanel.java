@@ -1,11 +1,9 @@
 package nz.ac.wgtn.swen225.lc.app.gui;
 
 import nz.ac.wgtn.swen225.lc.app.controller.GameController;
-import nz.ac.wgtn.swen225.lc.app.controller.InputController;
 import nz.ac.wgtn.swen225.lc.app.controller.RecorderController;
 import nz.ac.wgtn.swen225.lc.app.util.MyButton;
 import nz.ac.wgtn.swen225.lc.app.util.MyFont;
-import nz.ac.wgtn.swen225.lc.app.util.MyImage;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;
 
 import javax.swing.*;
@@ -54,7 +52,7 @@ public class RightPanel extends JPanel implements ActionListener, ChangeListener
         setBorder(BorderFactory.createEmptyBorder(0, AppWindow.SQUARE_SIZE,
                 0, AppWindow.SQUARE_SIZE));
         setOpaque(false);
-        bgImg = new MyImage("water").getImage();
+        bgImg = LoadingImg.Water.loadImage();
     }
 
     private void setupComponents(){
@@ -138,6 +136,10 @@ public class RightPanel extends JPanel implements ActionListener, ChangeListener
         }
     }
 
+    /**
+     * Paints the background of the panel with a tiled image.
+     * @param g the Graphics object
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
