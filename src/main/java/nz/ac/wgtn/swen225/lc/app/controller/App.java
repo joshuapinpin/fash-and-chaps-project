@@ -86,7 +86,7 @@ public class App implements GameController {
             );
         }
 
-        rendererController.updateGui();
+//        rendererController.updateGui();
 
         // Update the window to render changes
         // Update Game Panel.
