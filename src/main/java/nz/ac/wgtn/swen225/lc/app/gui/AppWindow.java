@@ -18,8 +18,8 @@ import java.util.List;
 public class AppWindow extends JFrame {
     // Game Window Fields
     public static final int SQUARE_SIZE = 60; // 60 pixels
-    public static final int WINDOW_WIDTH = 1260;
-    public static final int WINDOW_HEIGHT = 780;
+    public static final int WINDOW_WIDTH = SQUARE_SIZE * 21;
+    public static final int WINDOW_HEIGHT = SQUARE_SIZE * 13;
     public static final int MAZE_SIZE = SQUARE_SIZE * 9;
     public static final int HEADER_HEIGHT = SQUARE_SIZE * 2;
 

@@ -6,7 +6,6 @@ import nz.ac.wgtn.swen225.lc.app.util.*;
 import nz.ac.wgtn.swen225.lc.domain.Direction;
 import nz.ac.wgtn.swen225.lc.domain.Maze;
 import nz.ac.wgtn.swen225.lc.renderer.Renderer;
-import nz.ac.wgtn.swen225.lc.persistency.levelloader.*;
 
 /**
  * Central controller for game logic and flow.
@@ -16,9 +15,6 @@ import nz.ac.wgtn.swen225.lc.persistency.levelloader.*;
  * @author Joshua Pinpin (Student ID: 300662880)
  */
 public class App implements GameController {
-//    private Maze domain; // Reference to the domain model
-    private Renderer renderer;// Reference to the renderer/view
-
     // CONTROLLERS
     private InputController inputController;
     private TimerController timerController;
@@ -29,7 +25,6 @@ public class App implements GameController {
     private RendererController rendererController;
 
     // GAME MANAGEMENT Components
-    private AppWindow window; // Reference to the main application window
     private GameState state;
     private int level;
 
@@ -38,29 +33,20 @@ public class App implements GameController {
      */
     public App() {
         initialiseControllers();
-        initialiseComponents();
         startNewGame(1);
     }
 
     private void initialiseControllers(){
+        domainController = new DomainController(this);
+        rendererController = new RendererController(this, domainController);
         inputController = new InputController(this);
         timerController = new TimerController(this);
-
-        domainController = new DomainController(this);
         recorderController = new RecorderController(this, timerController);
 
-    }
+        rendererController.setWindow(new AppWindow(this, inputController,
+                timerController, recorderController)
+        );
 
-
-    private void initialiseComponents() {
-        // Initialize domain model, renderer, and controllers
-        //domain = Levels.LevelOne.load();
-        renderer = new Renderer(domainController.getMaze().getTileGrid(),
-                domainController.getMaze().getPlayer());
-        int size = AppWindow.MAZE_SIZE;
-        renderer.setDimensions(size, size);
-        window = new AppWindow(this, inputController,
-                timerController, recorderController);
     }
 
 
@@ -75,7 +61,7 @@ public class App implements GameController {
         System.out.println("*DEBUG* Inside of the App Package Now");
         if(state == null) throw new RuntimeException("Game state is null.");
 
-        // Handle Input, send to recorder if valid
+        // Handle Input, send input to recorder if valid
         try {
             state.handleInput(this, input);
             recorderController.addMovement(input);
@@ -87,21 +73,8 @@ public class App implements GameController {
             );
         }
 
-//        rendererController.updateGui();
-
-        // Update the window to render changes
-        // Update Game Panel.
-
-        window.updateWindow();
-
-        // Update the renderer with the latest domain state
-//        if(domain == null)
-//            throw new RuntimeException("Cannot update renderer: Domain is null.");
-//        if(renderer == null)
-//            throw new RuntimeException("Cannot update renderer: Renderer is null.");
-        renderer.getPanel().setAllTiles(domainController.getMaze().getTileGrid(),
-                domainController.getMaze().getPlayer());
-        renderer.getPanel().repaint();
+        // Update GUI after handling input
+        rendererController.updateGui(domainController);
     }
 
     /**
@@ -110,8 +83,6 @@ public class App implements GameController {
      */
     public void movePlayer(Direction dir){
         domainController.movePlayer(dir);
-//        if(domain == null) throw new RuntimeException("Cannot move player: Domain is null.");
-//        domain.movePlayer(dir);
     }
 
     /**
@@ -196,9 +167,9 @@ public class App implements GameController {
 
     // ========== Getters and Setters ==========
     public void setState(GameState state) {this.state = state;}
-    public AppWindow getGameWindow() {return window;}
+    public AppWindow getGameWindow() {return rendererController.window();}
     public GameState getState() {return state;}
-    public Maze getDomain() {return domainController.getMaze();}
-    public Renderer getRenderer() {return renderer;}
+    public Maze getDomain() {return domainController.domain();}
+    public Renderer getRenderer() {return rendererController.renderer();}
     public int getLevel() {return level;}
 }
