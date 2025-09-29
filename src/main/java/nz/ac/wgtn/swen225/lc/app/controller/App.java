@@ -16,7 +16,7 @@ import nz.ac.wgtn.swen225.lc.persistency.levelloader.*;
  * @author Joshua Pinpin (Student ID: 300662880)
  */
 public class App implements GameController {
-    private Maze domain; // Reference to the domain model
+//    private Maze domain; // Reference to the domain model
     private Renderer renderer;// Reference to the renderer/view
 
     // CONTROLLERS
@@ -37,8 +37,8 @@ public class App implements GameController {
      * Constructor initializes the game components and starts a new game.
      */
     public App() {
-        initialiseComponents();
         initialiseControllers();
+        initialiseComponents();
         startNewGame(1);
     }
 
@@ -46,7 +46,7 @@ public class App implements GameController {
         inputController = new InputController(this);
         timerController = new TimerController(this);
 
-        domainController = new DomainController(domain);
+        domainController = new DomainController(this);
         recorderController = new RecorderController(this, timerController);
 
     }
@@ -54,8 +54,9 @@ public class App implements GameController {
 
     private void initialiseComponents() {
         // Initialize domain model, renderer, and controllers
-        domain = Levels.LevelOne.load();
-        renderer = new Renderer(domain.getTileGrid(), domain.getPlayer());
+        //domain = Levels.LevelOne.load();
+        renderer = new Renderer(domainController.getMaze().getTileGrid(),
+                domainController.getMaze().getPlayer());
         int size = AppWindow.MAZE_SIZE;
         renderer.setDimensions(size, size);
         window = new AppWindow(this, inputController,
@@ -94,11 +95,12 @@ public class App implements GameController {
         window.updateWindow();
 
         // Update the renderer with the latest domain state
-        if(domain == null)
-            throw new RuntimeException("Cannot update renderer: Domain is null.");
-        if(renderer == null)
-            throw new RuntimeException("Cannot update renderer: Renderer is null.");
-        renderer.getPanel().setAllTiles(domain.getTileGrid(), domain.getPlayer());
+//        if(domain == null)
+//            throw new RuntimeException("Cannot update renderer: Domain is null.");
+//        if(renderer == null)
+//            throw new RuntimeException("Cannot update renderer: Renderer is null.");
+        renderer.getPanel().setAllTiles(domainController.getMaze().getTileGrid(),
+                domainController.getMaze().getPlayer());
         renderer.getPanel().repaint();
     }
 
@@ -107,8 +109,9 @@ public class App implements GameController {
      * @param dir Direction to move the player
      */
     public void movePlayer(Direction dir){
-        if(domain == null) throw new RuntimeException("Cannot move player: Domain is null.");
-        domain.movePlayer(dir);
+        domainController.movePlayer(dir);
+//        if(domain == null) throw new RuntimeException("Cannot move player: Domain is null.");
+//        domain.movePlayer(dir);
     }
 
     /**
@@ -116,15 +119,11 @@ public class App implements GameController {
      * @param level The level to start the new game at
      */
     public void startNewGame(int level) {
-        timerController.startTimer(TimerController.getTimeLimitForLevel(level));
         setState(new PlayState(timerController));
-
-        if(level == 1) domain = Levels.LevelOne.load();
-//        else if(level == 2) domain = Levels.LevelTwo.load();
-        else throw new IllegalArgumentException("Invalid level: " + level);
-
-        this.level = level;
+        timerController.startTimer(TimerController.getTimeLimitForLevel(level));
+        domainController.initialiseDomain(level);
         recorderController.stopRecording();
+        this.level = level;
         System.out.println("Starting New Game at Level " + level);
     }
 
@@ -157,7 +156,6 @@ public class App implements GameController {
      * Saves the current game state.
      */
     public void saveGame(){
-        if(domain == null) throw new RuntimeException("Cannot save game: Domain is null.");
         //TODO: get Persistence to create a "save current game" method
         System.out.println("Game Saved!");
     }
@@ -200,7 +198,7 @@ public class App implements GameController {
     public void setState(GameState state) {this.state = state;}
     public AppWindow getGameWindow() {return window;}
     public GameState getState() {return state;}
-    public Maze getDomain() {return domain;}
+    public Maze getDomain() {return domainController.getMaze();}
     public Renderer getRenderer() {return renderer;}
     public int getLevel() {return level;}
 }
