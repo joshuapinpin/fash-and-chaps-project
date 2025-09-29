@@ -1,39 +1,43 @@
 package nz.ac.wgtn.swen225.lc.persistency.levelloader.parse;
 
 import nz.ac.wgtn.swen225.lc.domain.Position;
-import nz.ac.wgtn.swen225.lc.domain.entities.Entity;
 import nz.ac.wgtn.swen225.lc.domain.tiles.Free;
-import nz.ac.wgtn.swen225.lc.domain.tiles.Tile;
-
-import java.util.Objects;
+import nz.ac.wgtn.swen225.lc.persistency.levelloader.LevelMaker;
 
 /**
- * Converts a String symbolic representation to a Free Tile instance.
+ * Parses a String representation into a Free Tile, if possible.
  * @author Thomas Ru - 300658840
- * @param symbol - the String representation.
  */
-record FreeParser(String symbol) implements TileParser {
+class FreeParser extends TileParser<Free> {
     /**
-     * Construct a Free Tile given a symbolic String representation, if possible.
-     * @param surroundings - the LevelMaker context, currently unused.
-     * @param tile - the String symbol.
-     * @param position - the Position of the tile.
-     * @return - the resulting Free tile.
+     * Creates a new parser.
+     * @param symbol - the String symbolic representation of a Free tile, e.g. 'F'
      */
-    @Override
-    public Tile parse(LevelMaker surroundings, String tile, Position position) {
-        String[] split = tile.split(separator);
-        assert split.length > 0;
-        assert split[0].equals(symbol);
-        Free free = Free.of(Objects.requireNonNull(position, "Position cannot be null."));
+    public FreeParser(String symbol) {
+        super(symbol, Free::of);
+    }
 
-        if (split.length > 2) {
-            throw new IllegalArgumentException("Expected 'F' or 'F:Entity-PROPERTY' but got"+tile);
+    /**
+     * Parse some String into a Free Tile.
+     * @param surroundings - the LevelMaker context for the TileParser strategy, has the whole gameboard.
+     * @param tile - the String which is supposed to represent a Tile.
+     * @param position - the Position of the Tile.
+     * @return - the Free Tile if possible, otherwise an IllegalArgumentException is thrown.
+     */
+    @Override // override parse for additional parsing of Entities on Free tiles
+    public Free parse(LevelMaker surroundings, String tile, Position position) {
+        checkNonNull(surroundings, tile, position);
+        String[] split = tile.split(separator);
+        if (split.length!=1 && split.length!=2) {
+            throw new IllegalArgumentException("Expected 'F' or 'F:Entity-PROPERTY' but got "+tile);
+        }
+        if (!split[0].equals(symbol())) {
+            throw new IllegalArgumentException("Cannot parse into a Free tile: "+tile);
         }
 
+        Free free = super.parse(surroundings, tile, position); // Tile with no Entity on it
         if (split.length == 2) {
-            Entity entity = EntityParser.parseEntity(split[1]);
-            free.setCollectable(entity);
+            free.setCollectable(EntityParsers.parseEntity(split[1]));
         }
         return free;
     }

@@ -1,30 +1,42 @@
 package nz.ac.wgtn.swen225.lc.persistency.levelloader.parse;
 
 import nz.ac.wgtn.swen225.lc.domain.Position;
-import nz.ac.wgtn.swen225.lc.domain.tiles.Tile;
 import nz.ac.wgtn.swen225.lc.domain.tiles.Info;
+import nz.ac.wgtn.swen225.lc.persistency.levelloader.LevelMaker;
 
 import java.util.Objects;
 
 /**
- * Converts a String symbolic representation to an Info Tile instance.
+ * Parses a String representation into an Info Tile, if possible.
  * @author Thomas Ru - 300658840
- * @param symbol - the String representation.
  */
-record InfoParser(String symbol) implements TileParser {
+class InfoParser extends TileParser<Info> {
     /**
-     * Construct an Info Tile given a symbolic String representation, if possible.
-     * @param surroundings - the LevelMaker context, currently unused.
-     * @param tile - the String symbol.
-     * @param position - the Position of the tile.
-     * @return - the resulting Info tile.
+     * Creates a new parser.
+     * @param symbol - the String symbolic representation of an Info tile, e.g. 'I'.
      */
-    @Override
-    public Tile parse(LevelMaker surroundings, String tile, Position position) {
+    public InfoParser(String symbol) {
+        super(symbol);
+    }
+
+    /**
+     * Parse some String into an Info Tile.
+     * @param surroundings - the LevelMaker context for the TileParser strategy, has the whole gameboard.
+     * @param tile - the String which is supposed to represent a Tile.
+     * @param position - the Position of the Tile.
+     * @return - the Info Tile if possible, otherwise an IllegalArgumentException is thrown.
+     */
+    @Override // override parse because Info Tile constructor isn't a Function<Position, Tile>
+    public Info parse(LevelMaker surroundings, String tile, Position position) {
+        checkNonNull(surroundings, tile, position);
         String[] split = tile.split(separator);
-        assert split[0].equals(symbol);
+        if (!split[0].equals(symbol())) {
+            throw new IllegalArgumentException("Cannot parse into an Info tile: "+tile);
+        }
+        if (split.length != 2) {
+            throw new IllegalArgumentException("Info Tile can't have message be empty or contain '"+separator+"'");
+        }
         String message = split[1];
         return Info.of(message, Objects.requireNonNull(position, "Position cannot be null."));
     }
 }
-
