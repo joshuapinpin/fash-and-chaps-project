@@ -30,7 +30,19 @@ public class Treasure implements Entity {
      */
     @Override
     public void onInteract(Player p){
+        if(p == null){
+            throw new IllegalArgumentException("Player cannot be null");
+        }
+        if(p.getTreasuresCollected() == p.getTotalTreasures()){
+            throw new IllegalStateException("All treasures have already been collected");
+        }
+
+        int oldSize = p.getTreasuresCollected();
         p.collectTreasure();
+
+        assert p.getTreasuresCollected() == oldSize + 1;
+        assert p.getTreasuresCollected() >= 0;
+
     }
 
     /**

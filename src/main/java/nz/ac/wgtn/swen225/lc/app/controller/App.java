@@ -6,6 +6,7 @@ import nz.ac.wgtn.swen225.lc.app.util.*;
 import nz.ac.wgtn.swen225.lc.domain.Direction;
 import nz.ac.wgtn.swen225.lc.domain.Maze;
 import nz.ac.wgtn.swen225.lc.renderer.Renderer;
+import nz.ac.wgtn.swen225.lc.persistency.levelloader.*;
 
 /**
  * Central controller for game logic and flow.
@@ -15,40 +16,32 @@ import nz.ac.wgtn.swen225.lc.renderer.Renderer;
  * @author Joshua Pinpin (Student ID: 300662880)
  */
 public class App implements GameController {
-    // MODEL  (Domain module)
     private Maze domain; // Reference to the domain model
-
-    // VIEW (Renderer module)
     private Renderer renderer;// Reference to the renderer/view
 
     // CONTROLLER Components
-    private AppWindow window; // Reference to the main application window
-    private GameState state;
     private InputController inputController;
     private TimerController timerController;
+    private RecorderController recorderController;
+    // Reference to persistence
 
     // GAME MANAGEMENT Components
-    // Reference to persistence
-    // Reference to recorder
-
+    private AppWindow window; // Reference to the main application window
+    private GameState state;
     private int level;
 
-    // Constructor with Singleton Pattern
-    private static App INSTANCE;
-    private App() {
+    /**
+     * Constructor initializes the game components and starts a new game.
+     */
+    public App() {
         initialiseControllerComponents();
         startNewGame(1);
-    }
-    public static App getInstance() {
-        if(INSTANCE == null) INSTANCE = new App();
-        return INSTANCE;
     }
 
 
     private void initialiseControllerComponents() {
         // Initialize domain model, renderer, and controllers
-        domain = new Maze(10,9);
-        domain.addTiles();
+        domain = Levels.LevelOne.load();
 
         renderer = new Renderer(domain.getTileGrid(), domain.getPlayer());
         int size = AppWindow.MAZE_SIZE;
@@ -56,7 +49,9 @@ public class App implements GameController {
 
         inputController = new InputController(this);
         timerController = new TimerController(this);
-        window = new AppWindow(this, inputController, timerController);
+        recorderController = new RecorderController(this, timerController);
+        window = new AppWindow(this, inputController,
+                timerController, recorderController);
     }
 
 
@@ -68,9 +63,13 @@ public class App implements GameController {
      * @param input The user input to handle
      */
     public void handleInput(Input input) {
+        System.out.println("*DEBUG* Inside of the App Package Now");
         if(state == null) throw new RuntimeException("Game state is null.");
 
-        try {state.handleInput(this, input);}
+        try {
+            state.handleInput(this, input);
+            recorderController.addMovement(input);
+        }
         catch(UnsupportedOperationException e){
             System.out.println(
                     "Input " + input + " not valid in current state: "
@@ -102,9 +101,15 @@ public class App implements GameController {
      * @param level The level to start the new game at
      */
     public void startNewGame(int level) {
-        setState(new PlayState());
-        this.level = level;
         timerController.startTimer(TimerController.getTimeLimitForLevel(level));
+        setState(new PlayState(timerController));
+
+        if(level == 1) domain = Levels.LevelOne.load();
+//        else if(level == 2) domain = Levels.LevelTwo.load();
+        else throw new IllegalArgumentException("Invalid level: " + level);
+
+        this.level = level;
+        recorderController.stopRecording();
         System.out.println("Starting New Game at Level " + level);
     }
 
@@ -113,7 +118,7 @@ public class App implements GameController {
      */
     public void pauseGame() {
         // TODO: Implement pause logic
-        setState(new PausedState());
+        setState(new PausedState(timerController));
         System.out.println("Game Paused");
     }
 
@@ -129,7 +134,7 @@ public class App implements GameController {
      * Continues the game from a paused state.
      */
     public void continueGame() {
-        setState(new PlayState());
+        setState(new PlayState(timerController));
         System.out.println("Continuing Game");
     }
 
@@ -160,40 +165,23 @@ public class App implements GameController {
         System.exit(0);
     }
 
+    /**
+     * Displays help or game rules.
+     */
     @Override
     public void help() {
         System.out.println("Displaying Help/Rules...");
     }
 
+    /**
+     * Handles the event when time is up.
+     */
     public void timeUp() {
-        setState(new DeadState());
+        setState(new DeadState(timerController));
         System.out.println("Time's Up! Game Over.");
     }
 
-    @Override
-    public void startRecording() {
-        System.out.println("Started Recording");
-
-    }
-
-    @Override
-    public void stopRecording() {
-        System.out.println("Stopped Recording");
-
-    }
-
-    @Override
-    public void autoPlay() {
-        System.out.println("Auto-Playing");
-
-    }
-
-    @Override
-    public void stepByStep() {
-        System.out.println("Step-By-Step Playing");
-
-    }
-
+    // ========== Getters and Setters ==========
     public void setState(GameState state) {this.state = state;}
     public AppWindow getGameWindow() {return window;}
     public GameState getState() {return state;}

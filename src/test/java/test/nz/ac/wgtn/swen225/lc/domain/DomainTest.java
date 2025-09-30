@@ -3,7 +3,6 @@ package test.nz.ac.wgtn.swen225.lc.domain;
 import nz.ac.wgtn.swen225.lc.domain.*;
 import nz.ac.wgtn.swen225.lc.domain.entities.*;
 import nz.ac.wgtn.swen225.lc.domain.tiles.*;
-import org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -23,7 +22,7 @@ public class DomainTest {
     void setup() {
         // Initialize maze and player for testing
         maze = new Maze(3, 3);
-        player = Player.getInstance();
+        player = Player.of();
         player.initialiseStartPos(3,3);
 
         maze.setPlayer(player);
@@ -39,7 +38,7 @@ public class DomainTest {
 
         //adding key with tile
         Free tileWithKey = Free.of(new Position(2,1));
-        tileWithKey.setCollectable(Key.of(Color.PINK));
+        tileWithKey.setCollectable(Key.of(EntityColor.PINK));
         maze.setTileAt(tileWithKey);
 
         maze.setTileAt(Free.of(new Position(2,2)));
@@ -96,7 +95,7 @@ public class DomainTest {
 
         // Check if player has collected the key
         assertEquals(1, player.getKeys().size());
-        assertTrue(player.getKeys().contains(Key.of(Color.PINK)));
+        assertTrue(player.getKeys().contains(Key.of(EntityColor.PINK)));
     }
 
     @Test

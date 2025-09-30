@@ -1,4 +1,5 @@
 package nz.ac.wgtn.swen225.lc.recorder;
+import nz.ac.wgtn.swen225.lc.app.controller.GameController;
 import nz.ac.wgtn.swen225.lc.app.util.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
@@ -15,24 +16,30 @@ import java.util.List;
  * @author Arushi Bhatnagar Stewart
  */
 public class Save{
-    private static final List<Input> movements = new ArrayList<>();
-    static final ObjectMapper mapper = new ObjectMapper();
+    private final List<Input> movements;
+    final ObjectMapper mapper;
     /** Method to add the Input objects (the directions/movements)
      * of the character to the movements list.
      *
      */
-    public static void addMovement(Input direction) {
+    public Save(){
+        movements = new ArrayList<>();
+        mapper = new ObjectMapper();
+    }
+    public void addMovement(Input direction) {
+        System.out.println("*DEBUG* Inside of the Recorder Package Now");
         movements.add(direction);
     }
     /** Returns movement list. */
-    public static List<Input> movements() {
+    public List<Input> movements() {
         return movements;
     }
     /** This is the core method of this class.
      * In this method, we create a file and write
      * elements in the movement list to the file
      */
-    public static void saveToFile(){
+    public void saveToFile(){
+        System.out.println("*DEBUG* Inside of the Recorder Package Now");
         File playerMovements = new File("movements.json");
         try {
             mapper.writeValue(playerMovements, movements);
@@ -40,11 +47,12 @@ public class Save{
             throw new Error(e);
         }
     }
-    public static void main(String[] args){
-        addMovement(Input.MOVE_UP);
-        addMovement(Input.MOVE_DOWN);
-        addMovement(Input.MOVE_LEFT);
-        addMovement(Input.MOVE_RIGHT);
-        saveToFile();
+    public static void main(String[] args) {
+        Save s = new Save();
+        s.addMovement(Input.MOVE_UP);
+        s.addMovement(Input.MOVE_DOWN);
+        s.addMovement(Input.MOVE_LEFT);
+        s.addMovement(Input.MOVE_RIGHT);
+        s.saveToFile();
     }
 }

@@ -216,3 +216,6 @@ buildNumber.properties
 .classpath
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij,eclipse,bluej,macos,maven
+
+### Custom Files ###
+**/movements.json

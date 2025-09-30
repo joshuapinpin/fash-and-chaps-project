@@ -19,12 +19,20 @@ import java.util.List;
 public class Play {
     private static int speed;
     private static int pos; // count for step by step playing
-    final static ObjectMapper mapper = new ObjectMapper();
-    private static List<Input> movements = new ArrayList<>();
+    final ObjectMapper mapper;
+    private static List<Input> movements;
+
+    public Play(){
+        movements = new ArrayList<>();
+        mapper = new ObjectMapper();
+        pos = 0;
+        speed = 1;
+    }
     /**
-     *
+     * This methods reads the list of movements from the json file
+     * and assigns it to our movement arraylist field.
      */
-    private static List<Input> getData() {
+    private List<Input> getData() {
         /*
         using new TypeReference<List<MyObject>>() {} to create
         an anonymous subclass of TypeReference,
@@ -41,7 +49,8 @@ public class Play {
         return movements;
     }
 
-    public static void setSpeed(int s) {
+    public void setSpeed(int s) {
+        System.out.println("*DEBUG* Inside of the Recorder Package Now");
         // speed needs to be 1-6
         assert s > 0 : "Speed must me greater than zero";
         speed = s;
@@ -52,16 +61,20 @@ public class Play {
      * from the list, everytime method is called.
      * Need to use the observer pattern.
      */
-    public static void stepByStep(GameController gm) {
+    public boolean stepByStep(GameController gm) {
+        // make the method return true while we still have positions to go
+        if(pos == movements.size()){pos = 0; return false;}
+        System.out.println("*DEBUG* Inside of the Recorder Package Now");
         // call in case data has changed
         getData();
         if (movements.isEmpty()) throw new IllegalArgumentException("Character has not moved yet");
         Input direction = movements.get(pos);
         // pass direction to app method
         gm.handleInput(direction);
-        System.out.println("posa: " + pos);
-        System.out.println("directiona: " + direction);
+        System.out.println("step-by-step position: " + pos);
+        System.out.println("step-by-step direction: " + direction);
         pos++;
+        return true;
     }
 
     /**
@@ -69,25 +82,26 @@ public class Play {
      * Currently, doesn't implement speed.
      * Need to use the observer pattern.
      */
-    public static void autoPlay(GameController gm) {
+    public void autoPlay(GameController gm) {
+        System.out.println("*DEBUG* Inside of the Recorder Package Now");
         getData();
         if (movements.isEmpty()) throw new IllegalArgumentException("Character has not moved yet");
         for (int frame = 0; frame < movements.size(); frame++) {
-            System.out.println("posb: " + frame);
+            System.out.println("autoplay position: " + frame);
             Input frame1 = movements.get(frame);
             gm.handleInput(frame1);
-            System.out.println("directiona: " + frame1);
+            System.out.println("autoplay direction: " + frame1);
         }
     }
-
     public static void main(String[] args) {
-        setSpeed(2);
+        Play p = new Play();
+        p.setSpeed(2);
         GameController x = GameController.of();
-        stepByStep(x);
-        stepByStep(x);
-        stepByStep(x);
-        stepByStep(x);
-        autoPlay(x);
+        p.stepByStep(x);
+        p.stepByStep(x);
+        p.stepByStep(x);
+        p.stepByStep(x);
+        p.autoPlay(x);
     }
 }
 

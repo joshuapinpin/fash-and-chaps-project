@@ -2,6 +2,7 @@ package nz.ac.wgtn.swen225.lc.app.gui;
 
 import nz.ac.wgtn.swen225.lc.app.controller.GameController;
 import nz.ac.wgtn.swen225.lc.app.controller.InputController;
+import nz.ac.wgtn.swen225.lc.app.controller.RecorderController;
 import nz.ac.wgtn.swen225.lc.app.util.MyButton;
 import nz.ac.wgtn.swen225.lc.app.util.MyFont;
 import nz.ac.wgtn.swen225.lc.app.util.MyImage;
@@ -25,14 +26,19 @@ public class RightPanel extends JPanel implements ActionListener, ChangeListener
     public static final int FONT_SIZE = 40;
 
     private GameController controller;
-    private InputController inputController;
+    private RecorderController recorderController;
     private List<JComponent> allComps;
     private Map<JButton, Runnable> buttonRunnableMap;
     private BufferedImage bgImg;
 
-    public RightPanel(GameController controller, InputController inputController){
+    /**
+     * Constructor for RightPanel.
+     * @param controller GameController
+     * @param recorderController RecorderController
+     */
+    public RightPanel(GameController controller, RecorderController recorderController){
         this.controller = controller;
-        this.inputController = inputController;
+        this.recorderController = recorderController;
         allComps = new ArrayList<>();
         setupUI();
         setupComponents();
@@ -60,10 +66,10 @@ public class RightPanel extends JPanel implements ActionListener, ChangeListener
     }
     private void setupRecorderButtons(){
         buttonRunnableMap = new HashMap<>();
-        setupSingleButton("Start Recorder", () -> controller.startRecording());
-        setupSingleButton("Stop Recorder", () -> controller.stopRecording());
-        setupSingleButton("Auto-Play", () -> controller.autoPlay());
-        setupSingleButton("Step-By-Step", () -> controller.stepByStep());
+        setupSingleButton("Start Recorder", () -> recorderController.startRecording());
+        setupSingleButton("Stop Recorder", () -> recorderController.stopRecording());
+        setupSingleButton("Auto-Play", () -> recorderController.autoPlay());
+        setupSingleButton("Step-By-Step", () -> recorderController.stepByStep());
 
     }
     private void setupSingleButton(String name, Runnable action){
@@ -98,11 +104,19 @@ public class RightPanel extends JPanel implements ActionListener, ChangeListener
         setupSingleButton("HELP", controller::help);
     }
 
+    /**
+     * Update all components in the panel
+     */
     @Override
     public void updatePanel() {
         allComps.forEach(JComponent::repaint);
     }
 
+    /**
+     * Invoked when button is pressed
+     * Runs the methods assigned to the button
+     * @param e the event to be processed (button)
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         JButton button = (JButton) e.getSource();
@@ -110,16 +124,19 @@ public class RightPanel extends JPanel implements ActionListener, ChangeListener
         else System.out.println("No action assigned to this button.");
     }
 
+    /**
+     * Invoked when the slider is changed.
+     * Changes and sets speed for recorder
+     * @param e  a ChangeEvent object
+     */
     @Override
     public void stateChanged(ChangeEvent e) {
         if (e.getSource() instanceof JSlider slider) {
             int value = slider.getValue();
-            // Do something with the value, e.g.:
+            recorderController.setSpeed(value);
             System.out.println("Slider value: " + value);
-            // You can call a controller method here if needed
         }
     }
-
 
     @Override
     protected void paintComponent(Graphics g) {

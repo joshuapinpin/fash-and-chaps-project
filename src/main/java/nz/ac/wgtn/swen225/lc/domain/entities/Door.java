@@ -9,14 +9,14 @@ import nz.ac.wgtn.swen225.lc.domain.Player;
  * @author Hayley Far
  */
 public class Door implements Entity {
-    private final Color doorColor;
+    private final EntityColor doorColor;
     private boolean isOpen = false; //state of the door
 
     /**
      * Constructor for door with specified color
      * @param doorColor color of the door
      */
-    Door(Color doorColor){
+    Door(EntityColor doorColor){
         this.doorColor = doorColor;
     }
 
@@ -25,8 +25,20 @@ public class Door implements Entity {
      * @param doorColor color of the door
      * @return new Door instance
      */
-    public static Door of(Color doorColor){
+    public static Door of(EntityColor doorColor){
         return new Door(doorColor);
+    }
+
+    /**
+     * Check if the player has the correct key for the door
+     * @param p player to check
+     * @return true if player has the correct key, false otherwise
+     */
+    public boolean hasCorrectKey(Player p) {
+        if(p == null){
+            throw new IllegalArgumentException("Player cannot be null");
+        }
+        return p.getKeys().stream().anyMatch(key -> key.getColor().equals(this.doorColor));
     }
 
     /**
@@ -36,16 +48,24 @@ public class Door implements Entity {
     */
     @Override
     public void onInteract(Player p){
-        if(p.getKeys().stream().anyMatch(key -> key.getColor().equals(this.doorColor))){
-            isOpen = true;
+        if(p == null){
+            throw new IllegalArgumentException("Player cannot be null");
         }
+
+        boolean hasKey = hasCorrectKey(p);
+
+        if(!isOpen && !hasKey){
+            throw new IllegalStateException("Door is closed and player does not have the correct key");
+        }
+
+        if(hasKey){isOpen = true;}
     }
 
     /**
      * Getter for door color
      * @return color of the door
      */
-    public Color getColor(){return doorColor;}
+    public EntityColor getColor(){return doorColor;}
 
     /**
      * Check if the door is open
@@ -63,7 +83,10 @@ public class Door implements Entity {
      */
     @Override
     public boolean canInteract(Player p) {
-        return isOpen || p.getKeys().stream().anyMatch(key -> key.getColor().equals(this.doorColor));
+        if(p == null){
+            throw new IllegalArgumentException("Player cannot be null");
+        }
+        return isOpen || hasCorrectKey(p);
     }
 
     /**

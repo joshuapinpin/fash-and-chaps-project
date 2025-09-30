@@ -29,6 +29,9 @@ public class Free extends Tile {
      * @return new Free instance
      */
     public static Free of(Position pos){
+        if(pos == null){
+            throw new IllegalArgumentException("Position cannot be null");
+        }
         return new Free(pos);
     }
 
@@ -40,10 +43,14 @@ public class Free extends Tile {
      */
     @Override
     public void onEnter(Player p){
+        if(p == null){
+            throw new IllegalArgumentException("Player cannot be null");
+        }
         collectable.ifPresent(entity-> {
             entity.onInteract(p);
             if(entity.removeEntity()) {
-                collectable = Optional.empty(); // Remove the entity after collection
+                collectable = Optional.empty();// Remove the entity after collection
+                assert !collectable.isPresent() : "Collectable should have been removed";
             }
         });
     }
@@ -57,6 +64,9 @@ public class Free extends Tile {
      */
     @Override
     public boolean isAccessible(Player p){
+        if(p == null){
+            throw new IllegalArgumentException("Player cannot be null");
+        }
         if(collectable.isPresent()){
             return collectable.get().canInteract(p);
         }
@@ -70,6 +80,9 @@ public class Free extends Tile {
     public void setCollectable(Entity collectable){
         if(collectable==null){throw new IllegalArgumentException("Collectable cannot be null");}
         this.collectable = Optional.of(collectable);
+
+        assert this.collectable.isPresent() : "Collectable should be present";
+        assert this.collectable.get() == collectable : "Collectable should be the one that was set";
     }
 
     /**

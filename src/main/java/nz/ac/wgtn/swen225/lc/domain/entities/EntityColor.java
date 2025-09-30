@@ -5,10 +5,9 @@ package nz.ac.wgtn.swen225.lc.domain.entities;
  * Used to differentiate between different keys
  * @author Hayley Far
  */
-public enum Color {
+public enum EntityColor {
     ORANGE,
     GREEN,
-    BLUE,
     PURPLE,
     PINK;
 }

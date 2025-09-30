@@ -2,6 +2,7 @@ package nz.ac.wgtn.swen225.lc.app.gui;
 
 import nz.ac.wgtn.swen225.lc.app.controller.GameController;
 import nz.ac.wgtn.swen225.lc.app.controller.InputController;
+import nz.ac.wgtn.swen225.lc.app.controller.RecorderController;
 import nz.ac.wgtn.swen225.lc.app.controller.TimerController;
 
 import javax.swing.*;
@@ -26,6 +27,7 @@ public class AppWindow extends JFrame {
     private GameController controller; // Reference to GameController
     private InputController inputController;
     private TimerController timerController;
+    private RecorderController recorderController;
 
     // PANELS
     private List<JPanel> allPanels;
@@ -41,21 +43,21 @@ public class AppWindow extends JFrame {
      * @param inputController
      */
     public AppWindow(GameController controller, InputController inputController,
-            TimerController timerController) {
+            TimerController timerController, RecorderController recorderController) {
         // TODO: Set up window, menus, status bar, and embed MazePanel
         super("Fash and Chaps :D");
         this.controller = controller;
         this.inputController = inputController;
         this.timerController = timerController;
+        this.recorderController = recorderController;
+
         setupWindow();
         setupPanels();
         //setupDialogs();
 
     }
+    // ===== SETUP METHODS =====
 
-    /**
-     * Sets up the main game window (JFrame) properties.
-     */
     private void setupWindow(){
         addKeyListener(inputController);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -75,7 +77,7 @@ public class AppWindow extends JFrame {
         menuPanel = new MenuPanel(controller);
         gamePanel = setupMazePanel();
         leftPanel = new LeftPanel(controller, timerController);
-        rightPanel = new RightPanel(controller, inputController);
+        rightPanel = new RightPanel(controller, recorderController);
 
         allPanels = List.of(titlePanel, menuPanel, gamePanel, leftPanel, rightPanel);
 
@@ -94,27 +96,49 @@ public class AppWindow extends JFrame {
         panel.setMinimumSize(new Dimension(MAZE_SIZE, MAZE_SIZE));
         panel.setMaximumSize(new Dimension(MAZE_SIZE, MAZE_SIZE));
         panel.setOpaque(false);
-//        panel.setBorder(BorderFactory.createLineBorder(new Color(0x362702), 5));
+        panel.setBorder(BorderFactory.createLineBorder(Color.white, 5));
         return panel;
         //return controller.getRenderer().getPanel();
     }
 
     // ===== INTERACTIONS WITH CONTROLLER =====
 
+    /**
+     * Show pause dialog (modal).
+     */
     public void showPauseDialog() {
     }
 
+    /**
+     * Show help dialog (modal).
+     */
     public void showHelpDialog() {
     }
+
+    /**
+     * Remove pause dialog (if any).
+     */
     public void removePauseDialog() {
     }
 
+    /**
+     * Show error dialog (modal).
+     * @param message The error message to display.
+     */
     public void showErrorDialog(String message) {
     }
 
+    /**
+     * Show message dialog (modal).
+     * @param message The message to display.
+     * @param title The title of the dialog.
+     */
     public void showMessageDialog(String message, String title) {
     }
 
+    /**
+     * Update the entire window (all panels).
+     */
     public void updateWindow(){
         allPanels.forEach(panel -> {
             if(panel instanceof GamePanel updatable) updatable.updatePanel();
@@ -123,16 +147,18 @@ public class AppWindow extends JFrame {
     }
 
 
+    /**
+     * Update the status bar with current game information.
+     */
     // TODO: Must decide what things are needed to be updated in the status bar
     public void updateStatus() {
         // TODO: Update status bar with current game info
     }
-
-
-
+    
     // Getters
     public static int getWindowWidth() {return WINDOW_WIDTH;}
     public static int getWindowHeight() {return WINDOW_HEIGHT;}
+
 
 
 }
