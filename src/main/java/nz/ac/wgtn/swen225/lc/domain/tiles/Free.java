@@ -48,6 +48,8 @@ public class Free extends Tile {
         });
     }
 
+
+
     /**
      * Free tile is accessible unless it contains an impassable entity (ExitLock or closed Door)
      * Used to check if the player can move onto the tile beforehand

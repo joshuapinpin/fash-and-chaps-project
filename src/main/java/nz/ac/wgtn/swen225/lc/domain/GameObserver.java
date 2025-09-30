@@ -5,20 +5,22 @@ import nz.ac.wgtn.swen225.lc.domain.entities.*;
  * Observer interface for game events
  * Implemented by classes that need to respond to game events
  * For app and renderer to observe
+ * App: to use for exiting level, updating info panel
+ * Renderer: to update visuals/sounds based on game state changes
  * @author Hayley Far
  */
 public interface GameObserver {
-    void onPlayerMove(Position newPosition);
+    //For App
+    default void onInfoMessage(String message){}
+    default void onLevelComplete(){} //exit tile
 
-    void onKeyCollected(Player player, Key key);
-    void onTreasureCollected(Player player, int remainingTreasures);
-    void onInfoMessage(String message);
-    void onLevelComplete(Player player); //exit tile
+    //For Renderer
+    default void onPlayerMove(Position newPosition){}
+    default void onKeyCollected(Key key){}
+    default void onTreasureCollected(){}
+    default void onDoorOpened(Door door){}
 
-    //for level two
-    void onPlayerDrown(Player player); //water
-    void onPlayerDie(Player player); //crab/monster
-
-    //need to have list/runnable for observers in player class
-    //and an addObserver(GameObserver observer) method in Player class
+    //For Level 2
+    default void onPlayerDrown(Player player){} //water
+    default void onPlayerDie(Player player){} //crab/monster
 }
