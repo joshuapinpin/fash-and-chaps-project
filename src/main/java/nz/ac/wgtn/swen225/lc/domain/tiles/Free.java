@@ -1,10 +1,12 @@
 package nz.ac.wgtn.swen225.lc.domain.tiles;
 
+import nz.ac.wgtn.swen225.lc.domain.GameObserver;
 import nz.ac.wgtn.swen225.lc.domain.entities.Entity;
 import nz.ac.wgtn.swen225.lc.domain.Player;
 import nz.ac.wgtn.swen225.lc.domain.Position;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * Free class representing a free tile in the game
@@ -40,19 +42,28 @@ public class Free extends Tile {
      * If there is a collectable entity, the player interacts with it
      * Checks to see if the entity should be removed after interaction
      * @param p player entering the free tile
+     * @return Consumer to notify observers of player movement and entity interaction
      */
     @Override
-    public void onEnter(Player p){
+    public Consumer<GameObserver> onEnter(Player p){
         if(p == null){
             throw new IllegalArgumentException("Player cannot be null");
         }
-        collectable.ifPresent(entity-> {
-            entity.onInteract(p);
-            if(entity.removeEntity()) {
-                collectable = Optional.empty();// Remove the entity after collection
-                assert !collectable.isPresent() : "Collectable should have been removed";
-            }
-        });
+
+        return observer->{
+            observer.onPlayerMove(p.getPos());
+            collectable.ifPresent(entity-> {
+                Consumer<GameObserver> notifyEntity = entity.onInteract(p);
+                if(notifyEntity != null) {
+                    notifyEntity.accept(observer);
+                }
+                if(entity.removeEntity()) {
+                    collectable = Optional.empty();// Remove the entity after collection
+                    assert !collectable.isPresent() : "Collectable should have been removed";
+                }
+            });
+        };
+
     }
 
 

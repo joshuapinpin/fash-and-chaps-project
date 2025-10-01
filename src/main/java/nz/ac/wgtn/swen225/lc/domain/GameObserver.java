@@ -6,12 +6,12 @@ import nz.ac.wgtn.swen225.lc.domain.entities.*;
  * Implemented by classes that need to respond to game events
  * For app and renderer to observe
  * App: to use for exiting level, updating info panel
- * Renderer: to update visuals/sounds based on game state changes
+ * Renderer: to update sounds based on game state changes
  * @author Hayley Far
  */
 public interface GameObserver {
     //For App
-    default void onInfoMessage(String message){}
+    default void onInfoMessage(){}
     default void onLevelComplete(){} //exit tile
 
     //For Renderer

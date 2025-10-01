@@ -1,7 +1,10 @@
 package nz.ac.wgtn.swen225.lc.domain.tiles;
 
+import nz.ac.wgtn.swen225.lc.domain.GameObserver;
 import nz.ac.wgtn.swen225.lc.domain.Player;
 import nz.ac.wgtn.swen225.lc.domain.Position;
+
+import java.util.function.Consumer;
 
 /**
  * Abstract Tile class representing a tile in the game
@@ -39,6 +42,7 @@ public abstract class Tile {
      * Abstract method to handle player entering the tile
      * To be implemented by subclasses for specific behaviors
      * @param player player entering the tile
+     * @return Consumer that accepts a GameObserver to notify about the event
      */
-    public abstract void onEnter(Player player);
+    public abstract Consumer<GameObserver> onEnter(Player player);
 }
