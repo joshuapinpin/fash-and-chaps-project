@@ -1,11 +1,9 @@
 package nz.ac.wgtn.swen225.lc.app.gui;
 
 import nz.ac.wgtn.swen225.lc.app.controller.GameController;
-import nz.ac.wgtn.swen225.lc.app.controller.InputController;
 import nz.ac.wgtn.swen225.lc.app.controller.RecorderController;
 import nz.ac.wgtn.swen225.lc.app.util.MyButton;
 import nz.ac.wgtn.swen225.lc.app.util.MyFont;
-import nz.ac.wgtn.swen225.lc.app.util.MyImage;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;
 
 import javax.swing.*;
@@ -42,19 +40,17 @@ public class RightPanel extends JPanel implements ActionListener, ChangeListener
         allComps = new ArrayList<>();
         setupUI();
         setupComponents();
-        setupRecorderButtons();
-        setupSlider();
-        setupHelp();
     }
 
     private void setupUI(){
         setOpaque(false);
         setLayout(new GridLayout(9,1, 0, 20));
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
-        setBorder(BorderFactory.createEmptyBorder(0, AppWindow.SQUARE_SIZE,
+        setBorder(BorderFactory.createEmptyBorder(
+                0, AppWindow.SQUARE_SIZE,
                 0, AppWindow.SQUARE_SIZE));
         setOpaque(false);
-        bgImg = new MyImage("water").getImage();
+        bgImg = LoadingImg.Water.loadImage();
     }
 
     private void setupComponents(){
@@ -63,7 +59,15 @@ public class RightPanel extends JPanel implements ActionListener, ChangeListener
         label.setForeground(Color.white);
         add(label);
         allComps.add(label);
+
+        setupRecorderButtons();
+        setupSlider();
+
+        JLabel helpLabel = new JLabel();
+        allComps.add(helpLabel);
+        setupSingleButton("HELP", controller::help);
     }
+
     private void setupRecorderButtons(){
         buttonRunnableMap = new HashMap<>();
         setupSingleButton("Start Recorder", () -> recorderController.startRecording());
@@ -96,12 +100,6 @@ public class RightPanel extends JPanel implements ActionListener, ChangeListener
         });
         add(slider);
         allComps.add(slider);
-    }
-
-    private void setupHelp(){
-        JLabel label = new JLabel();
-        allComps.add(label);
-        setupSingleButton("HELP", controller::help);
     }
 
     /**
@@ -138,6 +136,10 @@ public class RightPanel extends JPanel implements ActionListener, ChangeListener
         }
     }
 
+    /**
+     * Paints the background of the panel with a tiled image.
+     * @param g the Graphics object
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);

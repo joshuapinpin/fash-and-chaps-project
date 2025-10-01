@@ -52,8 +52,6 @@ public class MenuPanel extends JPanel implements ActionListener, GamePanel{
     private void setupSingleButton(String label, Runnable action){
         JButton button = MyButton.of(label, PANEL_WIDTH, PANEL_HEIGHT, FONT_SIZE,
                 LoadingImg.Rock.loadImage());
-
-
         button.addActionListener(this);
         button.setFocusable(false);
         buttonRunnableMap.put(button, action);

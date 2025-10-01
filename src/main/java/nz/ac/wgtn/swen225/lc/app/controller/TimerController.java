@@ -54,11 +54,11 @@ public class TimerController implements ActionListener {
 
     /**
      * Handles timer ticks.
-     * @param e the event to be processed
+     * Called by the Timer every second.
+     * @param e unused ActionEvent
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        // TODO: Update time left and notify controller if time runs out
         if(timeLeft > 0) timeLeft--;
         if(timeLeft == 0) {
             timer.stop();
@@ -75,35 +75,19 @@ public class TimerController implements ActionListener {
     }
 
     /**
-     * Pauses the timer.
+     * Stops the timer.
      */
-    public void pause() {
-        if(timer.isRunning()) timer.stop();
-    }
-
-    /**
-     * Resets the timer.
-     */
-    public void reset(int newTime) {
-        this.timeLeft = newTime;
-        timer.restart();
-    }
+    public void pause() {if(timer.isRunning()) timer.stop();}
 
     /**
      * Starts the timer with a specific time limit.
-     * @param timeLimit
+     * @param level The level number to set the time limit for.
      */
-    public void startTimer(int timeLimit) {
-        this.timeLeft = timeLimit;
+    public void startTimer(int level) {
+        this.timeLeft = getTimeLimitForLevel(level);
         timer.restart();
     }
 
-    /**
-     * Stops the timer.
-     */
-    public void stopTimer() {
-        pause();
-    }
 
     /**
      * Gets the remaining time in seconds.

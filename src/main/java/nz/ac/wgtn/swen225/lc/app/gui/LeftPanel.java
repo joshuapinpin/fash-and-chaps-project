@@ -4,7 +4,6 @@ package nz.ac.wgtn.swen225.lc.app.gui;
 import nz.ac.wgtn.swen225.lc.app.controller.GameController;
 import nz.ac.wgtn.swen225.lc.app.controller.TimerController;
 import nz.ac.wgtn.swen225.lc.app.util.MyFont;
-import nz.ac.wgtn.swen225.lc.app.util.MyImage;
 import nz.ac.wgtn.swen225.lc.domain.entities.EntityColor;
 import nz.ac.wgtn.swen225.lc.domain.entities.Key;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;
@@ -24,20 +23,19 @@ import java.util.Map;
  * @author Joshua Pinpin (Student ID: 300662880)
  */
 public class LeftPanel extends JPanel implements GamePanel{
-    // Size fields
-//    public static final int PANEL_WIDTH = (AppWindow.WINDOW_WIDTH / 4);
     public static final int PANEL_WIDTH = AppWindow.SQUARE_SIZE * 6;
     public static final int PANEL_HEIGHT = AppWindow.MAZE_SIZE;
     public static final int FONT_SIZE = 40;
 
     private JPanel levelPanel, timerPanel, keysPanel, treasurePanel;
     private JLabel timerLabel, levelLabel;
+    private BufferedImage bgImg;
+    private MyFont font;
+
     private GameController controller;
     private TimerController timerController;
-    private BufferedImage bgImg;
 
-    private Map<EntityColor, BufferedImage> imageMap;
-
+    private Map<EntityColor, BufferedImage> imageKeyMap;
     private List<JComponent> allComponents;
 
     /**
@@ -48,12 +46,13 @@ public class LeftPanel extends JPanel implements GamePanel{
     public LeftPanel(GameController controller, TimerController timerController){
         this.controller = controller;
         this.timerController = timerController;
+        this.font = MyFont.PIXEL;
         setLayout(new GridLayout(9, 1));
         setOpaque(false);
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         setupComponents();
-        bgImg = new MyImage("water").getImage();
-        imageMap = Map.of(
+        bgImg = LoadingImg.Water.loadImage();
+        imageKeyMap = Map.of(
             EntityColor.PINK, LoadingImg.PinkKey.loadImage(),
             EntityColor.ORANGE, LoadingImg.OrangeKey.loadImage(),
             EntityColor.GREEN, LoadingImg.GreenKey.loadImage(),
@@ -97,7 +96,7 @@ public class LeftPanel extends JPanel implements GamePanel{
                 for(int i = 0; i < 4; i++){
                     if(i < keysLeft){
                         EntityColor keyColor = keys.get(i).getColor();
-                        img = imageMap.get(keyColor);
+                        img = imageKeyMap.get(keyColor);
                     }
                     else img = LoadingImg.Sand.loadImage();
                     g.drawImage(img,AppWindow.SQUARE_SIZE + i * AppWindow.SQUARE_SIZE, 0,
@@ -120,40 +119,36 @@ public class LeftPanel extends JPanel implements GamePanel{
                 }
             }
         };
-        setupLabelWithPanel("Level", MyFont.PIXEL, levelPanel);
-        setupLabelWithPanel("Timer", MyFont.PIXEL, timerPanel);
-        setupLabelWithPanel("Keys", MyFont.PIXEL, keysPanel);
-        setupLabelWithPanel("Treasure", MyFont.PIXEL, treasurePanel);
+        setupLabelWithPanel("Level", levelPanel);
+        setupLabelWithPanel("Timer",  timerPanel);
+        setupLabelWithPanel("Keys",  keysPanel);
+        setupLabelWithPanel("Treasure", treasurePanel);
     }
 
-    private void setupLabelWithPanel(String name, MyFont font, JPanel panel){
+    private void setupLabelWithPanel(String name, JPanel panel){
         JLabel label = new JLabel(name);
-        label.setFont(font.getFont(FONT_SIZE));
-        label.setForeground(Color.white);
-        label.setHorizontalAlignment(SwingConstants.CENTER);
-        label.setVerticalAlignment(SwingConstants.CENTER);
+        setupLabel(label);
         panel.setOpaque(false);
 
         if(panel == timerPanel){
             timerLabel = new JLabel("0");
-            timerLabel.setFont(font.getFont(FONT_SIZE));
-            timerLabel.setForeground(Color.white);
-            timerLabel.setHorizontalAlignment(SwingConstants.CENTER);
-            timerLabel.setVerticalAlignment(SwingConstants.CENTER);
+            setupLabel(timerLabel);
             panel.add(timerLabel);
         } else if(panel == levelPanel){
             levelLabel = new JLabel(controller.getLevel() + "");
-            levelLabel.setFont(font.getFont(FONT_SIZE));
-            levelLabel.setForeground(Color.white);
-            levelLabel.setHorizontalAlignment(SwingConstants.CENTER);
-            levelLabel.setVerticalAlignment(SwingConstants.CENTER);
+            setupLabel(levelLabel);
             panel.add(levelLabel);
         }
 
-        add(label);
-        add(panel);
-        allComponents.add(label);
-        allComponents.add(panel);
+        add(label); add(panel);
+        allComponents.add(label); allComponents.add(panel);
+    }
+
+    private void setupLabel(JLabel label){
+        label.setFont(font.getFont(FONT_SIZE));
+        label.setForeground(Color.white);
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        label.setVerticalAlignment(SwingConstants.CENTER);
     }
 
     /**
