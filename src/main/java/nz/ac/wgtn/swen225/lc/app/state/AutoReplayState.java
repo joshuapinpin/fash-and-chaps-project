@@ -13,4 +13,7 @@ public record AutoReplayState() implements GameState{
     public void save(GameController c) {c.saveGame();}
     public void startNewGame(GameController c, int level) { c.startNewGame(level);}
     public void exit(GameController c) { c.exitGame();}
+
+    public static String name(){return "AutoReplayState";}
+
 }

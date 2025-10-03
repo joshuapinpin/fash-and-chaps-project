@@ -1,18 +1,15 @@
 package nz.ac.wgtn.swen225.lc.app.controller;
 
 import nz.ac.wgtn.swen225.lc.app.state.AutoReplayState;
-import nz.ac.wgtn.swen225.lc.app.state.GameState;
 import nz.ac.wgtn.swen225.lc.app.state.PausedState;
 import nz.ac.wgtn.swen225.lc.app.state.StepReplayState;
 import nz.ac.wgtn.swen225.lc.app.util.Input;
-import nz.ac.wgtn.swen225.lc.domain.Maze;
 import nz.ac.wgtn.swen225.lc.recorder.Play;
 import nz.ac.wgtn.swen225.lc.recorder.Save;
 
 public class RecorderController {
     Play play;
     Save save;
-    Maze domainCopy;
     boolean isRecording = false;
     GameController controller;
     TimerController timerController;

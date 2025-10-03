@@ -12,4 +12,7 @@ public record PausedState(TimerController timerController) implements GameState 
     public void startNewGame(GameController c, int level){c.startNewGame(level);}
     public void exit(GameController c){c.exitGame();}
     public void continueGame(GameController c){c.continueGame();}
+
+    public static String name(){return "PausedState";}
+
 }

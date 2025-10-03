@@ -166,7 +166,7 @@ public class App implements GameController {
      * Handles the event when time is up.
      */
     public void timeUp() {
-        setState(new DeadState(timerController));
+        setState(new DefeatState(timerController));
         System.out.println("Time's Up! Game Over.");
     }
 

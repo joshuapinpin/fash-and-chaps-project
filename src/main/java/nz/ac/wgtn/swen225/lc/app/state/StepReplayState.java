@@ -14,4 +14,7 @@ public record StepReplayState() implements GameState {
     public void startNewGame(GameController c, int level) { c.startNewGame(level);}
     public void exit(GameController c) { c.exitGame();}
 
+    public static String name(){return "StepReplayState";}
+
+
 }
