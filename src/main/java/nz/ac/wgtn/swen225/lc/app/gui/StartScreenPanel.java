@@ -2,12 +2,16 @@ package nz.ac.wgtn.swen225.lc.app.gui;
 
 import nz.ac.wgtn.swen225.lc.app.state.PlayState;
 import nz.ac.wgtn.swen225.lc.app.util.MyFont;
+import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class StartScreenPanel extends JPanel implements GamePanel{
     private AppWindow window;
+    private BufferedImage bgImg;
+
     public StartScreenPanel(AppWindow window) {
         this.window = window;
         setBackground(Color.BLACK);
@@ -20,10 +24,13 @@ public class StartScreenPanel extends JPanel implements GamePanel{
         JButton startButton = new JButton("Start Game");
         startButton.addActionListener(e -> window.showScreen(PlayState.name()));
         add(startButton, BorderLayout.SOUTH);
+
     }
 
     @Override
     public void updatePanel() {
 
     }
+
+
 }
