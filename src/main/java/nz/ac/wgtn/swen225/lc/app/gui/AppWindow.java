@@ -3,9 +3,7 @@ package nz.ac.wgtn.swen225.lc.app.gui;
 import java.awt.*;
 import java.util.List;
 
-import javax.swing.BorderFactory;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import nz.ac.wgtn.swen225.lc.app.controller.GameController;
 import nz.ac.wgtn.swen225.lc.app.controller.InputController;
@@ -59,17 +57,16 @@ public class AppWindow extends JFrame {
         setupWindow();
     }
     // ===== SETUP METHODS =====
-
     private void setupScreens(){
         // Using a CardLayout to switch between different screens
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
 
         // Initialize all screen panels
-        startScreenPanel = new StartScreenPanel();
-        playScreenPanel = new PlayScreenPanel(controller, timerController, recorderController);
-        victoryScreenPanel = new VictoryScreenPanel();
-        defeatScreenPanel = new DefeatScreenPanel();
+        startScreenPanel = new StartScreenPanel(this);
+        playScreenPanel = new PlayScreenPanel(this, controller, timerController, recorderController);
+        victoryScreenPanel = new VictoryScreenPanel(this);
+        defeatScreenPanel = new DefeatScreenPanel(this);
         allPanels = List.of(startScreenPanel, playScreenPanel, victoryScreenPanel, defeatScreenPanel);
 
         // Add all panels to the main panel with a unique name for each
@@ -80,9 +77,10 @@ public class AppWindow extends JFrame {
         setContentPane(mainPanel);
 
         // For testing purposes, show the play screen initially
-        showScreen(PlayState.name());
+        //showScreen(PlayState.name());
 
     }
+
     private void setupWindow(){
         addKeyListener(inputController);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -95,28 +93,7 @@ public class AppWindow extends JFrame {
         setVisible(true);
     }
 
-
-
     // ===== INTERACTIONS WITH CONTROLLER =====
-
-    /**
-     * Show pause dialog (modal).
-     */
-    public void showPauseDialog() {
-
-    }
-
-    /**
-     * Show help dialog (modal).
-     */
-    public void showHelpDialog() {
-
-    }
-
-    public void showScreen(String screenName){
-        cardLayout.show(mainPanel, screenName);
-    }
-
     /**
      * Update the entire window (all panels).
      */
@@ -126,6 +103,36 @@ public class AppWindow extends JFrame {
         });
     }
 
+    /**
+     * Show a specific screen based on the screen name.
+     * Should be called when the game state changes.
+     * @param screenName Name of the screen to show (e.g., "Start", "Play", "Victory", "Defeat").
+     */
+    public void showScreen(String screenName){
+        cardLayout.show(mainPanel, screenName);
+    }
+
+    /**
+     * Show pause dialog
+     */
+    public void showPauseDialog() {
+        JDialog pauseDialog = new JDialog(this, "Paused", true);
+        //TODO: pauseDialog.add(new PausePanel());
+        pauseDialog.pack();
+        pauseDialog.setLocationRelativeTo(this);
+        pauseDialog.setVisible(true);
+    }
+
+    /**
+     * Show help dialog
+     */
+    public void showHelpDialog() {
+        JDialog helpDialog = new JDialog(this, "Help", true);
+        //TODO: helpDialog.add(new HelpPanel());
+        helpDialog.pack();
+        helpDialog.setLocationRelativeTo(this);
+        helpDialog.setVisible(true);
+    }
 
     /**
      * Update the status bar with current game information.

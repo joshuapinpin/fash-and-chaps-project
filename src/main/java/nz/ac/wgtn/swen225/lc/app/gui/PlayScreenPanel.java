@@ -11,6 +11,7 @@ import java.util.List;
 import static nz.ac.wgtn.swen225.lc.app.gui.AppWindow.MAZE_SIZE;
 
 public class PlayScreenPanel extends JPanel implements GamePanel {
+    private AppWindow window;
     private GameController controller;
     private TimerController timerController;
     private RecorderController recorderController;
@@ -29,7 +30,8 @@ public class PlayScreenPanel extends JPanel implements GamePanel {
      * @param tc TimerController
      * @param rc RecorderController
      */
-    public PlayScreenPanel(GameController c, TimerController tc, RecorderController rc){
+    public PlayScreenPanel(AppWindow w, GameController c, TimerController tc, RecorderController rc){
+        this.window = w;
         this.controller = c;
         this.timerController = tc;
         this.recorderController = rc;

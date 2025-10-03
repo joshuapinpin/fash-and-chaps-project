@@ -1,8 +1,27 @@
 package nz.ac.wgtn.swen225.lc.app.gui;
 
+import nz.ac.wgtn.swen225.lc.app.state.PlayState;
+import nz.ac.wgtn.swen225.lc.app.util.MyFont;
+
 import javax.swing.*;
+import java.awt.*;
 
 public class StartScreenPanel extends JPanel implements GamePanel{
+    private AppWindow window;
+    public StartScreenPanel(AppWindow window) {
+        this.window = window;
+        setBackground(Color.BLACK);
+        setLayout(new BorderLayout());
+        JLabel title = new JLabel("Fash and Chaps", SwingConstants.CENTER);
+        title.setFont(MyFont.PIXEL.getFont(50));
+        title.setForeground(Color.WHITE);
+        add(title, BorderLayout.CENTER);
+
+        JButton startButton = new JButton("Start Game");
+        startButton.addActionListener(e -> window.showScreen(PlayState.name()));
+        add(startButton, BorderLayout.SOUTH);
+    }
+
     @Override
     public void updatePanel() {
 
