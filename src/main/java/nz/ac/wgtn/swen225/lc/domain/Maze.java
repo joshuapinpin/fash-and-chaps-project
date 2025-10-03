@@ -4,6 +4,10 @@ import nz.ac.wgtn.swen225.lc.domain.entities.*;
 import nz.ac.wgtn.swen225.lc.domain.tiles.Tile;
 import nz.ac.wgtn.swen225.lc.domain.tiles.*;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+
 /**
  * Maze class representing the maze structure
  * Contains tiles, player reference, and dimensions
@@ -14,6 +18,7 @@ public class Maze {
     private Tile[][] tileGrid; //2D array of tiles: [rows][cols]
     private Player player; //reference to player in maze
     private int rows; int cols; //dimensions of maze
+    private List<GameObserver> observers = new ArrayList<>();
 
     /**
      * Constructor for maze with specified dimensions
@@ -35,127 +40,47 @@ public class Maze {
 
         assert player != null : "Player instance is null";
         assert tileGrid != null : "Tile grid is null";
+
+        //JUST FOR TESTING, REMOVE LATER as observers to be made by app and renderer
+        this.addObserver(new GameObserver() {
+            @Override
+            public void onPlayerMove(Position newPosition) {
+                System.out.println("Player moved");
+            }
+
+            @Override
+            public void onKeyCollected(Key key) {
+                System.out.println("Key collected");
+            }
+
+            @Override
+            public void onTreasureCollected() {
+                System.out.println("Treasure collected");
+            }
+
+            @Override
+            public void onDoorOpened(Door door) {
+                System.out.println("Door opened");
+            }
+
+            @Override
+            public void onInfoMessage() {
+                System.out.println("Info tile triggered!");
+            }
+
+            @Override
+            public void onLevelComplete() {
+                System.out.println("Level completed!");
+            }
+        });
     }
 
     /**
-     * Add default tiles to maze for testing purposes for integration
-     * To delete later
-     * In a real implementation, tiles would be loaded from a file
+     * Adding an observer to the maze
+     * @param o observer to add
      */
-    public void addTiles(){
-        setTileAt(Free.of(new Position(0,0)));
-        setTileAt(Free.of(new Position(1,0)));
-        setTileAt(Wall.of(new Position(2,0)));
-        setTileAt(Free.of(new Position(3,0)));
-        setTileAt(Free.of(new Position(4,0)));
-        setTileAt(Free.of(new Position(5,0)));
-        setTileAt(Wall.of(new Position(6,0)));
-        setTileAt(Free.of(new Position(7,0)));
-        setTileAt(Free.of(new Position(8,0)));
-
-        Free tileWithTreasure = Free.of(new Position(0,1));
-        tileWithTreasure.setCollectable(Treasure.of());
-        setTileAt(tileWithTreasure);
-        setTileAt(Free.of(new Position(1,1)));
-        setTileAt(Wall.of(new Position(2,1)));
-        setTileAt(Free.of(new Position(3,1)));
-        setTileAt(Free.of(new Position(4,1)));
-        Free tileWithKey = Free.of(new Position(5,1));
-        tileWithKey.setCollectable(Key.of(EntityColor.ORANGE));
-        setTileAt(tileWithKey);
-        setTileAt(Wall.of(new Position(6,1)));
-        setTileAt(Free.of(new Position(7,1)));
-        setTileAt(Free.of(new Position(8,1)));
-
-        setTileAt(Wall.of(new Position(0,2)));
-        setTileAt(Wall.of(new Position(1,2)));
-        setTileAt(Wall.of(new Position(2,2)));
-        setTileAt(Free.of(new Position(3,2)));
-        setTileAt(Free.of(new Position(4,2)));
-        setTileAt(Free.of(new Position(5,2)));
-        setTileAt(Wall.of(new Position(6,2)));
-        setTileAt(Wall.of(new Position(7,2)));
-        setTileAt(Wall.of(new Position(8,2)));
-
-        setTileAt(Free.of(new Position(0,3)));
-        setTileAt(Wall.of(new Position(1,3)));
-        setTileAt(Free.of(new Position(2,3)));
-        setTileAt(Free.of(new Position(3,3)));
-        setTileAt(Free.of(new Position(4,3)));
-        setTileAt(Free.of(new Position(5,3)));
-        setTileAt(Free.of(new Position(6,3)));
-        setTileAt(Wall.of(new Position(7,3)));
-        setTileAt(Free.of(new Position(8,3)));
-
-        setTileAt(Free.of(new Position(0,4)));
-        Free tileWithDoor = Free.of(new Position(1,4));
-        tileWithDoor.setCollectable(Door.of(EntityColor.PURPLE));
-        setTileAt(tileWithDoor);
-        setTileAt(Free.of(new Position(2,4)));
-        setTileAt(Free.of(new Position(3,4)));
-        setTileAt(Info.of("Info", new Position(4,4)));
-        setTileAt(Free.of(new Position(5,4)));
-        setTileAt(Free.of(new Position(6,4)));
-        Free tileWithDoor2 = Free.of(new Position(7,4));
-        tileWithDoor2.setCollectable(Door.of(EntityColor.ORANGE));
-        setTileAt(tileWithDoor2);
-        setTileAt(Free.of(new Position(8,4)));
-
-        setTileAt(Free.of(new Position(0,5)));
-        setTileAt(Wall.of(new Position(1,5)));
-        setTileAt(Free.of(new Position(2,5)));
-        setTileAt(Free.of(new Position(3,5)));
-        setTileAt(Free.of(new Position(4,5)));
-        setTileAt(Free.of(new Position(5,5)));
-        setTileAt(Free.of(new Position(6,5)));
-        setTileAt(Wall.of(new Position(7,5)));
-        setTileAt(Free.of(new Position(8,5)));
-
-        setTileAt(Free.of(new Position(0,6)));
-        setTileAt(Wall.of(new Position(1,6)));
-        setTileAt(Wall.of(new Position(2,6)));
-        setTileAt(Free.of(new Position(3,6)));
-        setTileAt(Free.of(new Position(4,6)));
-        setTileAt(Free.of(new Position(5,6)));
-        setTileAt(Wall.of(new Position(6,6)));
-        setTileAt(Wall.of(new Position(7,6)));
-        setTileAt(Free.of(new Position(8,6)));
-
-        setTileAt(Free.of(new Position(0,7)));
-        setTileAt(Wall.of(new Position(1,7)));
-        setTileAt(Free.of(new Position(2,7)));
-        setTileAt(Free.of(new Position(3,7)));
-        setTileAt(Free.of(new Position(4,7)));
-        setTileAt(Free.of(new Position(5,7)));
-        Free tileWithTreasure2 = Free.of(new Position(6,7));
-        tileWithTreasure2.setCollectable(Treasure.of());
-        setTileAt(tileWithTreasure2);
-        setTileAt(Wall.of(new Position(7,7)));
-        setTileAt(Free.of(new Position(8,7)));
-
-        setTileAt(Free.of(new Position(0,8)));
-        setTileAt(Wall.of(new Position(1,8)));
-        setTileAt(Free.of(new Position(2,8)));
-        setTileAt(Free.of(new Position(3,8)));
-        setTileAt(Free.of(new Position(4,8)));
-        setTileAt(Free.of(new Position(5,8)));
-        setTileAt(Free.of(new Position(6,8)));
-        setTileAt(Wall.of(new Position(7,8)));
-        Free tileWithKey2 = Free.of(new Position(8,8));
-        tileWithKey2.setCollectable(Key.of(EntityColor.PURPLE));
-        setTileAt(tileWithKey2);
-
-        setTileAt(Free.of(new Position(0,9)));
-        setTileAt(Wall.of(new Position(1,9)));
-        setTileAt(Free.of(new Position(2,9)));
-        setTileAt(Wall.of(new Position(3,9)));
-        Free tileWithExitLock = Free.of(new Position(4,9));
-        tileWithExitLock.setCollectable(ExitLock.of());
-        setTileAt(tileWithExitLock);
-        setTileAt(Wall.of(new Position(5,9)));
-        setTileAt(Free.of(new Position(6,9)));
-        setTileAt(Wall.of(new Position(7,9)));
-        setTileAt(Free.of(new Position(8,9)));
+    public void addObserver(GameObserver o){
+        this.observers.add(o);
     }
 
     /**
@@ -178,6 +103,7 @@ public class Maze {
         int x = p.getX();
         int y = p.getY();
         if (x < 0 || x >= cols || y < 0 || y >= rows) {
+            //may need to look at this with more testing
             throw new IndexOutOfBoundsException("Position out of maze bounds: " + p);
         }
         Tile tile = tileGrid[y][x];
@@ -212,6 +138,7 @@ public class Maze {
     /**
      * Move player in specified direction if target tile is accessible
      * The direction dependent on what user input is
+     * Notify observers of player movement and any entity interactions when player enters a tile
      * @param direction direction to move player
      */
     public void movePlayer(Direction direction){
@@ -227,7 +154,8 @@ public class Maze {
 
         if(targetTile.isAccessible(this.player)){
             player.move(direction);
-            targetTile.onEnter(player);
+            Consumer<GameObserver> event = targetTile.onEnter(player);
+            observers.forEach(event); //notify all observers of this event
 
             assert player.getPos().equals(toMove) : "Player did not move to the correct position";
         }

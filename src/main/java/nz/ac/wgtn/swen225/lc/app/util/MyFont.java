@@ -13,10 +13,10 @@ public enum MyFont {
 
     MyFont(String filename) {
         this.filename = filename;
-        loadFont();
+        createFont();
     }
 
-    private void loadFont() {
+    private void createFont() {
         if ("Arial".equals(filename)) {
             font = new Font("Arial", Font.PLAIN, 12); // Default size, can be changed with deriveFont
             return;

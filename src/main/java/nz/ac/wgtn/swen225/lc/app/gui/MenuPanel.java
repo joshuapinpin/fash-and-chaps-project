@@ -26,12 +26,16 @@ public class MenuPanel extends JPanel implements ActionListener, GamePanel{
     private GameController controller;
     private BufferedImage bgImg;
 
+    /**
+     * Constructor for MenuPanel.
+     * @param controller GameController
+     */
     public MenuPanel(GameController controller){
         this.controller = controller;
         setLayout(new GridLayout(1, 5, BUTTON_GAP, BUTTON_GAP));
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
+        setOpaque(false);
         setBorder(BorderFactory.createEmptyBorder(BUTTON_GAP, BUTTON_GAP, BUTTON_GAP, BUTTON_GAP));
-        setBackground(Color.red);
         setupButtons();
         bgImg = LoadingImg.Water.loadImage();
     }
@@ -48,8 +52,6 @@ public class MenuPanel extends JPanel implements ActionListener, GamePanel{
     private void setupSingleButton(String label, Runnable action){
         JButton button = MyButton.of(label, PANEL_WIDTH, PANEL_HEIGHT, FONT_SIZE,
                 LoadingImg.Rock.loadImage());
-
-
         button.addActionListener(this);
         button.setFocusable(false);
         buttonRunnableMap.put(button, action);

@@ -21,13 +21,11 @@ public enum LoadingImg {
     PurpleKey("imgs/purpleKey.png"),
     PinkKey("imgs/pinkKey.png"),
     OrangeKey("imgs/orangeKey.png"),
-    BlueKey("imgs/blueKey.png"),
     GreenKey("imgs/greenKey.png"),
 
     PurpleDoor("imgs/purpleDoor.png"),
     PinkDoor("imgs/pinkDoor.png"),
     OrangeDoor("imgs/orangeDoor.png"),
-    BlueDoor("imgs/blueDoor.png"),
     GreenDoor("imgs/greenDoor.png"),
 
     Exit("imgs/exit.png"),

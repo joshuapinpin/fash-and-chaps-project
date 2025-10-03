@@ -9,7 +9,7 @@ import nz.ac.wgtn.swen225.lc.renderer.Renderer;
 
 public interface GameController {
     static GameController of() {
-        return App.getInstance();
+        return new App();
     }
     void handleInput(Input input);
 
@@ -30,12 +30,6 @@ public interface GameController {
     void exitGame();
     void help();
     void timeUp();
-
-    // Recorder Components
-    void startRecording();
-    void stopRecording();
-    void autoPlay();
-    void stepByStep();
 
     // Controller Componentws
     AppWindow getGameWindow();

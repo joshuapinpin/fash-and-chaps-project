@@ -20,9 +20,19 @@ public class TimerController implements ActionListener {
     private int timeLeft;
     private final GameController controller;
 
+    /**
+     * Initializes the TimerController with a reference to the GameController.
+     * @param controller The GameController to notify when time runs out.
+     */
     public TimerController(GameController controller) {
         this(controller, 0); // Default to 300 seconds (5 minutes)
     }
+
+    /**
+     * Initializes the TimerController with a reference to the GameController and initial time.
+     * @param controller The GameController to notify when time runs out.
+     * @param initialTime Initial time in seconds.
+     */
     public TimerController(GameController controller, int initialTime) {
         this.controller = controller;
         this.timeLeft = initialTime;
@@ -31,16 +41,24 @@ public class TimerController implements ActionListener {
         timer.setInitialDelay(0);
     }
 
+    /**
+     * Gets the time limit for a given level.
+     * @param level The level number (1 or 2).
+     * @return The time limit in seconds.
+     */
     public static int getTimeLimitForLevel(int level) {
         if(level == 1) return LEVEL_1_TIME_LIMIT;
         else if(level == 2) return LEVEL_2_TIME_LIMIT;
         throw new IllegalArgumentException("Invalid Level: " + level);
     }
 
-
+    /**
+     * Handles timer ticks.
+     * Called by the Timer every second.
+     * @param e unused ActionEvent
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
-        // TODO: Update time left and notify controller if time runs out
         if(timeLeft > 0) timeLeft--;
         if(timeLeft == 0) {
             timer.stop();
@@ -57,29 +75,24 @@ public class TimerController implements ActionListener {
     }
 
     /**
-     * Pauses the timer.
+     * Stops the timer.
      */
-    public void pause() {
-        if(timer.isRunning()) timer.stop();
-    }
+    public void pause() {if(timer.isRunning()) timer.stop();}
 
     /**
-     * Resets the timer.
+     * Starts the timer with a specific time limit.
+     * @param level The level number to set the time limit for.
      */
-    public void reset(int newTime) {
-        this.timeLeft = newTime;
+    public void startTimer(int level) {
+        this.timeLeft = getTimeLimitForLevel(level);
         timer.restart();
     }
 
-    public void startTimer(int timeLimit) {
-        this.timeLeft = timeLimit;
-        timer.restart();
-    }
 
-    public void stopTimer() {
-        pause();
-    }
-
+    /**
+     * Gets the remaining time in seconds.
+     * @return The remaining time in seconds.
+     */
     public int getTimeLeft() {
         return timeLeft;
     }

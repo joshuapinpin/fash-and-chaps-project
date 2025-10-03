@@ -15,11 +15,15 @@ public class TitlePanel extends JPanel implements GamePanel{
     private BufferedImage bgImg;
     private GameController controller;
 
+    /**
+     * Constructor for TitlePanel.
+     * @param controller GameController
+     */
     public TitlePanel(GameController controller){
         this.controller = controller;
         setLayout(new BorderLayout());
+        setOpaque(false);
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
-        setBackground(Color.yellow);
         bgImg = LoadingImg.Water.loadImage();
         setupTitle();
     }
@@ -32,6 +36,13 @@ public class TitlePanel extends JPanel implements GamePanel{
         title.setHorizontalAlignment(SwingConstants.CENTER);
         add(title);
     }
+
+
+    @Override
+    public void updatePanel() {
+
+    }
+
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -46,10 +57,5 @@ public class TitlePanel extends JPanel implements GamePanel{
             y = 0;
             x += squareSize;
         }
-    }
-
-    @Override
-    public void updatePanel() {
-
     }
 }

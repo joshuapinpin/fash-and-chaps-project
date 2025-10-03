@@ -15,77 +15,70 @@ import nz.ac.wgtn.swen225.lc.renderer.Renderer;
  * @author Joshua Pinpin (Student ID: 300662880)
  */
 public class App implements GameController {
-    // MODEL  (Domain module)
-    private Maze domain; // Reference to the domain model
-
-    // VIEW (Renderer module)
-    private Renderer renderer;// Reference to the renderer/view
-
-    // CONTROLLER Components
-    private AppWindow window; // Reference to the main application window
-    private GameState state;
+    // APP CONTROLLERS
     private InputController inputController;
     private TimerController timerController;
 
-    // GAME MANAGEMENT Components
-    // Reference to persistence
-    // Reference to recorder
+    // MODULE CONTROLLERS
+    private RecorderController recorderController;
+    private PersistencyController persistencyController;
+    private DomainController domainController;
+    private RendererController rendererController;
 
+    // GAME MANAGEMENT Components
+    private GameState state;
     private int level;
 
-    // Constructor with Singleton Pattern
-    private static App INSTANCE;
-    private App() {
-        initialiseControllerComponents();
+    /**
+     * Constructor initializes the game components and starts a new game.
+     */
+    public App() {
+        initialiseControllers();
         startNewGame(1);
     }
-    public static App getInstance() {
-        if(INSTANCE == null) INSTANCE = new App();
-        return INSTANCE;
-    }
 
-
-    private void initialiseControllerComponents() {
-        // Initialize domain model, renderer, and controllers
-        domain = new Maze(10,9);
-        domain.addTiles();
-
-        renderer = new Renderer(domain.getTileGrid(), domain.getPlayer());
-        int size = AppWindow.MAZE_SIZE;
-        renderer.setDimensions(size, size);
-
+    private void initialiseControllers(){
         inputController = new InputController(this);
         timerController = new TimerController(this);
-        window = new AppWindow(this, inputController, timerController);
-    }
 
+        domainController = new DomainController(this);
+        rendererController = new RendererController(this, domainController);
+        recorderController = new RecorderController(this, timerController);
+
+        rendererController.setWindow(new AppWindow(this, inputController,
+                timerController, recorderController
+        ));
+
+
+    }
 
     // ========== Game Controller Implementation ==========
 
     /**
-     * Handles a user input (e.g., move, pause, save, etc).
+     * Handles a user input (e.g., move, pause, save, etc.).
      * Delegates to the current game state for processing.
+     * Updates the GUI after processing input.
+     * App -> Domain -> App -> Renderer
      * @param input The user input to handle
      */
     public void handleInput(Input input) {
+        System.out.println("*DEBUG* Inside of the App Package Now");
         if(state == null) throw new RuntimeException("Game state is null.");
 
-        try {state.handleInput(this, input);}
+        // Handle Input, send input to recorder if valid
+        try {
+            state.handleInput(this, input);
+            recorderController.addMovement(input);
+        }
         catch(UnsupportedOperationException e){
             System.out.println(
                     "Input " + input + " not valid in current state: "
                     + state.getClass().getSimpleName()
             );
         }
-        window.updateWindow();
 
-        // Update the renderer with the latest domain state
-        if(domain == null)
-            throw new RuntimeException("Cannot update renderer: Domain is null.");
-        if(renderer == null)
-            throw new RuntimeException("Cannot update renderer: Renderer is null.");
-        renderer.getPanel().setAllTiles(domain.getTileGrid(), domain.getPlayer());
-        renderer.getPanel().repaint();
+        // Update GUI after handling input
+        rendererController.updateGui(domainController);
     }
 
     /**
@@ -93,8 +86,7 @@ public class App implements GameController {
      * @param dir Direction to move the player
      */
     public void movePlayer(Direction dir){
-        if(domain == null) throw new RuntimeException("Cannot move player: Domain is null.");
-        domain.movePlayer(dir);
+        domainController.movePlayer(dir);
     }
 
     /**
@@ -102,9 +94,11 @@ public class App implements GameController {
      * @param level The level to start the new game at
      */
     public void startNewGame(int level) {
-        setState(new PlayState());
+        setState(new PlayState(timerController));
+        timerController.startTimer(level);
+        domainController.initialiseDomain(level);
+        recorderController.stopRecording();
         this.level = level;
-        timerController.startTimer(TimerController.getTimeLimitForLevel(level));
         System.out.println("Starting New Game at Level " + level);
     }
 
@@ -113,12 +107,13 @@ public class App implements GameController {
      */
     public void pauseGame() {
         // TODO: Implement pause logic
-        setState(new PausedState());
+        setState(new PausedState(timerController));
         System.out.println("Game Paused");
     }
 
     /**
-     * Resumes the game.
+     * Resumes a saved game
+     * Load game from file selector.
      */
     public void resumeGame() {
         // TODO: Implement resume logic
@@ -129,7 +124,7 @@ public class App implements GameController {
      * Continues the game from a paused state.
      */
     public void continueGame() {
-        setState(new PlayState());
+        setState(new PlayState(timerController));
         System.out.println("Continuing Game");
     }
 
@@ -137,7 +132,6 @@ public class App implements GameController {
      * Saves the current game state.
      */
     public void saveGame(){
-        if(domain == null) throw new RuntimeException("Cannot save game: Domain is null.");
         //TODO: get Persistence to create a "save current game" method
         System.out.println("Game Saved!");
     }
@@ -160,44 +154,28 @@ public class App implements GameController {
         System.exit(0);
     }
 
+    /**
+     * Displays help or game rules.
+     */
     @Override
     public void help() {
         System.out.println("Displaying Help/Rules...");
     }
 
+    /**
+     * Handles the event when time is up.
+     */
     public void timeUp() {
-        setState(new DeadState());
+        setState(new DeadState(timerController));
         System.out.println("Time's Up! Game Over.");
     }
 
-    @Override
-    public void startRecording() {
-        System.out.println("Started Recording");
-
-    }
-
-    @Override
-    public void stopRecording() {
-        System.out.println("Stopped Recording");
-
-    }
-
-    @Override
-    public void autoPlay() {
-        System.out.println("Auto-Playing");
-
-    }
-
-    @Override
-    public void stepByStep() {
-        System.out.println("Step-By-Step Playing");
-
-    }
-
+    // ========== Getters and Setters ==========
     public void setState(GameState state) {this.state = state;}
-    public AppWindow getGameWindow() {return window;}
-    public GameState getState() {return state;}
-    public Maze getDomain() {return domain;}
-    public Renderer getRenderer() {return renderer;}
+
     public int getLevel() {return level;}
+    public GameState getState() {return state;}
+    public Maze getDomain() {return domainController.domain();}
+    public Renderer getRenderer() {return rendererController.renderer();}
+    public AppWindow getGameWindow() {return rendererController.window();}
 }
