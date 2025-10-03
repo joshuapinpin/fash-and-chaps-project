@@ -1,5 +1,7 @@
-package nz.ac.wgtn.swen225.lc.app.controller;
+package nz.ac.wgtn.swen225.lc.app.controller.module;
 
+import nz.ac.wgtn.swen225.lc.app.controller.AppController;
+import nz.ac.wgtn.swen225.lc.app.controller.logic.TimerController;
 import nz.ac.wgtn.swen225.lc.app.state.AutoReplayState;
 import nz.ac.wgtn.swen225.lc.app.state.PausedState;
 import nz.ac.wgtn.swen225.lc.app.state.StepReplayState;
@@ -11,14 +13,14 @@ public class RecorderController {
     Play play;
     Save save;
     boolean isRecording = false;
-    GameController controller;
+    AppController controller;
     TimerController timerController;
 
     /**
      * Initialise the recorder controller with references to play and save classes.
-     * @param controller GameController to interact with the game state.
+     * @param controller AppController to interact with the game state.
      */
-    public RecorderController(GameController controller, TimerController timerController) {
+    public RecorderController(AppController controller, TimerController timerController) {
         this.controller = controller;
         this.timerController = timerController;
         play = new Play();

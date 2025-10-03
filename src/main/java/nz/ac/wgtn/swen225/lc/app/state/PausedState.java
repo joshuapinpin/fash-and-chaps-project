@@ -1,17 +1,17 @@
 package nz.ac.wgtn.swen225.lc.app.state;
 
-import nz.ac.wgtn.swen225.lc.app.controller.GameController;
-import nz.ac.wgtn.swen225.lc.app.controller.TimerController;
+import nz.ac.wgtn.swen225.lc.app.controller.AppController;
+import nz.ac.wgtn.swen225.lc.app.controller.logic.TimerController;
 
 public record PausedState(TimerController timerController) implements GameState {
     public PausedState{
         timerController.pause();
     }
-    public void resume(GameController c){c.resumeGame();}
-    public void save(GameController c){c.saveGame();}
-    public void startNewGame(GameController c, int level){c.startNewGame(level);}
-    public void exit(GameController c){c.exitGame();}
-    public void continueGame(GameController c){c.continueGame();}
+    public void resume(AppController c){c.resumeGame();}
+    public void save(AppController c){c.saveGame();}
+    public void startNewGame(AppController c, int level){c.startNewGame(level);}
+    public void exit(AppController c){c.exitGame();}
+    public void continueGame(AppController c){c.continueGame();}
 
     public static String name(){return "PausedState";}
 

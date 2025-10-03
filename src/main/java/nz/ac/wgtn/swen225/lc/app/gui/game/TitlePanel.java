@@ -1,6 +1,6 @@
 package nz.ac.wgtn.swen225.lc.app.gui.game;
 
-import nz.ac.wgtn.swen225.lc.app.controller.GameController;
+import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
 import nz.ac.wgtn.swen225.lc.app.util.MyFont;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;
@@ -14,13 +14,13 @@ public class TitlePanel extends JPanel implements GamePanel{
     public static int PANEL_HEIGHT = AppWindow.HEADER_HEIGHT;
 
     private BufferedImage bgImg;
-    private GameController controller;
+    private AppController controller;
 
     /**
      * Constructor for TitlePanel.
-     * @param controller GameController
+     * @param controller AppController
      */
-    public TitlePanel(GameController controller){
+    public TitlePanel(AppController controller){
         this.controller = controller;
         setLayout(new BorderLayout());
         setOpaque(false);

@@ -5,10 +5,10 @@ import java.util.List;
 
 import javax.swing.*;
 
-import nz.ac.wgtn.swen225.lc.app.controller.GameController;
-import nz.ac.wgtn.swen225.lc.app.controller.InputController;
-import nz.ac.wgtn.swen225.lc.app.controller.RecorderController;
-import nz.ac.wgtn.swen225.lc.app.controller.TimerController;
+import nz.ac.wgtn.swen225.lc.app.controller.AppController;
+import nz.ac.wgtn.swen225.lc.app.controller.logic.InputController;
+import nz.ac.wgtn.swen225.lc.app.controller.module.RecorderController;
+import nz.ac.wgtn.swen225.lc.app.controller.logic.TimerController;
 import nz.ac.wgtn.swen225.lc.app.gui.game.GamePanel;
 import nz.ac.wgtn.swen225.lc.app.gui.screen.DefeatScreenPanel;
 import nz.ac.wgtn.swen225.lc.app.gui.screen.PlayScreenPanel;
@@ -30,7 +30,7 @@ public class AppWindow extends JFrame {
     public static final int HEADER_HEIGHT = SQUARE_SIZE * 2;
 
     // Controllers
-    private GameController controller; // Reference to GameController
+    private AppController controller; // Reference to AppController
     private InputController inputController;
     private TimerController timerController;
     private RecorderController recorderController;
@@ -50,8 +50,8 @@ public class AppWindow extends JFrame {
      * @param controller
      * @param inputController
      */
-    public AppWindow(GameController controller, InputController inputController,
-            TimerController timerController, RecorderController recorderController) {
+    public AppWindow(AppController controller, InputController inputController,
+                     TimerController timerController, RecorderController recorderController) {
         // TODO: Set up window, menus, status bar, and embed MazePanel
         super("Fash and Chaps :D");
         this.controller = controller;

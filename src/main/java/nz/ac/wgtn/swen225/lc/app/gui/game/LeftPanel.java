@@ -1,8 +1,8 @@
 package nz.ac.wgtn.swen225.lc.app.gui.game;
 
 
-import nz.ac.wgtn.swen225.lc.app.controller.GameController;
-import nz.ac.wgtn.swen225.lc.app.controller.TimerController;
+import nz.ac.wgtn.swen225.lc.app.controller.AppController;
+import nz.ac.wgtn.swen225.lc.app.controller.logic.TimerController;
 import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
 import nz.ac.wgtn.swen225.lc.app.util.MyFont;
 import nz.ac.wgtn.swen225.lc.domain.entities.EntityColor;
@@ -33,7 +33,7 @@ public class LeftPanel extends JPanel implements GamePanel{
     private BufferedImage bgImg;
     private MyFont font;
 
-    private GameController controller;
+    private AppController controller;
     private TimerController timerController;
 
     private Map<EntityColor, BufferedImage> imageKeyMap;
@@ -41,10 +41,10 @@ public class LeftPanel extends JPanel implements GamePanel{
 
     /**
      * Constructor for LeftPanel.
-     * @param controller GameController
+     * @param controller AppController
      * @param timerController TimerController
      */
-    public LeftPanel(GameController controller, TimerController timerController){
+    public LeftPanel(AppController controller, TimerController timerController){
         this.controller = controller;
         this.timerController = timerController;
         this.font = MyFont.PIXEL;
@@ -89,7 +89,7 @@ public class LeftPanel extends JPanel implements GamePanel{
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                List<Key> keys = controller.getDomain().getPlayer().getKeys();
+                List<Key> keys = controller.domain().getPlayer().getKeys();
                 int keysLeft = keys.size();
 
 
@@ -111,7 +111,7 @@ public class LeftPanel extends JPanel implements GamePanel{
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 for(int i = 0; i < 4; i++){
-                    int treasures = controller.getDomain().getPlayer().getTreasuresCollected();
+                    int treasures = controller.domain().getPlayer().getTreasuresCollected();
                     BufferedImage img;
                     if(i < treasures) img = LoadingImg.Treasure.loadImage();
                     else img = LoadingImg.Sand.loadImage();
@@ -136,7 +136,7 @@ public class LeftPanel extends JPanel implements GamePanel{
             setupLabel(timerLabel);
             panel.add(timerLabel);
         } else if(panel == levelPanel){
-            levelLabel = new JLabel(controller.getLevel() + "");
+            levelLabel = new JLabel(controller.level() + "");
             setupLabel(levelLabel);
             panel.add(levelLabel);
         }
@@ -159,7 +159,7 @@ public class LeftPanel extends JPanel implements GamePanel{
     public void updatePanel() {
         int timeLeft = timerController.getTimeLeft();
         timerLabel.setText(timeLeft + "");
-        int level = controller.getLevel();
+        int level = controller.level();
         levelLabel.setText(level + "");
         allComponents.forEach(JComponent::repaint);
     }

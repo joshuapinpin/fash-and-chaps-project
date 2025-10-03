@@ -1,6 +1,6 @@
 package nz.ac.wgtn.swen225.lc.app.gui.game;
 
-import nz.ac.wgtn.swen225.lc.app.controller.GameController;
+import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
 import nz.ac.wgtn.swen225.lc.app.util.MyButton;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;
@@ -23,14 +23,14 @@ public class MenuPanel extends JPanel implements ActionListener, GamePanel{
 
     // Buttons: Pause, Save, Exit, Resume
     private Map<JButton, Runnable> buttonRunnableMap;
-    private GameController controller;
+    private AppController controller;
     private BufferedImage bgImg;
 
     /**
      * Constructor for MenuPanel.
-     * @param controller GameController
+     * @param controller AppController
      */
-    public MenuPanel(GameController controller){
+    public MenuPanel(AppController controller){
         this.controller = controller;
         setLayout(new GridLayout(1, 5, BUTTON_GAP, BUTTON_GAP));
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));

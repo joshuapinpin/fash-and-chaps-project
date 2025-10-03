@@ -1,7 +1,7 @@
 package nz.ac.wgtn.swen225.lc.app.gui.game;
 
-import nz.ac.wgtn.swen225.lc.app.controller.GameController;
-import nz.ac.wgtn.swen225.lc.app.controller.RecorderController;
+import nz.ac.wgtn.swen225.lc.app.controller.AppController;
+import nz.ac.wgtn.swen225.lc.app.controller.module.RecorderController;
 import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
 import nz.ac.wgtn.swen225.lc.app.util.MyButton;
 import nz.ac.wgtn.swen225.lc.app.util.MyFont;
@@ -24,7 +24,7 @@ public class RightPanel extends JPanel implements ActionListener, ChangeListener
     public static final int PANEL_HEIGHT = AppWindow.MAZE_SIZE;
     public static final int FONT_SIZE = 40;
 
-    private GameController controller;
+    private AppController controller;
     private RecorderController recorderController;
     private List<JComponent> allComps;
     private Map<JButton, Runnable> buttonRunnableMap;
@@ -32,10 +32,10 @@ public class RightPanel extends JPanel implements ActionListener, ChangeListener
 
     /**
      * Constructor for RightPanel.
-     * @param controller GameController
+     * @param controller AppController
      * @param recorderController RecorderController
      */
-    public RightPanel(GameController controller, RecorderController recorderController){
+    public RightPanel(AppController controller, RecorderController recorderController){
         this.controller = controller;
         this.recorderController = recorderController;
         allComps = new ArrayList<>();
@@ -97,7 +97,7 @@ public class RightPanel extends JPanel implements ActionListener, ChangeListener
         slider.setOpaque(false); // transparent background if you want
         slider.addChangeListener(e -> {
             stateChanged(e);
-            controller.getGameWindow().requestFocusInWindow();
+            controller.gameWindow().requestFocusInWindow();
         });
         add(slider);
         allComps.add(slider);

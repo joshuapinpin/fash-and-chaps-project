@@ -61,7 +61,7 @@ public class Play {
      * from the list, everytime method is called.
      * Need to use the observer pattern.
      */
-    public boolean stepByStep(GameController gm) {
+    public boolean stepByStep(AppController gm) {
         // make the method return true while we still have positions to go
         if(pos == movements.size()){pos = 0; return false;}
         System.out.println("*DEBUG* Inside of the Recorder Package Now");
@@ -82,7 +82,7 @@ public class Play {
      * Currently, doesn't implement speed.
      * Need to use the observer pattern.
      */
-    public void autoPlay(GameController gm) {
+    public void autoPlay(AppController gm) {
         System.out.println("*DEBUG* Inside of the Recorder Package Now");
         getData();
         if (movements.isEmpty()) throw new IllegalArgumentException("Character has not moved yet");
@@ -96,7 +96,7 @@ public class Play {
     public static void main(String[] args) {
         Play p = new Play();
         p.setSpeed(2);
-        GameController x = GameController.of();
+        AppController x = AppController.of();
         p.stepByStep(x);
         p.stepByStep(x);
         p.stepByStep(x);

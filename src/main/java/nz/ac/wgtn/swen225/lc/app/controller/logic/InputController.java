@@ -1,5 +1,6 @@
-package nz.ac.wgtn.swen225.lc.app.controller;
+package nz.ac.wgtn.swen225.lc.app.controller.logic;
 
+import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 import nz.ac.wgtn.swen225.lc.app.state.AutoReplayState;
 import nz.ac.wgtn.swen225.lc.app.state.StepReplayState;
 import nz.ac.wgtn.swen225.lc.app.util.Input;
@@ -9,12 +10,12 @@ import java.awt.event.KeyListener;
 import java.util.*;
 
 /**
- * Handles user input (keyboard and UI actions) and delegates to GameController.
+ * Handles user input (keyboard and UI actions) and delegates to AppController.
  *
  * @author <Your Name>
  */
 public class InputController implements KeyListener {
-    private final GameController controller;
+    private final AppController controller;
     private final Map<KeyCombo, KeyAction> inputs;
     private final Set<Integer> pressedKeys = new HashSet<>();
 
@@ -22,9 +23,9 @@ public class InputController implements KeyListener {
      * Represents a combination of key code and control modifier.
      */
     private record KeyCombo(int keyCode, boolean ctrl) {}
-    private interface KeyAction {void execute(GameController gameController);}
+    private interface KeyAction {void execute(AppController gameController);}
 
-    public InputController(GameController controller) {
+    public InputController(AppController controller) {
         this.controller = controller;
         this.inputs = new HashMap<>();
         setupInputs();
@@ -46,8 +47,8 @@ public class InputController implements KeyListener {
     }
 
     @Override public void keyPressed(KeyEvent e) {
-        if(controller.getState().equals(new StepReplayState())
-                || controller.getState().equals(new AutoReplayState())) return;
+        if(controller.state().equals(new StepReplayState())
+                || controller.state().equals(new AutoReplayState())) return;
 
 
         int keyCode = e.getKeyCode();

@@ -1,11 +1,21 @@
 package nz.ac.wgtn.swen225.lc.app.controller;
 
-import nz.ac.wgtn.swen225.lc.app.state.*;
-import nz.ac.wgtn.swen225.lc.app.gui.*;
-import nz.ac.wgtn.swen225.lc.app.util.*;
+import nz.ac.wgtn.swen225.lc.app.controller.logic.InputController;
+import nz.ac.wgtn.swen225.lc.app.controller.logic.TimerController;
+import nz.ac.wgtn.swen225.lc.app.controller.module.DomainController;
+import nz.ac.wgtn.swen225.lc.app.controller.module.PersistencyController;
+import nz.ac.wgtn.swen225.lc.app.controller.module.RecorderController;
+import nz.ac.wgtn.swen225.lc.app.controller.module.RendererController;
+import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
+import nz.ac.wgtn.swen225.lc.app.state.DefeatState;
+import nz.ac.wgtn.swen225.lc.app.state.GameState;
+import nz.ac.wgtn.swen225.lc.app.state.PausedState;
+import nz.ac.wgtn.swen225.lc.app.state.PlayState;
+import nz.ac.wgtn.swen225.lc.app.util.Input;
 import nz.ac.wgtn.swen225.lc.domain.Direction;
 import nz.ac.wgtn.swen225.lc.domain.Maze;
 import nz.ac.wgtn.swen225.lc.renderer.Renderer;
+
 
 /**
  * Central controller for game logic and flow.
@@ -14,10 +24,11 @@ import nz.ac.wgtn.swen225.lc.renderer.Renderer;
  *
  * @author Joshua Pinpin (Student ID: 300662880)
  */
-public class App implements GameController {
+public class AppController {
     // APP CONTROLLERS
     private InputController inputController;
     private TimerController timerController;
+    private AppWindow window;
 
     // MODULE CONTROLLERS
     private RecorderController recorderController;
@@ -32,8 +43,9 @@ public class App implements GameController {
     /**
      * Constructor initializes the game components and starts a new game.
      */
-    public App() {
+    private AppController() {
         initialiseControllers();
+//        setState(new StartState());
         startNewGame(1);
     }
 
@@ -45,14 +57,19 @@ public class App implements GameController {
         rendererController = new RendererController(this, domainController);
         recorderController = new RecorderController(this, timerController);
 
-        rendererController.setWindow(new AppWindow(this, inputController,
-                timerController, recorderController
-        ));
-
-
+        window = new AppWindow(this, inputController, timerController, recorderController);
     }
 
+
     // ========== Game Controller Implementation ==========
+
+    /**
+     * Factory method to create a new AppController instance.
+     * @return A new AppController instance
+     */
+    public static AppController of() {
+        return new AppController();
+    }
 
     /**
      * Handles a user input (e.g., move, pause, save, etc.).
@@ -73,12 +90,15 @@ public class App implements GameController {
         catch(UnsupportedOperationException e){
             System.out.println(
                     "Input " + input + " not valid in current state: "
-                    + state.getClass().getSimpleName()
+                            + state.getClass().getSimpleName()
             );
         }
 
-        // Update GUI after handling input
-        rendererController.updateGui(domainController);
+        // Update Maze after handling input
+        rendererController.updateMaze(domainController);
+
+        // Update Supporting GUI Elements
+        window.updateWindow();
     }
 
     /**
@@ -157,7 +177,6 @@ public class App implements GameController {
     /**
      * Displays help or game rules.
      */
-    @Override
     public void help() {
         System.out.println("Displaying Help/Rules...");
     }
@@ -173,9 +192,9 @@ public class App implements GameController {
     // ========== Getters and Setters ==========
     public void setState(GameState state) {this.state = state;}
 
-    public int getLevel() {return level;}
-    public GameState getState() {return state;}
-    public Maze getDomain() {return domainController.domain();}
-    public Renderer getRenderer() {return rendererController.renderer();}
-    public AppWindow getGameWindow() {return rendererController.window();}
+    public int level() {return level;}
+    public GameState state() {return state;}
+    public Maze domain() {return domainController.domain();}
+    public Renderer renderer() {return rendererController.renderer();}
+    public AppWindow gameWindow() {return window;}
 }

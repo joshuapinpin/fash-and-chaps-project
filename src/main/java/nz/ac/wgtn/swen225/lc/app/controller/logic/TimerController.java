@@ -1,4 +1,6 @@
-package nz.ac.wgtn.swen225.lc.app.controller;
+package nz.ac.wgtn.swen225.lc.app.controller.logic;
+
+import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -7,7 +9,7 @@ import javax.swing.Timer;
 
 /**
  * Manages the countdown timer for each level.
- * Notifies GameController when time runs out.
+ * Notifies AppController when time runs out.
  *
  * @author <Your Name>
  */
@@ -18,22 +20,22 @@ public class TimerController implements ActionListener {
 
     private Timer timer;
     private int timeLeft;
-    private final GameController controller;
+    private final AppController controller;
 
     /**
-     * Initializes the TimerController with a reference to the GameController.
-     * @param controller The GameController to notify when time runs out.
+     * Initializes the TimerController with a reference to the AppController.
+     * @param controller The AppController to notify when time runs out.
      */
-    public TimerController(GameController controller) {
+    public TimerController(AppController controller) {
         this(controller, 0); // Default to 300 seconds (5 minutes)
     }
 
     /**
-     * Initializes the TimerController with a reference to the GameController and initial time.
-     * @param controller The GameController to notify when time runs out.
+     * Initializes the TimerController with a reference to the AppController and initial time.
+     * @param controller The AppController to notify when time runs out.
      * @param initialTime Initial time in seconds.
      */
-    public TimerController(GameController controller, int initialTime) {
+    public TimerController(AppController controller, int initialTime) {
         this.controller = controller;
         this.timeLeft = initialTime;
         // TODO: Initialize timer
@@ -64,7 +66,7 @@ public class TimerController implements ActionListener {
             timer.stop();
             controller.timeUp();
         }
-        controller.getGameWindow().updateWindow();
+        controller.gameWindow().updateWindow();
     }
 
     /**

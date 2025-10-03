@@ -1,6 +1,5 @@
 package nz.ac.wgtn.swen225.lc.domain.tiles;
 
-import nz.ac.wgtn.swen225.lc.app.controller.GameController;
 import nz.ac.wgtn.swen225.lc.domain.Player;
 import nz.ac.wgtn.swen225.lc.domain.Position;
 
@@ -41,7 +40,7 @@ public class Info extends Tile {
     @Override
     public void onEnter(Player p){
         //Need to sort out with app to access this
-        //e.g. GameController.showMessage(message, "Info Field");
+        //e.g. AppController.showMessage(message, "Info Field");
         //but not sure what tha method is for exactly
     }
 

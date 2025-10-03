@@ -1,6 +1,5 @@
 package nz.ac.wgtn.swen225.lc.domain.tiles;
 
-import nz.ac.wgtn.swen225.lc.app.controller.GameController;
 import nz.ac.wgtn.swen225.lc.domain.Player;
 import nz.ac.wgtn.swen225.lc.domain.Position;
 
@@ -12,7 +11,7 @@ import nz.ac.wgtn.swen225.lc.domain.Position;
  */
 public class Exit extends Tile {
 
-    //Potential field of GameController to trigger level complete?
+    //Potential field of AppController to trigger level complete?
 
     /**
      * Constructor for exit tile with specified position
@@ -47,11 +46,11 @@ public class Exit extends Tile {
         int nextLevel = currentLevel + 1;
         if(nextLevel > MAXLEVELS){
             //change to victory state
-            //GameController.exitGame();
+            //AppController.exitGame();
         } else {
-            //GameController.startNewGame(nextLevel);
+            //AppController.startNewGame(nextLevel);
         }
-        //GameController.startNewGame();**/
+        //AppController.startNewGame();**/
         throw new UnsupportedOperationException();
     }
 
