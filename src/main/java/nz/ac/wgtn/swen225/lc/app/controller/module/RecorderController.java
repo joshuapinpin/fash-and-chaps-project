@@ -75,7 +75,7 @@ public class RecorderController {
         System.out.println("Step-By-Step Playing");
         controller.setState(new StepReplayState());
         if(!play.stepByStep(controller))
-            controller.setState(new PausedState(timerController));
+            controller.setState(new PausedState(controller));
     }
 
     /**
@@ -86,7 +86,7 @@ public class RecorderController {
         System.out.println("Auto-Playing");
         controller.setState(new AutoReplayState());
         play.autoPlay(controller);
-        controller.setState(new PausedState(timerController));
+        controller.setState(new PausedState(controller));
     }
 
     /**

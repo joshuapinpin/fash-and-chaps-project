@@ -3,9 +3,9 @@ package nz.ac.wgtn.swen225.lc.app.state;
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 import nz.ac.wgtn.swen225.lc.app.controller.logic.TimerController;
 
-public record PausedState(TimerController timerController) implements GameState {
+public record PausedState(AppController c) implements GameState {
     public PausedState{
-        timerController.pause();
+        c.timerController().pause();
     }
     public void resume(AppController c){c.resumeGame();}
     public void save(AppController c){c.saveGame();}

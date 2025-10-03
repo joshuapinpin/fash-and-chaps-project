@@ -8,9 +8,9 @@ import nz.ac.wgtn.swen225.lc.domain.Direction;
  * State representing the game being actively played.
  * @author Joshua Pinpin
  */
-public record PlayState(TimerController timerController) implements GameState {
+public record PlayState(AppController c) implements GameState {
     public PlayState{
-        timerController.start();
+        c.timerController().start();
     }
     public void moveUp(AppController c) { c.movePlayer(Direction.UP);}
     public void moveDown(AppController c) { c.movePlayer(Direction.DOWN);}

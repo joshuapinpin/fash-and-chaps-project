@@ -38,6 +38,7 @@ public class AppWindow extends JFrame {
     // UI COMPONENTS
     private CardLayout cardLayout;
     private JPanel mainPanel;
+
     private List<JPanel> allPanels;
     private JPanel startScreenPanel;
     private JPanel playScreenPanel;

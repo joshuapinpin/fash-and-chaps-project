@@ -114,7 +114,7 @@ public class AppController {
      * @param level The level to start the new game at
      */
     public void startNewGame(int level) {
-        setState(new PlayState(timerController));
+        setState(new PlayState(this));
         timerController.startTimer(level);
         domainController.initialiseDomain(level);
         recorderController.stopRecording();
@@ -127,7 +127,7 @@ public class AppController {
      */
     public void pauseGame() {
         // TODO: Implement pause logic
-        setState(new PausedState(timerController));
+        setState(new PausedState(this));
         System.out.println("Game Paused");
     }
 
@@ -144,7 +144,7 @@ public class AppController {
      * Continues the game from a paused state.
      */
     public void continueGame() {
-        setState(new PlayState(timerController));
+        setState(new PlayState(this));
         System.out.println("Continuing Game");
     }
 
@@ -185,7 +185,7 @@ public class AppController {
      * Handles the event when time is up.
      */
     public void timeUp() {
-        setState(new DefeatState(timerController));
+        setState(new DefeatState(this));
         System.out.println("Time's Up! Game Over.");
     }
 
@@ -197,4 +197,9 @@ public class AppController {
     public Maze domain() {return domainController.domain();}
     public Renderer renderer() {return rendererController.renderer();}
     public AppWindow gameWindow() {return window;}
+
+    public TimerController timerController() {return timerController; }
+    public RecorderController recorderController() {return recorderController; }
+    public DomainController domainController() {return domainController;}
+    public RendererController rendererController() {return rendererController;}
 }
