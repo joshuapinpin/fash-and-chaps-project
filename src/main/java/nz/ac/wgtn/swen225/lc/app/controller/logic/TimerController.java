@@ -64,7 +64,7 @@ public class TimerController implements ActionListener {
         if(timeLeft > 0) timeLeft--;
         if(timeLeft == 0) {
             timer.stop();
-            controller.timeUp();
+            controller.defeat();
         }
         controller.window().updateWindow();
     }

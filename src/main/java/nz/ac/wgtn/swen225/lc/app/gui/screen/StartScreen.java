@@ -1,5 +1,6 @@
 package nz.ac.wgtn.swen225.lc.app.gui.screen;
 
+import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
 import nz.ac.wgtn.swen225.lc.app.gui.game.GamePanel;
 import nz.ac.wgtn.swen225.lc.app.state.PlayState;
@@ -10,12 +11,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class StartScreenPanel extends JPanel implements GamePanel {
-    private AppWindow window;
+public class StartScreen extends JPanel implements GamePanel {
     private BufferedImage bgImg;
 
-    public StartScreenPanel(AppWindow window) {
-        this.window = window;
+    public StartScreen(AppController controller) {
         setBackground(Color.BLACK);
         setLayout(new BorderLayout());
         JLabel title = new JLabel("Fash and Chaps", SwingConstants.CENTER);
@@ -24,7 +23,7 @@ public class StartScreenPanel extends JPanel implements GamePanel {
         add(title, BorderLayout.CENTER);
 
         JButton startButton = new JButton("Start Game");
-        startButton.addActionListener(e -> window.showScreen(PlayState.name()));
+        startButton.addActionListener(e -> controller.startNewGame(1));
         add(startButton, BorderLayout.SOUTH);
 
         bgImg = LoadingImg.StartScreen.loadImage();

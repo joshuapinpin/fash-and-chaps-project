@@ -10,10 +10,10 @@ import nz.ac.wgtn.swen225.lc.app.controller.logic.InputController;
 import nz.ac.wgtn.swen225.lc.app.controller.module.RecorderController;
 import nz.ac.wgtn.swen225.lc.app.controller.logic.TimerController;
 import nz.ac.wgtn.swen225.lc.app.gui.game.GamePanel;
-import nz.ac.wgtn.swen225.lc.app.gui.screen.DefeatScreenPanel;
-import nz.ac.wgtn.swen225.lc.app.gui.screen.PlayScreenPanel;
-import nz.ac.wgtn.swen225.lc.app.gui.screen.StartScreenPanel;
-import nz.ac.wgtn.swen225.lc.app.gui.screen.VictoryScreenPanel;
+import nz.ac.wgtn.swen225.lc.app.gui.screen.DefeatScreen;
+import nz.ac.wgtn.swen225.lc.app.gui.screen.PlayScreen;
+import nz.ac.wgtn.swen225.lc.app.gui.screen.StartScreen;
+import nz.ac.wgtn.swen225.lc.app.gui.screen.VictoryScreen;
 import nz.ac.wgtn.swen225.lc.app.state.*;
 
 /**
@@ -69,10 +69,10 @@ public class AppWindow extends JFrame {
         mainPanel = new JPanel(cardLayout);
 
         // Initialize all screen panels
-        startScreenPanel = new StartScreenPanel(this);
-        playScreenPanel = new PlayScreenPanel(this, controller, timerController, recorderController);
-        victoryScreenPanel = new VictoryScreenPanel(this);
-        defeatScreenPanel = new DefeatScreenPanel(this);
+        startScreenPanel = new StartScreen(controller);
+        playScreenPanel = new PlayScreen(controller, timerController, recorderController);
+        victoryScreenPanel = new VictoryScreen(controller);
+        defeatScreenPanel = new DefeatScreen(controller);
         allPanels = List.of(startScreenPanel, playScreenPanel, victoryScreenPanel, defeatScreenPanel);
 
         // Add all panels to the main panel with a unique name for each

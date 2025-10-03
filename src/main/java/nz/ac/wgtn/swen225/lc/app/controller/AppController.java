@@ -7,10 +7,7 @@ import nz.ac.wgtn.swen225.lc.app.controller.module.PersistencyController;
 import nz.ac.wgtn.swen225.lc.app.controller.module.RecorderController;
 import nz.ac.wgtn.swen225.lc.app.controller.module.RendererController;
 import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
-import nz.ac.wgtn.swen225.lc.app.state.DefeatState;
-import nz.ac.wgtn.swen225.lc.app.state.GameState;
-import nz.ac.wgtn.swen225.lc.app.state.PausedState;
-import nz.ac.wgtn.swen225.lc.app.state.PlayState;
+import nz.ac.wgtn.swen225.lc.app.state.*;
 import nz.ac.wgtn.swen225.lc.app.util.Input;
 import nz.ac.wgtn.swen225.lc.domain.Direction;
 import nz.ac.wgtn.swen225.lc.domain.Maze;
@@ -45,8 +42,8 @@ public class AppController {
      */
     private AppController() {
         initialiseControllers();
-//        setState(new StartState());
-        startNewGame(1);
+        setState(new StartState());
+//        startNewGame(1);
     }
 
     private void initialiseControllers(){
@@ -114,12 +111,21 @@ public class AppController {
      * @param level The level to start the new game at
      */
     public void startNewGame(int level) {
+        window.showScreen(PlayState.name());
         setState(new PlayState(this));
         timerController.startTimer(level);
         domainController.initialiseDomain(level);
         recorderController.stopRecording();
         this.level = level;
         System.out.println("Starting New Game at Level " + level);
+    }
+
+    /**
+     * Restarts the current level.
+     */
+    public void restartLevel(){
+        startNewGame(level);
+        System.out.println("Restarting Level " + level);
     }
 
     /**
@@ -182,9 +188,19 @@ public class AppController {
     }
 
     /**
-     * Handles the event when time is up.
+     * Handles the event when player achieves victory
+     * By collecting all treasures and reaching exit
      */
-    public void timeUp() {
+    public void victory(){
+        setState(new VictoryState(this));
+        System.out.println("You Win! Congratulations!");
+    }
+
+    /**
+     * Handles the event when player is defeated
+     * Either by time running out or monster hitting player
+     */
+    public void defeat() {
         setState(new DefeatState(this));
         System.out.println("Time's Up! Game Over.");
     }
