@@ -9,6 +9,11 @@ import nz.ac.wgtn.swen225.lc.app.controller.GameController;
 import nz.ac.wgtn.swen225.lc.app.controller.InputController;
 import nz.ac.wgtn.swen225.lc.app.controller.RecorderController;
 import nz.ac.wgtn.swen225.lc.app.controller.TimerController;
+import nz.ac.wgtn.swen225.lc.app.gui.game.GamePanel;
+import nz.ac.wgtn.swen225.lc.app.gui.screen.DefeatScreenPanel;
+import nz.ac.wgtn.swen225.lc.app.gui.screen.PlayScreenPanel;
+import nz.ac.wgtn.swen225.lc.app.gui.screen.StartScreenPanel;
+import nz.ac.wgtn.swen225.lc.app.gui.screen.VictoryScreenPanel;
 import nz.ac.wgtn.swen225.lc.app.state.*;
 
 /**
@@ -75,10 +80,6 @@ public class AppWindow extends JFrame {
         mainPanel.add(victoryScreenPanel, VictoryState.name());
         mainPanel.add(defeatScreenPanel, DefeatState.name());
         setContentPane(mainPanel);
-
-        // For testing purposes, show the play screen initially
-        //showScreen(PlayState.name());
-
     }
 
     private void setupWindow(){
@@ -86,7 +87,6 @@ public class AppWindow extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
         pack();
-        //setLayout(new BorderLayout());
         setFocusable(true);
         requestFocusInWindow();
         setResizable(false);

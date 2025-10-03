@@ -1,7 +1,8 @@
-package nz.ac.wgtn.swen225.lc.app.gui;
+package nz.ac.wgtn.swen225.lc.app.gui.game;
 
 import nz.ac.wgtn.swen225.lc.app.controller.GameController;
 import nz.ac.wgtn.swen225.lc.app.controller.RecorderController;
+import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
 import nz.ac.wgtn.swen225.lc.app.util.MyButton;
 import nz.ac.wgtn.swen225.lc.app.util.MyFont;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;

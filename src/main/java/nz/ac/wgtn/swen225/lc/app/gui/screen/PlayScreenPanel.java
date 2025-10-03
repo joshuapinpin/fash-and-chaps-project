@@ -1,8 +1,10 @@
-package nz.ac.wgtn.swen225.lc.app.gui;
+package nz.ac.wgtn.swen225.lc.app.gui.screen;
 
 import nz.ac.wgtn.swen225.lc.app.controller.GameController;
 import nz.ac.wgtn.swen225.lc.app.controller.RecorderController;
 import nz.ac.wgtn.swen225.lc.app.controller.TimerController;
+import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
+import nz.ac.wgtn.swen225.lc.app.gui.game.*;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,5 +1,7 @@
-package nz.ac.wgtn.swen225.lc.app.gui;
+package nz.ac.wgtn.swen225.lc.app.gui.screen;
 
+import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
+import nz.ac.wgtn.swen225.lc.app.gui.game.GamePanel;
 import nz.ac.wgtn.swen225.lc.app.state.PlayState;
 import nz.ac.wgtn.swen225.lc.app.util.MyFont;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;
@@ -8,7 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class StartScreenPanel extends JPanel implements GamePanel{
+public class StartScreenPanel extends JPanel implements GamePanel {
     private AppWindow window;
     private BufferedImage bgImg;
 
@@ -25,6 +27,7 @@ public class StartScreenPanel extends JPanel implements GamePanel{
         startButton.addActionListener(e -> window.showScreen(PlayState.name()));
         add(startButton, BorderLayout.SOUTH);
 
+        bgImg = LoadingImg.StartScreen.loadImage();
     }
 
     @Override
@@ -32,5 +35,10 @@ public class StartScreenPanel extends JPanel implements GamePanel{
 
     }
 
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.drawImage(bgImg, 0, 0, getWidth(), getHeight(), this);
+    }
 
 }

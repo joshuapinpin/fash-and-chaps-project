@@ -1,8 +1,9 @@
-package nz.ac.wgtn.swen225.lc.app.gui;
+package nz.ac.wgtn.swen225.lc.app.gui.game;
 
 
 import nz.ac.wgtn.swen225.lc.app.controller.GameController;
 import nz.ac.wgtn.swen225.lc.app.controller.TimerController;
+import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
 import nz.ac.wgtn.swen225.lc.app.util.MyFont;
 import nz.ac.wgtn.swen225.lc.domain.entities.EntityColor;
 import nz.ac.wgtn.swen225.lc.domain.entities.Key;
