@@ -1,8 +1,11 @@
 package nz.ac.wgtn.swen225.lc.domain.tiles;
 
 import nz.ac.wgtn.swen225.lc.app.controller.GameController;
+import nz.ac.wgtn.swen225.lc.domain.GameObserver;
 import nz.ac.wgtn.swen225.lc.domain.Player;
 import nz.ac.wgtn.swen225.lc.domain.Position;
+
+import java.util.function.Consumer;
 
 /**
  * Info class representing an informational tile in the game
@@ -37,12 +40,11 @@ public class Info extends Tile {
      * Method to handle player entering the info tile
      * Displays the informational message to the player
      * @param p player entering the info tile
+     * @return Consumer to notify observers of informational message
      */
     @Override
-    public void onEnter(Player p){
-        //Need to sort out with app to access this
-        //e.g. GameController.showMessage(message, "Info Field");
-        //but not sure what tha method is for exactly
+    public Consumer<GameObserver> onEnter(Player p){
+        return observer -> observer.onInfoMessage();
     }
 
     /**

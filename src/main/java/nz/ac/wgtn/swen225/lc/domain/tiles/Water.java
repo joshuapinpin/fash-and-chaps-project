@@ -1,10 +1,12 @@
 package nz.ac.wgtn.swen225.lc.domain.tiles;
 
+import nz.ac.wgtn.swen225.lc.domain.GameObserver;
 import nz.ac.wgtn.swen225.lc.domain.Player;
 import nz.ac.wgtn.swen225.lc.domain.Position;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * Water class representing a water tile in the game
@@ -41,14 +43,14 @@ public class Water extends Tile{
      * Method to handle player entering the water tile
      * Currently unimplemented, to be defined for level 2 when player drowns
      * @param player player entering the water tile
+     * @return Consumer to notify observers of player drowning
      */
     @Override
-    public void onEnter(Player player) {
+    public Consumer<GameObserver> onEnter(Player player) {
         if(player == null){
             throw new IllegalArgumentException("Player cannot be null");
         }
-        //to be implemented for level 2 when player drowns
-        throw new UnsupportedOperationException();
+        return observer -> observer.onPlayerDrown(player);
     }
 
     /**

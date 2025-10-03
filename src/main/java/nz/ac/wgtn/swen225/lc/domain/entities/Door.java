@@ -1,6 +1,9 @@
 package nz.ac.wgtn.swen225.lc.domain.entities;
 
+import nz.ac.wgtn.swen225.lc.domain.GameObserver;
 import nz.ac.wgtn.swen225.lc.domain.Player;
+
+import java.util.function.Consumer;
 
 /**
  * Door class representing a door entity in the game
@@ -45,9 +48,10 @@ public class Door implements Entity {
      * Method to handle player interaction with the door
      * To be able to unlock door with the correct key
      * @param p player interacting with the door
+     * @return Consumer to notify observers of door opening
     */
     @Override
-    public void onInteract(Player p){
+    public Consumer<GameObserver> onInteract(Player p){
         if(p == null){
             throw new IllegalArgumentException("Player cannot be null");
         }
@@ -59,6 +63,7 @@ public class Door implements Entity {
         }
 
         if(hasKey){isOpen = true;}
+        return observer -> observer.onDoorOpened(this);
     }
 
     /**
