@@ -196,7 +196,7 @@ public class AppController {
     public GameState state() {return state;}
     public Maze domain() {return domainController.domain();}
     public Renderer renderer() {return rendererController.renderer();}
-    public AppWindow gameWindow() {return window;}
+    public AppWindow window() {return window;}
 
     public TimerController timerController() {return timerController; }
     public RecorderController recorderController() {return recorderController; }

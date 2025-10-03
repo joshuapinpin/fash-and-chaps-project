@@ -66,7 +66,7 @@ public class TimerController implements ActionListener {
             timer.stop();
             controller.timeUp();
         }
-        controller.gameWindow().updateWindow();
+        controller.window().updateWindow();
     }
 
     /**

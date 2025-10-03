@@ -97,7 +97,7 @@ public class RightPanel extends JPanel implements ActionListener, ChangeListener
         slider.setOpaque(false); // transparent background if you want
         slider.addChangeListener(e -> {
             stateChanged(e);
-            controller.gameWindow().requestFocusInWindow();
+            controller.window().requestFocusInWindow();
         });
         add(slider);
         allComps.add(slider);
