@@ -70,7 +70,7 @@ public enum LoadingSounds {
                 //controls volume of sound
                 FloatControl changeVol = (FloatControl) BGCLIP.getControl(FloatControl.Type.MASTER_GAIN);
                 changeVol.setValue(volume);
-                
+
                 BGCLIP.start();
                 BGCLIP.loop(Clip.LOOP_CONTINUOUSLY); // loops the music
 
