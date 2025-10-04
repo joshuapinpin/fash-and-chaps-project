@@ -111,6 +111,23 @@ public class DomainTest {
 
     }
 
+    @BeforeEach
+    void waterGame(){
+        maze = new Maze(2, 2);
+        player = Player.of();
+        player.initialiseStartPos(2,2);
+
+        Monster monster = Monster.of(new Position(2,1));
+        maze.setMonster(monster);
+
+        maze.setPlayer(player);
+
+        maze.setTileAt(Free.of(new Position(0,0)));
+        maze.setTileAt(Water.of(new Position(0,1)));
+        maze.setTileAt(Water.of(new Position(1,0)));
+        maze.setTileAt(Free.of(new Position(1,1)));
+    }
+
     @Test
     void testMazeDimensions() {
         miniGame();
@@ -237,6 +254,16 @@ public class DomainTest {
         maze.ping(); //monster moves left
         maze.movePlayer(Direction.UP);
         maze.ping(); //monster moves right and hits player
+        assertEquals(false, player.isAlive());
+    }
+
+    //-------------------------------
+    @Test
+    void testWaterTile(){
+        waterGame();
+
+        assertEquals(new Position(1,1), player.getPos());
+        maze.movePlayer(Direction.LEFT); //player going onto water tile
         assertEquals(false, player.isAlive());
     }
 }
