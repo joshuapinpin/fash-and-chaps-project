@@ -93,17 +93,18 @@ public class Renderer {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        LoadingSounds.BackgroundSound.playBackgroundMusic(-30f);
-        LoadingSounds.PlayerDrownSound.playSoundEffect(-20.0f);
-        LoadingSounds.PlayerDrownSound.playSoundEffect(-20.0f);
-
-        Thread.sleep(10000);
-        for(int i = 0; i < 10; i++){
-            LoadingSounds.PlayerDrownSound.playSoundEffect(-20.0f);
+        LoadingSounds.KeySound.playBackgroundMusic(-30f);
+        try {
+            Thread.sleep(Long.MAX_VALUE);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
-        Thread.sleep(10000);
-        LoadingSounds.BackgroundSound.stopBackgroundMusic();
+
+
+
+        //Thread.sleep(10000);
+        //LoadingSounds.BackgroundSound.stopBackgroundMusic();
     }
 
 

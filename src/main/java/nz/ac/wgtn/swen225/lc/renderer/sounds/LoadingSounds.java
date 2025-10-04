@@ -63,7 +63,6 @@ public enum LoadingSounds {
      * @param volume - controls how loud the sound is
      */
     public void playBackgroundMusic(float volume){
-        new Thread(() -> {
             try {
                 BGCLIP = AudioSystem.getClip();
                 BGCLIP.open(loadSound()); //gets the audio
@@ -71,14 +70,14 @@ public enum LoadingSounds {
                 //controls volume of sound
                 FloatControl changeVol = (FloatControl) BGCLIP.getControl(FloatControl.Type.MASTER_GAIN);
                 changeVol.setValue(volume);
-
-                BGCLIP.loop(Clip.LOOP_CONTINUOUSLY); // loops the music
+                
                 BGCLIP.start();
+                BGCLIP.loop(Clip.LOOP_CONTINUOUSLY); // loops the music
 
             } catch (Exception e) {
                 throw new RuntimeException("Error playing background sound: " + filename, e);
             }
-        }).start();
+
     }
 
     /**
