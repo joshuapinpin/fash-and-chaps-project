@@ -50,6 +50,7 @@ public class Water extends Tile{
         if(player == null){
             throw new IllegalArgumentException("Player cannot be null");
         }
+        player.die();
         return observer -> observer.onPlayerDrown(player);
     }
 
