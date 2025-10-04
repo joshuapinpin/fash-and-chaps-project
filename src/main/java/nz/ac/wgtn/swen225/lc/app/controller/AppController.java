@@ -133,7 +133,7 @@ public class AppController {
      */
     public void pauseGame() {
         setState(new PausedState(this));
-        window.showPauseDialog();
+        //window.showPauseDialog();
         System.out.println("Game Paused");
     }
 
@@ -178,8 +178,7 @@ public class AppController {
      * Displays help or game rules.
      */
     public void help() {
-        setState(new PausedState(this));
-        window.showHelpDialog();
+        setState(new HelpState(this));
         System.out.println("Displaying Help/Rules...");
     }
 

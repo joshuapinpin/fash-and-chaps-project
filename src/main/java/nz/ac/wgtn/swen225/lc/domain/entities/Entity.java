@@ -32,4 +32,12 @@ public interface Entity {
      * @return true if accessible, false otherwise
      */
     default boolean canInteract(Player p){return true;}
+
+    /**
+     * Accept a visitor to perform operations based on the entity type
+     * @param visitor the visitor to accept
+     * @param <T> the return type of the visitor's operation
+     * @return the result of the visitor's operation
+     */
+    <T> T accept(EntityVisitor<T> visitor);
 }

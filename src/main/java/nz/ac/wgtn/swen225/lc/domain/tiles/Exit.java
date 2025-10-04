@@ -60,4 +60,15 @@ public class Exit extends Tile {
         Exit exit = (Exit) obj;
         return this.getPos().equals(exit.getPos());
     }
+
+    /**
+     * Accept method for visitor pattern
+     * @param visitor TileVisitor instance
+     * @param <T> return type of the visitor
+     * @return result of visitor's visitFree method
+     */
+    @Override
+    public <T> T accept(TileVisitor<T> visitor) {
+        return visitor.visitExit(this);
+    }
 }

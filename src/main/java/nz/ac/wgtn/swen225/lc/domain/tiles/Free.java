@@ -54,7 +54,7 @@ public class Free extends Tile {
             observer.onPlayerMove(p.getPos());
             collectable.ifPresent(entity-> {
                 Consumer<GameObserver> notifyEntity = entity.onInteract(p);
-                if(notifyEntity != null) {
+                if(notifyEntity != null) { //calling accept to execute the consumer
                     notifyEntity.accept(observer);
                 }
                 if(entity.removeEntity()) {
@@ -65,8 +65,6 @@ public class Free extends Tile {
         };
 
     }
-
-
 
     /**
      * Free tile is accessible unless it contains an impassable entity (ExitLock or closed Door)
@@ -116,5 +114,15 @@ public class Free extends Tile {
         if(this.getClass() != obj.getClass()) return false;
         Free free = (Free) obj;
         return this.getPos().equals(free.getPos()) && this.collectable.equals(free.collectable);
+    }
+
+    /**
+     * Accept method for visitor pattern
+     * @param visitor TileVisitor instance
+     * @return result from visitor's visitFree method
+     */
+    @Override
+    public <T> T accept(TileVisitor<T> visitor) {
+        return visitor.visitFree(this);
     }
 }

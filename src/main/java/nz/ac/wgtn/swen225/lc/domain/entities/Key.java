@@ -69,4 +69,14 @@ public class Key implements Entity {
         Key key = (Key) obj;
         return this.keyColor == key.keyColor;
     }
+
+    /**
+     * Accept method for visitor pattern
+     * @param visitor the visitor to accept
+     * @return result of visitor's visitKey method
+     */
+    @Override
+    public <T> T accept(EntityVisitor<T> visitor) {
+        return visitor.visitKey(this);
+    }
 }

@@ -107,4 +107,14 @@ public class Door implements Entity {
         Door door = (Door) obj;
         return this.doorColor == door.doorColor && this.isOpen == door.isOpen;
     }
+
+    /**
+     * Accept method for visitor pattern
+     * @param visitor EntityVisitor instance
+     * @return result of visitor's visitDoor method
+     */
+    @Override
+    public <T> T accept(EntityVisitor<T> visitor) {
+        return visitor.visitDoor(this);
+    }
 }

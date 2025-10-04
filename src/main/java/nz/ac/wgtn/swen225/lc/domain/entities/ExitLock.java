@@ -82,4 +82,15 @@ public class ExitLock implements Entity {
         ExitLock exitLock = (ExitLock) obj;
         return this.isPassable == exitLock.isPassable;
     }
+
+    /**
+     * Accept method for visitor pattern
+     * @param visitor TileVisitor instance
+     * @param <T> return type of the visitor
+     * @return result of visitor's visitExit method
+     */
+    @Override
+    public <T> T accept(EntityVisitor<T> visitor) {
+        return visitor.visitExitLock(this);
+    }
 }
