@@ -3,14 +3,13 @@ package nz.ac.wgtn.swen225.lc.renderer.sounds;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;
 
 import javax.sound.sampled.*;
-import javax.xml.transform.Source;
 import java.io.InputStream;
 
 public enum LoadingSounds {
     VictorySound("sounds/victory.wav"),
     LosingSound("sounds/losing.wav"),
     WalkingSound(""),
-    BackgroundSound(""),
+    BackgroundSound("sounds/background.wav"),
     UnlockedSound("sounds/unlock.wav"),
     KeySound("sounds/key.wav"),
     CoinSound("sounds/coin.wav"),
@@ -18,11 +17,16 @@ public enum LoadingSounds {
     PlayerCrabSound("");
 
     private final String filename;
+    private Clip BGCLIP; // saves the clip for bg sound
 
     LoadingSounds(String name) {
         this.filename = name;
     }
 
+    /**
+     * Loads the file for sound to each enum
+     * @return returns an AudioInputStream used to find sound/load sound
+     */
     AudioInputStream loadSound() {
         try{
             InputStream stream = LoadingImg.class.getResourceAsStream("/" + filename);
@@ -31,32 +35,57 @@ public enum LoadingSounds {
         }catch(Exception e) {throw new RuntimeException("Error loading sound: " + filename, e);}
     }
 
+    /**
+     * Method to play each sound effect
+     * @param volume - controls how loud the sound is
+     */
     public void playSoundEffect(float volume) {
         new Thread(() -> {
             try {
                 Clip clip = AudioSystem.getClip();
-                clip.open(loadSound());
+                clip.open(loadSound()); // gets the file as audio
 
                 //controls volume of sound
                 FloatControl changeVol = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
                 changeVol.setValue(volume);
-
                 clip.start();
 
                 //makes sure the whole clip gets played
                 Thread.sleep(clip.getMicrosecondLength() / 1000);
-
             } catch (Exception e) {
-                throw new RuntimeException("Error playing sound: " + filename, e);
+                throw new RuntimeException("Error playing sound effect: " + filename, e);
             }
         }).start();
     }
 
-    /*public void playBackgroundMusic(){
-        try{
-            SourceDataLine sound = AudioSystem.getSourceDataLine();
+    /**
+     * Method to play background music in a loop
+     * @param volume - controls how loud the sound is
+     */
+    public void playBackgroundMusic(float volume){
+        new Thread(() -> {
+            try {
+                BGCLIP = AudioSystem.getClip();
+                BGCLIP.open(loadSound()); //gets the audio
 
-        } catch(Exception e){ throw new  RuntimeException("Error loading sound: " + filename); }
-    }*/
+                //controls volume of sound
+                FloatControl changeVol = (FloatControl) BGCLIP.getControl(FloatControl.Type.MASTER_GAIN);
+                changeVol.setValue(volume);
+
+                BGCLIP.loop(Clip.LOOP_CONTINUOUSLY); // loops the music
+                BGCLIP.start();
+
+            } catch (Exception e) {
+                throw new RuntimeException("Error playing background sound: " + filename, e);
+            }
+        }).start();
+    }
+
+    /**
+     * Stops the background music
+     */
+    public void stopBackgroundMusic(){
+        BGCLIP.stop();
+    }
 
 }
