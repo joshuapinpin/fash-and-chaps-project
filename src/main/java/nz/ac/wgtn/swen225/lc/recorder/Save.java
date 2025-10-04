@@ -2,12 +2,9 @@ package nz.ac.wgtn.swen225.lc.recorder;
 import nz.ac.wgtn.swen225.lc.app.controller.GameController;
 import nz.ac.wgtn.swen225.lc.app.util.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;
-
-import javax.imageio.ImageIO;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 /**
@@ -20,7 +17,7 @@ import java.util.List;
  * @author Arushi Bhatnagar Stewart
  */
 public class Save{
-    private final List<Input> movements;
+    private List<Input> movements;
     final ObjectMapper mapper;
     private String filename;
     /** Method to add the Input objects (the directions/movements)
@@ -31,6 +28,12 @@ public class Save{
         movements = new ArrayList<>();
         mapper = new ObjectMapper();
     }
+    /** */
+    public void reset(){
+        movements = new ArrayList<>();
+        filename = "";
+    }
+    /** */
     public void addMovement(Input direction) {
         System.out.println("*DEBUG* Inside of the Recorder Package Now");
         movements.add(direction);
@@ -39,15 +42,18 @@ public class Save{
     public List<Input> movements() {
         return movements;
     }
+    /** */
+    public String chooseFile(){
+
+    }
     /** This is the core method of this class.
      * In this method, we create a file and write
      * elements in the movement list to the file
      */
-    public void saveToFile(){
+    public void saveToFile(String filename){
         System.out.println("*DEBUG* Inside of the Recorder Package Now");
-        File playerMovements = new File("movements.json");
-        try {
-            mapper.writeValue(playerMovements, movements);
+        try(OutputStream os = new FileOutputStream(filename);) {
+            mapper.writeValue(os, movements);
         } catch(IOException e){
             throw new Error(e);
         }
@@ -59,6 +65,6 @@ public class Save{
         s.addMovement(Input.MOVE_DOWN);
         s.addMovement(Input.MOVE_LEFT);
         s.addMovement(Input.MOVE_RIGHT);
-        s.saveToFile();
+        s.saveToFile("movements.json");
     }
 }

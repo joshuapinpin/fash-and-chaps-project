@@ -1,3 +1,6 @@
+# ignore recorder file
+movements.json
+
 # Created by https://www.toptal.com/developers/gitignore/api/intellij,eclipse,bluej,macos,maven
 # Edit at https://www.toptal.com/developers/gitignore?templates=intellij,eclipse,bluej,macos,maven
 

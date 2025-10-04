@@ -35,7 +35,7 @@ public class RecorderController {
 
     public void stopRecording(){
         isRecording = false;
-        save.saveToFile();
+        save.saveToFile(null); // josh fix this
         System.out.println("Stopped Recording");
     }
 
@@ -50,14 +50,14 @@ public class RecorderController {
     public void stepByStep() {
         System.out.println("Step-By-Step Playing");
         controller.setState(new StepReplayState());
-        if(!play.stepByStep(controller))
+        if(!play.stepByStep(controller, null)) // josh fix this
             controller.setState(new PausedState(timerController));
     }
 
     public void autoPlay() {
         System.out.println("Auto-Playing");
         controller.setState(new AutoReplayState());
-        play.autoPlay(controller);
+        play.autoPlay(controller, null); // josh fix this
         controller.setState(new PausedState(timerController));
     }
 

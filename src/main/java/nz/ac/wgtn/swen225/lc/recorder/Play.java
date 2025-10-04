@@ -3,8 +3,10 @@ import nz.ac.wgtn.swen225.lc.app.controller.*;
 import nz.ac.wgtn.swen225.lc.app.util.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
-import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,35 +16,32 @@ import java.util.List;
  *
  * @author Arushi Bhatnagar Stewart
  */
-
-// use game controller handle input?
 public class Play {
     private static int speed;
     private static int pos; // count for step by step playing
     final ObjectMapper mapper;
     private static List<Input> movements;
     private InputStream fileStream;
-
+    /** */
     public Play(){
         movements = new ArrayList<>();
         mapper = new ObjectMapper();
         pos = 0;
         speed = 1;
     }
+    /** */
     public void setSpeed(int s) {
         System.out.println("*DEBUG* Inside of the Recorder Package Now");
         // speed needs to be 1-6
         assert s > 0 : "Speed must me greater than zero";
         speed = s;
     }
+    /** */
     public void LoadingFile(String filename){
-        try{
+        try(InputStream is = new FileInputStream(filename);){
             // putting a bracket in front of filename means it looks for file from root of classpath
             // InputStream object used to read file contents
-            fileStream = Play.class.getResourceAsStream("/" + filename);
-            if(fileStream == null) {throw new RuntimeException("Cannot find recording: " + filename);}
-            fileStream.close();
-        } catch(IOException e){ throw new RuntimeException("Error loading the recording: " + filename, e);}
+        } catch (IOException e) {throw new RuntimeException("Error loading the recording: " + filename, e);}
     }
     /**
      * This methods reads the list of movements from the json file
@@ -65,7 +64,6 @@ public class Play {
         }
         return movements;
     }
-
     /**
      * Very basic implementation of step by step. Reads one input
      * from the list, everytime method is called.
@@ -87,7 +85,6 @@ public class Play {
         pos++;
         return true;
     }
-
     /**
      * Very basic implementation. In one iteration, reads all the frames
      * Currently, doesn't implement speed.
