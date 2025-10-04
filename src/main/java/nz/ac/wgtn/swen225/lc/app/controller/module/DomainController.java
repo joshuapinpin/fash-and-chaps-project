@@ -1,10 +1,12 @@
 package nz.ac.wgtn.swen225.lc.app.controller.module;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
+import nz.ac.wgtn.swen225.lc.app.state.VictoryState;
 import nz.ac.wgtn.swen225.lc.domain.*;
 import nz.ac.wgtn.swen225.lc.domain.entities.*;
 import nz.ac.wgtn.swen225.lc.domain.tiles.Tile;
 import nz.ac.wgtn.swen225.lc.persistency.levelloader.Levels;
+import nz.ac.wgtn.swen225.lc.renderer.Renderer;
 
 import java.util.Collections;
 import java.util.List;
@@ -36,7 +38,15 @@ public class DomainController {
         this.tileGrid = domain.getTileGrid();
         this.player = domain.getPlayer();
         this.keysList = player.getKeys();
+        initialiseObservers();
+    }
 
+    private void initialiseObservers(){
+        domain.addObserver(Renderer.playSounds());
+        domain.addObserver(new GameObserver() {
+            @Override public void onInfoMessage() {controller.window().showHelpDialog();}
+            @Override public void onLevelComplete() {controller.setState(new VictoryState(controller));}
+        });
     }
 
     /**
