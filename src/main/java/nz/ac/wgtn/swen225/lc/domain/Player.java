@@ -58,7 +58,7 @@ public class Player{
     public void move(Direction d){state.move(d);}
     public void collectTreasure(){state.collectTreasure();}
     public void addKey(Key k){state.addKey(k);}
-    public void die(){state = new DieState();}
+    public void die(){state = new DeadState();}
     public boolean isAlive(){return state.isAlive();}
 
     /**
@@ -127,7 +127,7 @@ public class Player{
      * Dead state implementation
      * Player cannot move, collect treasures, or add keys
      */
-    protected class DieState implements PlayerState{
+    protected class DeadState implements PlayerState{
         @Override
         public void move(Direction direction){}
         @Override
