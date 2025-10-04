@@ -1,11 +1,11 @@
 // java
 package test.nz.ac.wgtn.swen225.lc.fuzz;
 
+import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
-import nz.ac.wgtn.swen225.lc.app.controller.GameController;
 import nz.ac.wgtn.swen225.lc.app.util.Input;
 
 import java.awt.*; // GraphicsEnvironment used to detect headless CI environments
@@ -74,7 +74,7 @@ public class FuzzTest {
 
         // Build a controller via the regular factory. This path initializes the GUI in non-headless mode, which
         // is why the headless assumption above is required to prevent failures on CI.
-        GameController controller = GameController.of();
+        AppController controller = AppController.of();
         controller.startNewGame(level); // Ensure a clean game state before fuzzing begins.
 
         Instant end = Instant.now().plus(Duration.ofMillis(durationMillis));
