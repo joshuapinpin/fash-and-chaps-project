@@ -1,8 +1,13 @@
 package nz.ac.wgtn.swen225.lc.renderer;
 
+import nz.ac.wgtn.swen225.lc.domain.GameObserver;
 import nz.ac.wgtn.swen225.lc.domain.Player;
+import nz.ac.wgtn.swen225.lc.domain.Position;
+import nz.ac.wgtn.swen225.lc.domain.entities.Door;
+import nz.ac.wgtn.swen225.lc.domain.entities.Key;
 import nz.ac.wgtn.swen225.lc.domain.tiles.Tile;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.Drawable;
+import nz.ac.wgtn.swen225.lc.renderer.sounds.LoadingSounds;
 
 import javax.swing.*;
 
@@ -40,11 +45,51 @@ public class Renderer {
         return drawable;
     }
 
+
+    public static GameObserver playSounds(){
+        return new GameObserver(){
+            @Override
+            public void onPlayerMove(Position newPosition) {
+                System.out.println("Player moved");
+            }
+
+            @Override
+            public void onKeyCollected(Key key) {
+                LoadingSounds.KeySound.playSoundEffect(-20.f);
+            }
+
+            @Override
+            public void onTreasureCollected() {
+                LoadingSounds.CoinSound.playSoundEffect(-20.f);
+            }
+
+            @Override
+            public void onDoorOpened(Door door) {
+                LoadingSounds.UnlockedSound.playSoundEffect(-20.f);
+            }
+
+            @Override
+            public void onPlayerDrown(Player player) {
+                GameObserver.super.onPlayerDie(player);
+            }
+
+            @Override
+            public void onInfoMessage() {
+                System.out.println("Info tile triggered!");
+            }
+
+            @Override
+            public void onLevelComplete() {
+                System.out.println("Level completed!");
+            }
+        };
+    }
+
     /*
     * Testing main to see if drawing are displayed.
      */
     public static void main(String[] args) {
-        Renderer renderer = new Renderer(null, null);
+        /*Renderer renderer = new Renderer(null, null);
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Test Image Display");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -53,6 +98,12 @@ public class Renderer {
             frame.pack(); // Use pack() to respect preferred size
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
-        });
+        });*/
+        LoadingSounds.PlayerDrownSound.playSoundEffect(-20.0f);
+        try {
+            Thread.sleep(3000); // wait long enough for the sound to finish
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
