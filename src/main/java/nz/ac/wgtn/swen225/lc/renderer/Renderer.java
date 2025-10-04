@@ -3,6 +3,7 @@ package nz.ac.wgtn.swen225.lc.renderer;
 import nz.ac.wgtn.swen225.lc.domain.Player;
 import nz.ac.wgtn.swen225.lc.domain.tiles.Tile;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.Drawable;
+import nz.ac.wgtn.swen225.lc.renderer.sounds.LoadingSounds;
 
 import javax.swing.*;
 
@@ -44,7 +45,7 @@ public class Renderer {
     * Testing main to see if drawing are displayed.
      */
     public static void main(String[] args) {
-        Renderer renderer = new Renderer(null, null);
+        /*Renderer renderer = new Renderer(null, null);
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Test Image Display");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -53,6 +54,12 @@ public class Renderer {
             frame.pack(); // Use pack() to respect preferred size
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
-        });
+        });*/
+        LoadingSounds.PlayerDrownSound.playSoundEffect(-20.0f);
+        try {
+            Thread.sleep(3000); // wait long enough for the sound to finish
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
