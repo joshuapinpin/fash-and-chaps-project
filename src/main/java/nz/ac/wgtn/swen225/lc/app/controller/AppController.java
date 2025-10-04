@@ -178,8 +178,7 @@ public class AppController {
      * Displays help or game rules.
      */
     public void help() {
-        setState(new PausedState(this));
-        //window.displayHelp();
+        setState(new HelpState(this));
         System.out.println("Displaying Help/Rules...");
     }
 

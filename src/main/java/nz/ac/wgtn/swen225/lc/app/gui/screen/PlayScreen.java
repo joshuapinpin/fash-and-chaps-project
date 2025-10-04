@@ -43,7 +43,6 @@ public class PlayScreen extends JPanel implements GamePanel {
         setupGame();
     }
 
-
     private void setupGame(){
         // Main Panels
         titlePanel = new TitlePanel(controller);
@@ -81,17 +80,12 @@ public class PlayScreen extends JPanel implements GamePanel {
     /**
      * Show the info panel over the game panel.
      */
-    public void showInfo(){
-        infoPanel.setVisible(true);
-    }
+    public void showInfo(){infoPanel.setVisible(true);}
 
     /**
      * Hide the info panel over the game panel.
      */
-    public void hideInfo(){
-        infoPanel.setVisible(false);
-    }
-
+    public void hideInfo(){infoPanel.setVisible(false);}
 
     @Override
     public void updatePanel() {

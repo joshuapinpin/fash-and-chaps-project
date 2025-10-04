@@ -113,20 +113,9 @@ public class AppWindow extends JFrame {
     }
 
     /**
-     * Show pause dialog
+     * Show Info dialog
      */
-    public void showPauseDialog() {
-//        JDialog pauseDialog = new JDialog(this, "Paused", true);
-//        pauseDialog.add(new PausePanel(controller));
-//        pauseDialog.pack();
-//        pauseDialog.setLocationRelativeTo(this);
-//        pauseDialog.setVisible(true);
-    }
-
-    /**
-     * Show help dialog
-     */
-    public void displayHelp(boolean doShow) {
+    public void displayInfo(boolean doShow) {
         if(doShow) playScreenPanel.showInfo();
         else playScreenPanel.hideInfo();
     }
