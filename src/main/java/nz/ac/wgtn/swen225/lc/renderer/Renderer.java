@@ -84,11 +84,11 @@ public class Renderer {
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
         });*/
-        LoadingSounds.PlayerDrownSound.playSoundEffect(-20.0f);
+        /*LoadingSounds.PlayerDrownSound.playSoundEffect(-20.0f);
         try {
             Thread.sleep(3000); // wait long enough for the sound to finish
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 }
