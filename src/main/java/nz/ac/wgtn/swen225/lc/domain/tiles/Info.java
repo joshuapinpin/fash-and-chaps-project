@@ -67,4 +67,16 @@ public class Info extends Tile {
         Info info = (Info) obj;
         return this.getPos().equals(info.getPos()) && this.message.equals(info.message);
     }
+
+
+    /**
+     * Accept method for visitor pattern
+     * @param visitor TileVisitor instance
+     * @param <T> return type of the visitor
+     * @return result of visitor's visitInfo method
+     */
+    @Override
+    public <T> T accept(TileVisitor<T> visitor) {
+        return visitor.visitInfo(this);
+    }
 }
