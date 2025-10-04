@@ -19,6 +19,7 @@ public class Maze {
     private Player player; //reference to player in maze
     private int rows; int cols; //dimensions of maze
     private List<GameObserver> observers = new ArrayList<>();
+    private List<Monster> monsters = new ArrayList<>();
 
     /**
      * Constructor for maze with specified dimensions
@@ -71,6 +72,11 @@ public class Maze {
             @Override
             public void onLevelComplete() {
                 System.out.println("Level completed!");
+            }
+
+            @Override
+            public void onPlayerDie(Player player) {
+                System.out.println("Player died!");
             }
         });
     }
@@ -164,6 +170,34 @@ public class Maze {
     }
 
     /**
+     * Update all monsters in the maze
+     * Each monster moves in its current direction
+     * If a monster collides with a wall, it updates its direction
+     * Moves monster and checks for collision with player after move
+     * Notify observers of any events (e.g., player death)
+     */
+    //this will be called by app/controller every game tick
+    //the monsters if for loop may not be in sync
+    public void ping() {
+        Consumer <GameObserver> collisionEvent = observer -> {};
+
+        for (Monster m : monsters) {
+            //check if next tile in direction is a wall
+            Position toMove = m.getDirection().apply(m.getPos());
+            Tile targetTile = getTileAt(toMove);
+
+            if (targetTile instanceof Wall) {
+                m.updateDirection();
+            }
+
+            m.move();
+            collisionEvent = m.checkCollisionWithPlayer(this.player);
+
+            observers.forEach(collisionEvent);
+        }
+    }
+
+    /**
      * Getter for number of rows in maze
      * @return number of rows
      */
@@ -196,6 +230,13 @@ public class Maze {
      */
     public Player getPlayer(){
         return this.player;
+    }
+
+    public void setMonster(Monster m){
+        if(m == null){
+            throw new IllegalArgumentException("Monster cannot be null");
+        }
+        this.monsters.add(m);
     }
 
     /**
