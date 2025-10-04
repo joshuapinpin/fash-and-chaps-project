@@ -1,5 +1,6 @@
-package nz.ac.wgtn.swen225.lc.app.controller;
+package nz.ac.wgtn.swen225.lc.app.controller.module;
 
+import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 import nz.ac.wgtn.swen225.lc.domain.*;
 import nz.ac.wgtn.swen225.lc.domain.entities.*;
 import nz.ac.wgtn.swen225.lc.domain.tiles.Tile;
@@ -9,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class DomainController {
-    GameController controller;
+    AppController controller;
     Maze domain;
     Player player;
     List<Key> keysList;
@@ -17,9 +18,9 @@ public class DomainController {
 
     /**
      * Initializes the DomainController
-     * @param controller Reference to the main GameController
+     * @param controller Reference to the main AppController
      */
-    public DomainController(GameController controller){
+    public DomainController(AppController controller){
         this.controller = controller;
         initialiseDomain(1);
     }

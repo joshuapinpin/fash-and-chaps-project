@@ -34,7 +34,9 @@ public enum LoadingImg {
 
     Rock("imgs/wall.png"),
     Sand("imgs/sand.png"),
-    Water("imgs/water.png");
+    Water("imgs/water.png"),
+
+    StartScreen("imgs/startScreen.png");
 
 
     private final String filename;

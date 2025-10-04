@@ -1,14 +1,22 @@
 package nz.ac.wgtn.swen225.lc.app.gui;
 
-import nz.ac.wgtn.swen225.lc.app.controller.GameController;
-import nz.ac.wgtn.swen225.lc.app.controller.InputController;
-import nz.ac.wgtn.swen225.lc.app.controller.RecorderController;
-import nz.ac.wgtn.swen225.lc.app.controller.TimerController;
-
-import javax.swing.*;
-import javax.swing.JPanel;
 import java.awt.*;
 import java.util.List;
+
+import javax.swing.*;
+
+import nz.ac.wgtn.swen225.lc.app.controller.AppController;
+import nz.ac.wgtn.swen225.lc.app.controller.logic.InputController;
+import nz.ac.wgtn.swen225.lc.app.controller.module.RecorderController;
+import nz.ac.wgtn.swen225.lc.app.controller.logic.TimerController;
+import nz.ac.wgtn.swen225.lc.app.gui.game.GamePanel;
+import nz.ac.wgtn.swen225.lc.app.gui.game.HelpPanel;
+import nz.ac.wgtn.swen225.lc.app.gui.game.PausePanel;
+import nz.ac.wgtn.swen225.lc.app.gui.screen.DefeatScreen;
+import nz.ac.wgtn.swen225.lc.app.gui.screen.PlayScreen;
+import nz.ac.wgtn.swen225.lc.app.gui.screen.StartScreen;
+import nz.ac.wgtn.swen225.lc.app.gui.screen.VictoryScreen;
+import nz.ac.wgtn.swen225.lc.app.state.*;
 
 /**
  * Main application window/frame. Contains UI components and embeds the game panel from renderer.
@@ -24,118 +32,71 @@ public class AppWindow extends JFrame {
     public static final int HEADER_HEIGHT = SQUARE_SIZE * 2;
 
     // Controllers
-    private GameController controller; // Reference to GameController
+    private AppController controller; // Reference to AppController
     private InputController inputController;
     private TimerController timerController;
     private RecorderController recorderController;
 
-    // PANELS
+    // UI COMPONENTS
+    private CardLayout cardLayout;
+    private JPanel mainPanel;
+
     private List<JPanel> allPanels;
-    private JPanel titlePanel;
-    private JPanel gamePanel;// Reference to MazePanel (from renderer)
-    private JPanel leftPanel; // Reference to LeftPanel
-    private JPanel rightPanel;
-    private JPanel menuPanel;
+    private JPanel startScreenPanel;
+    private JPanel playScreenPanel;
+    private JPanel victoryScreenPanel;
+    private JPanel defeatScreenPanel;
+
 
     /**
      * Constructor to initialize the main application window.
      * @param controller
      * @param inputController
      */
-    public AppWindow(GameController controller, InputController inputController,
-            TimerController timerController, RecorderController recorderController) {
+    public AppWindow(AppController controller, InputController inputController,
+                     TimerController timerController, RecorderController recorderController) {
         // TODO: Set up window, menus, status bar, and embed MazePanel
         super("Fash and Chaps :D");
         this.controller = controller;
         this.inputController = inputController;
         this.timerController = timerController;
         this.recorderController = recorderController;
-
+        setupScreens();
         setupWindow();
-        setupPanels();
-        //setupDialogs();
-
     }
     // ===== SETUP METHODS =====
+    private void setupScreens(){
+        // Using a CardLayout to switch between different screens
+        cardLayout = new CardLayout();
+        mainPanel = new JPanel(cardLayout);
+
+        // Initialize all screen panels
+        startScreenPanel = new StartScreen(controller);
+        playScreenPanel = new PlayScreen(controller, timerController, recorderController);
+        victoryScreenPanel = new VictoryScreen(controller);
+        defeatScreenPanel = new DefeatScreen(controller);
+        allPanels = List.of(startScreenPanel, playScreenPanel, victoryScreenPanel, defeatScreenPanel);
+
+        // Add all panels to the main panel with a unique name for each
+        mainPanel.add(startScreenPanel, StartState.name());
+        mainPanel.add(playScreenPanel, PlayState.name());
+        mainPanel.add(victoryScreenPanel, VictoryState.name());
+        mainPanel.add(defeatScreenPanel, DefeatState.name());
+        setContentPane(mainPanel);
+    }
 
     private void setupWindow(){
         addKeyListener(inputController);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
         pack();
-        setLayout(new BorderLayout());
         setFocusable(true);
         requestFocusInWindow();
         setResizable(false);
         setVisible(true);
-        System.out.println("Initialised Game Window (JFrame)");
-    }
-
-    private void setupPanels(){
-        // Main Panels
-        titlePanel = new TitlePanel(controller);
-        menuPanel = new MenuPanel(controller);
-        gamePanel = setupMazePanel();
-        leftPanel = new LeftPanel(controller, timerController);
-        rightPanel = new RightPanel(controller, recorderController);
-
-        allPanels = List.of(titlePanel, menuPanel, gamePanel, leftPanel, rightPanel);
-
-        // Main Frame
-        add(titlePanel, BorderLayout.NORTH);
-        add(menuPanel, BorderLayout.SOUTH);
-        add(leftPanel, BorderLayout.WEST);
-        add(gamePanel, BorderLayout.CENTER);
-        add(rightPanel, BorderLayout.EAST);
-        System.out.println("Initialised Panels");
-    }
-
-    private JPanel setupMazePanel(){
-        JPanel panel = controller.getRenderer().getPanel();
-        panel.setPreferredSize(new Dimension(MAZE_SIZE, MAZE_SIZE));
-        panel.setMinimumSize(new Dimension(MAZE_SIZE, MAZE_SIZE));
-        panel.setMaximumSize(new Dimension(MAZE_SIZE, MAZE_SIZE));
-        panel.setOpaque(false);
-        panel.setBorder(BorderFactory.createLineBorder(Color.white, 5));
-        return panel;
-        //return controller.getRenderer().getPanel();
     }
 
     // ===== INTERACTIONS WITH CONTROLLER =====
-
-    /**
-     * Show pause dialog (modal).
-     */
-    public void showPauseDialog() {
-    }
-
-    /**
-     * Show help dialog (modal).
-     */
-    public void showHelpDialog() {
-    }
-
-    /**
-     * Remove pause dialog (if any).
-     */
-    public void removePauseDialog() {
-    }
-
-    /**
-     * Show error dialog (modal).
-     * @param message The error message to display.
-     */
-    public void showErrorDialog(String message) {
-    }
-
-    /**
-     * Show message dialog (modal).
-     * @param message The message to display.
-     * @param title The title of the dialog.
-     */
-    public void showMessageDialog(String message, String title) {
-    }
-
     /**
      * Update the entire window (all panels).
      */
@@ -143,9 +104,38 @@ public class AppWindow extends JFrame {
         allPanels.forEach(panel -> {
             if(panel instanceof GamePanel updatable) updatable.updatePanel();
         });
-        allPanels.forEach(JPanel::repaint);
     }
 
+    /**
+     * Show a specific screen based on the screen name.
+     * Should be called when the game state changes.
+     * @param screenName Name of the screen to show (e.g., "Start", "Play", "Victory", "Defeat").
+     */
+    public void showScreen(String screenName){
+        cardLayout.show(mainPanel, screenName);
+    }
+
+    /**
+     * Show pause dialog
+     */
+    public void showPauseDialog() {
+        JDialog pauseDialog = new JDialog(this, "Paused", true);
+        pauseDialog.add(new PausePanel(controller));
+        pauseDialog.pack();
+        pauseDialog.setLocationRelativeTo(this);
+        pauseDialog.setVisible(true);
+    }
+
+    /**
+     * Show help dialog
+     */
+    public void showHelpDialog() {
+        JDialog helpDialog = new JDialog(this, "Help", true);
+        TODO: helpDialog.add(new HelpPanel(controller));
+        helpDialog.pack();
+        helpDialog.setLocationRelativeTo(this);
+        helpDialog.setVisible(true);
+    }
 
     /**
      * Update the status bar with current game information.
@@ -154,11 +144,4 @@ public class AppWindow extends JFrame {
     public void updateStatus() {
         // TODO: Update status bar with current game info
     }
-    
-    // Getters
-    public static int getWindowWidth() {return WINDOW_WIDTH;}
-    public static int getWindowHeight() {return WINDOW_HEIGHT;}
-
-
-
 }

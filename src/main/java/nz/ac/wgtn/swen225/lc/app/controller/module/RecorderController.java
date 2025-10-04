@@ -1,27 +1,26 @@
-package nz.ac.wgtn.swen225.lc.app.controller;
+package nz.ac.wgtn.swen225.lc.app.controller.module;
 
+import nz.ac.wgtn.swen225.lc.app.controller.AppController;
+import nz.ac.wgtn.swen225.lc.app.controller.logic.TimerController;
 import nz.ac.wgtn.swen225.lc.app.state.AutoReplayState;
-import nz.ac.wgtn.swen225.lc.app.state.GameState;
 import nz.ac.wgtn.swen225.lc.app.state.PausedState;
 import nz.ac.wgtn.swen225.lc.app.state.StepReplayState;
 import nz.ac.wgtn.swen225.lc.app.util.Input;
-import nz.ac.wgtn.swen225.lc.domain.Maze;
 import nz.ac.wgtn.swen225.lc.recorder.Play;
 import nz.ac.wgtn.swen225.lc.recorder.Save;
 
 public class RecorderController {
     Play play;
     Save save;
-    Maze domainCopy;
     boolean isRecording = false;
-    GameController controller;
+    AppController controller;
     TimerController timerController;
 
     /**
      * Initialise the recorder controller with references to play and save classes.
-     * @param controller GameController to interact with the game state.
+     * @param controller AppController to interact with the game state.
      */
-    public RecorderController(GameController controller, TimerController timerController) {
+    public RecorderController(AppController controller, TimerController timerController) {
         this.controller = controller;
         this.timerController = timerController;
         play = new Play();
@@ -76,7 +75,7 @@ public class RecorderController {
         System.out.println("Step-By-Step Playing");
         controller.setState(new StepReplayState());
         if(!play.stepByStep(controller))
-            controller.setState(new PausedState(timerController));
+            controller.setState(new PausedState(controller));
     }
 
     /**
@@ -87,7 +86,7 @@ public class RecorderController {
         System.out.println("Auto-Playing");
         controller.setState(new AutoReplayState());
         play.autoPlay(controller);
-        controller.setState(new PausedState(timerController));
+        controller.setState(new PausedState(controller));
     }
 
     /**
