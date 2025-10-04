@@ -1,6 +1,10 @@
 package nz.ac.wgtn.swen225.lc.renderer;
 
+import nz.ac.wgtn.swen225.lc.domain.GameObserver;
 import nz.ac.wgtn.swen225.lc.domain.Player;
+import nz.ac.wgtn.swen225.lc.domain.Position;
+import nz.ac.wgtn.swen225.lc.domain.entities.Door;
+import nz.ac.wgtn.swen225.lc.domain.entities.Key;
 import nz.ac.wgtn.swen225.lc.domain.tiles.Tile;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.Drawable;
 import nz.ac.wgtn.swen225.lc.renderer.sounds.LoadingSounds;
@@ -39,6 +43,46 @@ public class Renderer {
      */
     public Drawable getPanel(){
         return drawable;
+    }
+
+
+    public static GameObserver playSounds(){
+        return new GameObserver(){
+            @Override
+            public void onPlayerMove(Position newPosition) {
+                System.out.println("Player moved");
+            }
+
+            @Override
+            public void onKeyCollected(Key key) {
+                LoadingSounds.KeySound.playSoundEffect(-20.f);
+            }
+
+            @Override
+            public void onTreasureCollected() {
+                LoadingSounds.CoinSound.playSoundEffect(-20.f);
+            }
+
+            @Override
+            public void onDoorOpened(Door door) {
+                LoadingSounds.UnlockedSound.playSoundEffect(-20.f);
+            }
+
+            @Override
+            public void onPlayerDrown(Player player) {
+                GameObserver.super.onPlayerDie(player);
+            }
+
+            @Override
+            public void onInfoMessage() {
+                System.out.println("Info tile triggered!");
+            }
+
+            @Override
+            public void onLevelComplete() {
+                System.out.println("Level completed!");
+            }
+        };
     }
 
     /*
