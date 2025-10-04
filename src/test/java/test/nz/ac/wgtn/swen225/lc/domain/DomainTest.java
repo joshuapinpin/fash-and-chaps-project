@@ -6,6 +6,8 @@ import nz.ac.wgtn.swen225.lc.domain.tiles.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -74,6 +76,39 @@ public class DomainTest {
 
         maze.setTileAt(Free.of(new Position(4,3)));
         maze.setTileAt(Free.of(new Position(4,4)));
+    }
+
+    @BeforeEach
+    void monsterGame(){
+        maze = new Maze(4, 4);
+        player = Player.of();
+        player.initialiseStartPos(4,4);
+
+        Monster monster = Monster.of(new Position(2,1));
+        maze.setMonster(monster);
+
+        maze.setPlayer(player);
+
+        maze.setTileAt(Wall.of(new Position(0,0)));
+        maze.setTileAt(Wall.of(new Position(0,1)));
+        maze.setTileAt(Wall.of(new Position(0,2)));
+        maze.setTileAt(Wall.of(new Position(0,3)));
+
+        maze.setTileAt(Wall.of(new Position(1,0)));
+        maze.setTileAt(Free.of(new Position(1,1)));
+        maze.setTileAt(Free.of(new Position(1,2)));
+        maze.setTileAt(Wall.of(new Position(1,3)));
+
+        maze.setTileAt(Wall.of(new Position(2,0)));
+        maze.setTileAt(Free.of(new Position(2,1)));
+        maze.setTileAt(Free.of(new Position(2,2)));
+        maze.setTileAt(Wall.of(new Position(2,3)));
+
+        maze.setTileAt(Wall.of(new Position(3,0)));
+        maze.setTileAt(Free.of(new Position(3,1)));
+        maze.setTileAt(Wall.of(new Position(3,2)));
+        maze.setTileAt(Wall.of(new Position(3,3)));
+
     }
 
     @Test
@@ -155,5 +190,41 @@ public class DomainTest {
         assertEquals(1, player.getTreasuresCollected());
     }
 
+    //-------------------------------------
+    @Test
+    void testLayoutMonster(){
+        monsterGame();
 
+        String expectedLayout =
+                "W W W W \n" +
+                "W F M F \n" +
+                "W F P W \n" +
+                "W W W W \n";
+        assertEquals(expectedLayout, maze.toString());
+    }
+
+    @Test
+    void testMonsterMove(){
+        monsterGame();
+        List<Monster> monsters= maze.getMonsters();
+        Monster m1 = monsters.get(0);
+
+        //monsters start moving left, and starts at (2,1)
+        maze.ping();
+        assertEquals(new Position(1,1), m1.getPos());
+        maze.ping(); //hits wall, should change direction and move
+        assertEquals(new Position(2,1), m1.getPos());
+        maze.ping();
+        assertEquals(new Position(3,1), m1.getPos());
+    }
+
+    @Test
+    void testMonsterCollision(){
+        monsterGame();
+        List<Monster> monsters= maze.getMonsters();
+        Monster m1 = monsters.get(0);
+
+        maze.movePlayer(Direction.UP); //player at (3,2)
+
+    }
 }

@@ -14,7 +14,7 @@ public class Monster {
 
     private Position position; // Starting position of the monster
     private boolean isAlive = true; // Status of the monster
-    private Direction direction = Direction.RIGHT;
+    private Direction direction = Direction.LEFT;
 
     /**
      * Constructor for monster with specified position

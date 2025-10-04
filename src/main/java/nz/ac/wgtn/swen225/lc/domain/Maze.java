@@ -214,6 +214,14 @@ public class Maze {
     }
 
     /**
+     * Getter for list of monsters in maze
+     * @return list of monsters
+     */
+    public List<Monster> getMonsters(){
+        return this.monsters;
+    }
+
+    /**
      * Setter for player reference in maze
      * @param player player to set
      */
@@ -267,6 +275,7 @@ public class Maze {
      */
     public String getSymbol(Position pos) {
         if (player != null && player.getPos().equals(pos)) return "P";
+        if(monsters.stream().anyMatch(m-> m.getPos().equals(pos))) return "M";
         Tile tile = getTileAt(pos);
 
         if (tile instanceof Wall) {
