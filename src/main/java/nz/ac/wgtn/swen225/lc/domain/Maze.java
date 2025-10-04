@@ -43,42 +43,42 @@ public class Maze {
         assert tileGrid != null : "Tile grid is null";
 
         //JUST FOR TESTING, REMOVE LATER as observers to be made by app and renderer
-        this.addObserver(new GameObserver() {
-            @Override
-            public void onPlayerMove(Position newPosition) {
-                System.out.println("Player moved");
-            }
-
-            @Override
-            public void onKeyCollected(Key key) {
-                System.out.println("Key collected");
-            }
-
-            @Override
-            public void onTreasureCollected() {
-                System.out.println("Treasure collected");
-            }
-
-            @Override
-            public void onDoorOpened(Door door) {
-                System.out.println("Door opened");
-            }
-
-            @Override
-            public void onInfoMessage() {
-                System.out.println("Info tile triggered!");
-            }
-
-            @Override
-            public void onLevelComplete() {
-                System.out.println("Level completed!");
-            }
-
-            @Override
-            public void onPlayerDie(Player player) {
-                System.out.println("Player died!");
-            }
-        });
+//        this.addObserver(new GameObserver() {
+//            @Override
+//            public void onPlayerMove(Position newPosition) {
+//                System.out.println("Player moved");
+//            }
+//
+//            @Override
+//            public void onKeyCollected(Key key) {
+//                System.out.println("Key collected");
+//            }
+//
+//            @Override
+//            public void onTreasureCollected() {
+//                System.out.println("Treasure collected");
+//            }
+//
+//            @Override
+//            public void onDoorOpened(Door door) {
+//                System.out.println("Door opened");
+//            }
+//
+//            @Override
+//            public void onInfoMessage() {
+//                System.out.println("Info tile triggered!");
+//            }
+//
+//            @Override
+//            public void onLevelComplete() {
+//                System.out.println("Level completed!");
+//            }
+//
+//            @Override
+//            public void onPlayerDie(Player player) {
+//                System.out.println("Player died!");
+//            }
+//        });
     }
 
     /**
