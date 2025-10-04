@@ -66,4 +66,14 @@ public class Water extends Tile{
         if(!(obj instanceof Water other)) return false;
         return this.getPos().equals(other.getPos());
     }
+
+    /**
+     * Accept method for visitor pattern
+     * @param visitor TileVisitor instance
+     * @return result of visitor's visitWater method
+     */
+    @Override
+    public <T> T accept(TileVisitor<T> visitor) {
+        return visitor.visitWater(this);
+    }
 }

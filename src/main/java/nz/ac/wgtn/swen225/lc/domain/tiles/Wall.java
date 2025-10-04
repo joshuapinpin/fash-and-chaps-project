@@ -71,4 +71,14 @@ public class Wall extends Tile {
         Wall wall = (Wall) obj;
         return this.getPos().equals(wall.getPos());
     }
+
+    /**
+     * Accept method for visitor pattern
+     * @param visitor TileVisitor instance
+     * @return result of visitor's visitWall method
+     */
+    @Override
+    public <T> T accept(TileVisitor<T> visitor) {
+        return visitor.visitWall(this);
+    }
 }

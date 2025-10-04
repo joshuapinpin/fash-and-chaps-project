@@ -20,7 +20,6 @@ public class DomainTest {
     private Maze maze;
     private Player player;
 
-    @BeforeEach
     void miniGame(){
         maze = new Maze(5, 5);
         player = Player.of();
@@ -28,6 +27,10 @@ public class DomainTest {
 
         maze.setPlayer(player);
         this.player.setTotalTreasures(4); //for testing purposes, to be set when maze is loaded
+
+        //need at least one observer to make sure it executes the consumer that picks up key etc
+        //BECAUSE the picking up key logic (onEnter() in Free) is connected to the consumer
+        maze.addObserver(new GameObserver() {});
 
         //setting tiles in the maze
         maze.setTileAt(Wall.of(new Position(0,0)));
@@ -78,7 +81,6 @@ public class DomainTest {
         maze.setTileAt(Free.of(new Position(4,4)));
     }
 
-    @BeforeEach
     void monsterGame(){
         maze = new Maze(4, 4);
         player = Player.of();
@@ -111,7 +113,6 @@ public class DomainTest {
 
     }
 
-    @BeforeEach
     void waterGame(){
         maze = new Maze(2, 2);
         player = Player.of();
