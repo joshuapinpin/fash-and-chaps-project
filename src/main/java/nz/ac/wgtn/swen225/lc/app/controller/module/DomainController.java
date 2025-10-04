@@ -32,20 +32,25 @@ public class DomainController {
      * @param level
      */
     public void initialiseDomain(int level){
+        // Load Level
         if(level == 1) this.domain = Levels.LevelOne.load();
         else if(level == 2) this.domain = Levels.LevelTwo.load();
         else throw new IllegalArgumentException("Invalid level: " + level);
+
+        // Initialise Domain Fields
         this.tileGrid = domain.getTileGrid();
         this.player = domain.getPlayer();
         this.keysList = player.getKeys();
-        initialiseObservers();
-    }
 
-    private void initialiseObservers(){
+        // Add Observers to the Domain
         domain.addObserver(Renderer.playSounds());
         domain.addObserver(new GameObserver() {
-            @Override public void onInfoMessage() {controller.window().showHelpDialog();}
-            @Override public void onLevelComplete() {controller.setState(new VictoryState(controller));}
+            @Override public void onInfoMessage() {
+                controller.window().displayInfo(true);
+            }
+            @Override public void onLevelComplete() {
+                controller.victory();
+            }
         });
     }
 
@@ -55,6 +60,8 @@ public class DomainController {
      */
     public void movePlayer(Direction dir){
         if(domain == null) throw new RuntimeException("Cannot move player: Domain is null.");
+        // TODO: need a better and safer way to turn info on and off
+        controller.window().displayInfo(false);
         domain.movePlayer(dir);
     }
 

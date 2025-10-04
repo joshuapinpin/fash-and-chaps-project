@@ -20,10 +20,14 @@ public class PlayScreen extends JPanel implements GamePanel {
     // Panels
     private List<JPanel> allPanels;
     private JPanel titlePanel;
-    private JPanel gamePanel;// Reference to MazePanel (from renderer)
     private JPanel leftPanel; // Reference to LeftPanel
     private JPanel rightPanel;
     private JPanel menuPanel;
+
+    // Game Panels
+    private JLayeredPane layeredPane;
+    private JPanel gamePanel;// Reference to MazePanel (from renderer)
+    private JPanel infoPanel; // Reference to InfoPanel
 
     /**
      * Constructor to initialize the main application window.
@@ -32,7 +36,6 @@ public class PlayScreen extends JPanel implements GamePanel {
      * @param rc RecorderController
      */
     public PlayScreen(AppController c, TimerController tc, RecorderController rc){
-
         this.controller = c;
         this.timerController = tc;
         this.recorderController = rc;
@@ -40,34 +43,49 @@ public class PlayScreen extends JPanel implements GamePanel {
         setupGame();
     }
 
-
     private void setupGame(){
         // Main Panels
         titlePanel = new TitlePanel(controller);
         menuPanel = new MenuPanel(controller);
         leftPanel = new LeftPanel(controller, timerController);
         rightPanel = new RightPanel(controller, recorderController);
+        infoPanel = new InfoPanel(controller);
 
         gamePanel = controller.renderer().getPanel();
         gamePanel.setPreferredSize(new Dimension(MAZE_SIZE, MAZE_SIZE));
         gamePanel.setMinimumSize(new Dimension(MAZE_SIZE, MAZE_SIZE));
         gamePanel.setMaximumSize(new Dimension(MAZE_SIZE, MAZE_SIZE));
-        gamePanel.setOpaque(false);
-        gamePanel.setBorder(BorderFactory.createLineBorder(Color.white, 5));
+        gamePanel.setBounds(0, 0, AppWindow.MAZE_SIZE, AppWindow.MAZE_SIZE);
+        gamePanel.setOpaque(true);
+        gamePanel.setBackground(Color.RED);
 
+        gamePanel.setVisible(true);
 
-        allPanels = List.of(
-                titlePanel, menuPanel, gamePanel,
-                leftPanel, rightPanel);
+        layeredPane = new JLayeredPane();
+        layeredPane.setPreferredSize(new Dimension(MAZE_SIZE, MAZE_SIZE));
+        layeredPane.setLayout(null);
+        layeredPane.setBorder(BorderFactory.createLineBorder(Color.white, 5));
+        layeredPane.add(gamePanel, JLayeredPane.DEFAULT_LAYER);
+        layeredPane.add(infoPanel, JLayeredPane.PALETTE_LAYER);
 
         // Main Frame
         add(titlePanel, BorderLayout.NORTH);
         add(menuPanel, BorderLayout.SOUTH);
         add(leftPanel, BorderLayout.WEST);
-        add(gamePanel, BorderLayout.CENTER);
         add(rightPanel, BorderLayout.EAST);
+        add(layeredPane, BorderLayout.CENTER);
+        allPanels = List.of(titlePanel, menuPanel, gamePanel, leftPanel, rightPanel);
     }
 
+    /**
+     * Show the info panel over the game panel.
+     */
+    public void showInfo(){infoPanel.setVisible(true);}
+
+    /**
+     * Hide the info panel over the game panel.
+     */
+    public void hideInfo(){infoPanel.setVisible(false);}
 
     @Override
     public void updatePanel() {
