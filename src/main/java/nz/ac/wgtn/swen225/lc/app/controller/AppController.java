@@ -179,7 +179,7 @@ public class AppController {
      */
     public void help() {
         setState(new PausedState(this));
-        window.displayHelp();
+        //window.displayHelp();
         System.out.println("Displaying Help/Rules...");
     }
 

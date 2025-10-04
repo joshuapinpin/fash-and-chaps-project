@@ -126,8 +126,9 @@ public class AppWindow extends JFrame {
     /**
      * Show help dialog
      */
-    public void displayHelp() {
-        playScreenPanel.showInfo();
+    public void displayHelp(boolean doShow) {
+        if(doShow) playScreenPanel.showInfo();
+        else playScreenPanel.hideInfo();
     }
 
     /**
