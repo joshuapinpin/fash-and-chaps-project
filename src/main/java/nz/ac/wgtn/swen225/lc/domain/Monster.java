@@ -13,7 +13,6 @@ import java.util.function.Consumer;
 public class Monster {
 
     private Position position; // Starting position of the monster
-    private boolean isAlive = true; // Status of the monster
     private Direction direction = Direction.LEFT;
 
     /**
@@ -49,20 +48,6 @@ public class Monster {
      */
     public void move(){
         this.position = direction.apply(this.position);
-    }
-
-    /**
-     * Check for collision between the monster and the player
-     * If positions are the same, the player dies
-     * @param p player to check collision with
-     * @return Consumer to notify observers of player death if collision occurs
-     */
-    public Consumer<GameObserver> checkCollisionWithPlayer(Player p){
-        //check positions
-        if(this.position.equals(p.getPos())){
-            return observer -> observer.onPlayerDie(p);
-        }
-        return observer -> {};
     }
 
     /**

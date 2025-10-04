@@ -141,6 +141,12 @@ public class Maze {
         assert getTileAt(pos) == tile : "Tile was not set correctly at position: " + pos;
     }
 
+    public void playerDead(){
+        if(!player.isAlive()){return;}
+        player.die();
+        observers.forEach(observer -> observer.onPlayerDie(player));
+    }
+
     /**
      * Move player in specified direction if target tile is accessible
      * The direction dependent on what user input is
@@ -160,6 +166,13 @@ public class Maze {
 
         if(targetTile.isAccessible(this.player)){
             player.move(direction);
+
+            for(Monster m : monsters){
+                if(m.getPos().equals(player.getPos())){
+                    playerDead();
+                }
+            }
+
             Consumer<GameObserver> event = targetTile.onEnter(player);
             observers.forEach(event); //notify all observers of this event
 
@@ -191,9 +204,9 @@ public class Maze {
             }
 
             m.move();
-            collisionEvent = m.checkCollisionWithPlayer(this.player);
-
-            observers.forEach(collisionEvent);
+            if(m.getPos().equals(player.getPos())){
+                playerDead();
+            }
         }
     }
 

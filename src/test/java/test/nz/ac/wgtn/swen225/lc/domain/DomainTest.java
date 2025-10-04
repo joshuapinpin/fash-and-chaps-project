@@ -224,7 +224,19 @@ public class DomainTest {
         List<Monster> monsters= maze.getMonsters();
         Monster m1 = monsters.get(0);
 
-        maze.movePlayer(Direction.UP); //player at (3,2)
+        maze.movePlayer(Direction.UP);
+        assertEquals(false, player.isAlive());
+    }
 
+    @Test
+    void monsterMoveAndHitPlayer(){
+        monsterGame();
+        List<Monster> monsters= maze.getMonsters();
+        Monster m1 = monsters.get(0);
+
+        maze.ping(); //monster moves left
+        maze.movePlayer(Direction.UP);
+        maze.ping(); //monster moves right and hits player
+        assertEquals(false, player.isAlive());
     }
 }
