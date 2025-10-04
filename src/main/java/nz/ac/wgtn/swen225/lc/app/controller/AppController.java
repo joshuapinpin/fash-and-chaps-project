@@ -1,11 +1,7 @@
 package nz.ac.wgtn.swen225.lc.app.controller;
 
-import nz.ac.wgtn.swen225.lc.app.controller.logic.InputController;
-import nz.ac.wgtn.swen225.lc.app.controller.logic.TimerController;
-import nz.ac.wgtn.swen225.lc.app.controller.module.DomainController;
-import nz.ac.wgtn.swen225.lc.app.controller.module.PersistencyController;
-import nz.ac.wgtn.swen225.lc.app.controller.module.RecorderController;
-import nz.ac.wgtn.swen225.lc.app.controller.module.RendererController;
+import nz.ac.wgtn.swen225.lc.app.controller.logic.*;
+import nz.ac.wgtn.swen225.lc.app.controller.module.*;
 import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
 import nz.ac.wgtn.swen225.lc.app.state.*;
 import nz.ac.wgtn.swen225.lc.app.util.Input;
@@ -25,7 +21,6 @@ public class AppController {
     // APP CONTROLLERS
     private InputController inputController;
     private TimerController timerController;
-    private AppWindow window;
 
     // MODULE CONTROLLERS
     private RecorderController recorderController;
@@ -34,8 +29,18 @@ public class AppController {
     private RendererController rendererController;
 
     // GAME MANAGEMENT Components
+    private AppWindow window;
     private GameState state;
     private int level;
+    private static final AppController APP = new AppController();
+
+    /**
+     * Factory method to return singleton AppController instance
+     * @return The single instance of AppController
+     */
+    public static AppController of() {
+        return APP;
+    }
 
     /**
      * Constructor initializes the game components and starts a new game.
@@ -43,30 +48,18 @@ public class AppController {
     private AppController() {
         initialiseControllers();
         setState(new StartState());
-//        startNewGame(1);
     }
 
     private void initialiseControllers(){
         inputController = new InputController(this);
         timerController = new TimerController(this);
-
         domainController = new DomainController(this);
         rendererController = new RendererController(this, domainController);
         recorderController = new RecorderController(this, timerController);
-
         window = new AppWindow(this, inputController, timerController, recorderController);
     }
 
-
     // ========== Game Controller Implementation ==========
-
-    /**
-     * Factory method to create a new AppController instance.
-     * @return A new AppController instance
-     */
-    public static AppController of() {
-        return new AppController();
-    }
 
     /**
      * Handles a user input (e.g., move, pause, save, etc.).
@@ -82,6 +75,7 @@ public class AppController {
         // Handle Input, send input to recorder if valid
         try {
             state.handleInput(this, input);
+            //TODO: also pass the exact time the input was made
             recorderController.addMovement(input);
         }
         catch(UnsupportedOperationException e){
@@ -91,10 +85,8 @@ public class AppController {
             );
         }
 
-        // Update Maze after handling input
+        // Update Maze and window after handling input
         rendererController.updateMaze(domainController);
-
-        // Update Supporting GUI Elements
         window.updateWindow();
     }
 
@@ -111,12 +103,12 @@ public class AppController {
      * @param level The level to start the new game at
      */
     public void startNewGame(int level) {
-        window.showScreen(PlayState.name());
-        setState(new PlayState(this));
         timerController.startTimer(level);
+        setState(new PlayState(this));
         domainController.initialiseDomain(level);
         recorderController.stopRecording();
         this.level = level;
+        window.updateWindow();
         System.out.println("Starting New Game at Level " + level);
     }
 
@@ -129,24 +121,6 @@ public class AppController {
     }
 
     /**
-     * Pauses the game.
-     */
-    public void pauseGame() {
-        // TODO: Implement pause logic
-        setState(new PausedState(this));
-        System.out.println("Game Paused");
-    }
-
-    /**
-     * Resumes a saved game
-     * Load game from file selector.
-     */
-    public void resumeGame() {
-        // TODO: Implement resume logic
-        System.out.println("Game Resumed");
-    }
-
-    /**
      * Continues the game from a paused state.
      */
     public void continueGame() {
@@ -155,7 +129,27 @@ public class AppController {
     }
 
     /**
+     * Pauses the game.
+     */
+    public void pauseGame() {
+        setState(new PausedState(this));
+        window.showPauseDialog();
+        System.out.println("Game Paused");
+    }
+
+    /**
+     * Resumes a saved game
+     * Load game from file selector.
+     * Get from persistency
+     */
+    public void resumeGame() {
+        // TODO: Implement resume logic
+        System.out.println("Game Resumed");
+    }
+
+    /**
      * Saves the current game state.
+     * Get from persistency
      */
     public void saveGame(){
         //TODO: get Persistence to create a "save current game" method
@@ -184,6 +178,8 @@ public class AppController {
      * Displays help or game rules.
      */
     public void help() {
+        setState(new PausedState(this));
+        window.showHelpDialog();
         System.out.println("Displaying Help/Rules...");
     }
 
@@ -206,14 +202,17 @@ public class AppController {
     }
 
     // ========== Getters and Setters ==========
+    // State
     public void setState(GameState state) {this.state = state;}
 
+    // App Components
     public int level() {return level;}
     public GameState state() {return state;}
     public Maze domain() {return domainController.domain();}
     public Renderer renderer() {return rendererController.renderer();}
     public AppWindow window() {return window;}
 
+    // Controllers
     public TimerController timerController() {return timerController; }
     public RecorderController recorderController() {return recorderController; }
     public DomainController domainController() {return domainController;}

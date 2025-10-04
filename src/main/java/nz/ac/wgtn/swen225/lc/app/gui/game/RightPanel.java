@@ -71,8 +71,8 @@ public class RightPanel extends JPanel implements ActionListener, ChangeListener
 
     private void setupRecorderButtons(){
         buttonRunnableMap = new HashMap<>();
-        setupSingleButton("Start Recorder", () -> recorderController.startRecording());
-        setupSingleButton("Stop Recorder", () -> recorderController.stopRecording());
+        setupSingleButton("Start", () -> recorderController.startRecording());
+        setupSingleButton("Stop", () -> recorderController.stopRecording());
         setupSingleButton("Auto-Play", () -> recorderController.autoPlay());
         setupSingleButton("Step-By-Step", () -> recorderController.stepByStep());
 

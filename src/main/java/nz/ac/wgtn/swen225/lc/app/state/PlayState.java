@@ -10,6 +10,7 @@ import nz.ac.wgtn.swen225.lc.domain.Direction;
  */
 public record PlayState(AppController c) implements GameState {
     public PlayState{
+        c.window().showScreen(name());
         c.timerController().start();
     }
     public void moveUp(AppController c) { c.movePlayer(Direction.UP);}

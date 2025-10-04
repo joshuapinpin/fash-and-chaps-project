@@ -29,7 +29,6 @@ public class InputController implements KeyListener {
         this.controller = controller;
         this.inputs = new HashMap<>();
         setupInputs();
-        System.out.println("InputController initialized.");
     }
 
     private void setupInputs(){
@@ -46,7 +45,8 @@ public class InputController implements KeyListener {
         inputs.put(new KeyCombo(KeyEvent.VK_ESCAPE, false), c -> c.handleInput(Input.CONTINUE));
     }
 
-    @Override public void keyPressed(KeyEvent e) {
+    @Override
+    public void keyPressed(KeyEvent e) {
         if(controller.state().equals(new StepReplayState())
                 || controller.state().equals(new AutoReplayState())) return;
 

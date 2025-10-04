@@ -10,6 +10,8 @@ import nz.ac.wgtn.swen225.lc.app.controller.logic.InputController;
 import nz.ac.wgtn.swen225.lc.app.controller.module.RecorderController;
 import nz.ac.wgtn.swen225.lc.app.controller.logic.TimerController;
 import nz.ac.wgtn.swen225.lc.app.gui.game.GamePanel;
+import nz.ac.wgtn.swen225.lc.app.gui.game.HelpPanel;
+import nz.ac.wgtn.swen225.lc.app.gui.game.PausePanel;
 import nz.ac.wgtn.swen225.lc.app.gui.screen.DefeatScreen;
 import nz.ac.wgtn.swen225.lc.app.gui.screen.PlayScreen;
 import nz.ac.wgtn.swen225.lc.app.gui.screen.StartScreen;
@@ -118,7 +120,7 @@ public class AppWindow extends JFrame {
      */
     public void showPauseDialog() {
         JDialog pauseDialog = new JDialog(this, "Paused", true);
-        //TODO: pauseDialog.add(new PausePanel());
+        pauseDialog.add(new PausePanel(controller));
         pauseDialog.pack();
         pauseDialog.setLocationRelativeTo(this);
         pauseDialog.setVisible(true);
@@ -129,7 +131,7 @@ public class AppWindow extends JFrame {
      */
     public void showHelpDialog() {
         JDialog helpDialog = new JDialog(this, "Help", true);
-        //TODO: helpDialog.add(new HelpPanel());
+        TODO: helpDialog.add(new HelpPanel(controller));
         helpDialog.pack();
         helpDialog.setLocationRelativeTo(this);
         helpDialog.setVisible(true);

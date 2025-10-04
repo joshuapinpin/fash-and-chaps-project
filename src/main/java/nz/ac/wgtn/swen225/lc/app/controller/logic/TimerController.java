@@ -18,15 +18,16 @@ public class TimerController implements ActionListener {
     private static final int LEVEL_1_TIME_LIMIT = 60; // Level 1 time limit in seconds
     private static final int LEVEL_2_TIME_LIMIT = 120; // Level 2 time limit in seconds
 
-    private Timer timer;
-    private int timeLeft;
     private final AppController controller;
+    private final Timer timer;
+    private int timeLeft;
 
     /**
      * Initializes the TimerController with a reference to the AppController.
      * @param controller The AppController to notify when time runs out.
      */
     public TimerController(AppController controller) {
+
         this(controller, 0); // Default to 300 seconds (5 minutes)
     }
 
@@ -79,7 +80,9 @@ public class TimerController implements ActionListener {
     /**
      * Stops the timer.
      */
-    public void pause() {if(timer.isRunning()) timer.stop();}
+    public void pause() {
+        if(timer.isRunning()) timer.stop();
+    }
 
     /**
      * Starts the timer with a specific time limit.
