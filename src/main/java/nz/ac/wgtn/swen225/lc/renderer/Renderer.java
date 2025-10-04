@@ -49,11 +49,6 @@ public class Renderer {
     public static GameObserver playSounds(){
         return new GameObserver(){
             @Override
-            public void onPlayerMove(Position newPosition) {
-                System.out.println("Player moved");
-            }
-
-            @Override
             public void onKeyCollected(Key key) {
                 LoadingSounds.KeySound.playSoundEffect(-20.f);
             }
@@ -65,22 +60,12 @@ public class Renderer {
 
             @Override
             public void onDoorOpened(Door door) {
-                LoadingSounds.UnlockedSound.playSoundEffect(-20.f);
+                LoadingSounds.UnlockedSound.playSoundEffect(-10.f);
             }
 
             @Override
             public void onPlayerDrown(Player player) {
-                GameObserver.super.onPlayerDie(player);
-            }
-
-            @Override
-            public void onInfoMessage() {
-                System.out.println("Info tile triggered!");
-            }
-
-            @Override
-            public void onLevelComplete() {
-                System.out.println("Level completed!");
+                LoadingSounds.PlayerDrownSound.playSoundEffect(-20.f);
             }
         };
     }
@@ -99,11 +84,11 @@ public class Renderer {
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
         });*/
-        LoadingSounds.PlayerDrownSound.playSoundEffect(-20.0f);
+        /*LoadingSounds.PlayerDrownSound.playSoundEffect(-20.0f);
         try {
             Thread.sleep(3000); // wait long enough for the sound to finish
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 }

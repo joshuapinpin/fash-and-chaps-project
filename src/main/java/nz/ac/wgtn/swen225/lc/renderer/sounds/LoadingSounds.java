@@ -32,16 +32,24 @@ public enum LoadingSounds {
     }
 
     public void playSoundEffect(float volume) {
-        try{
-            Clip clip = AudioSystem.getClip();
-            clip.open(loadSound());
+        new Thread(() -> {
+            try {
+                Clip clip = AudioSystem.getClip();
+                clip.open(loadSound());
 
-            //changes volume of sound
-            FloatControl changeVol = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            changeVol.setValue(volume);
+                //controls volume of sound
+                FloatControl changeVol = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+                changeVol.setValue(volume);
 
-            clip.start();
-        } catch(Exception e){ throw new  RuntimeException("Error playing sound: " + filename); }
+                clip.start();
+
+                //makes sure the whole clip gets played
+                Thread.sleep(clip.getMicrosecondLength() / 1000);
+
+            } catch (Exception e) {
+                throw new RuntimeException("Error playing sound: " + filename, e);
+            }
+        }).start();
     }
 
     /*public void playBackgroundMusic(){
