@@ -4,6 +4,10 @@ import nz.ac.wgtn.swen225.lc.domain.entities.*;
 import nz.ac.wgtn.swen225.lc.domain.tiles.Tile;
 import nz.ac.wgtn.swen225.lc.domain.tiles.*;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+
 /**
  * Maze class representing the maze structure
  * Contains tiles, player reference, and dimensions
@@ -14,6 +18,7 @@ public class Maze {
     private Tile[][] tileGrid; //2D array of tiles: [rows][cols]
     private Player player; //reference to player in maze
     private int rows; int cols; //dimensions of maze
+    private List<GameObserver> observers = new ArrayList<>();
 
     /**
      * Constructor for maze with specified dimensions
@@ -35,6 +40,47 @@ public class Maze {
 
         assert player != null : "Player instance is null";
         assert tileGrid != null : "Tile grid is null";
+
+        //JUST FOR TESTING, REMOVE LATER as observers to be made by app and renderer
+        this.addObserver(new GameObserver() {
+            @Override
+            public void onPlayerMove(Position newPosition) {
+                System.out.println("Player moved");
+            }
+
+            @Override
+            public void onKeyCollected(Key key) {
+                System.out.println("Key collected");
+            }
+
+            @Override
+            public void onTreasureCollected() {
+                System.out.println("Treasure collected");
+            }
+
+            @Override
+            public void onDoorOpened(Door door) {
+                System.out.println("Door opened");
+            }
+
+            @Override
+            public void onInfoMessage() {
+                System.out.println("Info tile triggered!");
+            }
+
+            @Override
+            public void onLevelComplete() {
+                System.out.println("Level completed!");
+            }
+        });
+    }
+
+    /**
+     * Adding an observer to the maze
+     * @param o observer to add
+     */
+    public void addObserver(GameObserver o){
+        this.observers.add(o);
     }
 
     /**
@@ -92,6 +138,7 @@ public class Maze {
     /**
      * Move player in specified direction if target tile is accessible
      * The direction dependent on what user input is
+     * Notify observers of player movement and any entity interactions when player enters a tile
      * @param direction direction to move player
      */
     public void movePlayer(Direction direction){
@@ -107,7 +154,8 @@ public class Maze {
 
         if(targetTile.isAccessible(this.player)){
             player.move(direction);
-            targetTile.onEnter(player);
+            Consumer<GameObserver> event = targetTile.onEnter(player);
+            observers.forEach(event); //notify all observers of this event
 
             assert player.getPos().equals(toMove) : "Player did not move to the correct position";
         }
