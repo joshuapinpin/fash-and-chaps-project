@@ -45,7 +45,10 @@ public class Renderer {
         return drawable;
     }
 
-
+    /**
+     * Observes game events to play sound effects
+     * @return - an observer
+     */
     public static GameObserver playSounds(){
         return new GameObserver(){
             @Override
@@ -73,7 +76,7 @@ public class Renderer {
     /*
     * Testing main to see if drawing are displayed.
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         /*Renderer renderer = new Renderer(null, null);
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Test Image Display");
@@ -84,11 +87,25 @@ public class Renderer {
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
         });*/
-        /*LoadingSounds.PlayerDrownSound.playSoundEffect(-20.0f);
+        LoadingSounds.PlayerDrownSound.playSoundEffect(-20.0f);
         try {
             Thread.sleep(3000); // wait long enough for the sound to finish
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }*/
+        }
+        LoadingSounds.KeySound.playBackgroundMusic(-30f);
+        try {
+            Thread.sleep(Long.MAX_VALUE);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
+
+
+        //Thread.sleep(10000);
+        //LoadingSounds.BackgroundSound.stopBackgroundMusic();
     }
+
+
 }
