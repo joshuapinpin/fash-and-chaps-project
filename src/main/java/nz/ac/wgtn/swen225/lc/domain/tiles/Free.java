@@ -54,7 +54,7 @@ public class Free extends Tile {
             observer.onPlayerMove(p.getPos());
             collectable.ifPresent(entity-> {
                 Consumer<GameObserver> notifyEntity = entity.onInteract(p);
-                if(notifyEntity != null) {
+                if(notifyEntity != null) { //calling accept to execute the consumer
                     notifyEntity.accept(observer);
                 }
                 if(entity.removeEntity()) {
