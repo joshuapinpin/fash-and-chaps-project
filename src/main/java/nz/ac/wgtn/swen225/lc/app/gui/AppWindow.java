@@ -10,8 +10,6 @@ import nz.ac.wgtn.swen225.lc.app.controller.logic.InputController;
 import nz.ac.wgtn.swen225.lc.app.controller.module.RecorderController;
 import nz.ac.wgtn.swen225.lc.app.controller.logic.TimerController;
 import nz.ac.wgtn.swen225.lc.app.gui.game.GamePanel;
-import nz.ac.wgtn.swen225.lc.app.gui.game.HelpPanel;
-import nz.ac.wgtn.swen225.lc.app.gui.game.PausePanel;
 import nz.ac.wgtn.swen225.lc.app.gui.screen.DefeatScreen;
 import nz.ac.wgtn.swen225.lc.app.gui.screen.PlayScreen;
 import nz.ac.wgtn.swen225.lc.app.gui.screen.StartScreen;
@@ -42,11 +40,10 @@ public class AppWindow extends JFrame {
     private JPanel mainPanel;
 
     private List<JPanel> allPanels;
-    private JPanel startScreenPanel;
-    private JPanel playScreenPanel;
-    private JPanel victoryScreenPanel;
-    private JPanel defeatScreenPanel;
-
+    private StartScreen startScreenPanel;
+    private PlayScreen playScreenPanel;
+    private VictoryScreen victoryScreenPanel;
+    private DefeatScreen defeatScreenPanel;
 
     /**
      * Constructor to initialize the main application window.
@@ -119,22 +116,18 @@ public class AppWindow extends JFrame {
      * Show pause dialog
      */
     public void showPauseDialog() {
-        JDialog pauseDialog = new JDialog(this, "Paused", true);
-        pauseDialog.add(new PausePanel(controller));
-        pauseDialog.pack();
-        pauseDialog.setLocationRelativeTo(this);
-        pauseDialog.setVisible(true);
+//        JDialog pauseDialog = new JDialog(this, "Paused", true);
+//        pauseDialog.add(new PausePanel(controller));
+//        pauseDialog.pack();
+//        pauseDialog.setLocationRelativeTo(this);
+//        pauseDialog.setVisible(true);
     }
 
     /**
      * Show help dialog
      */
-    public void showHelpDialog() {
-        JDialog helpDialog = new JDialog(this, "Help", true);
-        TODO: helpDialog.add(new HelpPanel(controller));
-        helpDialog.pack();
-        helpDialog.setLocationRelativeTo(this);
-        helpDialog.setVisible(true);
+    public void displayHelp() {
+        playScreenPanel.showInfo();
     }
 
     /**
