@@ -19,6 +19,7 @@ public class Maze {
     private Player player; //reference to player in maze
     private int rows; int cols; //dimensions of maze
     private List<GameObserver> observers = new ArrayList<>();
+    private List<Monster> monsters = new ArrayList<>();
 
     /**
      * Constructor for maze with specified dimensions
@@ -71,6 +72,11 @@ public class Maze {
             @Override
             public void onLevelComplete() {
                 System.out.println("Level completed!");
+            }
+
+            @Override
+            public void onPlayerDie(Player player) {
+                System.out.println("Player died!");
             }
         });
     }
@@ -135,6 +141,12 @@ public class Maze {
         assert getTileAt(pos) == tile : "Tile was not set correctly at position: " + pos;
     }
 
+    public void playerDead(){
+        if(!player.isAlive()){return;}
+        player.die();
+        observers.forEach(observer -> observer.onPlayerDie(player));
+    }
+
     /**
      * Move player in specified direction if target tile is accessible
      * The direction dependent on what user input is
@@ -154,6 +166,13 @@ public class Maze {
 
         if(targetTile.isAccessible(this.player)){
             player.move(direction);
+
+            for(Monster m : monsters){
+                if(m.getPos().equals(player.getPos())){
+                    playerDead();
+                }
+            }
+
             Consumer<GameObserver> event = targetTile.onEnter(player);
             observers.forEach(event); //notify all observers of this event
 
@@ -161,6 +180,34 @@ public class Maze {
         }
         player.setDirection(direction); //update player direction regardless of move success
         assert player.getDirection() == direction : "Player direction not updated correctly";
+    }
+
+    /**
+     * Update all monsters in the maze
+     * Each monster moves in its current direction
+     * If a monster collides with a wall, it updates its direction
+     * Moves monster and checks for collision with player after move
+     * Notify observers of any events (e.g., player death)
+     */
+    //this will be called by app/controller every game tick
+    //the monsters if for loop may not be in sync
+    public void ping() {
+        Consumer <GameObserver> collisionEvent = observer -> {};
+
+        for (Monster m : monsters) {
+            //check if next tile in direction is a wall
+            Position toMove = m.getDirection().apply(m.getPos());
+            Tile targetTile = getTileAt(toMove);
+
+            if (targetTile instanceof Wall) {
+                m.updateDirection();
+            }
+
+            m.move();
+            if(m.getPos().equals(player.getPos())){
+                playerDead();
+            }
+        }
     }
 
     /**
@@ -180,6 +227,14 @@ public class Maze {
     }
 
     /**
+     * Getter for list of monsters in maze
+     * @return list of monsters
+     */
+    public List<Monster> getMonsters(){
+        return this.monsters;
+    }
+
+    /**
      * Setter for player reference in maze
      * @param player player to set
      */
@@ -196,6 +251,13 @@ public class Maze {
      */
     public Player getPlayer(){
         return this.player;
+    }
+
+    public void setMonster(Monster m){
+        if(m == null){
+            throw new IllegalArgumentException("Monster cannot be null");
+        }
+        this.monsters.add(m);
     }
 
     /**
@@ -226,6 +288,7 @@ public class Maze {
      */
     public String getSymbol(Position pos) {
         if (player != null && player.getPos().equals(pos)) return "P";
+        if(monsters.stream().anyMatch(m-> m.getPos().equals(pos))) return "M";
         Tile tile = getTileAt(pos);
 
         if (tile instanceof Wall) {
