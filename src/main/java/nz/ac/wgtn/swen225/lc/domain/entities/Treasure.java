@@ -62,4 +62,14 @@ public class Treasure implements Entity {
         if(this.getClass() != obj.getClass()) return false;
         return true; // All treasures are considered equal
     }
+
+    /**
+     * Accept method for visitor pattern
+     * @param visitor the visitor to accept
+     * @return result of visitor's visitTreasure method
+     */
+    @Override
+    public <T> T accept(EntityVisitor<T> visitor) {
+        return visitor.visitTreasure(this);
+    }
 }

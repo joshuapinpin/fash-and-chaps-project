@@ -66,8 +66,6 @@ public class Free extends Tile {
 
     }
 
-
-
     /**
      * Free tile is accessible unless it contains an impassable entity (ExitLock or closed Door)
      * Used to check if the player can move onto the tile beforehand
@@ -116,5 +114,15 @@ public class Free extends Tile {
         if(this.getClass() != obj.getClass()) return false;
         Free free = (Free) obj;
         return this.getPos().equals(free.getPos()) && this.collectable.equals(free.collectable);
+    }
+
+    /**
+     * Accept method for visitor pattern
+     * @param visitor TileVisitor instance
+     * @return result from visitor's visitFree method
+     */
+    @Override
+    public <T> T accept(TileVisitor<T> visitor) {
+        return visitor.visitFree(this);
     }
 }
