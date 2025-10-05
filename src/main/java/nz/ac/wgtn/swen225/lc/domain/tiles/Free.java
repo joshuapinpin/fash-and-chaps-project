@@ -50,20 +50,25 @@ public class Free extends Tile {
             throw new IllegalArgumentException("Player cannot be null");
         }
 
-        return observer->{
-            observer.onPlayerMove(p.getPos());
-            collectable.ifPresent(entity-> {
-                Consumer<GameObserver> notifyEntity = entity.onInteract(p);
-                if(notifyEntity != null) { //calling accept to execute the consumer
-                    notifyEntity.accept(observer);
-                }
-                if(entity.removeEntity()) {
-                    collectable = Optional.empty();// Remove the entity after collection
-                    assert !collectable.isPresent() : "Collectable should have been removed";
-                }
-            });
-        };
+        final Consumer<GameObserver> entityEvent;
 
+        //using if else because consumer needs to be final or effectively final
+        if(collectable.isPresent()){
+            entityEvent = collectable.get().onInteract(p);
+            if(collectable.get().removeEntity()) {
+                collectable = Optional.empty();// Remove the entity after collection
+                assert !collectable.isPresent() : "Collectable should have been removed";
+            }
+        }
+        else {
+            entityEvent = observer -> {};
+        }
+
+        //returning an observer which first notifies of player move, then of entity interaction
+        return observer -> {
+            observer.onPlayerMove(p.getPos());
+            entityEvent.accept(observer);
+        };
     }
 
     /**
