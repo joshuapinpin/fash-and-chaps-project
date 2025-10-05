@@ -244,7 +244,8 @@ public class Maze {
     /**
      * Get symbol for tile at specified position for string representation
      * P = Player, K = Key, D = Door, T = Treasure, L = ExitLock
-     * ~ = Water, W = Wall, F = Free, E = Exit, I = Info
+     * ~ = Water, W = Wall, F = Free, E = Exit, I = Info, M = Monster
+     * Used for JUnit testing to verify maze layout
      * @param pos position to get symbol for
      * @return symbol representing tile at position
      */
@@ -253,29 +254,39 @@ public class Maze {
         if(monsters.stream().anyMatch(m-> m.getPos().equals(pos))) return "M";
         Tile tile = getTileAt(pos);
 
-        if (tile instanceof Wall) {
-            return "W";
-        } else if (tile instanceof Free) {
-            Free freeTile = (Free) tile;
-            if (freeTile.getCollectable().isPresent()) {
-                Entity entity = freeTile.getCollectable().get();
-                if (entity instanceof Key) {
-                    return "K";
-                } else if (entity instanceof Door) {
-                    return "D";
-                } else if (entity instanceof Treasure) {
-                    return "T";
-                } else if (entity instanceof ExitLock) {
-                    return "L";
+        return tile.accept(new TileVisitor<String>() {
+            @Override
+            public String visitWall(Wall wall) {return "W";}
+
+            @Override
+            public String visitFree(Free free) {
+                if(free.getCollectable().isPresent()){
+                    Entity entity = free.getCollectable().get();
+                    return entity.accept(new EntityVisitor<String>() {
+                        @Override
+                        public String visitKey(Key key) {return "K";}
+
+                        @Override
+                        public String visitDoor(Door door) {return "D";}
+
+                        @Override
+                        public String visitExitLock(ExitLock exitLock) {return "L";}
+
+                        @Override
+                        public String visitTreasure(Treasure treasure) {return "T";}
+                    });
                 }
+                return "F";
             }
-        } else if (tile instanceof Exit) {
-            return "E";
-        } else if (tile instanceof Water) {
-            return "~";
-        } else if (tile instanceof Info){
-            return "I";
-        }
-        return "F";
+
+            @Override
+            public String visitInfo(Info info) {return "I";}
+
+            @Override
+            public String visitWater(Water water) {return "~";}
+
+            @Override
+            public String visitExit(Exit exit) {return "E";}
+        });
     }
 }
