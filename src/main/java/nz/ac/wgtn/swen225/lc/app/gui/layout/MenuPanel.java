@@ -1,26 +1,30 @@
 package nz.ac.wgtn.swen225.lc.app.gui.layout;
 
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
 import nz.ac.wgtn.swen225.lc.app.gui.GamePanel;
 import nz.ac.wgtn.swen225.lc.app.util.MyButton;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;
 
-import javax.swing.*;
-
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.util.Map;
-import java.util.HashMap;
-
 public class MenuPanel extends JPanel implements ActionListener, GamePanel {
     // Size fields
     public static final int PANEL_WIDTH = AppWindow.WINDOW_WIDTH;
     public static final int PANEL_HEIGHT = AppWindow.HEADER_HEIGHT;
     public static final int BUTTON_GAP = 20;
-    public static final int FONT_SIZE = 30;
+    public static final int FONT_SIZE = 40;
 
     // Buttons: Pause, Save, Exit, Resume
     private Map<JButton, Runnable> buttonRunnableMap;

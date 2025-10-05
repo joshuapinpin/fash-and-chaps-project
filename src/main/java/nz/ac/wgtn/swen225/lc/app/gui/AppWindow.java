@@ -14,6 +14,7 @@ import nz.ac.wgtn.swen225.lc.app.gui.screen.PlayScreen;
 import nz.ac.wgtn.swen225.lc.app.gui.screen.StartScreen;
 import nz.ac.wgtn.swen225.lc.app.gui.screen.VictoryScreen;
 import nz.ac.wgtn.swen225.lc.app.state.*;
+import nz.ac.wgtn.swen225.lc.app.util.MyFont;
 
 /**
  * Main application window/frame. Contains UI components and embeds the game panel from renderer.
@@ -27,6 +28,9 @@ public class AppWindow extends JFrame {
     public static final int WINDOW_HEIGHT = SQUARE_SIZE * 13;
     public static final int MAZE_SIZE = SQUARE_SIZE * 9;
     public static final int HEADER_HEIGHT = SQUARE_SIZE * 2;
+    public static final int FONT_SIZE_H1 = 40;
+    public static final int FONT_SIZE_H2 = 20;
+
 
     // Controllers
     private final AppController c; // Reference to AppController
@@ -85,6 +89,13 @@ public class AppWindow extends JFrame {
         requestFocusInWindow();
         setResizable(false);
         setVisible(true);
+    }
+
+    public static void formatLabel(JLabel label, int fontSize){
+        label.setFont(MyFont.PIXEL.getFont(fontSize));
+        label.setForeground(Color.white);
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        label.setVerticalAlignment(SwingConstants.CENTER);
     }
 
     // ===== INTERACTIONS WITH CONTROLLER =====
