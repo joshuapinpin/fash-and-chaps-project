@@ -36,8 +36,8 @@ public class TimerPanel extends JPanel implements GamePanel, LogicPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         BufferedImage img = LoadingImg.Sand.loadImage();
-        for(int i = 0; i < 4; i++){
-            g.drawImage(img, AppWindow.SQUARE_SIZE + i * AppWindow.SQUARE_SIZE, 0,
+        for(int i = 0; i < 2; i++){
+            g.drawImage(img, AppWindow.SQUARE_SIZE * 2 + i * AppWindow.SQUARE_SIZE, 0,
                     AppWindow.SQUARE_SIZE, AppWindow.SQUARE_SIZE, this);
         }
     }

@@ -55,7 +55,7 @@ public class LeftPanel extends JPanel implements GamePanel {
         this.c = controller;
         this.timerController = controller.timerController();
         this.font = MyFont.PIXEL;
-        setLayout(new GridLayout(8, 1));
+        setLayout(new GridLayout(9, 1));
         setOpaque(false);
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
 

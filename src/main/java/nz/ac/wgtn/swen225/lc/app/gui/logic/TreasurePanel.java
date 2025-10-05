@@ -15,6 +15,7 @@ public class TreasurePanel extends JPanel implements GamePanel {
     public TreasurePanel(AppController c){
         this.c = c;
         setLayout(new GridLayout(4,1));
+        setOpaque(false);
     }
 
 

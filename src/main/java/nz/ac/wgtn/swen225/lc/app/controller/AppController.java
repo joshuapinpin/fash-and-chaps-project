@@ -53,6 +53,7 @@ public class AppController {
     private void initialiseControllers(){
         inputController = new InputController(this);
         timerController = new TimerController(this);
+        persistencyController = new PersistencyController(this);
         domainController = new DomainController(this);
         rendererController = new RendererController(this, domainController);
         recorderController = new RecorderController(this, timerController);
@@ -107,6 +108,7 @@ public class AppController {
         setState(new PlayState(this));
         domainController.initialiseDomain(level);
         recorderController.stopRecording();
+        windowController.displayInfo(false);
         this.level = level;
         windowController().updateWindow();
         System.out.println("Starting New Game at Level " + level);
@@ -213,6 +215,8 @@ public class AppController {
     // Controllers
     public InputController inputController() {return inputController; }
     public TimerController timerController() {return timerController; }
+
+    public PersistencyController persistencyController() {return persistencyController; }
     public WindowController windowController() {return windowController; }
     public RecorderController recorderController() {return recorderController; }
     public DomainController domainController() {return domainController;}

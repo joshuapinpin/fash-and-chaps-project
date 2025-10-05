@@ -73,7 +73,7 @@ public class TimerController implements ActionListener {
     /**
      * Starts the timer.
      */
-    public void start() {
+    public void play() {
         if(!timer.isRunning()) timer.start();
     }
 

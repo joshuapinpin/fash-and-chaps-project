@@ -195,6 +195,7 @@ public class WindowController {
         setupSingleLogicPanel("Timer", timerPanel = new TimerPanel(c));
         setupSingleLogicPanel("Keys", keysPanel = new KeysPanel(c));
         setupSingleLogicPanel("Treasure", treasurePanel = new TreasurePanel(c));
+        leftPanel.add(new JLabel());
     }
 
     private void setupSingleLogicPanel(String name, JPanel panel){

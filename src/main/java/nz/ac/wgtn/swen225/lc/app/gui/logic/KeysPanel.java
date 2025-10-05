@@ -2,6 +2,7 @@ package nz.ac.wgtn.swen225.lc.app.gui.logic;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
+import nz.ac.wgtn.swen225.lc.app.gui.layout.LeftPanel;
 import nz.ac.wgtn.swen225.lc.domain.entities.EntityColor;
 import nz.ac.wgtn.swen225.lc.domain.entities.Key;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;
@@ -25,6 +26,7 @@ public class KeysPanel extends JPanel {
                 EntityColor.GREEN, LoadingImg.GreenKey.loadImage(),
                 EntityColor.PURPLE, LoadingImg.PurpleKey.loadImage()
         );
+        setOpaque(false);
     }
 
     @Override
@@ -32,16 +34,17 @@ public class KeysPanel extends JPanel {
         super.paintComponent(g);
         List<Key> keys = c.domain().getPlayer().getKeys();
         int keysLeft = keys.size();
-
+        int maxKeys = c.persistencyController().maxKeys();
 
         BufferedImage img;
-        for(int i = 0; i < 4; i++){
+        for(int i = 0; i < maxKeys; i++){
             if(i < keysLeft){
                 EntityColor keyColor = keys.get(i).getColor();
                 img = imageKeyMap.get(keyColor);
             }
             else img = LoadingImg.Sand.loadImage();
-            g.drawImage(img, AppWindow.SQUARE_SIZE + i * AppWindow.SQUARE_SIZE, 0,
+            int offset = (LeftPanel.PANEL_WIDTH / 2) - ((maxKeys * AppWindow.SQUARE_SIZE) / 2);
+            g.drawImage(img, offset +  i * AppWindow.SQUARE_SIZE, 0,
                     AppWindow.SQUARE_SIZE, AppWindow.SQUARE_SIZE, this);
         }
     }
