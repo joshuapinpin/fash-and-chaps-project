@@ -1,4 +1,4 @@
-package nz.ac.wgtn.swen225.lc.app.controller.logic;
+package nz.ac.wgtn.swen225.lc.app.controller.local;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 import nz.ac.wgtn.swen225.lc.app.state.AutoReplayState;

@@ -46,7 +46,7 @@ public class DomainController {
         domain.addObserver(Renderer.playSounds());
         domain.addObserver(new GameObserver() {
             @Override public void onInfoMessage() {
-                controller.window().displayInfo(true);
+                controller.windowController().window().displayInfo(true);
             }
             @Override public void onLevelComplete() {
                 controller.victory();
@@ -61,7 +61,7 @@ public class DomainController {
     public void movePlayer(Direction dir){
         if(domain == null) throw new RuntimeException("Cannot move player: Domain is null.");
         // TODO: need a better and safer way to turn info on and off
-        controller.window().displayInfo(false);
+        controller.windowController().window().displayInfo(false);
         domain.movePlayer(dir);
     }
 

@@ -1,8 +1,9 @@
-package nz.ac.wgtn.swen225.lc.app.gui.game;
+package nz.ac.wgtn.swen225.lc.app.gui.layout;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 import nz.ac.wgtn.swen225.lc.app.controller.module.RecorderController;
 import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
+import nz.ac.wgtn.swen225.lc.app.gui.GamePanel;
 import nz.ac.wgtn.swen225.lc.app.util.MyButton;
 import nz.ac.wgtn.swen225.lc.app.util.MyFont;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;
@@ -19,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RightPanel extends JPanel implements ActionListener, ChangeListener, GamePanel{
+public class RightPanel extends JPanel implements ActionListener, ChangeListener, GamePanel {
     public static final int PANEL_WIDTH = AppWindow.SQUARE_SIZE * 6 ;
     public static final int PANEL_HEIGHT = AppWindow.MAZE_SIZE;
     public static final int FONT_SIZE = 40;
@@ -97,7 +98,7 @@ public class RightPanel extends JPanel implements ActionListener, ChangeListener
         slider.setOpaque(false); // transparent background if you want
         slider.addChangeListener(e -> {
             stateChanged(e);
-            controller.window().requestFocusInWindow();
+            controller.windowController().window().requestFocusInWindow();
         });
         add(slider);
         allComps.add(slider);

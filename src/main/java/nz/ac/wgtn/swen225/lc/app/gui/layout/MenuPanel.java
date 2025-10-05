@@ -1,7 +1,8 @@
-package nz.ac.wgtn.swen225.lc.app.gui.game;
+package nz.ac.wgtn.swen225.lc.app.gui.layout;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
+import nz.ac.wgtn.swen225.lc.app.gui.GamePanel;
 import nz.ac.wgtn.swen225.lc.app.util.MyButton;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;
 
@@ -14,7 +15,7 @@ import java.awt.image.BufferedImage;
 import java.util.Map;
 import java.util.HashMap;
 
-public class MenuPanel extends JPanel implements ActionListener, GamePanel{
+public class MenuPanel extends JPanel implements ActionListener, GamePanel {
     // Size fields
     public static final int PANEL_WIDTH = AppWindow.WINDOW_WIDTH;
     public static final int PANEL_HEIGHT = AppWindow.HEADER_HEIGHT;

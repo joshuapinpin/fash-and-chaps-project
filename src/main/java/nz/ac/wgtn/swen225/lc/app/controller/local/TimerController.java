@@ -1,4 +1,4 @@
-package nz.ac.wgtn.swen225.lc.app.controller.logic;
+package nz.ac.wgtn.swen225.lc.app.controller.local;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 
@@ -67,7 +67,7 @@ public class TimerController implements ActionListener {
             timer.stop();
             controller.defeat();
         }
-        controller.window().updateWindow();
+        controller.windowController().window().updateWindow();
     }
 
     /**

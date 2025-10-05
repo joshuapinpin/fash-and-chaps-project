@@ -6,10 +6,9 @@ import java.util.List;
 import javax.swing.*;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
-import nz.ac.wgtn.swen225.lc.app.controller.logic.InputController;
+import nz.ac.wgtn.swen225.lc.app.controller.local.InputController;
 import nz.ac.wgtn.swen225.lc.app.controller.module.RecorderController;
-import nz.ac.wgtn.swen225.lc.app.controller.logic.TimerController;
-import nz.ac.wgtn.swen225.lc.app.gui.game.GamePanel;
+import nz.ac.wgtn.swen225.lc.app.controller.local.TimerController;
 import nz.ac.wgtn.swen225.lc.app.gui.screen.DefeatScreen;
 import nz.ac.wgtn.swen225.lc.app.gui.screen.PlayScreen;
 import nz.ac.wgtn.swen225.lc.app.gui.screen.StartScreen;

@@ -27,7 +27,7 @@ public class InfoPanel extends JPanel {
         addText("Pick up keys to open doors.");
         addText("Collect coins to open chest.");
         addText("Avoid crabs and puddles.");
-        addText("Reach exit to complete level.");
+        addText("Reach sand castle to win!");
         add(Box.createVerticalGlue()); // Push content up
 
         setVisible(false);

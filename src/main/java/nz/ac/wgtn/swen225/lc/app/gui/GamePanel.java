@@ -1,4 +1,4 @@
-package nz.ac.wgtn.swen225.lc.app.gui.game;
+package nz.ac.wgtn.swen225.lc.app.gui;
 
 public interface GamePanel {
     void updatePanel();

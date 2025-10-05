@@ -1,7 +1,8 @@
-package nz.ac.wgtn.swen225.lc.app.gui.game;
+package nz.ac.wgtn.swen225.lc.app.gui.layout;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
+import nz.ac.wgtn.swen225.lc.app.gui.GamePanel;
 import nz.ac.wgtn.swen225.lc.app.util.MyFont;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;
 
@@ -9,7 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class TitlePanel extends JPanel implements GamePanel{
+public class TitlePanel extends JPanel implements GamePanel {
     public static int PANEL_WIDTH = AppWindow.WINDOW_WIDTH;
     public static int PANEL_HEIGHT = AppWindow.HEADER_HEIGHT;
 

@@ -1,9 +1,10 @@
-package nz.ac.wgtn.swen225.lc.app.gui.game;
+package nz.ac.wgtn.swen225.lc.app.gui.layout;
 
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
-import nz.ac.wgtn.swen225.lc.app.controller.logic.TimerController;
+import nz.ac.wgtn.swen225.lc.app.controller.local.TimerController;
 import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
+import nz.ac.wgtn.swen225.lc.app.gui.GamePanel;
 import nz.ac.wgtn.swen225.lc.app.util.MyFont;
 import nz.ac.wgtn.swen225.lc.domain.entities.EntityColor;
 import nz.ac.wgtn.swen225.lc.domain.entities.Key;
@@ -23,7 +24,7 @@ import java.util.Map;
  *
  * @author Joshua Pinpin (Student ID: 300662880)
  */
-public class LeftPanel extends JPanel implements GamePanel{
+public class LeftPanel extends JPanel implements GamePanel {
     public static final int PANEL_WIDTH = AppWindow.SQUARE_SIZE * 6;
     public static final int PANEL_HEIGHT = AppWindow.MAZE_SIZE;
     public static final int FONT_SIZE = 40;

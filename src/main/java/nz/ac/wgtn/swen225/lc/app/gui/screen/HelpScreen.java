@@ -1,6 +1,6 @@
 package nz.ac.wgtn.swen225.lc.app.gui.screen;
 
-import nz.ac.wgtn.swen225.lc.app.gui.game.GamePanel;
+import nz.ac.wgtn.swen225.lc.app.gui.GamePanel;
 
 import javax.swing.*;
 

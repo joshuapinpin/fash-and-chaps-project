@@ -2,9 +2,11 @@ package nz.ac.wgtn.swen225.lc.app.gui.screen;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 import nz.ac.wgtn.swen225.lc.app.controller.module.RecorderController;
-import nz.ac.wgtn.swen225.lc.app.controller.logic.TimerController;
+import nz.ac.wgtn.swen225.lc.app.controller.local.TimerController;
 import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
-import nz.ac.wgtn.swen225.lc.app.gui.game.*;
+import nz.ac.wgtn.swen225.lc.app.gui.GamePanel;
+import nz.ac.wgtn.swen225.lc.app.gui.game.InfoPanel;
+import nz.ac.wgtn.swen225.lc.app.gui.layout.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -58,13 +60,13 @@ public class PlayScreen extends JPanel implements GamePanel {
         gamePanel.setBounds(0, 0, AppWindow.MAZE_SIZE, AppWindow.MAZE_SIZE);
         gamePanel.setOpaque(true);
         gamePanel.setBackground(Color.RED);
+        gamePanel.setBorder(BorderFactory.createLineBorder(Color.white, 5));
 
         gamePanel.setVisible(true);
 
         layeredPane = new JLayeredPane();
         layeredPane.setPreferredSize(new Dimension(MAZE_SIZE, MAZE_SIZE));
         layeredPane.setLayout(null);
-        layeredPane.setBorder(BorderFactory.createLineBorder(Color.white, 5));
         layeredPane.add(gamePanel, JLayeredPane.DEFAULT_LAYER);
         layeredPane.add(infoPanel, JLayeredPane.PALETTE_LAYER);
 
