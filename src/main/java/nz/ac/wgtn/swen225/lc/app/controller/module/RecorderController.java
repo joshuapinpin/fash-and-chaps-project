@@ -95,7 +95,7 @@ public class RecorderController {
      */
     public void addMovement(Input dir){
         if(!isRecording) return;
-        save.addMovement(dir);
+        // save.addMovement(dir);
     }
 
 
