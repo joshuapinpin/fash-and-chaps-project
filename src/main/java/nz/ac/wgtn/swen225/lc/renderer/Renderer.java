@@ -10,7 +10,6 @@ import nz.ac.wgtn.swen225.lc.renderer.sounds.LoadingSounds;
 
 import javax.swing.*;
 
-
 /**
  * Controls how panels and tiles are drawn within the game
  * Controls when sounds are played
@@ -39,9 +38,7 @@ public class Renderer {
      * Returns the panel
      * @return - returns the JPanel
      */
-    public Drawable getPanel(){
-        return drawable;
-    }
+    public Drawable getPanel(){ return drawable;}
 
     /**
      * Observes game events to play sound effects

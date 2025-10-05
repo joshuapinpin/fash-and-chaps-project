@@ -14,7 +14,6 @@ public enum LoadingImg {
     PlayerDown("imgs/playerDown.png"),
     PlayerLeft("imgs/playerLeft.png"),
     PlayerRight("imgs/playerRight.png"),
-
     enemyCrab("imgs/enemyCrab.png"),
 
     Treasure("imgs/treasure.png"),
