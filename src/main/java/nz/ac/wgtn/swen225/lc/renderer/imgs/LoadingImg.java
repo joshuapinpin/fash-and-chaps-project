@@ -36,9 +36,11 @@ public enum LoadingImg {
     Sand("imgs/sand.png"),
     Water("imgs/water.png"),
 
-    StartScreen("imgs/startScreen.png");
-
-
+    StartScreen("imgs/startScreen.png"),
+    LoseScreen("imgs/loseScreen.png"),
+    WinScreen("imgs/winScreen.png"),
+    Background("imgs/background.png");
+    
     private final String filename;
     private BufferedImage image;
 
