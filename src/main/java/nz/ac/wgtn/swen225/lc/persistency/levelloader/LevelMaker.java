@@ -17,6 +17,8 @@ import java.util.Objects;
 public class LevelMaker {
     private final int rows;
     private final int cols;
+    private int keyCount = 0;
+    private int treasureCount = 0;
 
     @JsonSerialize(using = BoardSerializer.class) // for pretty 2D array printing
     private final String[][] board;
@@ -98,6 +100,14 @@ public class LevelMaker {
         }
         return maze;
     }
+
+    public void incrementKeys() { keyCount++; }
+
+    public int keyCount() { return keyCount; }
+
+    public void incrementTreasures() { treasureCount++; }
+
+    public int treasureCount() { return treasureCount; }
 
     /**
      * Gives the String representation of a LevelMaker's board.

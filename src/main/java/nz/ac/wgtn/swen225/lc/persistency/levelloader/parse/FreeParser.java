@@ -37,7 +37,7 @@ class FreeParser extends TileParser<Free> {
 
         Free free = super.parse(surroundings, tile, position); // Tile with no Entity on it
         if (split.length == 2) {
-            free.setCollectable(EntityParsers.parseEntity(split[1]));
+            free.setCollectable(EntityParsers.parseEntity(surroundings, split[1]));
         }
         return free;
     }
