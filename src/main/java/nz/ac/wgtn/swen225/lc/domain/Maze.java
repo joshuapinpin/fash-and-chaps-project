@@ -110,6 +110,22 @@ public class Maze {
     }
 
     /**
+     * Get target tile in specified direction from current position
+     * Used by player and monsters to determine next tile
+     * @param currentPos current position
+     * @param direction direction to get target tile
+     * @return target tile in direction from current position
+     */
+    public Tile targetTile(Position currentPos, Direction direction){
+        if(currentPos == null || direction == null){
+            throw new IllegalArgumentException("Player not set in maze");
+        }
+
+        Position toMove = direction.apply(currentPos);
+        return getTileAt(toMove);
+    }
+
+    /**
      * Move player in specified direction if target tile is accessible
      * The direction dependent on what user input is
      * Notify observers of player movement and any entity interactions when player enters a tile
@@ -123,8 +139,7 @@ public class Maze {
             throw new IllegalArgumentException("Player not set in maze");
         }
 
-        Position toMove = direction.apply(player.getPos());
-        Tile targetTile = getTileAt(toMove);
+        Tile targetTile = targetTile(player.getPos(), direction);
 
         if(targetTile.isAccessible(this.player)){
             player.move(direction);
@@ -138,7 +153,7 @@ public class Maze {
             Consumer<GameObserver> event = targetTile.onEnter(player);
             observers.forEach(event); //notify all observers of this event
 
-            assert player.getPos().equals(toMove) : "Player did not move to the correct position";
+            assert player.getPos().equals(targetTile.getPos()) : "Player did not move to the correct position";
         }
         player.setDirection(direction); //update player direction regardless of move success
         assert player.getDirection() == direction : "Player direction not updated correctly";
@@ -158,8 +173,7 @@ public class Maze {
 
         for (Monster m : monsters) {
             //check if next tile in direction is a wall
-            Position toMove = m.getDirection().apply(m.getPos());
-            Tile targetTile = getTileAt(toMove);
+            Tile targetTile = targetTile(m.getPos(), m.getDirection());
 
             if (targetTile instanceof Wall) {
                 m.updateDirection();
