@@ -19,9 +19,10 @@ public class LevelMaker {
     private final int cols;
     private int keyCount = 0;
     private int treasureCount = 0;
+    private boolean loaded = false;
 
     @JsonSerialize(using = BoardSerializer.class) // for pretty 2D array printing
-    private final String[][] board;
+    private String[][] board;
 
     /**
      * Create LevelMaker object from ASCII art type array representing the board.
@@ -59,6 +60,14 @@ public class LevelMaker {
     }
 
     /**
+     * Sets the board of String symbols representing all the tiles in a level.
+     * @param board - the String[][] board.
+     */
+    public void setBoard(String[][] board) {
+        this.board = board;
+    }
+
+    /**
      * Get number of rows in game board.
      * Used by Jackson to infer serialisation.
      * @return - integer number of rows.
@@ -78,7 +87,7 @@ public class LevelMaker {
 
     /**
      * Gives the Maze object corresponding to the tiles and entities listed
-     * in the board.
+     * in the board. Note key and treasure counts are also determined as loading occurs.
      * @return - the Maze object.
      */
     public Maze loadLevel() {
@@ -89,7 +98,7 @@ public class LevelMaker {
         // parse String symbol at each board position
         for (int y = 0; y < rows; y++) {
             for (int x = 0; x < cols; x++) {
-                symbol = board[y][x];
+                symbol = Objects.requireNonNull(board[y][x], "Board is null at row="+x+", col="+y);
                 if (symbol.isEmpty()) {
                     throw new IllegalArgumentException("Symbol cannot be empty");
                 }
@@ -98,16 +107,23 @@ public class LevelMaker {
                 maze.setTileAt(tile);
             }
         }
+        loaded = true;
         return maze;
     }
 
     public void incrementKeys() { keyCount++; }
 
-    public int keyCount() { return keyCount; }
+    public int keyCount() {
+        if (!loaded) { loadLevel(); }
+        return keyCount;
+    }
 
     public void incrementTreasures() { treasureCount++; }
 
-    public int treasureCount() { return treasureCount; }
+    public int treasureCount() {
+        if (!loaded) { loadLevel(); }
+        return treasureCount;
+    }
 
     /**
      * Gives the String representation of a LevelMaker's board.

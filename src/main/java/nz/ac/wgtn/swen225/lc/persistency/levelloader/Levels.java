@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Level loading API, each level is a singleton.
@@ -28,7 +29,17 @@ public enum Levels {
 
     static {
         // check no duplicate level numbers
-        assert Arrays.stream(Levels.values()).distinct().count() == Levels.values().length;
+        boolean unique = Arrays.stream(Levels.values())
+                .map(level->level.levelNumber)
+                .distinct()
+                .count()
+                == Levels.values().length;
+        if (!unique) {
+            String levelNumbers = Arrays.stream(Levels.values())
+                    .map(level->String.valueOf(level.levelNumber))
+                    .collect(Collectors.joining(", ", "[", "]"));
+            throw new AssertionError("Level numbers must be unique: "+levelNumbers);
+        }
     }
 
     /**
@@ -81,6 +92,9 @@ public enum Levels {
         }
         catch (IOException e) {
             throw new Error("Level loading failed: Level "+i, e);
+        }
+        catch (NullPointerException e) {
+            throw new Error("Level deserialised to null: Level "+i, e);
         }
     }
 

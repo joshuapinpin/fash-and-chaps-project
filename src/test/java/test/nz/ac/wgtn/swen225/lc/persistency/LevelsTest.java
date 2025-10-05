@@ -16,7 +16,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 record TestData(int number){}
 
-// TODO: move Level67.json to test/resources
 public class LevelsTest {
     private static Maze mapper(InputStream in){
         try {
@@ -25,6 +24,11 @@ public class LevelsTest {
         } catch (IOException e) {
             throw new Error("Deserialisation failed: "+e);
         }
+    }
+
+    @Test
+    public void testPath() {
+        assertEquals("/levels/Level", Levels.defaultPath());
     }
 
     @Test
@@ -54,6 +58,14 @@ public class LevelsTest {
     }
 
     @Test
+    public void testMapperReturnsNull() {
+        Error err = assertThrows(Error.class, ()->{
+            Levels.load(67, in->null);
+        });
+        assertEquals("Level deserialised to null: Level 67",  err.getMessage());
+    }
+
+    @Test
     public void testMapperFailure() {
         Error err = assertThrows(Error.class, ()->{
             Levels.load(67, in->{
@@ -65,8 +77,27 @@ public class LevelsTest {
 
     @Test
     public void testMapperNull() {
-        Error err = assertThrows(AssertionError.class, ()->{
+        Exception e = assertThrows(IllegalArgumentException.class, ()->{
             Levels.load(67, null);
         });
+        assertEquals("Mapper cannot be null.", e.getMessage());
+    }
+
+    @Test
+    public void testMaxTime() {
+        assertEquals(60, Levels.LevelOne.maxTime());
+        assertEquals(60, Levels.LevelTwo.maxTime());
+    }
+
+    @Test
+    public void testMaxKeys() {
+        assertEquals(2, Levels.LevelOne.maxKeys());
+        // TODO: add LevelTwo check
+    }
+
+    @Test
+    public void textMaxTreasures() {
+        assertEquals(4, Levels.LevelOne.maxTreasures());
+        // TODO: add LevelTwo check
     }
 }
