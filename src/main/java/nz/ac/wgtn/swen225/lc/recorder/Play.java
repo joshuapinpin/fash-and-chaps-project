@@ -61,7 +61,7 @@ public class Play {
      * from the list, everytime method is called.
      * Need to use the observer pattern.
      */
-    public boolean stepByStep(AppController gm) {
+    public boolean stepByStep(AppController ac) {
         // make the method return true while we still have positions to go
         if(pos == movements.size()){pos = 0; return false;}
         System.out.println("*DEBUG* Inside of the Recorder Package Now");
@@ -70,7 +70,7 @@ public class Play {
         if (movements.isEmpty()) throw new IllegalArgumentException("Character has not moved yet");
         Input direction = movements.get(pos);
         // pass direction to app method
-        gm.handleInput(direction);
+        ac.handleInput(direction);
         System.out.println("step-by-step position: " + pos);
         System.out.println("step-by-step direction: " + direction);
         pos++;
@@ -82,14 +82,14 @@ public class Play {
      * Currently, doesn't implement speed.
      * Need to use the observer pattern.
      */
-    public void autoPlay(AppController gm) {
+    public void autoPlay(AppController ac) {
         System.out.println("*DEBUG* Inside of the Recorder Package Now");
         getData();
         if (movements.isEmpty()) throw new IllegalArgumentException("Character has not moved yet");
         for (int frame = 0; frame < movements.size(); frame++) {
             System.out.println("autoplay position: " + frame);
             Input frame1 = movements.get(frame);
-            gm.handleInput(frame1);
+            ac.handleInput(frame1);
             System.out.println("autoplay direction: " + frame1);
         }
     }

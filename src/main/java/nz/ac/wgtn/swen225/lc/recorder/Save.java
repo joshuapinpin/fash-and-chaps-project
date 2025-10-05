@@ -1,11 +1,14 @@
 package nz.ac.wgtn.swen225.lc.recorder;
 import nz.ac.wgtn.swen225.lc.app.util.*;
+import nz.ac.wgtn.swen225.lc.app.controller.*;
+import nz.ac.wgtn.swen225.lc.app.controller.logic.*;
+import nz.ac.wgtn.swen225.lc.app.state.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import javax.swing.*;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 /**
  * Class for saving each movement of the Character
  * It coordinates with the App package, which calls
@@ -16,8 +19,9 @@ import java.util.List;
  * @author Arushi Bhatnagar Stewart
  */
 public class Save{
-    private List<Input> movements = new ArrayList<>();
-    final ObjectMapper mapper = new ObjectMapper();;
+    private record MovementState(Input direction, GameState state){}
+    private Map<MovementState, Integer> saveMap = new HashMap<>();
+    private final ObjectMapper mapper = new ObjectMapper();;
     /** Method to add the Input objects (the directions/movements)
      * of the character to the movements list.
      *
@@ -25,12 +29,14 @@ public class Save{
     public Save(){}
     /** */
     public void reset(){
-        movements = new ArrayList<>();
+        saveMap = new HashMap<>();
     }
     /** */
-    public void addMovement(Input direction) {
+    public void addMovement(Input direction, AppController ac) {
         System.out.println("*DEBUG* Inside of the Recorder Package Now");
-        movements.add(direction);
+        MovementState ms = new MovementState(direction, ac.state());
+        int timeLeft = ac.timerController().getTimeLeft();
+        saveMap.put(ms, timeLeft);
     }
     /** */
     public File chooseFile(){
@@ -57,7 +63,7 @@ public class Save{
         System.out.println("*DEBUG* Inside of the Recorder Package Now");
         File playerMovements = chooseFile();
         try {
-            mapper.writerWithDefaultPrettyPrinter().writeValue(playerMovements, movements);
+            mapper.writerWithDefaultPrettyPrinter().writeValue(playerMovements, saveMap);
         } catch(IOException e){
             throw new Error(e);
         }
@@ -65,10 +71,11 @@ public class Save{
 
     public static void main(String[] args) {
         Save s = new Save();
-        s.addMovement(Input.MOVE_UP);
-        s.addMovement(Input.MOVE_DOWN);
-        s.addMovement(Input.MOVE_LEFT);
-        s.addMovement(Input.MOVE_RIGHT);
+        AppController ac = AppController.of();
+        s.addMovement(Input.MOVE_UP, ac);
+        s.addMovement(Input.MOVE_DOWN, ac);
+        s.addMovement(Input.MOVE_LEFT, ac);
+        s.addMovement(Input.MOVE_RIGHT, ac);
         s.saveToFile();
     }
 }
