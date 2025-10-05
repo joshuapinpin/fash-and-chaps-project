@@ -32,30 +32,12 @@ public class Drawable extends JPanel{
             Direction.LEFT, LoadingImg.PlayerLeft,
             Direction.RIGHT, LoadingImg.PlayerRight
     );
-    Map<Class<? extends Tile>, LoadingImg> tileLookUpTable = Map.of(    //lookup table to see type of tile
-            Exit.class, LoadingImg.Exit,
-            Free.class, LoadingImg.Sand,
-            Info.class, LoadingImg.Info,
-            Wall.class, LoadingImg.Rock,
-            Water.class, LoadingImg.Water
-    );
-    Map<Class<? extends Entity>, LoadingImg> entityLookUpTable = Map.of(    //lookup table to see type of entity
-            Treasure.class, LoadingImg.Treasure,
-            ExitLock.class, LoadingImg.ExitLock
-    );
-    Map<EntityColor, LoadingImg> keyLookUpTable = Map.of(    //lookup table for key entities (to see colour)
-            EntityColor.PURPLE, LoadingImg.PurpleKey,
-            EntityColor.ORANGE, LoadingImg.OrangeKey,
-            EntityColor.PINK, LoadingImg.PinkKey,
-            EntityColor.GREEN, LoadingImg.GreenKey
-    );
-    Map<EntityColor, LoadingImg> doorLookUpTable = Map.of(   //lookup table for door entities (to see colour)
-            EntityColor.PURPLE, LoadingImg.PurpleDoor,
-            EntityColor.ORANGE, LoadingImg.OrangeDoor,
-            EntityColor.PINK, LoadingImg.PinkDoor,
-            EntityColor.GREEN, LoadingImg.GreenDoor
-    );
 
+    /**
+     * Constructor to set all the tiles and player within the world
+     * @param currentTiles - all the tiles within the current world
+     * @param player - current player
+     */
     public Drawable(Tile[][] currentTiles, Player player){
         setAllTiles(currentTiles, player);
     }
@@ -91,14 +73,14 @@ public class Drawable extends JPanel{
     public void drawCurrentImage(Graphics g){
         for (int dy = -4; dy <= 4; dy++) {
             for (int dx = -4; dx <= 4; dx++) {
-                int worldX = centerX + dx;
-                int worldY = centerY + dy;
+                int worldX = centerX + dx; // x position of the screen
+                int worldY = centerY + dy; //
 
                 //ensures its within bounds
                 if (worldX < 0 || worldX >= allTiles[0].length || worldY < 0 || worldY >= allTiles.length) {continue;}
 
                 Tile tile = allTiles[worldY][worldX];//gets the current tile
-                BufferedImage image = findImage(tile);//gets the image for that tile
+                BufferedImage image = tile.accept(new TileImage());//gets the image for that tile
 
                 //calculates the pos of this tile in screen view
                 int screenX = (dx + 4) * SIZE;
@@ -112,47 +94,6 @@ public class Drawable extends JPanel{
 
 
     /**
-     * Finds the corresponding image for type of tile
-     * @param tile - type of tile
-     * @return - returns the image of the current tile
-     */
-    public BufferedImage findImage(Tile tile){
-        if (tile instanceof Wall) {
-            return tileLookUpTable.get(Wall.class).loadImage();
-        } else if (tile instanceof Free f) {
-            if (f.getCollectable().isPresent()) {
-                Entity entity = f.getCollectable().get();
-                if (entity instanceof Key k) {
-                    return keyLookUpTable.get(k.getColor()).loadImage();
-                } else if (entity instanceof Door d) {
-                    return doorLookUpTable.get(d.getColor()).loadImage();
-                } else if (entity instanceof Treasure) {
-                    return entityLookUpTable.get(Treasure.class).loadImage();
-                } else if (entity instanceof ExitLock) {
-                    return entityLookUpTable.get(ExitLock.class).loadImage();
-                }
-            }
-        } else if (tile instanceof Exit) {
-            return tileLookUpTable.get(Exit.class).loadImage();
-        } else if (tile instanceof Water) {
-            return tileLookUpTable.get(Water.class).loadImage();
-        } else if (tile instanceof Info){
-            return tileLookUpTable.get(Info.class).loadImage();
-        }
-        return tileLookUpTable.get(Free.class).loadImage();
-    }
-
-
-
-
-
-
-
-
-
-
-
-    /**
      * Draws tiles onto the JPanel
      * @param g the <code>Graphics</code> object to protect
      */
@@ -161,6 +102,5 @@ public class Drawable extends JPanel{
         super.paintComponent(g);
         //dummyTest.drawTiles(g, this);
         drawCurrentImage(g);
-
     }
 }
