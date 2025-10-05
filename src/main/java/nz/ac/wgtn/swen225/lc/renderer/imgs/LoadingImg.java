@@ -39,13 +39,13 @@ public enum LoadingImg {
     StartScreen("imgs/startScreen.png");
 
 
-    private final String filename;
-    private BufferedImage image;
+    private final String filename;//name of file
+    private BufferedImage image; //tile image
 
-    /*
-    *   Constructor for the enum
-    *   Loads and saves the image to an enum
-    *   @param filename: name of the image file
+    /**
+     * Constructor for the enum
+     * Loads and saves the image to an enum
+     * @param filename: name of the image file
      */
     LoadingImg(String filename){
         this.filename = filename;
@@ -57,8 +57,9 @@ public enum LoadingImg {
         } catch(IOException e){ throw new RuntimeException("Error loading the image: " + filename, e);}
     }
 
-    /*
-     * Gets the buffered image
+    /**
+     * Gets the image of enum
+     * @return - buffered image
      */
     public BufferedImage loadImage() {
         return image;

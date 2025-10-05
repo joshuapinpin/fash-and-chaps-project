@@ -2,7 +2,6 @@ package nz.ac.wgtn.swen225.lc.renderer;
 
 import nz.ac.wgtn.swen225.lc.domain.GameObserver;
 import nz.ac.wgtn.swen225.lc.domain.Player;
-import nz.ac.wgtn.swen225.lc.domain.Position;
 import nz.ac.wgtn.swen225.lc.domain.entities.Door;
 import nz.ac.wgtn.swen225.lc.domain.entities.Key;
 import nz.ac.wgtn.swen225.lc.domain.tiles.Tile;
@@ -13,7 +12,8 @@ import javax.swing.*;
 
 
 /**
- * Controls how panels and tiles within the game
+ * Controls how panels and tiles are drawn within the game
+ * Controls when sounds are played
  */
 public class Renderer {
     public static int X_PANEL_WIDTH;
@@ -33,9 +33,7 @@ public class Renderer {
     /**
      * Constructor for Renderer that sets a Drawable
      */
-    public Renderer(Tile[][] currentTiles, Player player){
-        drawable = new Drawable(currentTiles, player);
-    }
+    public Renderer(Tile[][] currentTiles, Player player){ drawable = new Drawable(currentTiles, player); }
 
     /**
      * Returns the panel
@@ -51,25 +49,32 @@ public class Renderer {
      */
     public static GameObserver playSounds(){
         return new GameObserver(){
+            /**
+             * Plays key collection sound
+             * @param key - key object
+             */
             @Override
-            public void onKeyCollected(Key key) {
-                LoadingSounds.KeySound.playSoundEffect(-20.f);
-            }
+            public void onKeyCollected(Key key) { LoadingSounds.KeySound.playSoundEffect(-20.f); }
 
+            /**
+             * Plays treasure collection sound
+             */
             @Override
-            public void onTreasureCollected() {
-                LoadingSounds.CoinSound.playSoundEffect(-20.f);
-            }
+            public void onTreasureCollected() { LoadingSounds.CoinSound.playSoundEffect(-20.f); }
 
+            /**
+             * Plays door unlocking sound
+             * @param door - door object
+             */
             @Override
-            public void onDoorOpened(Door door) {
-                LoadingSounds.UnlockedSound.playSoundEffect(-10.f);
-            }
+            public void onDoorOpened(Door door) { LoadingSounds.UnlockedSound.playSoundEffect(-10.f); }
 
+            /**
+             * Plays water sounds when player dies in water
+             * @param player - current player
+             */
             @Override
-            public void onPlayerDrown(Player player) {
-                LoadingSounds.PlayerDrownSound.playSoundEffect(-20.f);
-            }
+            public void onPlayerDrown(Player player) { LoadingSounds.PlayerDrownSound.playSoundEffect(-20.f); }
         };
     }
 

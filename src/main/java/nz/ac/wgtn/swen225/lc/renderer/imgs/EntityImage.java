@@ -20,15 +20,35 @@ public class EntityImage implements EntityVisitor<BufferedImage>{
             EntityColor.GREEN, LoadingImg.GreenDoor
     );
 
+    /**
+     * Draws key collectable image
+     * @param key - current key tile object
+     * @return - key tile image
+     */
     @Override
     public BufferedImage visitKey(Key key) { return keyLookUpTable.get(key.getColor()).loadImage(); }
 
+    /**
+     * Draws door image
+     * @param door - current door tile object
+     * @return - door tile image
+     */
     @Override
     public BufferedImage visitDoor(Door door) { return doorLookUpTable.get(door.getColor()).loadImage();}
 
+    /**
+     * Draws exit lock image
+     * @param exitLock - current exit lock tile object
+     * @return - exit lock tile image
+     */
     @Override
     public BufferedImage visitExitLock(ExitLock exitLock) { return LoadingImg.ExitLock.loadImage(); }
 
+    /**
+     * Draws coin image
+     * @param treasure - current treasure tile object
+     * @return - coin tile image
+     */
     @Override
     public BufferedImage visitTreasure(Treasure treasure) { return LoadingImg.Treasure.loadImage(); }
 }

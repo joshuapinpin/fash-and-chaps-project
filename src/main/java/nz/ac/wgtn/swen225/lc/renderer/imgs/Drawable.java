@@ -4,7 +4,6 @@ import nz.ac.wgtn.swen225.lc.domain.Direction;
 import nz.ac.wgtn.swen225.lc.domain.Player;
 import nz.ac.wgtn.swen225.lc.domain.Position;
 import nz.ac.wgtn.swen225.lc.domain.entities.*;
-import nz.ac.wgtn.swen225.lc.domain.entities.EntityColor;
 import nz.ac.wgtn.swen225.lc.domain.tiles.*;
 import nz.ac.wgtn.swen225.lc.renderer.Renderer;
 
@@ -18,15 +17,14 @@ import java.util.Map;
  * Parses through List of tiles, checking which images to show
  */
 public class Drawable extends JPanel{
-
     Tile[][] allTiles; //array of all the tiles in the world
-    private final int ROWS = AppWindow.MAZE_SIZE/AppWindow.SQUARE_SIZE; //
-    private final int SIZE = AppWindow.SQUARE_SIZE;
-    Player player;
-    int centerX;
-    int centerY;
+    private final int ROWS = AppWindow.MAZE_SIZE/AppWindow.SQUARE_SIZE; //amount of rows drawn
+    private final int SIZE = AppWindow.SQUARE_SIZE;//size of each tile
+    Player player; //the player
+   int centerX;// x pos of player
+    int centerY;// y pos of plater
 
-    Map<Direction, LoadingImg> directionLookUpTable = Map.of(   //lookup table to see the direction of the player
+    Map<Direction, LoadingImg> directionLookUpTable = Map.of(  //lookup table to see the direction of the player
             Direction.UP, LoadingImg.PlayerUp,
             Direction.DOWN, LoadingImg.PlayerDown,
             Direction.LEFT, LoadingImg.PlayerLeft,
@@ -42,7 +40,6 @@ public class Drawable extends JPanel{
         setAllTiles(currentTiles, player);
     }
 
-
     /**
      * Gets all the tiles in the world and player
      * @param currentTiles - tiles of the world
@@ -57,14 +54,11 @@ public class Drawable extends JPanel{
         centerY = p.getY();
     }
 
-
     /**
      * Sets the JPanel to correct size
      */
     @Override
-    public Dimension getPreferredSize() {
-        return new Dimension(Renderer.X_PANEL_WIDTH, Renderer.Y_PANEL_HEIGHT);
-    }
+    public Dimension getPreferredSize() { return new Dimension(Renderer.X_PANEL_WIDTH, Renderer.Y_PANEL_HEIGHT); }
 
     /**
      * Draws the 9x9 world
@@ -76,7 +70,7 @@ public class Drawable extends JPanel{
                 int worldX = centerX + dx; // x position of the screen
                 int worldY = centerY + dy; //
 
-                //ensures its within bounds
+                //ensures positions are within bounds
                 if (worldX < 0 || worldX >= allTiles[0].length || worldY < 0 || worldY >= allTiles.length) {continue;}
 
                 Tile tile = allTiles[worldY][worldX];//gets the current tile
@@ -91,7 +85,6 @@ public class Drawable extends JPanel{
         }
         g.drawImage(directionLookUpTable.get(player.getDirection()).loadImage(),4*SIZE, 4*SIZE, SIZE, SIZE, null);// draws the player
     }
-
 
     /**
      * Draws tiles onto the JPanel
