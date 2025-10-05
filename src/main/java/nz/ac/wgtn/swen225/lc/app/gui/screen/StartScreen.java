@@ -1,7 +1,6 @@
 package nz.ac.wgtn.swen225.lc.app.gui.screen;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
-import nz.ac.wgtn.swen225.lc.app.gui.GamePanel;
 import nz.ac.wgtn.swen225.lc.app.util.MyFont;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;
 
@@ -9,7 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class StartScreen extends JPanel implements GamePanel {
+public class StartScreen extends JPanel {
     private BufferedImage bgImg;
 
     public StartScreen(AppController controller) {
@@ -25,11 +24,6 @@ public class StartScreen extends JPanel implements GamePanel {
         add(startButton, BorderLayout.SOUTH);
 
         bgImg = LoadingImg.StartScreen.loadImage();
-    }
-
-    @Override
-    public void updatePanel() {
-
     }
 
     @Override

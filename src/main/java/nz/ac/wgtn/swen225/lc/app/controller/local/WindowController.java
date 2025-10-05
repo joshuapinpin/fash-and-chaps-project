@@ -2,12 +2,10 @@ package nz.ac.wgtn.swen225.lc.app.controller.local;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
-import nz.ac.wgtn.swen225.lc.app.gui.GamePanel;
 import nz.ac.wgtn.swen225.lc.app.gui.screen.*;
 import nz.ac.wgtn.swen225.lc.app.gui.layout.*;
 import nz.ac.wgtn.swen225.lc.app.gui.logic.*;
 import nz.ac.wgtn.swen225.lc.app.state.*;
-import nz.ac.wgtn.swen225.lc.app.util.MyFont;
 
 import javax.swing.*;
 import java.awt.*;
@@ -71,10 +69,7 @@ public class WindowController {
     public void updateWindow(){
         Stream.of(screenPanels, layoutPanels, logicPanels)
             .flatMap(List::stream)
-            .forEach(panel -> {
-                if(panel instanceof GamePanel updatable)
-                    updatable.updatePanel();
-            });
+            .forEach(Component::repaint);
         updateLevel();
         updateTimer();
     }

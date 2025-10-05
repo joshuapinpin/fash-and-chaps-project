@@ -31,22 +31,7 @@ public class AppWindow extends JFrame {
     public static final int FONT_SIZE_H1 = 40;
     public static final int FONT_SIZE_H2 = 20;
 
-
-    // Controllers
     private final AppController c; // Reference to AppController
-    private InputController inputController;
-    private TimerController timerController;
-    private RecorderController recorderController;
-
-    // UI COMPONENTS
-    private CardLayout cardLayout;
-    private JPanel mainPanel;
-
-    private List<JPanel> allPanels;
-    private StartScreen startScreenPanel;
-    private PlayScreen playScreenPanel;
-    private VictoryScreen victoryScreenPanel;
-    private DefeatScreen defeatScreenPanel;
 
     /**
      * Constructor to initialize the main application window.
@@ -58,26 +43,6 @@ public class AppWindow extends JFrame {
         this.c = controller;
         //setupScreens();
         setupWindow();
-    }
-    // ===== SETUP METHODS =====
-    private void setupScreens(){
-        // Using a CardLayout to switch between different screens
-        cardLayout = new CardLayout();
-        mainPanel = new JPanel(cardLayout);
-
-        // Initialize all screen panels
-        startScreenPanel = new StartScreen(c);
-        playScreenPanel = new PlayScreen(c);
-        victoryScreenPanel = new VictoryScreen(c);
-        defeatScreenPanel = new DefeatScreen(c);
-        allPanels = List.of(startScreenPanel, playScreenPanel, victoryScreenPanel, defeatScreenPanel);
-
-        // Add all panels to the main panel with a unique name for each
-        mainPanel.add(startScreenPanel, StartState.name());
-        mainPanel.add(playScreenPanel, PlayState.name());
-        mainPanel.add(victoryScreenPanel, VictoryState.name());
-        mainPanel.add(defeatScreenPanel, DefeatState.name());
-        setContentPane(mainPanel);
     }
 
     private void setupWindow(){
@@ -98,38 +63,4 @@ public class AppWindow extends JFrame {
         label.setVerticalAlignment(SwingConstants.CENTER);
     }
 
-    // ===== INTERACTIONS WITH CONTROLLER =====
-    /**
-     * Update the entire window (all panels).
-     */
-    public void updateWindow(){
-        allPanels.forEach(panel -> {
-            if(panel instanceof GamePanel updatable) updatable.updatePanel();
-        });
-    }
-
-    /**
-     * Show a specific screen based on the screen name.
-     * Should be called when the game state changes.
-     * @param screenName Name of the screen to show (e.g., "Start", "Play", "Victory", "Defeat").
-     */
-    public void showScreen(String screenName){
-        cardLayout.show(mainPanel, screenName);
-    }
-
-    /**
-     * Show Info dialog
-     */
-    public void displayInfo(boolean doShow) {
-//        if(doShow) playScreenPanel.showInfo();
-//        else playScreenPanel.hideInfo();
-    }
-
-    /**
-     * Update the status bar with current game information.
-     */
-    // TODO: Must decide what things are needed to be updated in the status bar
-    public void updateStatus() {
-        // TODO: Update status bar with current game info
-    }
 }

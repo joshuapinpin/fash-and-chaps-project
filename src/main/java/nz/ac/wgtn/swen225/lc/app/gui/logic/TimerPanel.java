@@ -2,14 +2,13 @@ package nz.ac.wgtn.swen225.lc.app.gui.logic;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
-import nz.ac.wgtn.swen225.lc.app.gui.GamePanel;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class TimerPanel extends JPanel implements GamePanel, LogicPanel {
+public class TimerPanel extends JPanel implements LogicPanel {
     private AppController c;
     private JLabel timerLabel;
 
@@ -25,12 +24,6 @@ public class TimerPanel extends JPanel implements GamePanel, LogicPanel {
     public void updateLogic(String info) {
         timerLabel.setText(info);
     }
-
-    @Override
-    public void updatePanel() {
-        repaint();
-    }
-
 
     @Override
     protected void paintComponent(Graphics g) {

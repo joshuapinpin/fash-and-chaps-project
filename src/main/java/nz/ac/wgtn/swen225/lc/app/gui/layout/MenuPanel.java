@@ -15,11 +15,10 @@ import javax.swing.JPanel;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
-import nz.ac.wgtn.swen225.lc.app.gui.GamePanel;
 import nz.ac.wgtn.swen225.lc.app.util.MyButton;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;
 
-public class MenuPanel extends JPanel implements ActionListener, GamePanel {
+public class MenuPanel extends JPanel implements ActionListener {
     // Size fields
     public static final int PANEL_WIDTH = AppWindow.WINDOW_WIDTH;
     public static final int PANEL_HEIGHT = AppWindow.HEADER_HEIGHT;
@@ -86,8 +85,4 @@ public class MenuPanel extends JPanel implements ActionListener, GamePanel {
         }
     }
 
-    @Override
-    public void updatePanel() {
-
-    }
 }

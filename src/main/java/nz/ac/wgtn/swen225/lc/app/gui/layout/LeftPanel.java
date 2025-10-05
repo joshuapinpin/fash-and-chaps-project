@@ -17,7 +17,6 @@ import javax.swing.SwingConstants;
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 import nz.ac.wgtn.swen225.lc.app.controller.local.TimerController;
 import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
-import nz.ac.wgtn.swen225.lc.app.gui.GamePanel;
 import nz.ac.wgtn.swen225.lc.app.gui.logic.KeysPanel;
 import nz.ac.wgtn.swen225.lc.app.gui.logic.LevelPanel;
 import nz.ac.wgtn.swen225.lc.app.gui.logic.TimerPanel;
@@ -32,20 +31,12 @@ import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;
  *
  * @author Joshua Pinpin (Student ID: 300662880)
  */
-public class LeftPanel extends JPanel implements GamePanel {
+public class LeftPanel extends JPanel {
     public static final int PANEL_WIDTH = AppWindow.SQUARE_SIZE * 6;
     public static final int PANEL_HEIGHT = AppWindow.MAZE_SIZE;
-    public static final int FONT_SIZE = 40;
-
-    private JPanel levelPanel, timerPanel, keysPanel, treasurePanel;
-    private JLabel timerLabel, levelLabel;
-    private BufferedImage bgImg;
-    private MyFont font;
 
     private AppController c;
-    private TimerController timerController;
-
-    private List<JComponent> allComponents;
+    private BufferedImage bgImg;
 
     /**
      * Constructor for LeftPanel.
@@ -53,62 +44,11 @@ public class LeftPanel extends JPanel implements GamePanel {
      */
     public LeftPanel(AppController controller){
         this.c = controller;
-        this.timerController = controller.timerController();
-        this.font = MyFont.PIXEL;
         setLayout(new GridLayout(9, 1));
         setOpaque(false);
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
 
-        //setupComponents();
         bgImg = LoadingImg.Water.loadImage();
-    }
-
-    private void setupComponents(){
-        allComponents = new ArrayList<>();
-        setupLabelWithPanel("Level", levelPanel = new LevelPanel(c));
-        setupLabelWithPanel("Timer",  timerPanel = new TimerPanel(c));
-        setupLabelWithPanel("Keys",  keysPanel = new KeysPanel(c));
-        setupLabelWithPanel("Treasure", treasurePanel = new TreasurePanel(c));
-    }
-
-    private void setupLabelWithPanel(String name, JPanel panel){
-        JLabel label = new JLabel(name);
-        setupLabel(label);
-        panel.setOpaque(false);
-
-        if(panel == timerPanel){
-            timerLabel = new JLabel("0");
-            setupLabel(timerLabel);
-            panel.add(timerLabel);
-        } else if(panel == levelPanel){
-            levelLabel = new JLabel(c.level() + "");
-            setupLabel(levelLabel);
-            panel.add(levelLabel);
-        }
-
-        add(label);
-        add(panel);
-        allComponents.add(label);
-        allComponents.add(panel);
-    }
-
-    private void setupLabel(JLabel label){
-        label.setFont(font.getFont(FONT_SIZE));
-        label.setForeground(Color.white);
-        label.setHorizontalAlignment(SwingConstants.CENTER);
-        label.setVerticalAlignment(SwingConstants.CENTER);
-    }
-
-    /**
-     * Update the panel's components.
-     */
-    @Override
-    public void updatePanel() {
-//        int timeLeft = timerController.getTimeLeft();
-//        timerLabel.setText(timeLeft + "");
-//        int level = c.level();
-//        levelLabel.setText(level + "");
-//        allComponents.forEach(JComponent::repaint);
     }
 
     @Override

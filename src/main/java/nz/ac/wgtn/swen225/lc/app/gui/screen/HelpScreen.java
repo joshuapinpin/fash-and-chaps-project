@@ -1,12 +1,7 @@
 package nz.ac.wgtn.swen225.lc.app.gui.screen;
 
-import nz.ac.wgtn.swen225.lc.app.gui.GamePanel;
-
 import javax.swing.*;
 
-public class HelpScreen extends JPanel implements GamePanel {
-    @Override
-    public void updatePanel() {
+public class HelpScreen extends JPanel {
 
-    }
 }

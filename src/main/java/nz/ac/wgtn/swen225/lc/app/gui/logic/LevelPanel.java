@@ -2,15 +2,13 @@ package nz.ac.wgtn.swen225.lc.app.gui.logic;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
-import nz.ac.wgtn.swen225.lc.app.gui.GamePanel;
-import nz.ac.wgtn.swen225.lc.app.util.MyFont;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class LevelPanel extends JPanel implements GamePanel, LogicPanel {
+public class LevelPanel extends JPanel implements LogicPanel {
     private AppController c;
     private JLabel levelLabel;
 
@@ -28,10 +26,6 @@ public class LevelPanel extends JPanel implements GamePanel, LogicPanel {
         levelLabel.setText(info);
     }
 
-    @Override
-    public void updatePanel() {
-
-    }
 
     @Override
     protected void paintComponent(Graphics g) {

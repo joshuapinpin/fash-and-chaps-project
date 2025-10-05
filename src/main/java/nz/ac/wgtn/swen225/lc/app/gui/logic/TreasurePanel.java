@@ -2,14 +2,13 @@ package nz.ac.wgtn.swen225.lc.app.gui.logic;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
-import nz.ac.wgtn.swen225.lc.app.gui.GamePanel;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class TreasurePanel extends JPanel implements GamePanel {
+public class TreasurePanel extends JPanel implements LogicPanel{
     AppController c;
 
     public TreasurePanel(AppController c){
@@ -20,7 +19,7 @@ public class TreasurePanel extends JPanel implements GamePanel {
 
 
     @Override
-    public void updatePanel() {
+    public void updateLogic(String info) {
 
     }
 
