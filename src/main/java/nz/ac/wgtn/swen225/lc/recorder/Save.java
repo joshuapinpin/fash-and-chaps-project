@@ -2,9 +2,9 @@ package nz.ac.wgtn.swen225.lc.recorder;
 import nz.ac.wgtn.swen225.lc.app.controller.GameController;
 import nz.ac.wgtn.swen225.lc.app.util.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
+import java.io.File;
+import javax.swing.*;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 /**
@@ -17,43 +17,48 @@ import java.util.List;
  * @author Arushi Bhatnagar Stewart
  */
 public class Save{
-    private List<Input> movements;
-    final ObjectMapper mapper;
-    private String filename;
+    private List<Input> movements = new ArrayList<>();
+    final ObjectMapper mapper = new ObjectMapper();;
     /** Method to add the Input objects (the directions/movements)
      * of the character to the movements list.
      *
      */
-    public Save(){
-        movements = new ArrayList<>();
-        mapper = new ObjectMapper();
-    }
+    public Save(){}
     /** */
     public void reset(){
         movements = new ArrayList<>();
-        filename = "";
     }
     /** */
     public void addMovement(Input direction) {
         System.out.println("*DEBUG* Inside of the Recorder Package Now");
         movements.add(direction);
     }
-    /** Returns movement list. */
-    public List<Input> movements() {
-        return movements;
-    }
     /** */
-    public String chooseFile(){
-
+    public File chooseFile(){
+        File myFile = null;
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Save JSON File");
+        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("JSON files", "json"));
+        // parent is null, the dialog is displayed in a default position, centered on the screen
+        int userSelection = fileChooser.showSaveDialog(null);
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            myFile = fileChooser.getSelectedFile();
+            if (!myFile.getName().toLowerCase().endsWith(".json")) {
+                myFile = new File(myFile.getParentFile(), myFile.getName() + ".json");
+            }
+        }
+        assert myFile != null: "File not chosen";
+        return myFile;
     }
     /** This is the core method of this class.
      * In this method, we create a file and write
      * elements in the movement list to the file
      */
-    public void saveToFile(String filename){
+    public void saveToFile(){
         System.out.println("*DEBUG* Inside of the Recorder Package Now");
-        try(OutputStream os = new FileOutputStream(filename);) {
-            mapper.writeValue(os, movements);
+        File playerMovements = chooseFile();
+        try {
+            mapper.writerWithDefaultPrettyPrinter().writeValue(playerMovements, movements);
         } catch(IOException e){
             throw new Error(e);
         }
@@ -65,6 +70,6 @@ public class Save{
         s.addMovement(Input.MOVE_DOWN);
         s.addMovement(Input.MOVE_LEFT);
         s.addMovement(Input.MOVE_RIGHT);
-        s.saveToFile("movements.json");
+        s.saveToFile();
     }
 }
