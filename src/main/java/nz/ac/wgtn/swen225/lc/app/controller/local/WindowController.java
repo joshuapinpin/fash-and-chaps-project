@@ -75,6 +75,8 @@ public class WindowController {
                 if(panel instanceof GamePanel updatable)
                     updatable.updatePanel();
             });
+        updateLevel();
+        updateTimer();
     }
 
     public void updateLevel(){
@@ -202,5 +204,4 @@ public class WindowController {
         leftPanel.add(nameLabel);
         leftPanel.add(panel);
     }
-
 }

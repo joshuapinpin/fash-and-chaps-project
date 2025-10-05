@@ -16,10 +16,6 @@ public class LevelPanel extends JPanel implements GamePanel, LogicPanel {
 
     public LevelPanel(AppController c) {
         this.c = c;
-        setupPanel();
-    }
-
-    private void setupPanel(){
         setOpaque(false);
         levelLabel = new JLabel(c.level() + "");
         AppWindow.formatLabel(levelLabel, AppWindow.FONT_SIZE_H1);
@@ -29,7 +25,7 @@ public class LevelPanel extends JPanel implements GamePanel, LogicPanel {
 
     @Override
     public void updateLogic(String info) {
-
+        levelLabel.setText(info);
     }
 
     @Override

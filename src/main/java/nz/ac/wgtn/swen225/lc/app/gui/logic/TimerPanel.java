@@ -11,16 +11,19 @@ import java.awt.image.BufferedImage;
 
 public class TimerPanel extends JPanel implements GamePanel, LogicPanel {
     private AppController c;
-    private JLabel label;
-    private JPanel panel;
+    private JLabel timerLabel;
 
     public TimerPanel(AppController c){
         this.c = c;
+        setOpaque(false);
+        timerLabel = new JLabel(0 + "");
+        AppWindow.formatLabel(timerLabel, AppWindow.FONT_SIZE_H1);
+        add(timerLabel);
     }
 
     @Override
     public void updateLogic(String info) {
-
+        timerLabel.setText(info);
     }
 
     @Override
