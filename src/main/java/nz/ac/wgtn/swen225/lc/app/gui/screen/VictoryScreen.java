@@ -26,7 +26,7 @@ public class VictoryScreen extends JPanel implements GamePanel {
 //        startButton.addActionListener(e -> controller.showScreen(PlayState.name()));
 //        add(startButton, BorderLayout.SOUTH);
 
-        bgImg = LoadingImg.StartScreen.loadImage();
+        bgImg = LoadingImg.WinScreen.loadImage();
     }
 
     @Override

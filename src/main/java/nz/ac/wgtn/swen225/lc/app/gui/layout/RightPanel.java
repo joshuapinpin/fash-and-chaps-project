@@ -34,11 +34,10 @@ public class RightPanel extends JPanel implements ActionListener, ChangeListener
     /**
      * Constructor for RightPanel.
      * @param controller AppController
-     * @param recorderController RecorderController
      */
-    public RightPanel(AppController controller, RecorderController recorderController){
+    public RightPanel(AppController controller){
         this.controller = controller;
-        this.recorderController = recorderController;
+        this.recorderController = controller.recorderController();
         allComps = new ArrayList<>();
         setupUI();
         setupComponents();

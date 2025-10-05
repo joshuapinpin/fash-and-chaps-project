@@ -43,11 +43,10 @@ public class LeftPanel extends JPanel implements GamePanel {
     /**
      * Constructor for LeftPanel.
      * @param controller AppController
-     * @param timerController TimerController
      */
-    public LeftPanel(AppController controller, TimerController timerController){
+    public LeftPanel(AppController controller){
         this.controller = controller;
-        this.timerController = timerController;
+        this.timerController = controller.timerController();
         this.font = MyFont.PIXEL;
         setLayout(new GridLayout(9, 1));
         setOpaque(false);

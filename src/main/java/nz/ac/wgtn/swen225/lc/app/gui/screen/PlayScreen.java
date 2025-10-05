@@ -1,18 +1,25 @@
 package nz.ac.wgtn.swen225.lc.app.gui.screen;
 
-import nz.ac.wgtn.swen225.lc.app.controller.AppController;
-import nz.ac.wgtn.swen225.lc.app.controller.module.RecorderController;
-import nz.ac.wgtn.swen225.lc.app.controller.local.TimerController;
-import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
-import nz.ac.wgtn.swen225.lc.app.gui.GamePanel;
-import nz.ac.wgtn.swen225.lc.app.gui.game.InfoPanel;
-import nz.ac.wgtn.swen225.lc.app.gui.layout.*;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.util.List;
 
+import javax.swing.BorderFactory;
+import javax.swing.JLayeredPane;
+import javax.swing.JPanel;
+
+import nz.ac.wgtn.swen225.lc.app.controller.AppController;
+import nz.ac.wgtn.swen225.lc.app.controller.local.TimerController;
+import nz.ac.wgtn.swen225.lc.app.controller.module.RecorderController;
+import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
 import static nz.ac.wgtn.swen225.lc.app.gui.AppWindow.MAZE_SIZE;
+import nz.ac.wgtn.swen225.lc.app.gui.GamePanel;
+import nz.ac.wgtn.swen225.lc.app.gui.layout.InfoPanel;
+import nz.ac.wgtn.swen225.lc.app.gui.layout.LeftPanel;
+import nz.ac.wgtn.swen225.lc.app.gui.layout.MenuPanel;
+import nz.ac.wgtn.swen225.lc.app.gui.layout.RightPanel;
+import nz.ac.wgtn.swen225.lc.app.gui.layout.TitlePanel;
 
 public class PlayScreen extends JPanel implements GamePanel {
     private AppController controller;
@@ -34,23 +41,21 @@ public class PlayScreen extends JPanel implements GamePanel {
     /**
      * Constructor to initialize the main application window.
      * @param c AppController
-     * @param tc TimerController
-     * @param rc RecorderController
      */
-    public PlayScreen(AppController c, TimerController tc, RecorderController rc){
+    public PlayScreen(AppController c){
         this.controller = c;
-        this.timerController = tc;
-        this.recorderController = rc;
-        setLayout(new BorderLayout());
-        setupGame();
+        this.timerController = c.timerController();
+        this.recorderController = c.recorderController();
+        //setLayout(new BorderLayout());
+        //setupGame();
     }
 
     private void setupGame(){
         // Main Panels
         titlePanel = new TitlePanel(controller);
         menuPanel = new MenuPanel(controller);
-        leftPanel = new LeftPanel(controller, timerController);
-        rightPanel = new RightPanel(controller, recorderController);
+        leftPanel = new LeftPanel(controller);
+        rightPanel = new RightPanel(controller);
         infoPanel = new InfoPanel(controller);
 
         gamePanel = controller.renderer().getPanel();
@@ -91,9 +96,10 @@ public class PlayScreen extends JPanel implements GamePanel {
 
     @Override
     public void updatePanel() {
-        allPanels.forEach(panel -> {
-            if(panel instanceof GamePanel updatable) updatable.updatePanel();
-        });
-        allPanels.forEach(JPanel::repaint);
+//        allPanels.forEach(panel -> {
+//            if(panel instanceof GamePanel updatable) updatable.updatePanel();
+//        });
+//        allPanels.forEach(JPanel::repaint);
+        repaint();
     }
 }

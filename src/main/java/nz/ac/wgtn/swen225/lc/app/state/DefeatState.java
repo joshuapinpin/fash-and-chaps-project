@@ -4,7 +4,7 @@ import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 
 public record DefeatState(AppController c) implements GameState {
     public DefeatState {
-        c.windowController().window().showScreen(name());
+        c.windowController().changeScreen(name());
         c.timerController().pause();
     }
     public void exit(AppController c) { c.exitGame(); }

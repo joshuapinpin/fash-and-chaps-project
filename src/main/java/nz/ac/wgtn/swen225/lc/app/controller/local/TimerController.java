@@ -67,7 +67,7 @@ public class TimerController implements ActionListener {
             timer.stop();
             controller.defeat();
         }
-        controller.windowController().window().updateWindow();
+        controller.windowController().updateWindow();
     }
 
     /**

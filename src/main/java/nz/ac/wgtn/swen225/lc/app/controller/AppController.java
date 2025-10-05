@@ -56,8 +56,7 @@ public class AppController {
         domainController = new DomainController(this);
         rendererController = new RendererController(this, domainController);
         recorderController = new RecorderController(this, timerController);
-        windowController = new WindowController(this, new AppWindow(this, inputController,
-                timerController, recorderController));
+        windowController = new WindowController(this);
     }
 
     // ========== Game Controller Implementation ==========
@@ -88,7 +87,7 @@ public class AppController {
 
         // Update Maze and window after handling input
         rendererController.updateMaze(domainController);
-        windowController.window().updateWindow();
+        windowController.updateWindow();
     }
 
     /**
@@ -109,7 +108,7 @@ public class AppController {
         domainController.initialiseDomain(level);
         recorderController.stopRecording();
         this.level = level;
-        windowController().window().updateWindow();
+        windowController().updateWindow();
         System.out.println("Starting New Game at Level " + level);
     }
 
@@ -212,8 +211,9 @@ public class AppController {
     public Renderer renderer() {return rendererController.renderer();}
 
     // Controllers
-    public WindowController windowController() {return windowController; }
+    public InputController inputController() {return inputController; }
     public TimerController timerController() {return timerController; }
+    public WindowController windowController() {return windowController; }
     public RecorderController recorderController() {return recorderController; }
     public DomainController domainController() {return domainController;}
     public RendererController rendererController() {return rendererController;}

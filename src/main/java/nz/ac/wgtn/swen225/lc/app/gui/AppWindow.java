@@ -29,7 +29,7 @@ public class AppWindow extends JFrame {
     public static final int HEADER_HEIGHT = SQUARE_SIZE * 2;
 
     // Controllers
-    private AppController controller; // Reference to AppController
+    private final AppController c; // Reference to AppController
     private InputController inputController;
     private TimerController timerController;
     private RecorderController recorderController;
@@ -47,17 +47,12 @@ public class AppWindow extends JFrame {
     /**
      * Constructor to initialize the main application window.
      * @param controller
-     * @param inputController
      */
-    public AppWindow(AppController controller, InputController inputController,
-                     TimerController timerController, RecorderController recorderController) {
+    public AppWindow(AppController controller) {
         // TODO: Set up window, menus, status bar, and embed MazePanel
         super("Fash and Chaps :D");
-        this.controller = controller;
-        this.inputController = inputController;
-        this.timerController = timerController;
-        this.recorderController = recorderController;
-        setupScreens();
+        this.c = controller;
+        //setupScreens();
         setupWindow();
     }
     // ===== SETUP METHODS =====
@@ -67,10 +62,10 @@ public class AppWindow extends JFrame {
         mainPanel = new JPanel(cardLayout);
 
         // Initialize all screen panels
-        startScreenPanel = new StartScreen(controller);
-        playScreenPanel = new PlayScreen(controller, timerController, recorderController);
-        victoryScreenPanel = new VictoryScreen(controller);
-        defeatScreenPanel = new DefeatScreen(controller);
+        startScreenPanel = new StartScreen(c);
+        playScreenPanel = new PlayScreen(c);
+        victoryScreenPanel = new VictoryScreen(c);
+        defeatScreenPanel = new DefeatScreen(c);
         allPanels = List.of(startScreenPanel, playScreenPanel, victoryScreenPanel, defeatScreenPanel);
 
         // Add all panels to the main panel with a unique name for each
@@ -82,7 +77,7 @@ public class AppWindow extends JFrame {
     }
 
     private void setupWindow(){
-        addKeyListener(inputController);
+        addKeyListener(c.inputController());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
         pack();
@@ -115,8 +110,8 @@ public class AppWindow extends JFrame {
      * Show Info dialog
      */
     public void displayInfo(boolean doShow) {
-        if(doShow) playScreenPanel.showInfo();
-        else playScreenPanel.hideInfo();
+//        if(doShow) playScreenPanel.showInfo();
+//        else playScreenPanel.hideInfo();
     }
 
     /**

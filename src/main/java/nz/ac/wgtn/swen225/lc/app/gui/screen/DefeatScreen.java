@@ -24,7 +24,7 @@ public class DefeatScreen extends JPanel implements GamePanel {
         startButton.addActionListener(e -> controller.restartLevel());
         add(startButton, BorderLayout.SOUTH);
 
-        bgImg = LoadingImg.StartScreen.loadImage();
+        bgImg = LoadingImg.LoseScreen.loadImage();
     }
     @Override
     public void updatePanel() {
