@@ -21,7 +21,6 @@ public class Play {
     private static int pos; // count for step by step playing
     final ObjectMapper mapper;
     private static List<Input> movements;
-    private InputStream fileStream;
     /** */
     public Play(){
         movements = new ArrayList<>();
@@ -37,18 +36,21 @@ public class Play {
         speed = s;
     }
     /** */
-    public void LoadingFile(String filename){
-        try(InputStream is = new FileInputStream(filename);){
-            // putting a bracket in front of filename means it looks for file from root of classpath
-            // InputStream object used to read file contents
-        } catch (IOException e) {throw new RuntimeException("Error loading the recording: " + filename, e);}
+    public InputStream LoadingFile(String filename){
+        InputStream myFile = null;
+        try(InputStream is = new FileInputStream(filename);){ myFile = is; }
+        catch (IOException e) {throw new RuntimeException("Error loading the recording: " + filename, e);}
+        assert myFile != null: "File not loaded";
+        return myFile;
     }
     /**
      * This methods reads the list of movements from the json file
      * and assigns it to our movement arraylist field.
+     * @param
+     * @return new Exit instance
      */
     private List<Input> getData(String filename) {
-        LoadingFile(filename);
+        InputStream fileStream = LoadingFile(filename);
         /*
         using new TypeReference<List<MyObject>>() {} to create
         an anonymous subclass of TypeReference,
