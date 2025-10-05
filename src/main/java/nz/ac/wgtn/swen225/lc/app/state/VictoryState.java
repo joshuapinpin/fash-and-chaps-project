@@ -1,12 +1,15 @@
 package nz.ac.wgtn.swen225.lc.app.state;
 
-import nz.ac.wgtn.swen225.lc.app.controller.GameController;
-import nz.ac.wgtn.swen225.lc.app.controller.TimerController;
+import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 
-public record VictoryState(TimerController timerController) implements GameState {
+public record VictoryState(AppController c) implements GameState {
     public VictoryState{
-        timerController.stopTimer();
+        c.window().showScreen(name());
+        c.timerController().pause();
     }
-    public void exit(GameController c) { c.exitGame(); }
-    public void startNewGame(GameController c, int level) { c.startNewGame(level); }
+    public void exit(AppController c) { c.exitGame(); }
+    public void startNewGame(AppController c, int level) { c.startNewGame(level); }
+
+    public static String name(){return "VictoryState";}
+
 }

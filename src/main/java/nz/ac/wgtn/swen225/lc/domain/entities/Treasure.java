@@ -1,6 +1,9 @@
 package nz.ac.wgtn.swen225.lc.domain.entities;
 
+import nz.ac.wgtn.swen225.lc.domain.GameObserver;
 import nz.ac.wgtn.swen225.lc.domain.Player;
+
+import java.util.function.Consumer;
 
 /**
  * Treasure class representing a treasure entity in the game
@@ -27,9 +30,10 @@ public class Treasure implements Entity {
      * Method to handle player interaction with the treasure
      * To be able to collect the treasure
      * @param p player interacting with the treasure
+     * @return Consumer to notify observers of treasure collection
      */
     @Override
-    public void onInteract(Player p){
+    public Consumer<GameObserver> onInteract(Player p){
         if(p == null){
             throw new IllegalArgumentException("Player cannot be null");
         }
@@ -43,6 +47,8 @@ public class Treasure implements Entity {
         assert p.getTreasuresCollected() == oldSize + 1;
         assert p.getTreasuresCollected() >= 0;
 
+        return observer -> observer.onTreasureCollected();
+
     }
 
     /**
@@ -55,5 +61,15 @@ public class Treasure implements Entity {
         if(obj == null) return false;
         if(this.getClass() != obj.getClass()) return false;
         return true; // All treasures are considered equal
+    }
+
+    /**
+     * Accept method for visitor pattern
+     * @param visitor the visitor to accept
+     * @return result of visitor's visitTreasure method
+     */
+    @Override
+    public <T> T accept(EntityVisitor<T> visitor) {
+        return visitor.visitTreasure(this);
     }
 }

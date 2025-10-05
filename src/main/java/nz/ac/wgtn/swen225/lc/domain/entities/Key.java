@@ -1,6 +1,9 @@
 package nz.ac.wgtn.swen225.lc.domain.entities;
 
+import nz.ac.wgtn.swen225.lc.domain.GameObserver;
 import nz.ac.wgtn.swen225.lc.domain.Player;
+
+import java.util.function.Consumer;
 
 /**
  * Key class representing a key entity in the game
@@ -32,15 +35,17 @@ public class Key implements Entity {
      * Method to handle player interaction with the key
      * To be able to collect the key
      * @param p player interacting with the key
+     * @return Consumer to notify observers of key collection
      */
     @Override
-    public void onInteract(Player p){
+    public Consumer<GameObserver> onInteract(Player p){
         if(p == null){
             throw new IllegalArgumentException("Player cannot be null");
         }
         p.addKey(this);
 
         assert p.getKeys().contains(this);
+        return observer -> observer.onKeyCollected(this);
     }
 
     /**
@@ -63,5 +68,15 @@ public class Key implements Entity {
         if(this.getClass() != obj.getClass()) return false;
         Key key = (Key) obj;
         return this.keyColor == key.keyColor;
+    }
+
+    /**
+     * Accept method for visitor pattern
+     * @param visitor the visitor to accept
+     * @return result of visitor's visitKey method
+     */
+    @Override
+    public <T> T accept(EntityVisitor<T> visitor) {
+        return visitor.visitKey(this);
     }
 }

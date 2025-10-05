@@ -15,13 +15,14 @@ import java.util.List;
  * @author Hayley Far
  */
 public class Player{
-    //private static final Player INSTANCE = new Player(); //singleton instance
 
     private List<Key> keys; //collection of keys the player has
     private Position pos; //current position of the player
     private Direction direction = Direction.DOWN; //current direction the player is facing, enum Direction
     private int totalTreasures; //total number of treasures in the maze level
     private int treasuresCollected; //number of treasures collected by player
+
+    private PlayerState state = new AliveState();
 
     /**
      * Constructor for player with specified starting position
@@ -54,39 +55,87 @@ public class Player{
         return new Player();
     }
 
+    public void move(Direction d){state.move(d);}
+    public void collectTreasure(){state.collectTreasure();}
+    public void addKey(Key k){state.addKey(k);}
+    public void die(){state = new DeadState();}
+    public boolean isAlive(){return state.isAlive();}
+
     /**
-     * Method to move the player in a specified direction
-     * Updates position and direction accordingly
-     * @param direction direction to move in
+     * State pattern for player states: Alive and Dead
+     * Defines behavior for each state
      */
-    public void move(Direction direction){
-        if(direction == null){
-            throw new IllegalArgumentException("Direction cannot be null");
-        }
-        this.direction = direction;
-        this.pos = direction.apply(this.pos); //strategy pattern via enum
+    private interface PlayerState{
+        void move(Direction d);
+        void collectTreasure();
+        void addKey(Key k);
+        boolean isAlive();
     }
 
     /**
-     * Method to add a key to the player's collection
-     * @param k key to add
+     * Alive state implementation
+     * Player can move, collect treasures, and add keys
      */
-    public void addKey(Key k){
-        if(k == null){
-            throw new IllegalArgumentException("Key cannot be null");
+    protected class AliveState implements PlayerState{
+        /**
+         * Method to move the player in a specified direction
+         * Updates position and direction accordingly
+         * @param direction direction to move in
+         */
+        @Override
+        public void move(Direction direction){
+            if(direction == null){
+                throw new IllegalArgumentException("Direction cannot be null");
+            }
+            Player.this.setDirection(direction);
+            Player.this.setPos(direction.apply(Player.this.getPos())); //strategy pattern via enum
         }
-        keys.add(k);
-        assert keys.contains(k) : "Key should have been added to collection";
+
+        /**
+         * Method to add a key to the player's collection
+         * @param k key to add
+         */
+        @Override
+        public void addKey(Key k){
+            if(k == null){
+                throw new IllegalArgumentException("Key cannot be null");
+            }
+            keys.add(k);
+            assert keys.contains(k) : "Key should have been added to collection";
+        }
+
+        /**
+         * Method to decrement the treasure count when a treasure is collected
+         */
+        @Override
+        public void collectTreasure(){
+            if(treasuresCollected < totalTreasures){
+                treasuresCollected++;
+            }
+            assert treasuresCollected >= 0 : "Treasures left cannot be negative";
+        }
+
+        /**
+         * Check if player is alive
+         * @return true if alive, false if dead
+         */
+        @Override
+        public boolean isAlive(){return true;}
     }
 
     /**
-     * Method to decrement the treasure count when a treasure is collected
+     * Dead state implementation
+     * Player cannot move, collect treasures, or add keys
      */
-    public void collectTreasure(){
-        if(treasuresCollected < totalTreasures){
-            treasuresCollected++;
-        }
-        assert treasuresCollected >= 0 : "Treasures left cannot be negative";
+    protected class DeadState implements PlayerState{
+        @Override
+        public void move(Direction direction){}
+        @Override
+        public void addKey(Key k){}
+        @Override
+        public void collectTreasure(){}
+        @Override
+        public boolean isAlive(){return false;}
     }
 
     /**
@@ -121,6 +170,12 @@ public class Player{
     public Position getPos(){
         return pos;
     }
+
+    /**
+     * Get the current state of the player
+     * @return current player state
+     */
+    public PlayerState getState(){return state;}
 
     /**
      * Get the current direction the player is facing

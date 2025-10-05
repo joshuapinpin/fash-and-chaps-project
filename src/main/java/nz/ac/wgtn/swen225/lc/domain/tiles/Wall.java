@@ -1,10 +1,12 @@
 package nz.ac.wgtn.swen225.lc.domain.tiles;
 
+import nz.ac.wgtn.swen225.lc.domain.GameObserver;
 import nz.ac.wgtn.swen225.lc.domain.Player;
 import nz.ac.wgtn.swen225.lc.domain.Position;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * Wall class representing a wall tile in the game
@@ -49,9 +51,12 @@ public class Wall extends Tile {
      * Method to handle player entering the wall tile
      * Wall is impassable, so this method has no implementation
      * @param p player attempting to enter the wall tile
+     * @return empty Consumer as wall cannot be entered
      */
     @Override
-    public void onEnter(Player p){}
+    public Consumer<GameObserver> onEnter(Player p){
+        return observer->{};
+    }
 
     /**
      * Override equals method to compare wall tiles based on position
@@ -65,5 +70,15 @@ public class Wall extends Tile {
         if(this.getClass() != obj.getClass()) return false;
         Wall wall = (Wall) obj;
         return this.getPos().equals(wall.getPos());
+    }
+
+    /**
+     * Accept method for visitor pattern
+     * @param visitor TileVisitor instance
+     * @return result of visitor's visitWall method
+     */
+    @Override
+    public <T> T accept(TileVisitor<T> visitor) {
+        return visitor.visitWall(this);
     }
 }

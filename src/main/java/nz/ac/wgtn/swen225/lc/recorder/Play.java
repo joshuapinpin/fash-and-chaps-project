@@ -3,9 +3,7 @@ import nz.ac.wgtn.swen225.lc.app.controller.*;
 import nz.ac.wgtn.swen225.lc.app.util.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.FileInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,41 +14,25 @@ import java.util.List;
  *
  * @author Arushi Bhatnagar Stewart
  */
+
+// use game controller handle input?
 public class Play {
     private static int speed;
     private static int pos; // count for step by step playing
     final ObjectMapper mapper;
     private static List<Input> movements;
-    /** */
+
     public Play(){
         movements = new ArrayList<>();
         mapper = new ObjectMapper();
         pos = 0;
         speed = 1;
     }
-    /** */
-    public void setSpeed(int s) {
-        System.out.println("*DEBUG* Inside of the Recorder Package Now");
-        // speed needs to be 1-6
-        assert s > 0 : "Speed must me greater than zero";
-        speed = s;
-    }
-    /** */
-    public InputStream LoadingFile(String filename){
-        InputStream myFile = null;
-        try(InputStream is = new FileInputStream(filename);){ myFile = is; }
-        catch (IOException e) {throw new RuntimeException("Error loading the recording: " + filename, e);}
-        assert myFile != null: "File not loaded";
-        return myFile;
-    }
     /**
      * This methods reads the list of movements from the json file
      * and assigns it to our movement arraylist field.
-     * @param
-     * @return new Exit instance
      */
-    private List<Input> getData(String filename) {
-        InputStream fileStream = LoadingFile(filename);
+    private List<Input> getData() {
         /*
         using new TypeReference<List<MyObject>>() {} to create
         an anonymous subclass of TypeReference,
@@ -58,7 +40,7 @@ public class Play {
         in its class signature. Can't do List.class.
          */
         try {
-            movements = mapper.readValue(fileStream, new TypeReference<List<Input>>() {
+            movements = mapper.readValue(new File("movements.json"), new TypeReference<List<Input>>() {
             });
         } catch (IOException e) {
             // rethrows checked exception as error
@@ -66,18 +48,25 @@ public class Play {
         }
         return movements;
     }
+
+    public void setSpeed(int s) {
+        System.out.println("*DEBUG* Inside of the Recorder Package Now");
+        // speed needs to be 1-6
+        assert s > 0 : "Speed must me greater than zero";
+        speed = s;
+    }
+
     /**
      * Very basic implementation of step by step. Reads one input
      * from the list, everytime method is called.
      * Need to use the observer pattern.
      */
-    public boolean stepByStep(GameController gm, String filename) {
-        System.out.println("*DEBUG* Inside of the Recorder Package Now");
+    public boolean stepByStep(AppController gm) {
         // make the method return true while we still have positions to go
         if(pos == movements.size()){pos = 0; return false;}
-        getData(filename);
+        System.out.println("*DEBUG* Inside of the Recorder Package Now");
         // call in case data has changed
-        getData(filename);
+        getData();
         if (movements.isEmpty()) throw new IllegalArgumentException("Character has not moved yet");
         Input direction = movements.get(pos);
         // pass direction to app method
@@ -87,14 +76,15 @@ public class Play {
         pos++;
         return true;
     }
+
     /**
      * Very basic implementation. In one iteration, reads all the frames
      * Currently, doesn't implement speed.
      * Need to use the observer pattern.
      */
-    public void autoPlay(GameController gm, String filename) {
+    public void autoPlay(AppController gm) {
         System.out.println("*DEBUG* Inside of the Recorder Package Now");
-        getData(filename);
+        getData();
         if (movements.isEmpty()) throw new IllegalArgumentException("Character has not moved yet");
         for (int frame = 0; frame < movements.size(); frame++) {
             System.out.println("autoplay position: " + frame);
@@ -106,12 +96,12 @@ public class Play {
     public static void main(String[] args) {
         Play p = new Play();
         p.setSpeed(2);
-        GameController x = GameController.of();
-        p.stepByStep(x, "movements.json");
-        p.stepByStep(x, "movements.json");
-        p.stepByStep(x, "movements.json");
-        p.stepByStep(x, "movements.json");
-        p.autoPlay(x, "movements.json");
+        AppController x = AppController.of();
+        p.stepByStep(x);
+        p.stepByStep(x);
+        p.stepByStep(x);
+        p.stepByStep(x);
+        p.autoPlay(x);
     }
 }
 

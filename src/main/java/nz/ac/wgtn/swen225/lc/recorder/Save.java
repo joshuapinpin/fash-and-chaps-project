@@ -1,5 +1,4 @@
 package nz.ac.wgtn.swen225.lc.recorder;
-import nz.ac.wgtn.swen225.lc.app.controller.GameController;
 import nz.ac.wgtn.swen225.lc.app.util.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;

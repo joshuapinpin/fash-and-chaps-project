@@ -1,6 +1,9 @@
 package nz.ac.wgtn.swen225.lc.domain.entities;
 
+import nz.ac.wgtn.swen225.lc.domain.GameObserver;
 import nz.ac.wgtn.swen225.lc.domain.Player;
+
+import java.util.function.Consumer;
 
 /**
  * ExitLock class representing the exit lock entity in the game
@@ -29,9 +32,10 @@ public class ExitLock implements Entity {
      * Method to handle player interaction with the exit lock
      * To be able to pass through if all treasures are collected
      * @param p player interacting with the exit lock
+     * @return Consumer to notify observers of exit lock state change (if any, empty for now)
      */
     @Override
-    public void onInteract(Player p){
+    public Consumer<GameObserver> onInteract(Player p){
         if(p == null){
             throw new IllegalArgumentException("Player cannot be null");
         }
@@ -40,6 +44,7 @@ public class ExitLock implements Entity {
             assert p.getTreasuresCollected() == p.getTotalTreasures() : "Player should have collected all treasures";
             isPassable = true;
         }
+        return observer -> {}; // No notification needed when exit lock becomes passable
     }
 
     /**
@@ -76,5 +81,16 @@ public class ExitLock implements Entity {
         if (this.getClass() != obj.getClass()) return false;
         ExitLock exitLock = (ExitLock) obj;
         return this.isPassable == exitLock.isPassable;
+    }
+
+    /**
+     * Accept method for visitor pattern
+     * @param visitor TileVisitor instance
+     * @param <T> return type of the visitor
+     * @return result of visitor's visitExit method
+     */
+    @Override
+    public <T> T accept(EntityVisitor<T> visitor) {
+        return visitor.visitExitLock(this);
     }
 }

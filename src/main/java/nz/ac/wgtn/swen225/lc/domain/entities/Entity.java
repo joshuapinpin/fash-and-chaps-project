@@ -1,18 +1,23 @@
 package nz.ac.wgtn.swen225.lc.domain.entities;
 
+import nz.ac.wgtn.swen225.lc.domain.GameObserver;
 import nz.ac.wgtn.swen225.lc.domain.Player;
+
+import java.util.function.Consumer;
 
 /**
  * Represents an interactable entity in the maze
  * e.g. Key, Door, ExitLock and Treasure
  * Each entity is to define what happens when a player interacts with it
+ * @author Hayley Far
  */
 public interface Entity {
     /**
      * Defines the interaction between the player and the entity
      * @param player the player interacting with the entity
+     * @return a Consumer to notify observers of the interaction
      */
-    void onInteract(Player player);
+    Consumer<GameObserver> onInteract(Player player);
 
     /**
      * Defines whether the entity should be removed from the tile after interaction
@@ -27,4 +32,12 @@ public interface Entity {
      * @return true if accessible, false otherwise
      */
     default boolean canInteract(Player p){return true;}
+
+    /**
+     * Accept a visitor to perform operations based on the entity type
+     * @param visitor the visitor to accept
+     * @param <T> the return type of the visitor's operation
+     * @return the result of the visitor's operation
+     */
+    <T> T accept(EntityVisitor<T> visitor);
 }

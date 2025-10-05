@@ -1,12 +1,15 @@
 package nz.ac.wgtn.swen225.lc.app.state;
 
-import nz.ac.wgtn.swen225.lc.app.controller.GameController;
+import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 import nz.ac.wgtn.swen225.lc.app.util.Input;
 
-import java.util.HashMap;
-
 public interface GameState{
-    default void handleInput(GameController controller, Input input) {
+    /**
+     * Handles input based on the current game state.
+     * @param controller AppController
+     * @param input Input
+     */
+    default void handleInput(AppController controller, Input input) {
         switch(input){
             case MOVE_UP -> moveUp(controller);
             case MOVE_DOWN -> moveDown(controller);
@@ -22,15 +25,14 @@ public interface GameState{
             default -> throw new IllegalArgumentException("Unexpected input: " + input);
         }
     }
-
-    default void moveUp(GameController c){throw new UnsupportedOperationException();}
-    default void moveDown(GameController c){throw new UnsupportedOperationException();}
-    default void moveLeft(GameController c){throw new UnsupportedOperationException();}
-    default void moveRight(GameController c){throw new UnsupportedOperationException();}
-    default void pause(GameController c){throw new UnsupportedOperationException();}
-    default void resume(GameController c){throw new UnsupportedOperationException();}
-    default void save(GameController c){throw new UnsupportedOperationException();}
-    default void startNewGame(GameController c, int level){throw new UnsupportedOperationException();}
-    default void exit(GameController c){throw new UnsupportedOperationException();}
-    default void continueGame(GameController c){throw new UnsupportedOperationException();}
+    default void moveUp(AppController c){throw new UnsupportedOperationException();}
+    default void moveDown(AppController c){throw new UnsupportedOperationException();}
+    default void moveLeft(AppController c){throw new UnsupportedOperationException();}
+    default void moveRight(AppController c){throw new UnsupportedOperationException();}
+    default void pause(AppController c){throw new UnsupportedOperationException();}
+    default void resume(AppController c){throw new UnsupportedOperationException();}
+    default void save(AppController c){throw new UnsupportedOperationException();}
+    default void startNewGame(AppController c, int level){throw new UnsupportedOperationException();}
+    default void exit(AppController c){throw new UnsupportedOperationException();}
+    default void continueGame(AppController c){throw new UnsupportedOperationException();}
 }

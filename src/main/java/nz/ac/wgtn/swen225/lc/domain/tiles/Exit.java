@@ -1,8 +1,10 @@
 package nz.ac.wgtn.swen225.lc.domain.tiles;
 
-import nz.ac.wgtn.swen225.lc.app.controller.GameController;
+import nz.ac.wgtn.swen225.lc.domain.GameObserver;
 import nz.ac.wgtn.swen225.lc.domain.Player;
 import nz.ac.wgtn.swen225.lc.domain.Position;
+
+import java.util.function.Consumer;
 
 /**
  * Exit class representing the exit tile in the game
@@ -35,24 +37,14 @@ public class Exit extends Tile {
      * Method to handle player entering the exit tile
      * Triggers level completion when the player enters this tile
      * @param p player entering the exit tile
+     * @return Consumer to notify observers of level completion
      */
     @Override
-    public void onEnter(Player p){
+    public Consumer<GameObserver> onEnter(Player p){
         if(p == null){
             throw new IllegalArgumentException("Player cannot be null");
         }
-        //Drafted but need more information
-        //Need game controller? and to find what level we on
-        /**
-        int nextLevel = currentLevel + 1;
-        if(nextLevel > MAXLEVELS){
-            //change to victory state
-            //GameController.exitGame();
-        } else {
-            //GameController.startNewGame(nextLevel);
-        }
-        //GameController.startNewGame();**/
-        throw new UnsupportedOperationException();
+        return observer -> observer.onLevelComplete();
     }
 
     /**
@@ -67,5 +59,16 @@ public class Exit extends Tile {
         if(this.getClass() != obj.getClass()) return false;
         Exit exit = (Exit) obj;
         return this.getPos().equals(exit.getPos());
+    }
+
+    /**
+     * Accept method for visitor pattern
+     * @param visitor TileVisitor instance
+     * @param <T> return type of the visitor
+     * @return result of visitor's visitFree method
+     */
+    @Override
+    public <T> T accept(TileVisitor<T> visitor) {
+        return visitor.visitExit(this);
     }
 }
