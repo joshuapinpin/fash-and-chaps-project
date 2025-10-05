@@ -14,7 +14,6 @@ public enum LoadingImg {
     PlayerDown("imgs/playerDown.png"),
     PlayerLeft("imgs/playerLeft.png"),
     PlayerRight("imgs/playerRight.png"),
-
     enemyCrab("imgs/enemyCrab.png"),
 
     Treasure("imgs/treasure.png"),
@@ -40,14 +39,14 @@ public enum LoadingImg {
     LoseScreen("imgs/loseScreen.png"),
     WinScreen("imgs/winScreen.png"),
     Background("imgs/background.png");
-    
+
     private final String filename;
     private BufferedImage image;
-
-    /*
-    *   Constructor for the enum
-    *   Loads and saves the image to an enum
-    *   @param filename: name of the image file
+    
+    /**
+     * Constructor for the enum
+     * Loads and saves the image to an enum
+     * @param filename: name of the image file
      */
     LoadingImg(String filename){
         this.filename = filename;
@@ -59,8 +58,9 @@ public enum LoadingImg {
         } catch(IOException e){ throw new RuntimeException("Error loading the image: " + filename, e);}
     }
 
-    /*
-     * Gets the buffered image
+    /**
+     * Gets the image of enum
+     * @return - buffered image
      */
     public BufferedImage loadImage() {
         return image;
