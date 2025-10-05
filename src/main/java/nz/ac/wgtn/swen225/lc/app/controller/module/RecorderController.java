@@ -23,8 +23,8 @@ public class RecorderController {
     public RecorderController(AppController controller, TimerController timerController) {
         this.controller = controller;
         this.timerController = timerController;
-        play = new Play();
-        save = new Save();
+        play = Play.of();
+        save = Save.of();
     }
 
     /**
@@ -95,7 +95,7 @@ public class RecorderController {
      */
     public void addMovement(Input dir){
         if(!isRecording) return;
-        // save.addMovement(dir);
+        save.addMovement(dir, controller);
     }
 
 
