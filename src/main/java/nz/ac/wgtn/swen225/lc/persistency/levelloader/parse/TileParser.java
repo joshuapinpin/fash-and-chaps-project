@@ -23,7 +23,7 @@ abstract class TileParser<T extends Tile> {
 
     /**
      * Creates a TileParser given only a symbol to parse - therefore,
-     * parse(Levelmaker,String,Position) must be overridden for parsing to occur.
+     * parse(LevelMaker,String,Position) must be overridden for parsing to occur.
      * @param symbol - the String symbol.
      */
     public TileParser(String symbol) {
