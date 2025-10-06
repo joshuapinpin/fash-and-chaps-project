@@ -27,6 +27,12 @@ public class DomainController implements Controller {
         initialiseDomain(1);
     }
 
+
+    @Override
+    public void atNewGame(){
+        initialiseDomain(c.persistencyController().level());
+    }
+
     /**
      * Initialises the domain model for the specified level
      * @param level
@@ -56,10 +62,6 @@ public class DomainController implements Controller {
         });
     }
 
-    @Override
-    public void atNewGame(){
-
-    }
 
     /**
      * Moves the player in the specified direction

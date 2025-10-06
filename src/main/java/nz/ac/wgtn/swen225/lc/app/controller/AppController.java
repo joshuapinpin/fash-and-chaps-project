@@ -117,8 +117,7 @@ public class AppController {
         controllers.forEach(Controller::atNewGame);
 
         //timerController.restartTimer(level);
-
-        domainController.initialiseDomain(level);
+        //domainController.initialiseDomain(level);
         recorderController.stopRecording();
         windowController.displayInfo(false);
         windowController.initialiseWindow();
