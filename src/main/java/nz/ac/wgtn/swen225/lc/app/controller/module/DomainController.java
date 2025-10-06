@@ -48,6 +48,12 @@ public class DomainController {
             @Override public void onLevelComplete() {
                 c.victory();
             }
+            @Override public void onPlayerDrown(Player player){
+                c.defeat();
+            }
+            @Override public void onPlayerDie(Player player){
+                c.defeat();
+            }
         });
     }
 
