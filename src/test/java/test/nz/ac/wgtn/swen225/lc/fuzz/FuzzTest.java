@@ -9,11 +9,12 @@ import org.junit.jupiter.api.Timeout;
 import nz.ac.wgtn.swen225.lc.app.util.Input;
 
 import java.awt.*; // GraphicsEnvironment used to detect headless CI environments
-import java.security.SecureRandom; // Strong RNG; not seeded below for reproducibility (see comment in runFuzzer)
-import java.time.Duration;
 import java.time.Instant;
+import java.time.Duration; // used for level visitation timing
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Fuzz tests for the application.
@@ -33,22 +34,17 @@ public class FuzzTest {
     @Test
     @Timeout(60)  // max 1 min runtime
     public void testLevel1() {
-        // In CI containers there is no GUI display (no X11/Wayland), so any attempt to create Swing windows
-        // will throw java.awt.HeadlessException. This assumption skips the test in that case to keep the
-        // pipeline green while still allowing the test to run locally with a desktop.
         Assumptions.assumeFalse(GraphicsEnvironment.isHeadless(), "Headless CI - skipping GUI fuzzer");
-
-        // Run the fuzzer against level 1 with a small time budget to keep tests fast and deterministic enough
-        // for CI stability.
-        runFuzzer(1, 15_000); // ~15 seconds budget inside 60s test timeout
+        runFuzzer(1);
     }
 
-// Disabled level 2 for Integration Day as level 2 has not been implemented yet.
-//    @Test
-//    @Timeout(60)
-//    public void testLevel2() {
-//        runFuzzer(2, 15_000);
-//    }
+    @Test
+    @Timeout(60)
+    public void testLevel2() {
+        Assumptions.assumeFalse(GraphicsEnvironment.isHeadless(), "Headless CI - skipping GUI fuzzer");
+        runFuzzer(2);
+    }
+
 
     /**
      * Core fuzzing loop: starts target level then randomly feeds inputs through the public controller API.
@@ -61,60 +57,112 @@ public class FuzzTest {
      * No assertions: any thrown exception other than UnsupportedOperationException / IllegalArgumentException
      * (which can be legitimate for unsupported inputs in states) and is considered a finding.
      */
-    private void runFuzzer(int level, long durationMillis) {
-        // A seed value is captured (optionally override via -Dfuzz.seed) to allow reproducibility when needed.
-        // Note: The RNG below uses SecureRandom(), which ignores the seed. To reproduce a run exactly,
-        // replace SecureRandom with new Random(seed). Keeping SecureRandom favors input diversity over replay.
+    private void runFuzzer(int initialLevel) {
+        // Configurable duration (default 15s) via -Dfuzz.ms=15000 ; seed via -Dfuzz.seed ; log sequence via -Dfuzz.logSequence
+        long durationMillis = Long.getLong("fuzz.ms", 15_000L);
         long seed = Long.getLong("fuzz.seed", System.currentTimeMillis());
-        Random rnd = new SecureRandom(); // SecureRandom for better distribution; could switch to new Random(seed)
+        Random rnd = new Random(seed); // reproducible when seed provided
+        boolean logSeed = Boolean.getBoolean("fuzz.logSeed");
+        if(logSeed) System.out.println("[FUZZ] seed="+seed+" durationMs="+durationMillis+" startLevel="+initialLevel);
 
-        // Optional logging of the seed to stdout so that a failing run can be investigated locally.
-        boolean showSeed = Boolean.getBoolean("fuzz.logSeed");
-        if(showSeed) System.out.println("[FUZZ] LEVEL="+level+" SEED="+seed);
-
-        // Build a controller via the regular factory. This path initializes the GUI in non-headless mode, which
-        // is why the headless assumption above is required to prevent failures on CI.
         AppController controller = AppController.of();
-        controller.startNewGame(level); // Ensure a clean game state before fuzzing begins.
+        controller.startNewGame(initialLevel);
 
-        Instant end = Instant.now().plus(Duration.ofMillis(durationMillis));
-
-        // Input pools
+        // Action buckets
         List<Input> movement = List.of(Input.MOVE_UP, Input.MOVE_DOWN, Input.MOVE_LEFT, Input.MOVE_RIGHT);
         List<Input> meta = List.of(Input.PAUSE, Input.RESUME, Input.CONTINUE, Input.SAVE);
         List<Input> levelLoads = List.of(Input.LOAD_LEVEL_1, Input.LOAD_LEVEL_2);
+    boolean allowExit = Boolean.getBoolean("fuzz.allowExit");
+    List<Input> rare = allowExit ? List.of(Input.SAVE, Input.EXIT) : List.of(Input.SAVE); // avoid killing JVM early
 
-        // The main loop biases actions by bucket percentage:
-        //  - 0..69: movement (~70%)
-        //  - 70..84: meta actions (~15%)
-        //  - 85..94: level load actions (~10%)
-        //  - 95..99: rare action placeholder (~5%)
-        int moves = 0;
-        while(Instant.now().isBefore(end)) {
-            Input next;
-            int bucket = rnd.nextInt(100);
-            if(bucket < 70) {
-                next = movement.get(rnd.nextInt(movement.size()));
-            } else if(bucket < 85) {
-                next = meta.get(rnd.nextInt(meta.size()));
-            } else if(bucket < 95) {
-                next = levelLoads.get(rnd.nextInt(levelLoads.size()));
-            } else {
-                next = Input.SAVE; // placeholder for rarer action bucket
+        List<Input> executed = new ArrayList<>(1024); // store sequence for reproduction
+
+    Instant end = Instant.now().plusMillis(durationMillis);
+    int moves = 0;
+    boolean sawLevel1 = (initialLevel == 1);
+    boolean sawLevel2 = (initialLevel == 2);
+    boolean slowMode = Boolean.getBoolean("fuzz.slow");
+        try {
+            while(Instant.now().isBefore(end)) {
+                // If victory/defeat reached, restart random level.
+                String stateName = controller.state().getClass().getSimpleName();
+                if(stateName.contains("Victory") || stateName.contains("Defeat")) {
+                    int nextLevel = ThreadLocalRandom.current().nextBoolean() ? 1 : 2;
+                    controller.startNewGame(nextLevel);
+                    if(nextLevel==1) sawLevel1 = true; else sawLevel2 = true;
+                }
+
+                // Force visiting both levels: halfway through time, if one level never seen, switch.
+                long remaining = Duration.between(Instant.now(), end).toMillis();
+                if(remaining < (durationMillis/2) && !(sawLevel1 && sawLevel2)) {
+                    if(!sawLevel1) { controller.startNewGame(1); sawLevel1 = true; }
+                    else if(!sawLevel2) { controller.startNewGame(2); sawLevel2 = true; }
+                }
+
+                Input next = pickNext(rnd, movement, meta, levelLoads, rare);
+                executed.add(next);
+                try {
+                    controller.handleInput(next);
+                } catch(UnsupportedOperationException | IllegalArgumentException ignored) {
+                    // expected sometimes depending on state
+                }
+
+                moves++;
+                // Adaptive pacing: quicker early exploration, slow down a bit later so EDT can repaint.
+                if(slowMode) {
+                    sleepQuiet(40 + rnd.nextInt(60));
+                } else if((moves % 50)==0) {
+                    sleepQuiet(10 + rnd.nextInt(25));
+                } else if((moves % 10)==0) {
+                    sleepQuiet(1 + rnd.nextInt(4));
+                }
             }
+        } catch(RuntimeException | AssertionError e) {
+            dumpSequence(seed, executed, e);
+            throw e; // rethrow so JUnit marks failure
+        } catch(Error err) { // include other serious errors (StackOverflowError, etc.)
+            dumpSequence(seed, executed, err);
+            throw err;
+        }
 
+        if(Boolean.getBoolean("fuzz.alwaysDump")) {
+            dumpSequence(seed, executed, null);
+        }
+    }
+
+    private Input pickNext(Random rnd, List<Input> movement, List<Input> meta, List<Input> levelLoads, List<Input> rare) {
+        int bucket = rnd.nextInt(100);
+        if(bucket < 68) return movement.get(rnd.nextInt(movement.size()));      // ~68%
+        if(bucket < 83) return meta.get(rnd.nextInt(meta.size()));             // ~15%
+        if(bucket < 94) return levelLoads.get(rnd.nextInt(levelLoads.size())); // ~11%
+        return rare.get(rnd.nextInt(rare.size()));                             // ~6%
+    }
+
+    private void dumpSequence(long seed, List<Input> executed, Throwable t) {
+        System.out.println("===== FUZZ SEQUENCE DUMP =====");
+        System.out.println("Seed: " + seed + " length=" + executed.size());
+        if(t!=null) System.out.println("Failure: " + t);
+        StringBuilder sb = new StringBuilder();
+        for(Input i : executed) sb.append(i).append(',');
+        System.out.println(sb);
+        System.out.println("Re-run with: -Dfuzz.seed="+seed);
+        System.out.println("================================");
+    }
+
+    // Simple helper to manually replay a sequence if you copy it from a dump (comma-separated names)
+    // Usage (developer only): call from a temporary @Test with a recorded string.
+    @SuppressWarnings("unused")
+    private void replay(String csv, int startLevel) {
+        AppController controller = AppController.of();
+        controller.startNewGame(startLevel);
+        for(String tok : csv.split(",")) {
+            if(tok.isBlank()) continue;
             try {
-                // Drive the public controller API; any unexpected runtime exception here indicates a robustness issue.
-                controller.handleInput(next);
-            } catch(UnsupportedOperationException | IllegalArgumentException ignored) {
-                // Some inputs may be legitimately unsupported in certain states; those are not test failures.
-            }
-
-            moves++;
-            if((moves % 25)==0) {
-                // Brief sleeps give the EDT time to process events and simulate more realistic user pacing.
-                // Keeping this small prevents the test from exceeding the overall timeout.
-                sleepQuiet(5 + (rnd.nextInt(10))); // throttle a little
+                controller.handleInput(Input.valueOf(tok.trim()));
+                sleepQuiet(50); // slow for visibility
+            } catch(Exception e) {
+                System.out.println("Replay halted on input="+tok+" due to " + e);
+                break;
             }
         }
     }
