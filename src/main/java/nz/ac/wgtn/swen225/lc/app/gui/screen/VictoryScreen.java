@@ -1,9 +1,6 @@
 package nz.ac.wgtn.swen225.lc.app.gui.screen;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
-import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
-import nz.ac.wgtn.swen225.lc.app.gui.game.GamePanel;
-import nz.ac.wgtn.swen225.lc.app.state.PlayState;
 import nz.ac.wgtn.swen225.lc.app.util.MyFont;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;
 
@@ -11,7 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class VictoryScreen extends JPanel implements GamePanel {
+public class VictoryScreen extends JPanel {
     private BufferedImage bgImg;
 
     public VictoryScreen(AppController controller) {
@@ -28,12 +25,7 @@ public class VictoryScreen extends JPanel implements GamePanel {
 //        startButton.addActionListener(e -> controller.showScreen(PlayState.name()));
 //        add(startButton, BorderLayout.SOUTH);
 
-        bgImg = LoadingImg.StartScreen.loadImage();
-    }
-
-    @Override
-    public void updatePanel() {
-
+        bgImg = LoadingImg.WinScreen.loadImage();
     }
 
     @Override
