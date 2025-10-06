@@ -82,4 +82,5 @@ public class DomainController {
     public Player player() {return player;}
     public Tile[][] tileGrid() {return tileGrid;}
     public List<Key> keysList() {return Collections.unmodifiableList(keysList);}
+    public List<Monster> monsters(){return domain.getMonsters();}
 }

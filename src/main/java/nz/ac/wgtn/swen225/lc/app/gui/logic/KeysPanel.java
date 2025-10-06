@@ -53,13 +53,13 @@ public class KeysPanel extends JPanel implements LogicPanel {
         super.paintComponent(g);
 
         BufferedImage img;
+        int offset = (LeftPanel.PANEL_WIDTH / 2) - ((maxKeys * AppWindow.SQUARE_SIZE) / 2);
         for(int i = 0; i < maxKeys; i++){
             if(i < keysLeft){
                 EntityColor keyColor = keys.get(i).getColor();
                 img = imageKeyMap.get(keyColor);
             }
             else img = LoadingImg.Sand.loadImage();
-            int offset = (LeftPanel.PANEL_WIDTH / 2) - ((maxKeys * AppWindow.SQUARE_SIZE) / 2);
             g.drawImage(img, offset +  i * AppWindow.SQUARE_SIZE, 0,
                     AppWindow.SQUARE_SIZE, AppWindow.SQUARE_SIZE, this);
         }

@@ -18,7 +18,8 @@ public class RendererController {
      * @param domainController DomainController
      */
     public RendererController(AppController controller, DomainController domainController){
-        this.renderer = new Renderer(domainController.tileGrid(), domainController.player());
+        this.renderer = new Renderer(domainController.tileGrid(), domainController.player(),
+                domainController.monsters());
         this.mazePanel = renderer.getPanel();
         renderer.setDimensions(AppWindow.MAZE_SIZE, AppWindow.MAZE_SIZE);
         bgMusic = LoadingSounds.BackgroundSound;
