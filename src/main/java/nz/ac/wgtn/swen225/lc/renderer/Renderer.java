@@ -35,7 +35,7 @@ public class Renderer {
      * Constructor for Renderer that sets a Drawable
      */
     public Renderer(Tile[][] currentTiles, Player player, List<Monster> monsters){
-        drawable = new Drawable(currentTiles, player);
+        drawable = new Drawable(currentTiles, player, monsters);
     }
 
     /**
