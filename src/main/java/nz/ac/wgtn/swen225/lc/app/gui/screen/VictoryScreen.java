@@ -11,7 +11,7 @@ import java.awt.image.BufferedImage;
 public class VictoryScreen extends JPanel {
     private BufferedImage bgImg;
 
-    public VictoryScreen(AppController controller) {
+    public VictoryScreen(AppController c) {
         setBackground(Color.BLACK);
         setLayout(new BorderLayout());
         JLabel title = new JLabel("VICTORY!!!!!", SwingConstants.CENTER);
@@ -21,9 +21,9 @@ public class VictoryScreen extends JPanel {
 
         // Buttons if relevant
         // Maybe give options for level 1 or 2.
-//        JButton startButton = new JButton("Start Game");
-//        startButton.addActionListener(e -> controller.showScreen(PlayState.name()));
-//        add(startButton, BorderLayout.SOUTH);
+        JButton startButton = new JButton("Start Game");
+        startButton.addActionListener(e -> c.restartLevel());
+        add(startButton, BorderLayout.SOUTH);
 
         bgImg = LoadingImg.WinScreen.loadImage();
     }

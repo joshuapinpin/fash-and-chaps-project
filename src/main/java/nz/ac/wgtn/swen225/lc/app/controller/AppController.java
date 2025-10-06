@@ -31,7 +31,6 @@ public class AppController {
 
     // GAME MANAGEMENT Components
     private GameState state;
-    private int level;
     private static final AppController APP = new AppController();
 
     /**
@@ -109,7 +108,6 @@ public class AppController {
         domainController.initialiseDomain(level);
         recorderController.stopRecording();
         windowController.displayInfo(false);
-        this.level = level;
 
         rendererController.updateMaze(domainController);
         windowController.initialiseWindow();
@@ -120,8 +118,8 @@ public class AppController {
      * Restarts the current level.
      */
     public void restartLevel(){
-        startNewGame(level);
-        System.out.println("Restarting Level " + level);
+        System.out.println("Restarting Level");
+        startNewGame(persistencyController.level());
     }
 
     /**
@@ -137,7 +135,6 @@ public class AppController {
      */
     public void pauseGame() {
         setState(new PausedState(this));
-        //window.showPauseDialog();
         System.out.println("Game Paused");
     }
 
@@ -209,9 +206,9 @@ public class AppController {
     public void setState(GameState state) {this.state = state;}
 
     // App Components
-    public int level() {return level;}
-    public GameState state() {return state;}
+    public int level() {return persistencyController.level();}
     public Maze domain() {return domainController.domain();}
+    public GameState state() {return state;}
     public Renderer renderer() {return rendererController.renderer();}
 
     // Controllers
