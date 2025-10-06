@@ -15,11 +15,10 @@ public class RendererController {
     /**
      * Constructor initializes the renderer with the current domain state.
      * @param controller AppController
-     * @param domainController DomainController
+     * @param dc DomainController
      */
-    public RendererController(AppController controller, DomainController domainController){
-        this.renderer = new Renderer(domainController.tileGrid(), domainController.player(),
-                domainController.monsters());
+    public RendererController(AppController controller, DomainController dc){
+        this.renderer = new Renderer(dc.tileGrid(), dc.player(), dc.monsters());
         this.mazePanel = renderer.getPanel();
         renderer.setDimensions(AppWindow.MAZE_SIZE, AppWindow.MAZE_SIZE);
         bgMusic = LoadingSounds.BackgroundSound;
@@ -40,12 +39,19 @@ public class RendererController {
         mazePanel.repaint();
     }
 
+    /**
+     * Play background music in a loop.
+     */
     public void playMusic(){
         bgMusic.playBackgroundMusic(playVolume);
     }
 
+    /**
+     * Stop background music.
+     */
     public void stopMusic(){
-        bgMusic.stopBackgroundMusic();
+        try{ bgMusic.stopBackgroundMusic(); }
+        catch(NullPointerException e){}
     }
 
     // ===== Getters and Setters =====

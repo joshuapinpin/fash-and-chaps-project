@@ -104,6 +104,8 @@ public class AppController {
      */
     public void startNewGame(int level) {
         timerController.startTimer(level);
+        rendererController.stopMusic();
+
         setState(new PlayState(this));
         domainController.initialiseDomain(level);
         recorderController.stopRecording();
