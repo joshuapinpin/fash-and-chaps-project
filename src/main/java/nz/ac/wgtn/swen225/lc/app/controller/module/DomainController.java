@@ -55,9 +55,7 @@ public class DomainController implements Controller {
         domain.addObserver(new GameObserver() {
             @Override public void onInfoMessage() {c.windowController().displayInfo(true);}
             @Override public void onLevelComplete() {c.victory();}
-            @Override public void onPlayerDrown(Player player){
-                c.defeat();
-            }
+            @Override public void onPlayerDrown(Player player){c.defeat();}
             @Override public void onPlayerDie(Player player){
                 c.defeat();
             }
