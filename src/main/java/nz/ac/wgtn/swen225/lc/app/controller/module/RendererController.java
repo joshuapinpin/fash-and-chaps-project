@@ -36,7 +36,7 @@ public class RendererController {
         }
 
         // Update Maze
-        mazePanel.setAllTiles(domainController.tileGrid(), domainController.player());
+        mazePanel.setAllTiles(domainController.tileGrid(), domainController.player(), domainController.monsters());
         mazePanel.repaint();
     }
 
