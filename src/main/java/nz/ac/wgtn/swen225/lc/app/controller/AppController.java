@@ -63,6 +63,7 @@ public class AppController {
         recorderController = new RecorderController(this, timerController);
         windowController = new WindowController(this);
 
+        // The Order of Controllers MATTERS (for atNewGame calls)
         controllers = List.of(timerController, domainController, recorderController,
                 windowController, rendererController);
 
@@ -113,17 +114,7 @@ public class AppController {
      */
     public void startNewGame(int level) {
         persistencyController.setLevel(level);
-
         controllers.forEach(Controller::atNewGame);
-
-        //timerController.restartTimer(level);
-        //domainController.initialiseDomain(level);
-        recorderController.stopRecording();
-        windowController.displayInfo(false);
-        windowController.initialiseWindow();
-
-        rendererController.updateMaze(domainController);
-
         setState(new PlayState(this));
         System.out.println("Starting New Game at Level " + level);
     }

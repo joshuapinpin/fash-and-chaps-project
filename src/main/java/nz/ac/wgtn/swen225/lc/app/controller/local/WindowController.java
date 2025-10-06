@@ -62,9 +62,15 @@ public class WindowController implements Controller {
 
     // ====== CONTROLLER METHODS ======
 
+    /**
+     * Called when new game state is entered.
+     * Hides the info panel based on the new state.
+     * Initializes the window if entering a new game state.
+     */
     @Override
     public void atNewGame(){
-
+        displayInfo(false);
+        initialiseWindow();
     }
 
     /**

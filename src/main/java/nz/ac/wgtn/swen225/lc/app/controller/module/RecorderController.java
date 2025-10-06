@@ -28,9 +28,12 @@ public class RecorderController implements Controller {
         save = new Save();
     }
 
+    /**
+     * Called when a new game starts to reset recording state.
+     */
     @Override
     public void atNewGame(){
-
+        stopRecording();
     }
 
     /**
