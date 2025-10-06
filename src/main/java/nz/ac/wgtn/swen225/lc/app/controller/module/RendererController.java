@@ -38,15 +38,15 @@ public class RendererController implements Controller {
     /**
      * Updates the GUI components based on the current domain state.
      * Called after any change in the domain (e.g., player move, level change).
-     * @param dc DomainController
+     * @param domainController DomainController
      */
-    public void updateMaze(DomainController dc){
-        if(renderer == null || dc.domain() == null){
+    public void updateMaze(DomainController domainController){
+        if(renderer == null || domainController.domain() == null){
             throw new RuntimeException("Cannot update GUI: Renderer or Domain is null.");
         }
 
         // Update Maze
-        mazePanel.setAllTiles(dc.tileGrid(), dc.player(), dc.monsters());
+        mazePanel.setAllTiles(domainController.tileGrid(), domainController.player(), domainController.monsters());
         mazePanel.repaint();
     }
 
