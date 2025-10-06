@@ -27,11 +27,6 @@ public class DomainController implements Controller {
         initialiseDomain(1);
     }
 
-    @Override
-    public void initialiseNewGame() {
-
-    }
-
     /**
      * Initialises the domain model for the specified level
      * @param level
@@ -50,12 +45,8 @@ public class DomainController implements Controller {
         // Add Observers to the Domain
         domain.addObserver(Renderer.playSounds());
         domain.addObserver(new GameObserver() {
-            @Override public void onInfoMessage() {
-                c.windowController().displayInfo(true);
-            }
-            @Override public void onLevelComplete() {
-                c.victory();
-            }
+            @Override public void onInfoMessage() {c.windowController().displayInfo(true);}
+            @Override public void onLevelComplete() {c.victory();}
             @Override public void onPlayerDrown(Player player){
                 c.defeat();
             }
@@ -63,6 +54,11 @@ public class DomainController implements Controller {
                 c.defeat();
             }
         });
+    }
+
+    @Override
+    public void atNewGame(){
+
     }
 
     /**

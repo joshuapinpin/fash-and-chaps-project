@@ -14,6 +14,11 @@ public class PersistencyController implements Controller {
 
     public PersistencyController(AppController c) {this.c = c;}
 
+    @Override
+    public void atNewGame() {
+        loadLevel(1);
+    }
+
     public Levels loadLevel(int level){
         if(level == 1) this.currentLevel = Levels.LevelOne;
         else if(level == 2) this.currentLevel = Levels.LevelTwo;
@@ -30,6 +35,8 @@ public class PersistencyController implements Controller {
     }
 
     // ========== GETTERS ==========
+    public void setLevel(int level){loadLevel(level);}
+
     public Levels currentLevel() {return currentLevel;}
     public int level() {return level;}
     public int maxKeys() {return maxKeys;}

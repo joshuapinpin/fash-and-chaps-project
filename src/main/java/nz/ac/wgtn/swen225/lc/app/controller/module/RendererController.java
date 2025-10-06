@@ -25,6 +25,11 @@ public class RendererController implements Controller {
         bgMusic = LoadingSounds.BackgroundSound;
     }
 
+    @Override
+    public void atNewGame(){
+
+    }
+
     /**
      * Updates the GUI components based on the current domain state.
      * Called after any change in the domain (e.g., player move, level change).

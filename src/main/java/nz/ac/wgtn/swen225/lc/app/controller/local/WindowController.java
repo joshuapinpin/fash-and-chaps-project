@@ -62,6 +62,11 @@ public class WindowController implements Controller {
 
     // ====== CONTROLLER METHODS ======
 
+    @Override
+    public void atNewGame(){
+
+    }
+
     /**
      * Show a specific screen based on the screen name.
      * Should be called when the game state changes.

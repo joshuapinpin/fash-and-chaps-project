@@ -56,6 +56,11 @@ public class TimerController implements ActionListener, Controller {
         throw new IllegalArgumentException("Invalid Level: " + level);
     }
 
+    @Override
+    public void atNewGame(){
+        restartTimer(c.persistencyController().level());
+    }
+
     /**
      * Handles timer ticks.
      * Called by the Timer every second.
@@ -90,7 +95,7 @@ public class TimerController implements ActionListener, Controller {
      * Starts the timer with a specific time limit.
      * @param level The level number to set the time limit for.
      */
-    public void startTimer(int level) {
+    public void restartTimer(int level) {
         this.timeLeft = getTimeLimitForLevel(level);
         timer.restart();
     }

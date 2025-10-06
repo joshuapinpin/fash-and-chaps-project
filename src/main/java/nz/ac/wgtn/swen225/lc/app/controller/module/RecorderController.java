@@ -28,6 +28,11 @@ public class RecorderController implements Controller {
         save = new Save();
     }
 
+    @Override
+    public void atNewGame(){
+
+    }
+
     /**
      * Start recording the player's movements.
      */

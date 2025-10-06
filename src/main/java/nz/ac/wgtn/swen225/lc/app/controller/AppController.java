@@ -112,17 +112,20 @@ public class AppController {
      * @param level The level to start the new game at
      */
     public void startNewGame(int level) {
-        timerController.startTimer(level);
-        //rendererController.stopMusic();
+        persistencyController.setLevel(level);
 
-        setState(new PlayState(this));
+        controllers.forEach(Controller::atNewGame);
+
+        //timerController.restartTimer(level);
+
         domainController.initialiseDomain(level);
         recorderController.stopRecording();
         windowController.displayInfo(false);
-
         windowController.initialiseWindow();
+
         rendererController.updateMaze(domainController);
 
+        setState(new PlayState(this));
         System.out.println("Starting New Game at Level " + level);
     }
 

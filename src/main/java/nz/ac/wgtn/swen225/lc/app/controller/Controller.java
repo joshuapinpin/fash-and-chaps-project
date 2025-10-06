@@ -1,5 +1,5 @@
 package nz.ac.wgtn.swen225.lc.app.controller;
 
 public interface Controller {
-    default void initialiseNewGame(){}
+    void atNewGame();
 }
