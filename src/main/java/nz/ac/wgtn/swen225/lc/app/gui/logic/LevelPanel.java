@@ -22,8 +22,8 @@ public class LevelPanel extends JPanel implements LogicPanel {
 
 
     @Override
-    public void updateLogic(String info) {
-        levelLabel.setText(info);
+    public void updatePanel(int info) {
+        levelLabel.setText(info + "");
     }
 
 

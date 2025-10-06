@@ -41,7 +41,6 @@ public class AppWindow extends JFrame {
         // TODO: Set up window, menus, status bar, and embed MazePanel
         super("Fash and Chaps :D");
         this.c = controller;
-        //setupScreens();
         setupWindow();
     }
 
@@ -56,6 +55,11 @@ public class AppWindow extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Utility method to format JLabels consistently.
+     * @param label JLabel to format
+     * @param fontSize Font size to apply
+     */
     public static void formatLabel(JLabel label, int fontSize){
         label.setFont(MyFont.PIXEL.getFont(fontSize));
         label.setForeground(Color.white);

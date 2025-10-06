@@ -110,7 +110,9 @@ public class AppController {
         recorderController.stopRecording();
         windowController.displayInfo(false);
         this.level = level;
-        windowController().updateWindow();
+
+        rendererController.updateMaze(domainController);
+        windowController.initialiseWindow();
         System.out.println("Starting New Game at Level " + level);
     }
 

@@ -8,27 +8,32 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class TreasurePanel extends JPanel implements LogicPanel{
+public class TreasurePanel extends JPanel implements LogicPanel {
     AppController c;
+    int treasuresCollected;
+    int totalTreasures;
 
     public TreasurePanel(AppController c){
         this.c = c;
+        updatePanel(1);
         setLayout(new GridLayout(4,1));
         setOpaque(false);
     }
 
+    @Override
+    public void initialisePanelInfo(int info){
+        totalTreasures = info;
+    }
+
 
     @Override
-    public void updateLogic(String info) {
-
+    public void updatePanel(int info) {
+        treasuresCollected = info;
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        int treasuresCollected = c.domainController().player().getTreasuresCollected();
-        int totalTreasures = c.domainController().player().getTotalTreasures();
-
         for(int i = 0; i < totalTreasures; i++){
             BufferedImage img;
             if(i < treasuresCollected) img = LoadingImg.Treasure.loadImage();

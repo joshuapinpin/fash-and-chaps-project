@@ -64,37 +64,6 @@ public class WindowController {
     // ====== CONTROLLER METHODS ======
 
     /**
-     * Update the entire window (all panels).
-     */
-    public void updateWindow(){
-        Stream.of(screenPanels, layoutPanels, logicPanels)
-            .flatMap(List::stream)
-            .forEach(Component::repaint);
-        updateLevel();
-        updateTimer();
-    }
-
-    public void updateLevel(){
-        String level = "" + c.level();
-        levelPanel.updateLogic(level);
-    }
-
-    public void updateTimer(){
-        String timeLeft = "" + c.timerController().getTimeLeft();
-        timerPanel.updateLogic(timeLeft);
-    }
-
-    public void updateKeys(){
-
-    }
-
-    public void updateTreasure(){
-
-    }
-
-
-
-    /**
      * Show a specific screen based on the screen name.
      * Should be called when the game state changes.
      * @param screenName Name of the screen to show (e.g., "Start", "Play", "Victory", "Defeat").
@@ -112,24 +81,71 @@ public class WindowController {
     }
 
 
+    /**
+     * Initialise the window with game info.
+     * Should be called when a new game starts.
+     */
+    public void initialiseWindow(){
+        initialiseTreasure();
+        initialiseKeys();
+        initialiseTimer();
+        updateWindow();
+    }
+
+    private void initialiseTreasure() {
+        int maxTreasures = c.domainController().player().getTotalTreasures();
+        treasurePanel.initialisePanelInfo(maxTreasures);
+    }
+
+    private void initialiseKeys() {
+        int maxKeys = c.persistencyController().maxKeys();
+        keysPanel.initialisePanelInfo(maxKeys);
+    }
+
+    private void initialiseTimer() {
+        int startTime = c.persistencyController().maxTime();
+        timerPanel.initialisePanelInfo(startTime);
+    }
+
+    /**
+     * Update the entire window (all panels).
+     */
+    public void updateWindow(){
+        updateLevel();
+        updateTimer();
+        updateKeys();
+        updateTreasure();
+        updateGamePanel();
+        logicPanels.forEach(JPanel::repaint);
+    }
+
+    private void updateLevel(){
+        int level = c.level();
+        levelPanel.updatePanel(level);
+    }
+
+    private void updateTimer(){
+        int timeLeft = c.timerController().getTimeLeft();
+        timerPanel.updatePanel(timeLeft);
+    }
+
+    private void updateKeys(){
+        keysPanel.updatePanel(1);
+    }
+
+    private void updateTreasure(){
+        int treasuresCollected = c.domainController().player().getTreasuresCollected();
+        treasurePanel.updatePanel(treasuresCollected);
+    }
+
+    private void updateGamePanel(){
+        gamePanel.repaint();
+    }
+
+
 
     // ========== GETTERS ==========
     public AppWindow window() {return w;}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     // ====== SETUP METHODS ======
@@ -199,5 +215,6 @@ public class WindowController {
         panel.add(nameLabel);
         leftPanel.add(nameLabel);
         leftPanel.add(panel);
+        logicPanels.add(panel);
     }
 }

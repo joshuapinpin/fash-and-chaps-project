@@ -14,9 +14,14 @@ import java.util.List;
 import java.util.Map;
 
 
-public class KeysPanel extends JPanel {
+public class KeysPanel extends JPanel implements LogicPanel {
     AppController c;
+    List<Key> keys;
+    int keysLeft;
+    int maxKeys;
+
     private Map<EntityColor, BufferedImage> imageKeyMap;
+
 
     public KeysPanel(AppController c) {
         this.c = c;
@@ -26,15 +31,26 @@ public class KeysPanel extends JPanel {
                 EntityColor.GREEN, LoadingImg.GreenKey.loadImage(),
                 EntityColor.PURPLE, LoadingImg.PurpleKey.loadImage()
         );
+
+
         setOpaque(false);
+    }
+
+    @Override
+    public void initialisePanelInfo(int info){
+        maxKeys = info;
+    }
+
+
+    @Override
+    public void updatePanel(int info) {
+        keys = c.domain().getPlayer().getKeys();
+        keysLeft = keys.size();
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        List<Key> keys = c.domain().getPlayer().getKeys();
-        int keysLeft = keys.size();
-        int maxKeys = c.persistencyController().maxKeys();
 
         BufferedImage img;
         for(int i = 0; i < maxKeys; i++){
