@@ -104,15 +104,14 @@ public class AppController {
      */
     public void startNewGame(int level) {
         timerController.startTimer(level);
+        setState(new PlayState(this));
         domainController.initialiseDomain(level);
         recorderController.stopRecording();
         windowController.displayInfo(false);
 
         rendererController.updateMaze(domainController);
         windowController.initialiseWindow();
-        rendererController.stopMusic();
 
-        setState(new PlayState(this));
         System.out.println("Starting New Game at Level " + level);
     }
 
@@ -121,6 +120,7 @@ public class AppController {
      */
     public void restartLevel(){
         System.out.println("Restarting Level");
+        rendererController.stopMusic();
         startNewGame(persistencyController.level());
     }
 

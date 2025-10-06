@@ -68,6 +68,14 @@ public class DomainController {
         domain.movePlayer(dir);
     }
 
+    /**
+     * Moves the crab in level 2
+     * Called by TimerController every second
+     */
+    public void moveCrab(){
+        domain.ping();
+    }
+
 
     // ========== GETTERS AND SETTERS ==========
     public Maze domain() {return domain;}

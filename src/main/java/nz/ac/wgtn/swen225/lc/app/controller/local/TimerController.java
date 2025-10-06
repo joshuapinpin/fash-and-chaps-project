@@ -68,6 +68,7 @@ public class TimerController implements ActionListener {
             c.defeat();
         }
         c.windowController().updateWindow();
+        c.domainController().moveCrab();
     }
 
     /**
