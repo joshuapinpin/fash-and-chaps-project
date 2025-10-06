@@ -46,7 +46,7 @@ public class RendererController implements Controller {
         }
 
         // Update Maze
-        mazePanel.setAllTiles(dc.tileGrid(), dc.player());
+        mazePanel.setAllTiles(dc.tileGrid(), dc.player(), dc.monsters());
         mazePanel.repaint();
     }
 
