@@ -11,6 +11,9 @@ public record PlayState(AppController c) implements GameState {
     public PlayState{
         c.windowController().changeScreen(name());
         c.timerController().play();
+
+        // Music
+        c.rendererController().stopMusic(); // ensures no overlap
         c.rendererController().playMusic();
     }
     public void moveUp(AppController c) { c.movePlayer(Direction.UP);}

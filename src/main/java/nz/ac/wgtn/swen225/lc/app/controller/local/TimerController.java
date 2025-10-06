@@ -1,6 +1,7 @@
 package nz.ac.wgtn.swen225.lc.app.controller.local;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
+import nz.ac.wgtn.swen225.lc.app.controller.Controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,7 +14,7 @@ import javax.swing.Timer;
  *
  * @author <Your Name>
  */
-public class TimerController implements ActionListener {
+public class TimerController implements ActionListener, Controller {
     private static final int TIMER_INTERVAL = 1000; // Timer ticks every second
     private static final int LEVEL_1_TIME_LIMIT = 60; // Level 1 time limit in seconds
     private static final int LEVEL_2_TIME_LIMIT = 120; // Level 2 time limit in seconds

@@ -1,6 +1,7 @@
 package nz.ac.wgtn.swen225.lc.app.controller.local;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
+import nz.ac.wgtn.swen225.lc.app.controller.Controller;
 import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
 import nz.ac.wgtn.swen225.lc.app.gui.screen.*;
 import nz.ac.wgtn.swen225.lc.app.gui.layout.*;
@@ -16,7 +17,7 @@ import java.util.stream.Stream;
 
 import static nz.ac.wgtn.swen225.lc.app.gui.AppWindow.MAZE_SIZE;
 
-public class WindowController {
+public class WindowController implements Controller {
     AppController c;
     AppWindow w;
 

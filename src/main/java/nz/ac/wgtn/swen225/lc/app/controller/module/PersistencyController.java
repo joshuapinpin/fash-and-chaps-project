@@ -1,9 +1,10 @@
 package nz.ac.wgtn.swen225.lc.app.controller.module;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
+import nz.ac.wgtn.swen225.lc.app.controller.Controller;
 import nz.ac.wgtn.swen225.lc.persistency.levelloader.Levels;
 
-public class PersistencyController {
+public class PersistencyController implements Controller {
     private AppController c;
     private Levels currentLevel;
     private int level;
@@ -11,9 +12,7 @@ public class PersistencyController {
     private int maxTreasures;
     private int maxTime;
 
-    public PersistencyController(AppController c) {
-
-    }
+    public PersistencyController(AppController c) {this.c = c;}
 
     public Levels loadLevel(int level){
         if(level == 1) this.currentLevel = Levels.LevelOne;

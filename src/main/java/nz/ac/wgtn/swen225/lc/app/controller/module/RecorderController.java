@@ -1,6 +1,7 @@
 package nz.ac.wgtn.swen225.lc.app.controller.module;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
+import nz.ac.wgtn.swen225.lc.app.controller.Controller;
 import nz.ac.wgtn.swen225.lc.app.controller.local.TimerController;
 import nz.ac.wgtn.swen225.lc.app.state.AutoReplayState;
 import nz.ac.wgtn.swen225.lc.app.state.PausedState;
@@ -9,7 +10,7 @@ import nz.ac.wgtn.swen225.lc.app.util.Input;
 import nz.ac.wgtn.swen225.lc.recorder.Play;
 import nz.ac.wgtn.swen225.lc.recorder.Save;
 
-public class RecorderController {
+public class RecorderController implements Controller {
     Play play;
     Save save;
     boolean isRecording = false;

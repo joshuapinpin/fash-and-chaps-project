@@ -1,12 +1,13 @@
 package nz.ac.wgtn.swen225.lc.app.controller.module;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
+import nz.ac.wgtn.swen225.lc.app.controller.Controller;
 import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
 import nz.ac.wgtn.swen225.lc.renderer.Renderer;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.Drawable;
 import nz.ac.wgtn.swen225.lc.renderer.sounds.LoadingSounds;
 
-public class RendererController {
+public class RendererController implements Controller {
     Renderer renderer;
     Drawable mazePanel;
     LoadingSounds bgMusic;
