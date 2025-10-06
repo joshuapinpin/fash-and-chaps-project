@@ -8,6 +8,7 @@ import nz.ac.wgtn.swen225.lc.renderer.imgs.Drawable;
 import nz.ac.wgtn.swen225.lc.renderer.sounds.LoadingSounds;
 
 public class RendererController implements Controller {
+    AppController c;
     Renderer renderer;
     Drawable mazePanel;
     LoadingSounds bgMusic;
@@ -15,33 +16,37 @@ public class RendererController implements Controller {
 
     /**
      * Constructor initializes the renderer with the current domain state.
-     * @param controller AppController
+     * @param c AppController
      * @param dc DomainController
      */
-    public RendererController(AppController controller, DomainController dc){
+    public RendererController(AppController c, DomainController dc){
+        this.c = c;
         this.renderer = new Renderer(dc.tileGrid(), dc.player(), dc.monsters());
         this.mazePanel = renderer.getPanel();
         renderer.setDimensions(AppWindow.MAZE_SIZE, AppWindow.MAZE_SIZE);
         bgMusic = LoadingSounds.BackgroundSound;
     }
 
+    /**
+     * Called when a new game starts to initialize the renderer with the current domain state.
+     */
     @Override
     public void atNewGame(){
-
+        updateMaze(c.domainController());
     }
 
     /**
      * Updates the GUI components based on the current domain state.
      * Called after any change in the domain (e.g., player move, level change).
-     * @param domainController DomainController
+     * @param dc DomainController
      */
-    public void updateMaze(DomainController domainController){
-        if(renderer == null || domainController.domain() == null){
+    public void updateMaze(DomainController dc){
+        if(renderer == null || dc.domain() == null){
             throw new RuntimeException("Cannot update GUI: Renderer or Domain is null.");
         }
 
         // Update Maze
-        mazePanel.setAllTiles(domainController.tileGrid(), domainController.player());
+        mazePanel.setAllTiles(dc.tileGrid(), dc.player());
         mazePanel.repaint();
     }
 

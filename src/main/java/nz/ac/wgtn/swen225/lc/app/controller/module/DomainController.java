@@ -27,7 +27,9 @@ public class DomainController implements Controller {
         initialiseDomain(1);
     }
 
-
+    /**
+     * Called when a new game starts to initialize the domain for the current level.
+     */
     @Override
     public void atNewGame(){
         initialiseDomain(c.persistencyController().level());

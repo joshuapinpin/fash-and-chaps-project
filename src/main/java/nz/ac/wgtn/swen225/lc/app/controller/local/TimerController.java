@@ -16,8 +16,8 @@ import javax.swing.Timer;
  */
 public class TimerController implements ActionListener, Controller {
     private static final int TIMER_INTERVAL = 1000; // Timer ticks every second
-    private static final int LEVEL_1_TIME_LIMIT = 60; // Level 1 time limit in seconds
-    private static final int LEVEL_2_TIME_LIMIT = 120; // Level 2 time limit in seconds
+    private static final int LEVEL_1_TIME_LIMIT = 45; // Level 1 time limit in seconds
+    private static final int LEVEL_2_TIME_LIMIT = 60; // Level 2 time limit in seconds
 
     private final AppController c;
     private final Timer timer;
@@ -28,7 +28,6 @@ public class TimerController implements ActionListener, Controller {
      * @param controller The AppController to notify when time runs out.
      */
     public TimerController(AppController controller) {
-
         this(controller, 0); // Default to 300 seconds (5 minutes)
     }
 
