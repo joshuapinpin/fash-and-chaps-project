@@ -7,7 +7,9 @@ import nz.ac.wgtn.swen225.lc.domain.*;
 import nz.ac.wgtn.swen225.lc.domain.tiles.Tile;
 import nz.ac.wgtn.swen225.lc.persistency.levelloader.parse.TileParsers;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -20,6 +22,7 @@ public class LevelMaker {
     private int keyCount = 0;
     private int treasureCount = 0;
     private boolean loaded = false;
+    private List<Monster> monsters = new ArrayList<>();
 
     @JsonSerialize(using = BoardSerializer.class) // for pretty 2D array printing
     private String[][] board;
@@ -68,6 +71,14 @@ public class LevelMaker {
     }
 
     /**
+     * Add a monster to the level.
+     * @param monster - the Monster (e.g. crab).
+     */
+    public void setMonster(Monster monster) {
+        monsters.add(monster);
+    }
+
+    /**
      * Get number of rows in game board.
      * Used by Jackson to infer serialisation.
      * @return - integer number of rows.
@@ -107,19 +118,37 @@ public class LevelMaker {
                 maze.setTileAt(tile);
             }
         }
+
+        monsters.forEach(maze::setMonster);
         loaded = true;
         return maze;
     }
 
+    /**
+     * Adds 1 to the number of keys in the level.
+     */
     public void incrementKeys() { keyCount++; }
 
+    /**
+     * Gets the number of keys in the level (i.e. maximum).
+     * Useful for testing.
+     * @return - the integer number of keys.
+     */
     public int keyCount() {
         if (!loaded) { loadLevel(); }
         return keyCount;
     }
 
+    /**
+     * Adds 1 to the number of treasures in the level.
+     */
     public void incrementTreasures() { treasureCount++; }
 
+    /**
+     * Gets the number of treasures in the level (i.e. maximum).
+     * Useful for testing.
+     * @return - the integer number of treasures.
+     */
     public int treasureCount() {
         if (!loaded) { loadLevel(); }
         return treasureCount;

@@ -35,6 +35,7 @@ public enum TileParsers {
 
     private final TileParser<?> parser;
     private static final Map<String, TileParser<?>> legend = new HashMap<>();
+    public static final int MaxMonstersOnTile = 4;
     static {
         for (TileParsers tp : values()) {
             legend.put(tp.parser.symbol(), tp.parser);
