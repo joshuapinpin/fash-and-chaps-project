@@ -7,21 +7,15 @@ import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
-import nz.ac.wgtn.swen225.lc.app.controller.local.TimerController;
 import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
-import nz.ac.wgtn.swen225.lc.app.gui.logic.KeysPanel;
-import nz.ac.wgtn.swen225.lc.app.gui.logic.LevelPanel;
-import nz.ac.wgtn.swen225.lc.app.gui.logic.TimerPanel;
-import nz.ac.wgtn.swen225.lc.app.gui.logic.TreasurePanel;
-import nz.ac.wgtn.swen225.lc.app.util.MyFont;
+import nz.ac.wgtn.swen225.lc.app.gui.logic.*;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;
 
 /**
@@ -35,6 +29,14 @@ public class LeftPanel extends JPanel {
     public static final int PANEL_WIDTH = AppWindow.SQUARE_SIZE * 6;
     public static final int PANEL_HEIGHT = AppWindow.MAZE_SIZE;
 
+
+    // Game Logic Panels
+    private KeysPanel keysPanel;
+    private LevelPanel levelPanel;
+    private TimerPanel timerPanel;
+    private TreasurePanel treasurePanel;
+    private List<JPanel> logicPanels;
+
     private AppController c;
     private BufferedImage bgImg;
 
@@ -47,8 +49,25 @@ public class LeftPanel extends JPanel {
         setLayout(new GridLayout(9, 1));
         setOpaque(false);
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
-
         bgImg = LoadingImg.Water.loadImage();
+        logicPanels = new ArrayList<>();
+        setupLogicPanels();
+    }
+
+    private void setupLogicPanels() {
+        setupSingleLogicPanel("Level", levelPanel = new LevelPanel(c));
+        setupSingleLogicPanel("Timer", timerPanel = new TimerPanel(c));
+        setupSingleLogicPanel("Keys", keysPanel = new KeysPanel(c));
+        setupSingleLogicPanel("Treasure", treasurePanel = new TreasurePanel(c));
+    }
+
+    private void setupSingleLogicPanel(String name, JPanel panel){
+        JLabel nameLabel = new JLabel(name);
+        AppWindow.formatLabel(nameLabel, AppWindow.FONT_SIZE_H1);
+        panel.add(nameLabel);
+        add(nameLabel);
+        add(panel);
+        logicPanels.add(panel);
     }
 
     @Override
@@ -65,4 +84,11 @@ public class LeftPanel extends JPanel {
             x += squareSize;
         }
     }
+
+    // ====== GETTERS ======
+    public List<JPanel> logicPanels(){return Collections.unmodifiableList(logicPanels);}
+    public KeysPanel keysPanel(){return keysPanel;}
+    public LevelPanel levelPanel(){return levelPanel;}
+    public TimerPanel timerPanel(){return timerPanel;}
+    public TreasurePanel treasurePanel(){return treasurePanel;}
 }

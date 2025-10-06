@@ -6,13 +6,7 @@ import java.util.List;
 import javax.swing.*;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
-import nz.ac.wgtn.swen225.lc.app.controller.local.InputController;
-import nz.ac.wgtn.swen225.lc.app.controller.module.RecorderController;
-import nz.ac.wgtn.swen225.lc.app.controller.local.TimerController;
-import nz.ac.wgtn.swen225.lc.app.gui.screen.DefeatScreen;
-import nz.ac.wgtn.swen225.lc.app.gui.screen.PlayScreen;
-import nz.ac.wgtn.swen225.lc.app.gui.screen.StartScreen;
-import nz.ac.wgtn.swen225.lc.app.gui.screen.VictoryScreen;
+import nz.ac.wgtn.swen225.lc.app.gui.screen.*;
 import nz.ac.wgtn.swen225.lc.app.state.*;
 import nz.ac.wgtn.swen225.lc.app.util.MyFont;
 
@@ -31,6 +25,19 @@ public class AppWindow extends JFrame {
     public static final int FONT_SIZE_H1 = 40;
     public static final int FONT_SIZE_H2 = 20;
 
+    // GUI
+    // Main
+    private CardLayout cardLayout;
+    private JPanel mainPanel;
+
+    // Screens
+    private StartScreen startScreen;
+    private PlayScreen playScreen;
+    private PauseScreen pauseScreen;
+    private VictoryScreen victoryScreen;
+    private DefeatScreen defeatScreen;
+    private HelpScreen helpScreen;
+
     private final AppController c; // Reference to AppController
 
     /**
@@ -42,6 +49,7 @@ public class AppWindow extends JFrame {
         super("Fash and Chaps :D");
         this.c = controller;
         setupWindow();
+        setupScreens();
     }
 
     private void setupWindow(){
@@ -55,6 +63,23 @@ public class AppWindow extends JFrame {
         setVisible(true);
     }
 
+    private void setupScreens(){
+        cardLayout = new CardLayout();
+        mainPanel = new JPanel(cardLayout);
+        setupSingleScreen(startScreen = new StartScreen(c), StartState.name());
+        setupSingleScreen(playScreen = new PlayScreen(c), PlayState.name());
+        setupSingleScreen(victoryScreen = new VictoryScreen(c), VictoryState.name());
+        setupSingleScreen(defeatScreen = new DefeatScreen(c), DefeatState.name());
+        // TODO: setupSingleScreen(pauseScreen, new PauseScreen(c), PauseState.name());
+
+        setContentPane(mainPanel);
+    }
+
+    private void setupSingleScreen(JPanel panel, String name){
+        mainPanel.add(panel, name);
+        //screenPanels.add(panel);
+    }
+
     /**
      * Utility method to format JLabels consistently.
      * @param label JLabel to format
@@ -66,5 +91,19 @@ public class AppWindow extends JFrame {
         label.setHorizontalAlignment(SwingConstants.CENTER);
         label.setVerticalAlignment(SwingConstants.CENTER);
     }
+
+    /**
+     * Show a specific screen by name.
+     * @param name Name of the screen to show
+     */
+    public void showScreen(String name){
+        cardLayout.show(mainPanel, name);
+        revalidate();
+        repaint();
+        requestFocusInWindow();
+    }
+
+    // ====== GETTERS ======
+    public PlayScreen playScreen() {return playScreen;}
 
 }
