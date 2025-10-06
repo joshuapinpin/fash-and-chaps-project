@@ -38,7 +38,9 @@ public enum LoadingImg {
     StartScreen("imgs/startScreen.png"),
     LoseScreen("imgs/loseScreen.png"),
     WinScreen("imgs/winScreen.png"),
-    Background("imgs/background.png");
+    Background("imgs/background.png"),
+    Towel("imgs/button.png"),
+    Shell("imgs/shell.png");
 
     private final String filename;
     private BufferedImage image;
