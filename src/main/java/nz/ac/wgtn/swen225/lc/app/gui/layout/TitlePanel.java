@@ -1,4 +1,4 @@
-package nz.ac.wgtn.swen225.lc.app.gui.game;
+package nz.ac.wgtn.swen225.lc.app.gui.layout;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
@@ -9,7 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class TitlePanel extends JPanel implements GamePanel{
+public class TitlePanel extends JPanel{
     public static int PANEL_WIDTH = AppWindow.WINDOW_WIDTH;
     public static int PANEL_HEIGHT = AppWindow.HEADER_HEIGHT;
 
@@ -36,12 +36,6 @@ public class TitlePanel extends JPanel implements GamePanel{
         title.setVerticalAlignment(SwingConstants.CENTER);
         title.setHorizontalAlignment(SwingConstants.CENTER);
         add(title);
-    }
-
-
-    @Override
-    public void updatePanel() {
-
     }
 
 

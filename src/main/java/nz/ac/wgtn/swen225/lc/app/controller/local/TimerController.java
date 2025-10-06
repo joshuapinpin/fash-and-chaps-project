@@ -1,4 +1,4 @@
-package nz.ac.wgtn.swen225.lc.app.controller.logic;
+package nz.ac.wgtn.swen225.lc.app.controller.local;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 
@@ -18,7 +18,7 @@ public class TimerController implements ActionListener {
     private static final int LEVEL_1_TIME_LIMIT = 60; // Level 1 time limit in seconds
     private static final int LEVEL_2_TIME_LIMIT = 120; // Level 2 time limit in seconds
 
-    private final AppController controller;
+    private final AppController c;
     private final Timer timer;
     private int timeLeft;
 
@@ -37,7 +37,7 @@ public class TimerController implements ActionListener {
      * @param initialTime Initial time in seconds.
      */
     public TimerController(AppController controller, int initialTime) {
-        this.controller = controller;
+        this.c = controller;
         this.timeLeft = initialTime;
         // TODO: Initialize timer
         timer = new Timer(TIMER_INTERVAL, this);
@@ -65,15 +65,15 @@ public class TimerController implements ActionListener {
         if(timeLeft > 0) timeLeft--;
         if(timeLeft == 0) {
             timer.stop();
-            controller.defeat();
+            c.defeat();
         }
-        controller.window().updateWindow();
+        c.windowController().updateWindow();
     }
 
     /**
      * Starts the timer.
      */
-    public void start() {
+    public void play() {
         if(!timer.isRunning()) timer.start();
     }
 

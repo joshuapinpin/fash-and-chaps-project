@@ -1,4 +1,4 @@
-package nz.ac.wgtn.swen225.lc.app.gui.game;
+package nz.ac.wgtn.swen225.lc.app.gui.logic;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
@@ -17,7 +17,6 @@ public class InfoPanel extends JPanel {
         setPreferredSize(new Dimension(AppWindow.MAZE_SIZE, AppWindow.MAZE_SIZE));
         setOpaque(true);
         setBackground(new Color(0, 0, 0, 150)); // Semi-transparent background
-
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setAlignmentX(Component.CENTER_ALIGNMENT);
         setAlignmentY(Component.CENTER_ALIGNMENT);
@@ -27,7 +26,7 @@ public class InfoPanel extends JPanel {
         addText("Pick up keys to open doors.");
         addText("Collect coins to open chest.");
         addText("Avoid crabs and puddles.");
-        addText("Reach exit to complete level.");
+        addText("Reach sand castle to win!");
         add(Box.createVerticalGlue()); // Push content up
 
         setVisible(false);

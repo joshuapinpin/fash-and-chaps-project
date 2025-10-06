@@ -1,6 +1,6 @@
 package nz.ac.wgtn.swen225.lc.app.controller;
 
-import nz.ac.wgtn.swen225.lc.app.controller.logic.*;
+import nz.ac.wgtn.swen225.lc.app.controller.local.*;
 import nz.ac.wgtn.swen225.lc.app.controller.module.*;
 import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
 import nz.ac.wgtn.swen225.lc.app.state.*;
@@ -21,6 +21,7 @@ public class AppController {
     // APP CONTROLLERS
     private InputController inputController;
     private TimerController timerController;
+    private WindowController windowController;
 
     // MODULE CONTROLLERS
     private RecorderController recorderController;
@@ -29,9 +30,7 @@ public class AppController {
     private RendererController rendererController;
 
     // GAME MANAGEMENT Components
-    private AppWindow window;
     private GameState state;
-    private int level;
     private static final AppController APP = new AppController();
 
     /**
@@ -53,10 +52,11 @@ public class AppController {
     private void initialiseControllers(){
         inputController = new InputController(this);
         timerController = new TimerController(this);
+        persistencyController = new PersistencyController(this);
         domainController = new DomainController(this);
         rendererController = new RendererController(this, domainController);
         recorderController = new RecorderController(this, timerController);
-        window = new AppWindow(this, inputController, timerController, recorderController);
+        windowController = new WindowController(this);
     }
 
     // ========== Game Controller Implementation ==========
@@ -87,7 +87,7 @@ public class AppController {
 
         // Update Maze and window after handling input
         rendererController.updateMaze(domainController);
-        window.updateWindow();
+        windowController.updateWindow();
     }
 
     /**
@@ -107,8 +107,10 @@ public class AppController {
         setState(new PlayState(this));
         domainController.initialiseDomain(level);
         recorderController.stopRecording();
-        this.level = level;
-        window.updateWindow();
+        windowController.displayInfo(false);
+
+        rendererController.updateMaze(domainController);
+        windowController.initialiseWindow();
         System.out.println("Starting New Game at Level " + level);
     }
 
@@ -116,8 +118,8 @@ public class AppController {
      * Restarts the current level.
      */
     public void restartLevel(){
-        startNewGame(level);
-        System.out.println("Restarting Level " + level);
+        System.out.println("Restarting Level");
+        startNewGame(persistencyController.level());
     }
 
     /**
@@ -133,7 +135,6 @@ public class AppController {
      */
     public void pauseGame() {
         setState(new PausedState(this));
-        //window.showPauseDialog();
         System.out.println("Game Paused");
     }
 
@@ -205,14 +206,17 @@ public class AppController {
     public void setState(GameState state) {this.state = state;}
 
     // App Components
-    public int level() {return level;}
-    public GameState state() {return state;}
+    public int level() {return persistencyController.level();}
     public Maze domain() {return domainController.domain();}
+    public GameState state() {return state;}
     public Renderer renderer() {return rendererController.renderer();}
-    public AppWindow window() {return window;}
 
     // Controllers
+    public InputController inputController() {return inputController; }
     public TimerController timerController() {return timerController; }
+
+    public PersistencyController persistencyController() {return persistencyController; }
+    public WindowController windowController() {return windowController; }
     public RecorderController recorderController() {return recorderController; }
     public DomainController domainController() {return domainController;}
     public RendererController rendererController() {return rendererController;}
