@@ -3,11 +3,14 @@ package nz.ac.wgtn.swen225.lc.app.gui.screen;
 import javax.swing.*;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
+import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
 import nz.ac.wgtn.swen225.lc.app.gui.layout.*;
 import nz.ac.wgtn.swen225.lc.app.gui.logic.InfoPanel;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.Drawable;
+import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 import static nz.ac.wgtn.swen225.lc.app.gui.AppWindow.MAZE_SIZE;
 
@@ -21,6 +24,7 @@ public class PlayScreen extends JPanel {
     private GameLayeredPane layeredPane;
 
     private AppController c;
+    private BufferedImage bgImg;
 
     /**
      * Constructor to initialize the main application window.
@@ -29,6 +33,7 @@ public class PlayScreen extends JPanel {
     public PlayScreen(AppController c){
         this.c = c;
         setupLayoutPanels();
+        bgImg = LoadingImg.Background.loadImage();
     }
 
     private void setupLayoutPanels(){
@@ -62,6 +67,12 @@ public class PlayScreen extends JPanel {
         gamePanel.setVisible(true);
         //layoutPanels.add(gamePanel);
         return gamePanel;
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.drawImage(bgImg, 0, 0, AppWindow.WINDOW_WIDTH, AppWindow.WINDOW_HEIGHT, this);
     }
 
     // ===== GETTERS ======

@@ -6,6 +6,7 @@ public record VictoryState(AppController c) implements GameState {
     public VictoryState{
         c.windowController().changeScreen(name());
         c.timerController().pause();
+        c.rendererController().stopMusic();
     }
     public void exit(AppController c) { c.exitGame(); }
     public void startNewGame(AppController c, int level) { c.startNewGame(level); }

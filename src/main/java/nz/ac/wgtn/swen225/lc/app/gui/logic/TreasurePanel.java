@@ -2,6 +2,7 @@ package nz.ac.wgtn.swen225.lc.app.gui.logic;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
+import nz.ac.wgtn.swen225.lc.app.gui.layout.LeftPanel;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;
 
 import javax.swing.*;
@@ -34,11 +35,12 @@ public class TreasurePanel extends JPanel implements LogicPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        int offset = (LeftPanel.PANEL_WIDTH / 2) - ((totalTreasures * AppWindow.SQUARE_SIZE) / 2);
         for(int i = 0; i < totalTreasures; i++){
             BufferedImage img;
             if(i < treasuresCollected) img = LoadingImg.Treasure.loadImage();
             else img = LoadingImg.Sand.loadImage();
-            g.drawImage(img, AppWindow.SQUARE_SIZE + i * AppWindow.SQUARE_SIZE, 0,
+            g.drawImage(img, offset + i * AppWindow.SQUARE_SIZE, 0,
                     AppWindow.SQUARE_SIZE, AppWindow.SQUARE_SIZE, this);
         }
     }

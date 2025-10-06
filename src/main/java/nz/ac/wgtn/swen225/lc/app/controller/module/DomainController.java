@@ -48,6 +48,12 @@ public class DomainController {
             @Override public void onLevelComplete() {
                 c.victory();
             }
+            @Override public void onPlayerDrown(Player player){
+                c.defeat();
+            }
+            @Override public void onPlayerDie(Player player){
+                c.defeat();
+            }
         });
     }
 
@@ -62,10 +68,19 @@ public class DomainController {
         domain.movePlayer(dir);
     }
 
+    /**
+     * Moves the crab in level 2
+     * Called by TimerController every second
+     */
+    public void moveCrab(){
+        domain.ping();
+    }
+
 
     // ========== GETTERS AND SETTERS ==========
     public Maze domain() {return domain;}
     public Player player() {return player;}
     public Tile[][] tileGrid() {return tileGrid;}
     public List<Key> keysList() {return Collections.unmodifiableList(keysList);}
+    public List<Monster> monsters(){return domain.getMonsters();}
 }

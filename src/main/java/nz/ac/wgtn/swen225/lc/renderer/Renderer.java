@@ -1,6 +1,7 @@
 package nz.ac.wgtn.swen225.lc.renderer;
 
 import nz.ac.wgtn.swen225.lc.domain.GameObserver;
+import nz.ac.wgtn.swen225.lc.domain.Monster;
 import nz.ac.wgtn.swen225.lc.domain.Player;
 import nz.ac.wgtn.swen225.lc.domain.entities.Door;
 import nz.ac.wgtn.swen225.lc.domain.entities.Key;
@@ -9,6 +10,7 @@ import nz.ac.wgtn.swen225.lc.renderer.imgs.Drawable;
 import nz.ac.wgtn.swen225.lc.renderer.sounds.LoadingSounds;
 
 import javax.swing.*;
+import java.util.List;
 
 /**
  * Controls how panels and tiles are drawn within the game
@@ -32,7 +34,9 @@ public class Renderer {
     /**
      * Constructor for Renderer that sets a Drawable
      */
-    public Renderer(Tile[][] currentTiles, Player player){ drawable = new Drawable(currentTiles, player); }
+    public Renderer(Tile[][] currentTiles, Player player, List<Monster> monsters){
+        drawable = new Drawable(currentTiles, player);
+    }
 
     /**
      * Returns the panel

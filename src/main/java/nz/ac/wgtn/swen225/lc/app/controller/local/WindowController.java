@@ -89,7 +89,7 @@ public class WindowController {
     }
 
     private void initialiseTreasure() {
-        int maxTreasures = c.domainController().player().getTotalTreasures();
+        int maxTreasures = c.persistencyController().maxTreasures();
         treasurePanel.initialisePanelInfo(maxTreasures);
     }
 

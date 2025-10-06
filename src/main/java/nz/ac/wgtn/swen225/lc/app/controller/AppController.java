@@ -111,6 +111,7 @@ public class AppController {
 
         rendererController.updateMaze(domainController);
         windowController.initialiseWindow();
+
         System.out.println("Starting New Game at Level " + level);
     }
 
@@ -119,6 +120,7 @@ public class AppController {
      */
     public void restartLevel(){
         System.out.println("Restarting Level");
+        rendererController.stopMusic();
         startNewGame(persistencyController.level());
     }
 
