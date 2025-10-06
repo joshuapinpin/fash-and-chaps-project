@@ -1,7 +1,6 @@
 package nz.ac.wgtn.swen225.lc.app.controller.module;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
-import nz.ac.wgtn.swen225.lc.app.state.VictoryState;
 import nz.ac.wgtn.swen225.lc.domain.*;
 import nz.ac.wgtn.swen225.lc.domain.entities.*;
 import nz.ac.wgtn.swen225.lc.domain.tiles.Tile;
@@ -12,7 +11,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class DomainController {
-    AppController controller;
+    AppController c;
     Maze domain;
     Player player;
     List<Key> keysList;
@@ -23,7 +22,7 @@ public class DomainController {
      * @param controller Reference to the main AppController
      */
     public DomainController(AppController controller){
-        this.controller = controller;
+        this.c = controller;
         initialiseDomain(1);
     }
 
@@ -33,9 +32,7 @@ public class DomainController {
      */
     public void initialiseDomain(int level){
         // Load Level
-        if(level == 1) this.domain = Levels.LevelOne.load();
-        else if(level == 2) this.domain = Levels.LevelTwo.load();
-        else throw new IllegalArgumentException("Invalid level: " + level);
+        this.domain = c.persistencyController().loadLevel(level).load();
 
         // Initialise Domain Fields
         this.tileGrid = domain.getTileGrid();
@@ -46,10 +43,16 @@ public class DomainController {
         domain.addObserver(Renderer.playSounds());
         domain.addObserver(new GameObserver() {
             @Override public void onInfoMessage() {
-                controller.window().displayInfo(true);
+                c.windowController().displayInfo(true);
             }
             @Override public void onLevelComplete() {
-                controller.victory();
+                c.victory();
+            }
+            @Override public void onPlayerDrown(Player player){
+                c.defeat();
+            }
+            @Override public void onPlayerDie(Player player){
+                c.defeat();
             }
         });
     }
@@ -61,8 +64,16 @@ public class DomainController {
     public void movePlayer(Direction dir){
         if(domain == null) throw new RuntimeException("Cannot move player: Domain is null.");
         // TODO: need a better and safer way to turn info on and off
-        controller.window().displayInfo(false);
+        c.windowController().displayInfo(false);
         domain.movePlayer(dir);
+    }
+
+    /**
+     * Moves the crab in level 2
+     * Called by TimerController every second
+     */
+    public void moveCrab(){
+        domain.ping();
     }
 
 
@@ -71,4 +82,5 @@ public class DomainController {
     public Player player() {return player;}
     public Tile[][] tileGrid() {return tileGrid;}
     public List<Key> keysList() {return Collections.unmodifiableList(keysList);}
+    public List<Monster> monsters(){return domain.getMonsters();}
 }

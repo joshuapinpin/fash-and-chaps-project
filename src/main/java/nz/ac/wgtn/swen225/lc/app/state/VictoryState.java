@@ -4,8 +4,9 @@ import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 
 public record VictoryState(AppController c) implements GameState {
     public VictoryState{
-        c.window().showScreen(name());
+        c.windowController().changeScreen(name());
         c.timerController().pause();
+        c.rendererController().stopMusic();
     }
     public void exit(AppController c) { c.exitGame(); }
     public void startNewGame(AppController c, int level) { c.startNewGame(level); }

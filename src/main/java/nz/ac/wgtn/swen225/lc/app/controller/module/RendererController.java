@@ -4,10 +4,13 @@ import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
 import nz.ac.wgtn.swen225.lc.renderer.Renderer;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.Drawable;
+import nz.ac.wgtn.swen225.lc.renderer.sounds.LoadingSounds;
 
 public class RendererController {
     Renderer renderer;
     Drawable mazePanel;
+    LoadingSounds bgMusic;
+    float playVolume = -40f;
 
     /**
      * Constructor initializes the renderer with the current domain state.
@@ -15,9 +18,11 @@ public class RendererController {
      * @param domainController DomainController
      */
     public RendererController(AppController controller, DomainController domainController){
-        this.renderer = new Renderer(domainController.tileGrid(), domainController.player());
+        this.renderer = new Renderer(domainController.tileGrid(), domainController.player(),
+                domainController.monsters());
         this.mazePanel = renderer.getPanel();
         renderer.setDimensions(AppWindow.MAZE_SIZE, AppWindow.MAZE_SIZE);
+        bgMusic = LoadingSounds.BackgroundSound;
     }
 
     /**
@@ -33,6 +38,14 @@ public class RendererController {
         // Update Maze
         mazePanel.setAllTiles(domainController.tileGrid(), domainController.player());
         mazePanel.repaint();
+    }
+
+    public void playMusic(){
+        bgMusic.playBackgroundMusic(playVolume);
+    }
+
+    public void stopMusic(){
+        bgMusic.stopBackgroundMusic();
     }
 
     // ===== Getters and Setters =====

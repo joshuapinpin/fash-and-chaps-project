@@ -110,6 +110,22 @@ public class Maze {
     }
 
     /**
+     * Get target tile in specified direction from current position
+     * Used by player and monsters to determine next tile
+     * @param currentPos current position
+     * @param direction direction to get target tile
+     * @return target tile in direction from current position
+     */
+    public Tile targetTile(Position currentPos, Direction direction){
+        if(currentPos == null || direction == null){
+            throw new IllegalArgumentException("Player not set in maze");
+        }
+
+        Position toMove = direction.apply(currentPos);
+        return getTileAt(toMove);
+    }
+
+    /**
      * Move player in specified direction if target tile is accessible
      * The direction dependent on what user input is
      * Notify observers of player movement and any entity interactions when player enters a tile
@@ -123,8 +139,7 @@ public class Maze {
             throw new IllegalArgumentException("Player not set in maze");
         }
 
-        Position toMove = direction.apply(player.getPos());
-        Tile targetTile = getTileAt(toMove);
+        Tile targetTile = targetTile(player.getPos(), direction);
 
         if(targetTile.isAccessible(this.player)){
             player.move(direction);
@@ -138,7 +153,7 @@ public class Maze {
             Consumer<GameObserver> event = targetTile.onEnter(player);
             observers.forEach(event); //notify all observers of this event
 
-            assert player.getPos().equals(toMove) : "Player did not move to the correct position";
+            assert player.getPos().equals(targetTile.getPos()) : "Player did not move to the correct position";
         }
         player.setDirection(direction); //update player direction regardless of move success
         assert player.getDirection() == direction : "Player direction not updated correctly";
@@ -158,8 +173,7 @@ public class Maze {
 
         for (Monster m : monsters) {
             //check if next tile in direction is a wall
-            Position toMove = m.getDirection().apply(m.getPos());
-            Tile targetTile = getTileAt(toMove);
+            Tile targetTile = targetTile(m.getPos(), m.getDirection());
 
             if (targetTile instanceof Wall) {
                 m.updateDirection();
@@ -244,7 +258,8 @@ public class Maze {
     /**
      * Get symbol for tile at specified position for string representation
      * P = Player, K = Key, D = Door, T = Treasure, L = ExitLock
-     * ~ = Water, W = Wall, F = Free, E = Exit, I = Info
+     * ~ = Water, W = Wall, F = Free, E = Exit, I = Info, M = Monster
+     * Used for JUnit testing to verify maze layout
      * @param pos position to get symbol for
      * @return symbol representing tile at position
      */
@@ -253,29 +268,39 @@ public class Maze {
         if(monsters.stream().anyMatch(m-> m.getPos().equals(pos))) return "M";
         Tile tile = getTileAt(pos);
 
-        if (tile instanceof Wall) {
-            return "W";
-        } else if (tile instanceof Free) {
-            Free freeTile = (Free) tile;
-            if (freeTile.getCollectable().isPresent()) {
-                Entity entity = freeTile.getCollectable().get();
-                if (entity instanceof Key) {
-                    return "K";
-                } else if (entity instanceof Door) {
-                    return "D";
-                } else if (entity instanceof Treasure) {
-                    return "T";
-                } else if (entity instanceof ExitLock) {
-                    return "L";
+        return tile.accept(new TileVisitor<String>() {
+            @Override
+            public String visitWall(Wall wall) {return "W";}
+
+            @Override
+            public String visitFree(Free free) {
+                if(free.getCollectable().isPresent()){
+                    Entity entity = free.getCollectable().get();
+                    return entity.accept(new EntityVisitor<String>() {
+                        @Override
+                        public String visitKey(Key key) {return "K";}
+
+                        @Override
+                        public String visitDoor(Door door) {return "D";}
+
+                        @Override
+                        public String visitExitLock(ExitLock exitLock) {return "L";}
+
+                        @Override
+                        public String visitTreasure(Treasure treasure) {return "T";}
+                    });
                 }
+                return "F";
             }
-        } else if (tile instanceof Exit) {
-            return "E";
-        } else if (tile instanceof Water) {
-            return "~";
-        } else if (tile instanceof Info){
-            return "I";
-        }
-        return "F";
+
+            @Override
+            public String visitInfo(Info info) {return "I";}
+
+            @Override
+            public String visitWater(Water water) {return "~";}
+
+            @Override
+            public String visitExit(Exit exit) {return "E";}
+        });
     }
 }

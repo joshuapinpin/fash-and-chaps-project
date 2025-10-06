@@ -1,7 +1,6 @@
 package nz.ac.wgtn.swen225.lc.app.state;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
-import nz.ac.wgtn.swen225.lc.app.controller.logic.TimerController;
 import nz.ac.wgtn.swen225.lc.domain.Direction;
 
 /**
@@ -10,8 +9,9 @@ import nz.ac.wgtn.swen225.lc.domain.Direction;
  */
 public record PlayState(AppController c) implements GameState {
     public PlayState{
-        c.window().showScreen(name());
-        c.timerController().start();
+        c.windowController().changeScreen(name());
+        c.timerController().play();
+        c.rendererController().playMusic();
     }
     public void moveUp(AppController c) { c.movePlayer(Direction.UP);}
     public void moveDown(AppController c) { c.movePlayer(Direction.DOWN);}
