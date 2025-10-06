@@ -89,6 +89,15 @@ public enum EntityParsers {
     }
 
     /**
+     * Utility method to determine whether a given string starts with a valid Entity name.
+     * @param entity - the String which could potentially be parsed into an Entity.
+     * @return - true if the String starts with an Entity name, false otherwise.
+     */
+    public static boolean hasEntityName(String entity) {
+        return mapper.containsKey(entity.split(separator)[0]);
+    }
+
+    /**
      * Getter for the Entity's name.
      * @return - the name as a String.
      */
