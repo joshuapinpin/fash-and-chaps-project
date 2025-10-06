@@ -23,8 +23,8 @@ public class RecorderController {
     public RecorderController(AppController controller, TimerController timerController) {
         this.controller = controller;
         this.timerController = timerController;
-        play = Play.of();
-        save = Save.of();
+        play = Play.of(); // changed
+        save = Save.of(); // changed
     }
 
     /**
@@ -41,6 +41,7 @@ public class RecorderController {
     public void stopRecording(){
         isRecording = false;
         System.out.println("Stopped Recording");
+        save.saveToFile(); // changed
     }
 
     /**
@@ -85,7 +86,7 @@ public class RecorderController {
     public void autoPlay() {
         System.out.println("Auto-Playing");
         controller.setState(new AutoReplayState());
-        play.autoPlay(controller);
+        play.autoPlay(0, 0, controller); // changed to work
         controller.setState(new PausedState(controller));
     }
 
@@ -95,7 +96,7 @@ public class RecorderController {
      */
     public void addMovement(Input dir){
         if(!isRecording) return;
-        save.addMovement(dir, controller);
+        save.addMovement(dir, controller); // changed to work
     }
 
 

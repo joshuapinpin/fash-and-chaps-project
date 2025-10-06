@@ -7,8 +7,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import javax.swing.*;
 import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
+
 /**
  * Class for saving each movement of the Character
  * It coordinates with the App package, which calls
@@ -18,21 +19,16 @@ import java.util.Map;
  * @author Arushi Bhatnagar Stewart
  */
 public class Save{
-    /**
-     *
-     * @param direction
-     * @param state
-     */
-    record MovementState(Input direction, GameState state){}
+    public record inputTime(Input direction, Integer timeLeft){}
     private static final Save saveInstance = new Save();
-    private Map<MovementState, Integer> saveMap;
+    private List<inputTime> saveList;
     private final ObjectMapper mapper;
     /** Method to add the Input objects (the directions/movements)
      * of the character to the movements list.
      *
      */
     private Save(){
-        saveMap = new HashMap<>();
+        saveList = new ArrayList<>();
         mapper = new ObjectMapper();
     }
     /**
@@ -44,14 +40,13 @@ public class Save{
     }
     /** */
     public void reset(){
-        saveMap = new HashMap<>();
+        saveList = new ArrayList<>();
     }
     /** */
     public void addMovement(Input direction, AppController ac) {
         System.out.println("*DEBUG* Inside of the Recorder Package Now");
-        MovementState ms = new MovementState(direction, ac.state());
         int timeLeft = ac.timerController().getTimeLeft();
-        saveMap.put(ms, timeLeft);
+        saveList.add(new inputTime(direction, timeLeft));
     }
     /** */
     private File chooseFile(){
@@ -79,13 +74,13 @@ public class Save{
         System.out.println("*DEBUG* Inside of the Recorder Package Now");
         File playerMovements = chooseFile();
         try {
-            mapper.writerWithDefaultPrettyPrinter().writeValue(playerMovements, saveMap);
+            mapper.writerWithDefaultPrettyPrinter().writeValue(playerMovements, saveList);
         } catch(IOException e){
             throw new Error(e);
         }
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         Save s = Save.of();
         AppController ac = AppController.of();
         s.addMovement(Input.MOVE_UP, ac);
@@ -93,5 +88,5 @@ public class Save{
         s.addMovement(Input.MOVE_LEFT, ac);
         s.addMovement(Input.MOVE_RIGHT, ac);
         s.saveToFile();
-    }
+    } */
 }
