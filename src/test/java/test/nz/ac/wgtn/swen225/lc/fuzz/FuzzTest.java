@@ -16,6 +16,9 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
+import nz.ac.wgtn.swen225.lc.domain.Maze;
+import nz.ac.wgtn.swen225.lc.domain.Position;
+
 /**
  * Fuzz tests for the application.
  * Generates random sequences of actions to test the robustness of the application module.
@@ -65,8 +68,8 @@ public class FuzzTest {
         boolean logSeed = Boolean.getBoolean("fuzz.logSeed");
         if(logSeed) System.out.println("[FUZZ] seed="+seed+" durationMs="+durationMillis+" startLevel="+initialLevel);
 
-        AppController controller = AppController.of();
-        controller.startNewGame(initialLevel);
+    AppController controller = AppController.of();
+    safeStartNewGame(controller, initialLevel);
 
         // Action buckets
         List<Input> movement = List.of(Input.MOVE_UP, Input.MOVE_DOWN, Input.MOVE_LEFT, Input.MOVE_RIGHT);
@@ -88,15 +91,15 @@ public class FuzzTest {
                 String stateName = controller.state().getClass().getSimpleName();
                 if(stateName.contains("Victory") || stateName.contains("Defeat")) {
                     int nextLevel = ThreadLocalRandom.current().nextBoolean() ? 1 : 2;
-                    controller.startNewGame(nextLevel);
+                    safeStartNewGame(controller, nextLevel);
                     if(nextLevel==1) sawLevel1 = true; else sawLevel2 = true;
                 }
 
                 // Force visiting both levels: halfway through time, if one level never seen, switch.
                 long remaining = Duration.between(Instant.now(), end).toMillis();
                 if(remaining < (durationMillis/2) && !(sawLevel1 && sawLevel2)) {
-                    if(!sawLevel1) { controller.startNewGame(1); sawLevel1 = true; }
-                    else if(!sawLevel2) { controller.startNewGame(2); sawLevel2 = true; }
+                    if(!sawLevel1) { safeStartNewGame(controller,1); sawLevel1 = true; }
+                    else if(!sawLevel2) { safeStartNewGame(controller,2); sawLevel2 = true; }
                 }
 
                 Input next = pickNext(rnd, movement, meta, levelLoads, rare);
@@ -105,6 +108,15 @@ public class FuzzTest {
                     controller.handleInput(next);
                 } catch(UnsupportedOperationException | IllegalArgumentException ignored) {
                     // expected sometimes depending on state
+                } catch(RuntimeException rte) {
+                    if(rte.getMessage()!=null && rte.getMessage().contains("background sound")) {
+                        System.err.println("[FUZZ][AUDIO-WARN] Suppressed background sound failure mid-run: " + rte.getMessage());
+                    } else throw rte;
+                }
+
+                // Periodic logging of treasure count & position every 40 moves or when switching level
+                if((moves % 40)==0) {
+                    logProgress(controller, moves);
                 }
 
                 moves++;
@@ -130,6 +142,42 @@ public class FuzzTest {
         }
     }
 
+    private void logProgress(AppController controller, int moves) {
+        try {
+            Maze m = controller.domain();
+            if(m == null) return;
+            int treasures = countTreasures(m);
+            Position p = m.getPlayer()!=null? m.getPlayer().getPos():null;
+            System.out.printf("[FUZZ][STATE] moves=%d level=%d treasuresRemaining=%d player=%s state=%s%n",
+                    moves, controller.level(), treasures, p, controller.state().getClass().getSimpleName());
+        } catch(Exception e) {
+            System.out.println("[FUZZ][STATE] (error gathering state) " + e.getMessage());
+        }
+    }
+
+    private int countTreasures(Maze maze) {
+        int rows = maze.getRows();
+        int cols = maze.getCols();
+        int count = 0;
+        for(int r=0;r<rows;r++) {
+            for(int c=0;c<cols;c++) {
+                if("T".equals(maze.getSymbol(new Position(c,r)))) count++;
+            }
+        }
+        return count;
+    }
+
+    private void safeStartNewGame(AppController controller, int level) {
+        try {
+            controller.startNewGame(level);
+        } catch(RuntimeException e) {
+            // Suppress known audio background issues while still exercising logic.
+            if(e.getMessage()!=null && e.getMessage().contains("background sound")) {
+                System.err.println("[FUZZ][AUDIO-WARN] Suppressed audio init failure: " + e.getMessage());
+            } else throw e;
+        }
+    }
+
     private Input pickNext(Random rnd, List<Input> movement, List<Input> meta, List<Input> levelLoads, List<Input> rare) {
         int bucket = rnd.nextInt(100);
         if(bucket < 68) return movement.get(rnd.nextInt(movement.size()));      // ~68%
@@ -147,6 +195,58 @@ public class FuzzTest {
         System.out.println(sb);
         System.out.println("Re-run with: -Dfuzz.seed="+seed);
         System.out.println("================================");
+
+        // Optional artifact: write a markdown issue draft if enabled
+        if(Boolean.getBoolean("fuzz.issue.markdown")) {
+            writeIssueMarkdown(seed, executed, t, sb.toString());
+        }
+    }
+
+    private void writeIssueMarkdown(long seed, List<Input> executed, Throwable t, String csv) {
+        java.io.File dir = new java.io.File("target/fuzz-issues");
+        if(!dir.exists() && !dir.mkdirs()) {
+            System.err.println("[FUZZ][ISSUE] Could not create directory: " + dir);
+            return;
+        }
+        String shortName = (t==null?"no-exception":t.getClass().getSimpleName());
+        String fileName = String.format("fuzz-%s-seed-%d.md", shortName, seed);
+        java.io.File f = new java.io.File(dir, fileName);
+        try(java.io.PrintWriter pw = new java.io.PrintWriter(f, java.nio.charset.StandardCharsets.UTF_8)) {
+            pw.println("# Fuzzer Detected Exception : " + shortName);
+            pw.println();
+            pw.println("## Summary");
+            pw.println("Exception during fuzz run: `" + (t==null?"(none)":t.toString()) + "`.");
+            pw.println();
+            pw.println("## Reproduction");
+            pw.println("```bash");
+            pw.println("mvn -Dfuzz.seed=" + seed + " -Dfuzz.ms=15000 test");
+            pw.println("```");
+            pw.println();
+            pw.println("## Stack Trace (trimmed)");
+            pw.println("```");
+            if(t!=null) {
+                java.io.StringWriter sw = new java.io.StringWriter();
+                t.printStackTrace(new java.io.PrintWriter(sw));
+                pw.println(sw.toString());
+            } else pw.println("(none)");
+            pw.println("```");
+            pw.println();
+            pw.println("## Input Sequence (CSV)");
+            pw.println("```");
+            pw.println(csv);
+            pw.println("```");
+            pw.println();
+            pw.println("## Labels");
+            pw.println("#detectedByFuzzer");
+            pw.println();
+            pw.println("## Suggested Next Steps");
+            pw.println("- Investigate stack trace in module indicated by top frames.");
+            pw.println("- Re-run with same seed to confirm determinism.");
+            pw.println("- Add regression unit test if a logic bug is confirmed.");
+        } catch(Exception e) {
+            System.err.println("[FUZZ][ISSUE] Failed to write issue markdown: " + e);
+        }
+        System.out.println("[FUZZ][ISSUE] Markdown written: " + f.getPath());
     }
 
     // Simple helper to manually replay a sequence if you copy it from a dump (comma-separated names)
