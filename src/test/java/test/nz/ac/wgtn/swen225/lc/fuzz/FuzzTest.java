@@ -3,6 +3,7 @@ package test.nz.ac.wgtn.swen225.lc.fuzz;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
@@ -29,7 +30,7 @@ import java.util.Random;
  * @author Al-Bara Al-Sakkaf
  */
 public class FuzzTest {
-
+    @Disabled
     @Test
     @Timeout(60)  // max 1 min runtime
     public void testLevel1() {

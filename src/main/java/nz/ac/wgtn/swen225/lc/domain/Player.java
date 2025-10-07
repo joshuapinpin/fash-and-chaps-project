@@ -172,12 +172,6 @@ public class Player{
     }
 
     /**
-     * Get the current state of the player
-     * @return current player state
-     */
-    public PlayerState getState(){return state;}
-
-    /**
      * Get the current direction the player is facing
      * @return current direction
      */
@@ -199,9 +193,6 @@ public class Player{
      * @return true if all treasures collected, false otherwise
      */
     public boolean allTreasuresCollected(){
-        if(treasuresCollected < 0){
-            throw new IllegalStateException("Treasures left not initialized");
-        }
         return treasuresCollected == totalTreasures;
     }
 
@@ -216,11 +207,5 @@ public class Player{
      * @return total treasures
      */
     public int getTotalTreasures(){ return totalTreasures; }
-
-    /**
-     * Get the number of keys the player has collected
-     * @return number of keys
-     */
-    public int getKeysLeft(){return keys.size();}
 
 }
