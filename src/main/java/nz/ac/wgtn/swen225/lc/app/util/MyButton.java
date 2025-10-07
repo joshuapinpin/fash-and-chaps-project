@@ -12,13 +12,19 @@ import java.awt.image.BufferedImage;
 public class MyButton {
     JButton button;
 
+    /** Factory method to create a button with specified properties.
+     * @param name The text to display on the button.
+     * @param w The width of the button.
+     * @param h The height of the button.
+     * @param fontSize The font size of the button text.
+     * @param img The background image for the button (can be null).
+     * @return A JButton instance with the specified properties.
+     */
     public static JButton of(String name, int w, int h, int fontSize, BufferedImage img){
         return new MyButton(name, w, h, fontSize, img).button();
     }
 
-    public JButton button(){
-        return button;
-    }
+    private JButton button(){return button;}
 
     private MyButton(String name, int w, int h, int fontSize, BufferedImage img){
         button = new JButton(name){
