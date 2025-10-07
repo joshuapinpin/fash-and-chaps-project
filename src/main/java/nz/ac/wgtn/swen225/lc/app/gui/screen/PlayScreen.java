@@ -36,8 +36,6 @@ public class PlayScreen extends JPanel {
     private boolean displayingPause = false;
     private String previousCard = "";
 
-    private List<Position> shellPositions;
-
     /**
      * Constructor to initialize the main application window.
      * @param c AppController
@@ -48,11 +46,7 @@ public class PlayScreen extends JPanel {
         setupLayeredPanels();
         bgImg = LoadingImg.BgWater.loadImage();
         shell = LoadingImg.Shell.loadImage();
-        shellPositions = List.of();
-//                pos(1,1), pos(5,2), pos(0, 6),
-//                pos(4,5), pos(3,10), pos(20,1),
-//                pos(20, 7), pos(16,10), pos(19,9)
-//        );
+
     }
 
     private Position pos(int x, int y){
@@ -153,14 +147,6 @@ public class PlayScreen extends JPanel {
         // Darken the background
         g.setColor(new Color(0, 0, 0, 40)); // alpha 80 for subtle darkness
         g.fillRect(0, 0, AppWindow.WINDOW_WIDTH, AppWindow.WINDOW_HEIGHT);
-        // Shells
-        shellPositions.forEach(pos -> drawShell(g, pos, squareSize));
-    }
-
-    /** Helper Method for Drawing Shell */
-    private void drawShell(Graphics g, Position pos, int squareSize){
-        g.drawImage(shell, pos.getX() * squareSize + squareSize/4, pos.getY() * squareSize + squareSize/4,
-                squareSize/2, squareSize/2, this);
     }
 
     // ===== GETTERS ======
