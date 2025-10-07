@@ -44,7 +44,7 @@ public class PlayScreen extends JPanel {
         this.c = c;
         setupLayoutPanels();
         setupLayeredPanels();
-        bgImg = LoadingImg.BgWater.loadImage();
+        bgImg = LoadingImg.Background.loadImage();
         shell = LoadingImg.Shell.loadImage();
 
     }
@@ -145,8 +145,8 @@ public class PlayScreen extends JPanel {
             }
         }
         // Darken the background
-        g.setColor(new Color(0, 0, 0, 40)); // alpha 80 for subtle darkness
-        g.fillRect(0, 0, AppWindow.WINDOW_WIDTH, AppWindow.WINDOW_HEIGHT);
+        //g.setColor(new Color(0, 0, 0, 40)); // alpha 80 for subtle darkness
+        //g.fillRect(0, 0, AppWindow.WINDOW_WIDTH, AppWindow.WINDOW_HEIGHT);
     }
 
     // ===== GETTERS ======
