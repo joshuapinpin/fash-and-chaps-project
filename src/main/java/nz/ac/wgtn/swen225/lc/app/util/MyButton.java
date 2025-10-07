@@ -52,16 +52,7 @@ public class MyButton {
 
             @Override
             protected void paintComponent(Graphics g) {
-                int x = 0, y = 0;
-                while(x < w){
-                    while(y < h){
-                        g.drawImage(img, x, y,
-                                AppWindow.SQUARE_SIZE, AppWindow.SQUARE_SIZE, this);
-                        y += AppWindow.SQUARE_SIZE;
-                    }
-                    y = 0;
-                    x += AppWindow.SQUARE_SIZE;
-                }
+                if(img != null) drawImg(g);
                 if (hovered) {
                     // Draw a semi-transparent black overlay for a darker tint
                     g.setColor(new Color(0, 0, 0, 80)); // alpha 80 for subtle darkness
@@ -73,11 +64,26 @@ public class MyButton {
                 }
                 super.paintComponent(g);
             }
+
+            private void drawImg(Graphics g){
+                int x = 0, y = 0;
+                while(x < w){
+                    while(y < h){
+                        g.drawImage(img, x, y,
+                                AppWindow.SQUARE_SIZE, AppWindow.SQUARE_SIZE, this);
+                        y += AppWindow.SQUARE_SIZE;
+                    }
+                    y = 0;
+                    x += AppWindow.SQUARE_SIZE;
+                }
+            }
         };
 
         button.setContentAreaFilled(false);
         button.setOpaque(false);
         button.setFont(MyFont.PIXEL.getFont(fontSize));
         button.setForeground(Color.white);
+        button.setBorderPainted(false);
+        button.setBorder(BorderFactory.createEmptyBorder());
     }
 }

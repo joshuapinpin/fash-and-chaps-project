@@ -12,7 +12,7 @@ import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.Set;
+import java.util.List;
 
 import static nz.ac.wgtn.swen225.lc.app.gui.AppWindow.MAZE_SIZE;
 
@@ -29,7 +29,7 @@ public class PlayScreen extends JPanel {
     private BufferedImage bgImg;
     private BufferedImage shell;
 
-    private Set<Position> shellPositions;
+    private List<Position> shellPositions;
 
     /**
      * Constructor to initialize the main application window.
@@ -40,7 +40,11 @@ public class PlayScreen extends JPanel {
         setupLayoutPanels();
         bgImg = LoadingImg.Water.loadImage();
         shell = LoadingImg.Shell.loadImage();
-        shellPositions = Set.of();
+        shellPositions = List.of();
+//                pos(1,1), pos(5,2), pos(0, 6),
+//                pos(4,5), pos(3,10), pos(20,1),
+//                pos(20, 7), pos(16,10), pos(19,9)
+//        );
     }
 
     private Position pos(int x, int y){
@@ -63,6 +67,7 @@ public class PlayScreen extends JPanel {
         layeredPane.add(infoPanel, JLayeredPane.PALETTE_LAYER);
         add(layeredPane, BorderLayout.CENTER);
     }
+
     private void setupSingleLayoutPanel(JPanel panel, String position){
         add(panel, position);
     }
