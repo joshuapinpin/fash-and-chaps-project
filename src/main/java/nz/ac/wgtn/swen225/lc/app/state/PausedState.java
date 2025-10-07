@@ -7,6 +7,7 @@ public record PausedState(AppController c) implements GameState {
         c.timerController().pause();
     }
     public void resume(AppController c){c.resumeGame();}
+    public void pause(AppController c){c.continueGame();}
     public void save(AppController c){c.saveGame();}
     public void startNewGame(AppController c, int level){c.startNewGame(level);}
     public void exit(AppController c){c.exitGame();}
