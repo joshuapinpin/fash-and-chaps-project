@@ -298,6 +298,17 @@ public class DomainTest {
     @Test
     void testCollectKey() {
         miniGame();
+
+        //get green key object to test before and after collecting
+        Tile keyTile = maze.getTileAt(new Position(4,2));
+        Free freeTile = (Free) keyTile;
+        Key greenKey = (Key) freeTile.getCollectable().get();
+        assertEquals(true, greenKey.equals(Key.of(EntityColor.GREEN)));
+
+        assertThrows(IllegalArgumentException.class, ()-> {
+            greenKey.onInteract(null);
+        });
+
         maze.movePlayer(Direction.RIGHT);
         maze.movePlayer(Direction.RIGHT); // get green key
         assertEquals(1, player.getKeys().size());
@@ -313,7 +324,6 @@ public class DomainTest {
         maze.movePlayer(Direction.UP);
         maze.movePlayer(Direction.RIGHT);
         maze.movePlayer(Direction.RIGHT); //back to the middle
-
         maze.movePlayer(Direction.UP); //to open door
         assertEquals(new Position(2,1), player.getPos()); //door should be open
 
@@ -323,10 +333,52 @@ public class DomainTest {
     }
 
     @Test
+    void testDoor(){
+        miniGame();
+        //get door object to test before and after opening
+        Tile doorTileBefore = maze.getTileAt(new Position(2,1));
+        Free freeTileBefore = (Free) doorTileBefore;
+        Door door = (Door) freeTileBefore.getCollectable().get(); //orange door
+        assertEquals(true, door.equals(Door.of(EntityColor.ORANGE)));
+
+        assertThrows(IllegalArgumentException.class, ()-> {
+            door.onInteract(null);
+        });
+
+        assertThrows(IllegalStateException.class, ()-> { //player does not have key yet
+            door.onInteract(player);
+        });
+
+        assertThrows(IllegalArgumentException.class, ()-> {
+            door.canInteract(null);
+        });
+
+        assertEquals(false, door.hasCorrectKey(player)); //should not have key yet
+        player.addKey(Key.of(EntityColor.ORANGE));
+        assertEquals(true, door.hasCorrectKey(player));
+        assertEquals(true, door.canInteract(player)); //should be able to open now
+
+        assertThrows(IllegalArgumentException.class, ()-> {
+            door.hasCorrectKey(null);
+        });
+
+    }
+
+    @Test
     void testTreasures(){
         miniGame();
         assertEquals(4, player.getTotalTreasures());
         assertEquals(0, player.getTreasuresCollected());
+
+        //get treasure object to test before and after collecting
+        Tile treasureTile = maze.getTileAt(new Position(1,0));
+        Free freeTile = (Free) treasureTile;
+        Treasure treasure = (Treasure) freeTile.getCollectable().get();
+        assertEquals(true, treasure.equals(Treasure.of()));
+
+        assertThrows(IllegalArgumentException.class, ()-> {
+            treasure.onInteract(null);
+        });
 
         player.collectTreasure();
         assertEquals(1, player.getTreasuresCollected());
@@ -337,14 +389,36 @@ public class DomainTest {
         assertThrows(AssertionError.class, ()-> {
             player.setTotalTreasures(-1);
         });
+        assertThrows(IllegalStateException.class, ()-> {
+            treasure.onInteract(player); //all treasures already collected
+        });
     }
 
     @Test
     void exitLockAndVictory(){
         miniGame();
         player.setTotalTreasures(1);
+        //get exit lock object to test before and after collecting all treasures
+        Tile exitLockTile = maze.getTileAt(new Position(2,3));
+        Free freeTile = (Free) exitLockTile;
+        ExitLock exitLock = (ExitLock) freeTile.getCollectable().get();
+        assertEquals(true, exitLock.equals(ExitLock.of()));
+
+        //cannot pass through exit lock yet
+        assertEquals(false, exitLock.canInteract(player));
+        assertThrows(IllegalArgumentException.class, ()-> {
+            exitLock.canInteract(null);
+        });
+
+        assertThrows(IllegalArgumentException.class, ()-> {
+            maze.movePlayer(null);
+        });
+
         player.collectTreasure(); //collecting all treasures
 
+        assertThrows(IllegalArgumentException.class, ()-> {
+            exitLock.onInteract(null);
+        });
         maze.movePlayer(Direction.DOWN); //to exit lock
         assertEquals(new Position(2,3), player.getPos()); //should be able to
 
