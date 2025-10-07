@@ -76,43 +76,43 @@ public class AutoplayL1 implements Play{
      */
     public boolean autoPlay(AppController ac){
         if (saveList.isEmpty()) throw new IllegalArgumentException("Character has not moved yet");
-        pos = 0;
-        prevTimeLeft = 0;
         // Stop any existing autoplay
         if (autoplayTimer != null && autoplayTimer.isRunning()) {
             autoplayTimer.stop();
         }
-        autoplayTimer = new Timer(1, e -> processNextMove(ac));
-        autoplayTimer.setRepeats(true); // makes process iterative
+        pos = 0;
+        prevTimeLeft = 0;
+        SaveL1.inputTime iT = saveList.get(pos);
+        Input dir = iT.direction();
+        int timeLeft = iT.timeLeft();
+        // Calculate delay for THIS move
+        int timeDiff = Math.max(0, prevTimeLeft - timeLeft);
+        int delay = (timeDiff * 1000) / speed;
+        autoplayTimer = new Timer(delay, e -> processNextMove(ac));
+        autoplayTimer.setRepeats(false); // makes process iterative
         autoplayTimer.start();
         return true;
     }
     /** */
     private void processNextMove(AppController ac) {
         if (pos >= saveList.size()) {
-            autoplayTimer.stop();
             return;
         }
+        // Get and execute CURRENT move
         SaveL1.inputTime iT = saveList.get(pos);
         Input dir = iT.direction();
         int timeLeft = iT.timeLeft();
+        // Execute THIS move
         ac.handleInput(dir);
-        int timeDiff = Math.max(0, prevTimeLeft - timeLeft);
-        int delay = (timeDiff/speed) * 1000;
         prevTimeLeft = timeLeft;
         pos++;
-        // Update delay for next iteration
-        autoplayTimer.setDelay(delay);
+        // Calculate delay for NEXT move
+        SaveL1.inputTime nextMove = saveList.get(pos);
+        int nextTimeLeft = nextMove.timeLeft();
+        int timeDiff = Math.max(1, prevTimeLeft - nextTimeLeft);
+        int delay = (timeDiff * 1000) / speed;
+        // schedule next move
+        autoplayTimer.setInitialDelay(delay);
+        autoplayTimer.restart();
     }
-
-    /*public static void main(String[] args) {
-        Play p = new Play();
-        p.setSpeed(2);
-        AppController x = AppController.of();
-        p.stepByStep(x);
-        p.stepByStep(x);
-        p.stepByStep(x);
-        p.stepByStep(x);
-        p.autoPlay(x);
-    } */
 }

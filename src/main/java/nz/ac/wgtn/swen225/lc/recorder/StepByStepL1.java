@@ -83,15 +83,4 @@ public class StepByStepL1 implements Play{
         pos++;
         return true;
     }
-
-    /*public static void main(String[] args) {
-        Play p = new Play();
-        p.setSpeed(2);
-        AppController x = AppController.of();
-        p.stepByStep(x);
-        p.stepByStep(x);
-        p.stepByStep(x);
-        p.stepByStep(x);
-        p.autoPlay(x);
-    } */
 }

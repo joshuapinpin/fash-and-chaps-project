@@ -67,14 +67,4 @@ public class SaveL1 implements Save{
             throw new Error(e);
         }
     }
-
-    /*public static void main(String[] args) {
-        Save s = Save.of();
-        AppController ac = AppController.of();
-        s.addMovement(Input.MOVE_UP, ac);
-        s.addMovement(Input.MOVE_DOWN, ac);
-        s.addMovement(Input.MOVE_LEFT, ac);
-        s.addMovement(Input.MOVE_RIGHT, ac);
-        s.saveToFile();
-    } */
 }
