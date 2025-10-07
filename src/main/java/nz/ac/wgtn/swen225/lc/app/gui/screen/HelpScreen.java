@@ -16,6 +16,8 @@ public class HelpScreen extends JPanel {
 
     private BufferedImage bgImg;
     private JPanel rootPanel;
+    private JPanel controlsPanel;
+    private JPanel helpPanel;
     private JPanel buttonPanel;
 
     public HelpScreen(AppController c) {
@@ -23,6 +25,8 @@ public class HelpScreen extends JPanel {
         setLayout(new BorderLayout());
         setupTitlePanel();
         setupRootPanel();
+        setupHelpPanel();
+        setupControlsPanel();
         setupButtonPanel();
         bgImg = LoadingImg.Background.loadImage();
     }
@@ -30,33 +34,61 @@ public class HelpScreen extends JPanel {
     private void setupTitlePanel(){
         JPanel titlePanel = new JPanel(new BorderLayout());
         titlePanel.setOpaque(false);
-        titlePanel.setPreferredSize(new Dimension(AppWindow.WINDOW_WIDTH, AppWindow.SQUARE_SIZE * 3));
+        titlePanel.setPreferredSize(new Dimension(AppWindow.WINDOW_WIDTH, AppWindow.SQUARE_SIZE * 2));
         JLabel title = new JLabel("HOW TO PLAY", SwingConstants.CENTER);
         title.setHorizontalAlignment(SwingConstants.CENTER);
         title.setVerticalAlignment(SwingConstants.CENTER);
-        title.setFont(MyFont.PIXEL.getFont(100));
+        title.setFont(MyFont.PIXEL.getFont(90));
         title.setForeground(Color.WHITE);
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
         titlePanel.add(title);
-//
-//        JLabel bird = new JLabel(new ImageIcon(LoadingImg.PlayerDown.loadImage()));
-//        titlePanel.add(bird, BorderLayout.WEST);
-//
-//        JPanel crab = new JPanel();
-//        crab.add(new JLabel(new ImageIcon(LoadingImg.enemyCrab.loadImage())));
-//        crab.setPreferredSize(new Dimension(AppWindow.SQUARE_SIZE * 3, AppWindow.SQUARE_SIZE * 3));
-//        titlePanel.add(crab, BorderLayout.EAST);
-
-
         add(titlePanel, BorderLayout.NORTH);
     }
 
     private void setupRootPanel(){
-        rootPanel = new JPanel(null);
-        //rootPanel.setOpaque(false);
+        rootPanel = new JPanel(new GridLayout(1,2));
+        rootPanel.setOpaque(false);
         rootPanel.setBackground(new Color(255,0,0,80));
+
+        helpPanel = new JPanel();
+        controlsPanel = new JPanel();
+
+        rootPanel.add(helpPanel);
+        rootPanel.add(controlsPanel);
         add(rootPanel, BorderLayout.CENTER);
     }
+
+    private void setupControlsPanel() {
+        controlsPanel.setOpaque(false);
+        controlsPanel.setLayout(new BoxLayout(controlsPanel, BoxLayout.Y_AXIS));
+        controlsPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        controlsPanel.setAlignmentY(Component.CENTER_ALIGNMENT);
+        controlsPanel.add(Box.createVerticalGlue());
+        addText("ARROW KEYS: Move Player", controlsPanel);
+        addText("SPACEBAR: Pause Game", controlsPanel);
+        addText("ESCAPE: Resumes Current Game", controlsPanel);
+        addText("CTRL 1: Start New Game (Level 1)", controlsPanel);
+        addText("CTRL 2: Start New Game (Level 2)", controlsPanel);
+        addText("CTRL X: Exit Game (Lose Current Game)", controlsPanel);
+        addText("CTRL S: Exit Game (Save Current Game)", controlsPanel);
+        addText("CTRL R: Resume Saved Game", controlsPanel);
+        controlsPanel.add(Box.createVerticalGlue());
+    }
+
+    private void addText(String text, JPanel panel){
+        JLabel label = new JLabel(text);
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        label.setVerticalAlignment(SwingConstants.CENTER);
+        label.setFont(MyFont.PIXEL.getFont(AppWindow.FONT_SIZE_H2));
+        label.setForeground(Color.WHITE);
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(Box.createRigidArea(new Dimension(0, 15))); // Spacing between labels
+        panel.add(label);
+    }
+
+    private void setupHelpPanel() {
+    }
+
 
     private void setupButtonPanel(){
         buttonPanel = new JPanel(new BorderLayout());
@@ -84,7 +116,7 @@ public class HelpScreen extends JPanel {
             }
         }
          //Darken the background
-        g.setColor(new Color(0, 0, 0, 40)); // alpha 80 for subtle darkness
+        g.setColor(new Color(0, 0, 0, 80));
         g.fillRect(0, 0, AppWindow.WINDOW_WIDTH, AppWindow.WINDOW_HEIGHT);
     }
 }

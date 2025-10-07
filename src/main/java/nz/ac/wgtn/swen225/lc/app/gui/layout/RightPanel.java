@@ -65,7 +65,6 @@ public class RightPanel extends JPanel implements ActionListener, ChangeListener
 
         JLabel helpLabel = new JLabel();
         allComps.add(helpLabel);
-        setupSingleButton("HELP", controller::help);
     }
 
     private void setupRecorderButtons(){
