@@ -79,6 +79,18 @@ public enum LoadingSounds {
     }
 
     /**
+     * Restarts the background music
+     */
+    public void restartBackgroundMusic(){
+        if(BGCLIP != null){
+            BGCLIP.stop();
+            BGCLIP.setFramePosition(0); //resets the clip to beginning
+            BGCLIP.start();
+            BGCLIP.loop(Clip.LOOP_CONTINUOUSLY);
+        }
+    }
+
+    /**
      * Stops the background music
      */
     public void stopBackgroundMusic(){
