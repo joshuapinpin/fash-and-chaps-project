@@ -78,13 +78,6 @@
                     <version>3.13.0</version>
                 </plugin>
                 <plugin>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.3.0</version>
-                    <configuration>
-                        <useModulePath>false</useModulePath>
-                    </configuration>
-                </plugin>
-                <plugin>
                     <artifactId>maven-jar-plugin</artifactId>
                     <version>3.4.2</version>
                 </plugin>
@@ -136,6 +129,15 @@
                 <version>3.5.1</version>
                 <configuration>
                     <mainClass>nz.ac.wgtn.swen225.lc.app.Main</mainClass>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <useModulePath>false</useModulePath>
+                    <!-- disable assertions for code coverage reasons -->
+                    <argLine>-da ${argLine}</argLine>
                 </configuration>
             </plugin>
         </plugins>
