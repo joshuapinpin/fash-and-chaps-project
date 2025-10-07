@@ -61,10 +61,10 @@ public class StartScreen extends JPanel {
         setupSingleButton("Exit", e -> c.exitGame());
     }
 
-    private void setupSingleButton(String name, ActionListener event){
+    private void setupSingleButton(String name, ActionListener listener){
         JButton button = MyButton.of(name, width, height, 30, null);
         button.setPreferredSize(new Dimension(width/2, AppWindow.SQUARE_SIZE));
-        button.addActionListener(event);
+        button.addActionListener(listener);
         button.setFocusable(false);
 
         JPanel panel = new JPanel();
