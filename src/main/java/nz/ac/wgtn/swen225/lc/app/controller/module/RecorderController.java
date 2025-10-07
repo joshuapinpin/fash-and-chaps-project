@@ -1,21 +1,17 @@
 package nz.ac.wgtn.swen225.lc.app.controller.module;
-
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
+import nz.ac.wgtn.swen225.lc.app.controller.Controller;
 import nz.ac.wgtn.swen225.lc.app.controller.local.TimerController;
 import nz.ac.wgtn.swen225.lc.app.state.AutoReplayState;
 import nz.ac.wgtn.swen225.lc.app.state.PausedState;
 import nz.ac.wgtn.swen225.lc.app.state.StepReplayState;
 import nz.ac.wgtn.swen225.lc.app.util.Input;
-import nz.ac.wgtn.swen225.lc.recorder.Play;
-import nz.ac.wgtn.swen225.lc.recorder.Save;
-import nz.ac.wgtn.swen225.lc.recorder.SaveL1; // changed
-import nz.ac.wgtn.swen225.lc.recorder.AutoplayL1; // changed
-import nz.ac.wgtn.swen225.lc.recorder.StepByStepL1; // changed
+import nz.ac.wgtn.swen225.lc.recorder.*;
 
-public class RecorderController {
-    Play autoplay;
-    Play stepbystep;
-    Save saveL1; // changed
+public class RecorderController implements Controller {
+    Play autoplayL1;
+    Play stepbystepL1;
+    Save saveL1;
     boolean isRecording = false;
     AppController controller;
     TimerController timerController;
@@ -27,9 +23,14 @@ public class RecorderController {
     public RecorderController(AppController controller, TimerController timerController) {
         this.controller = controller;
         this.timerController = timerController;
-        autoplay = AutoplayL1.of(); // changed to work
-        stepbystep = StepByStepL1.of(); // changed to work
-        saveL1 = SaveL1.of(); // changed to work
+        autoplayL1 = AutoplayL1.of();
+        stepbystepL1 = StepByStepL1.of();
+        saveL1 = SaveL1.of();
+    }
+
+    @Override
+    public void atNewGame(){
+        isRecording = false;
     }
 
     /**
@@ -46,7 +47,7 @@ public class RecorderController {
     public void stopRecording(){
         isRecording = false;
         System.out.println("Stopped Recording");
-        saveL1.updateMovement(Input.SAVE, controller, true); // changed
+        saveToFile();
     }
 
     /**
@@ -62,7 +63,7 @@ public class RecorderController {
      * @param s Speed in milliseconds between moves.
      */
     public void setSpeed(int s) {
-        autoplay.setSpeed(s); // changed
+        autoplayL1.setSpeed(s);
     }
 
     /**
@@ -70,7 +71,7 @@ public class RecorderController {
      */
     public void saveToFile(){
         isRecording = false;
-        saveL1.updateMovement(Input.SAVE, controller, true); // changed
+        saveL1.updateMovement(Input.SAVE, controller, true);
     }
 
     /**
@@ -80,7 +81,7 @@ public class RecorderController {
     public void stepByStep() {
         System.out.println("Step-By-Step Playing");
         controller.setState(new StepReplayState());
-        if(!stepbystep.play(controller))
+        if(!stepbystepL1.play(controller))
             controller.setState(new PausedState(controller));
     }
 
@@ -91,8 +92,8 @@ public class RecorderController {
     public void autoPlay() {
         System.out.println("Auto-Playing");
         controller.setState(new AutoReplayState());
-        autoplay.play(controller); // changed to work
-        //controller.setState(new PausedState(controller));
+        autoplayL1.play(controller);
+        // controller.setState(new PausedState(controller));
     }
 
     /**
@@ -101,7 +102,7 @@ public class RecorderController {
      */
     public void addMovement(Input dir){
         if(!isRecording) return;
-        saveL1.updateMovement(dir, controller, false); // changed to work
+        saveL1.updateMovement(dir, controller, false);
     }
 
 

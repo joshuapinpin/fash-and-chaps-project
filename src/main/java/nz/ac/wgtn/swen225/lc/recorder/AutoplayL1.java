@@ -82,7 +82,7 @@ public class AutoplayL1 implements Play{
         if (autoplayTimer != null && autoplayTimer.isRunning()) {
             autoplayTimer.stop();
         }
-        autoplayTimer = new Timer(0, e -> processNextMove(ac));
+        autoplayTimer = new Timer(1, e -> processNextMove(ac));
         autoplayTimer.setRepeats(true); // makes process iterative
         autoplayTimer.start();
         return true;
