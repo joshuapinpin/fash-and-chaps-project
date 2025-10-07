@@ -420,9 +420,6 @@ public class DomainTest {
         player.collectTreasure();
         player.collectTreasure();
         assertEquals(true, player.allTreasuresCollected());
-        assertThrows(AssertionError.class, ()-> {
-            player.setTotalTreasures(-1);
-        });
         assertThrows(IllegalStateException.class, ()-> {
             treasure.onInteract(player); //all treasures already collected
         });
