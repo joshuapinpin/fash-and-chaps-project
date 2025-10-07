@@ -30,7 +30,7 @@ import java.util.Random;
  * @author Al-Bara Al-Sakkaf
  */
 public class FuzzTest {
-    @Disabled
+
     @Test
     @Timeout(60)  // max 1 min runtime
     public void testLevel1() {
