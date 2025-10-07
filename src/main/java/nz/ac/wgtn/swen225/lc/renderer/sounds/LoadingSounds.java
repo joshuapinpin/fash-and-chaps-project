@@ -8,13 +8,11 @@ import java.io.InputStream;
 public enum LoadingSounds {
     VictorySound("sounds/victory.wav"),
     LosingSound("sounds/losing.wav"),
-    WalkingSound(""),
     BackgroundSound("sounds/background.wav"),
     UnlockedSound("sounds/unlock.wav"),
     KeySound("sounds/key.wav"),
     CoinSound("sounds/coin.wav"),
-    PlayerDrownSound("sounds/drown.wav"),
-    PlayerCrabSound("");
+    PlayerDrownSound("sounds/drown.wav");
 
     private final String filename; //name of file
     private Clip BGCLIP; // saves the clip for bg sound
@@ -65,8 +63,10 @@ public enum LoadingSounds {
      */
     public void playBackgroundMusic(float volume){
             try {
-                BGCLIP = AudioSystem.getClip();
-                BGCLIP.open(loadSound()); //gets the audio
+                if(BGCLIP == null){
+                    BGCLIP = AudioSystem.getClip();
+                    BGCLIP.open(loadSound()); //gets the audio
+                }
 
                 //controls volume of sound
                 FloatControl changeVol = (FloatControl) BGCLIP.getControl(FloatControl.Type.MASTER_GAIN);
@@ -81,6 +81,8 @@ public enum LoadingSounds {
     /**
      * Stops the background music
      */
-    public void stopBackgroundMusic(){ BGCLIP.stop(); }
+    public void stopBackgroundMusic(){
+        if(BGCLIP != null && BGCLIP.isRunning()){BGCLIP.stop(); }
+    }
 
 }
