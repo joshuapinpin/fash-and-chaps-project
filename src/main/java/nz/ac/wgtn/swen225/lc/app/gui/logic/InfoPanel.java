@@ -13,24 +13,32 @@ public class InfoPanel extends JPanel {
     public static final int PANEL_WIDTH = AppWindow.MAZE_SIZE - (PANEL_X*2);
     public static final int PANEL_HEIGHT = (AppWindow.MAZE_SIZE - AppWindow.SQUARE_SIZE) / 2 - (PANEL_Y*2);
 
-    public InfoPanel(AppController controller) {
-        setPreferredSize(new Dimension(AppWindow.MAZE_SIZE, AppWindow.MAZE_SIZE));
-        setOpaque(true);
-        setBackground(new Color(0, 0, 0, 150)); // Semi-transparent background
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        setAlignmentX(Component.CENTER_ALIGNMENT);
-        setAlignmentY(Component.CENTER_ALIGNMENT);
+    JPanel helperPanel;
 
-        add(Box.createVerticalGlue()); // Push content to center vertically
+    public InfoPanel(AppController controller) {
+        setOpaque(false);
+        setLayout(null);
+
+        helperPanel = new JPanel();
+        helperPanel.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
+        helperPanel.setOpaque(true);
+        helperPanel.setBackground(new Color(0, 0, 0, 150)); // Semi-transparent background
+        helperPanel.setLayout(new BoxLayout(helperPanel, BoxLayout.Y_AXIS));
+        helperPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        helperPanel.setAlignmentY(Component.CENTER_ALIGNMENT);
+
+        helperPanel.add(Box.createVerticalGlue()); // Push content to center vertically
         addText("Welcome to Fash and Chaps!");
         addText("Pick up keys to open doors.");
         addText("Collect coins to open chest.");
         addText("Avoid crabs and puddles.");
         addText("Reach sand castle to win!");
-        add(Box.createVerticalGlue()); // Push content up
+        helperPanel.add(Box.createVerticalGlue()); // Push content up
 
-        setVisible(false);
-        setBounds(PANEL_X, PANEL_Y, PANEL_WIDTH, PANEL_HEIGHT);
+        helperPanel.setVisible(true);
+        helperPanel.setBounds(PANEL_X, PANEL_Y, PANEL_WIDTH, PANEL_HEIGHT);
+
+        add(helperPanel);
     }
 
     private void addText(String text){
@@ -40,7 +48,9 @@ public class InfoPanel extends JPanel {
         label.setFont(MyFont.PIXEL.getFont(20));
         label.setForeground(Color.WHITE);
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
-        add(Box.createRigidArea(new Dimension(0, 5))); // Spacing between labels
-        add(label);
+        helperPanel.add(Box.createRigidArea(new Dimension(0, 5))); // Spacing between labels
+        helperPanel.add(label);
     }
+
+    public static String name(){return "InfoPanel";}
 }

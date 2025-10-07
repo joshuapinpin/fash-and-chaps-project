@@ -23,6 +23,7 @@ public class WindowController implements Controller {
 
     // Game Panel
     private JPanel gamePanel;
+    private PlayScreen playScreen;
 
     // Game Logic Panels
     private KeysPanel keysPanel;
@@ -45,6 +46,7 @@ public class WindowController implements Controller {
     }
 
     private void setupGamePanels(){
+        playScreen = w.playScreen();
         levelPanel = w.playScreen().leftPanel().levelPanel();
         timerPanel = w.playScreen().leftPanel().timerPanel();
         keysPanel = w.playScreen().leftPanel().keysPanel();
@@ -79,7 +81,9 @@ public class WindowController implements Controller {
      * @param screenName Name of the screen to show (e.g., "Start", "Play", "Victory", "Defeat").
      */
     public void changeScreen(String screenName){
+        System.out.println("*DEBUG* Changing screen to: " + screenName);
         w.showScreen(screenName);
+        if(screenName.equals(PlayState.name()) && playScreen.isPaused()) displayPrevious();
     }
 
     /**
@@ -87,7 +91,17 @@ public class WindowController implements Controller {
      * @param doShow true to show, false to hide
      */
     public void displayInfo(boolean doShow) {
-        infoPanel.setVisible(doShow);
+        if(doShow) playScreen.displayInfo();
+        else playScreen.displayBlank();
+    }
+
+    public void displayPause(boolean doShow){
+        if(doShow) playScreen.displayPause();
+        else playScreen.displayBlank();
+    }
+
+    public void displayPrevious(){
+        playScreen.displayPrevious();
     }
 
     /**

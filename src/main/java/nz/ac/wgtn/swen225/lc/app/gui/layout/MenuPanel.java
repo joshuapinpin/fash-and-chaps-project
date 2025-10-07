@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
+import nz.ac.wgtn.swen225.lc.app.util.Input;
 import nz.ac.wgtn.swen225.lc.app.util.MyButton;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;
 
@@ -27,7 +28,7 @@ public class MenuPanel extends JPanel implements ActionListener {
 
     // Buttons: Pause, Save, Exit, Resume
     private Map<JButton, Runnable> buttonRunnableMap;
-    private AppController controller;
+    private AppController c;
     private BufferedImage bgImg;
 
     /**
@@ -35,7 +36,7 @@ public class MenuPanel extends JPanel implements ActionListener {
      * @param controller AppController
      */
     public MenuPanel(AppController controller){
-        this.controller = controller;
+        this.c = controller;
         setLayout(new GridLayout(1, 5, BUTTON_GAP, BUTTON_GAP));
         setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         setOpaque(false);
@@ -46,11 +47,11 @@ public class MenuPanel extends JPanel implements ActionListener {
 
     private void setupButtons(){
         buttonRunnableMap = new HashMap<>();
-        setupSingleButton("Save", () -> controller.saveGame());
-        setupSingleButton("Load", () -> controller.loadGame());
-        setupSingleButton("Play", () -> controller.continueGame());
-        setupSingleButton("Pause", () -> controller.pauseGame());
-        setupSingleButton("Home", () -> controller.exitGame());
+        setupSingleButton("Save", () -> c.handleInput(Input.SAVE));
+        setupSingleButton("Load", () -> c.handleInput(Input.RESUME));
+        setupSingleButton("Play", () -> c.handleInput(Input.CONTINUE));
+        setupSingleButton("Pause", () -> c.handleInput(Input.PAUSE));
+        setupSingleButton("Home", () -> c.handleInput(Input.EXIT));
     }
 
     private void setupSingleButton(String label, Runnable action){

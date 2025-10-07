@@ -137,7 +137,7 @@ public class AppController {
      * Continues the game from a paused state.
      */
     public void continueGame() {
-        setState(new PlayState(this));
+        if(!(state instanceof PlayState)) setState(new PlayState(this));
         System.out.println("Continuing Game");
     }
 
@@ -150,13 +150,13 @@ public class AppController {
     }
 
     /**
-     * Resumes a saved game
-     * Load game from file selector.
-     * Get from persistency
+     * Loads a saved game state.
+     * Opens a file chooser to select the saved game file.
+     * Uses Persistence to retrieve the saved state and update the domain model.
      */
     public void resumeGame() {
         // TODO: Implement resume logic
-        System.out.println("Game Resumed");
+        System.out.println("Game Loaded/Resume!");
     }
 
     /**
@@ -166,16 +166,6 @@ public class AppController {
     public void saveGame(){
         //TODO: get Persistence to create a "save current game" method
         System.out.println("Game Saved!");
-    }
-
-    /**
-     * Loads a saved game state.
-     * Opens a file chooser to select the saved game file.
-     * Uses Persistence to retrieve the saved state and update the domain model.
-     */
-    public void loadGame(){
-        // TODO: get Persistence to create a "load saved game" method, which returns a Domain object
-        System.out.println("Game Loaded!");
     }
 
     /**
