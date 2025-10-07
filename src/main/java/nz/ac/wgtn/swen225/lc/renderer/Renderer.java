@@ -99,12 +99,27 @@ public class Renderer {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        LoadingSounds.KeySound.playBackgroundMusic(-30f);
+        LoadingSounds.BackgroundSound.playBackgroundMusic(-30f);
         try {
-            Thread.sleep(Long.MAX_VALUE);
+            Thread.sleep(6000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        LoadingSounds.BackgroundSound.stopBackgroundMusic();
+        LoadingSounds.BackgroundSound.playBackgroundMusic(-30f);
+        try {
+            Thread.sleep(4000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        LoadingSounds.BackgroundSound.stopBackgroundMusic();
+        LoadingSounds.BackgroundSound.restartBackgroundMusic();
+        try {
+            Thread.sleep(4000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
 
 
 
