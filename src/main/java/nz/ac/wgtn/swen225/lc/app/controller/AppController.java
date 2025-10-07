@@ -64,8 +64,13 @@ public class AppController {
         windowController = new WindowController(this);
 
         // The Order of Controllers MATTERS (for atNewGame calls)
-        controllers = List.of(timerController, domainController, recorderController,
-                windowController, rendererController);
+        controllers = List.of(
+                timerController,
+                domainController,
+                recorderController,
+                windowController,
+                rendererController
+        );
 
     }
 

@@ -40,7 +40,8 @@ public enum LoadingImg {
     WinScreen("imgs/winScreen.png"),
     Background("imgs/background.png"),
     Towel("imgs/button.png"),
-    Shell("imgs/shell.png");
+    Shell("imgs/shell.png"),
+    BgWater("imgs/water1.png");
 
     private final String filename;
     private BufferedImage image;

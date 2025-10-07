@@ -38,7 +38,7 @@ public class PlayScreen extends JPanel {
     public PlayScreen(AppController c){
         this.c = c;
         setupLayoutPanels();
-        bgImg = LoadingImg.Water.loadImage();
+        bgImg = LoadingImg.BgWater.loadImage();
         shell = LoadingImg.Shell.loadImage();
         shellPositions = List.of();
 //                pos(1,1), pos(5,2), pos(0, 6),

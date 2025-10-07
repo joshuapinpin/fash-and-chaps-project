@@ -32,6 +32,7 @@ public class RendererController implements Controller {
      */
     @Override
     public void atNewGame(){
+        resetMusic();
         updateMaze(c.domainController());
     }
 
@@ -66,16 +67,32 @@ public class RendererController implements Controller {
         catch(NullPointerException e){}
     }
 
+    /**
+     * Restart background music from the beginning.
+     */
+    public void resetMusic(){
+        bgMusic.restartBackgroundMusic();
+    }
+
+    /**
+     * Play victory sound effect
+     */
     public void playVictorySound(){
         stopMusic();
         LoadingSounds.VictorySound.playSoundEffect(playVolume);
     }
 
+    /**
+     * Play defeat sound effect
+     */
     public void playDefeatSound(){
         stopMusic();
         LoadingSounds.LosingSound.playSoundEffect(playVolume);
     }
 
+    /**
+     * Play drowning sound effect
+     */
     public void playDrowningSound(){
         LoadingSounds.PlayerDrownSound.playSoundEffect(playVolume);
     }
