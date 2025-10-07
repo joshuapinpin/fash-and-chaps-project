@@ -1,6 +1,7 @@
 package nz.ac.wgtn.swen225.lc.app.controller.local;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
+import nz.ac.wgtn.swen225.lc.app.controller.Controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,10 +14,10 @@ import javax.swing.Timer;
  *
  * @author <Your Name>
  */
-public class TimerController implements ActionListener {
+public class TimerController implements ActionListener, Controller {
     private static final int TIMER_INTERVAL = 1000; // Timer ticks every second
-    private static final int LEVEL_1_TIME_LIMIT = 60; // Level 1 time limit in seconds
-    private static final int LEVEL_2_TIME_LIMIT = 120; // Level 2 time limit in seconds
+    private static final int LEVEL_1_TIME_LIMIT = 45; // Level 1 time limit in seconds
+    private static final int LEVEL_2_TIME_LIMIT = 60; // Level 2 time limit in seconds
 
     private final AppController c;
     private final Timer timer;
@@ -27,7 +28,6 @@ public class TimerController implements ActionListener {
      * @param controller The AppController to notify when time runs out.
      */
     public TimerController(AppController controller) {
-
         this(controller, 0); // Default to 300 seconds (5 minutes)
     }
 
@@ -53,6 +53,11 @@ public class TimerController implements ActionListener {
         if(level == 1) return LEVEL_1_TIME_LIMIT;
         else if(level == 2) return LEVEL_2_TIME_LIMIT;
         throw new IllegalArgumentException("Invalid Level: " + level);
+    }
+
+    @Override
+    public void atNewGame(){
+        restartTimer(c.persistencyController().level());
     }
 
     /**
@@ -89,7 +94,7 @@ public class TimerController implements ActionListener {
      * Starts the timer with a specific time limit.
      * @param level The level number to set the time limit for.
      */
-    public void startTimer(int level) {
+    public void restartTimer(int level) {
         this.timeLeft = getTimeLimitForLevel(level);
         timer.restart();
     }

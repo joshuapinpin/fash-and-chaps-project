@@ -25,6 +25,7 @@ public class PlayScreen extends JPanel {
 
     private AppController c;
     private BufferedImage bgImg;
+    private BufferedImage shell;
 
     /**
      * Constructor to initialize the main application window.
@@ -33,7 +34,8 @@ public class PlayScreen extends JPanel {
     public PlayScreen(AppController c){
         this.c = c;
         setupLayoutPanels();
-        bgImg = LoadingImg.Background.loadImage();
+        bgImg = LoadingImg.Water.loadImage();
+        shell = LoadingImg.Shell.loadImage();
     }
 
     private void setupLayoutPanels(){
@@ -72,7 +74,22 @@ public class PlayScreen extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(bgImg, 0, 0, AppWindow.WINDOW_WIDTH, AppWindow.WINDOW_HEIGHT, this);
+        //g.drawImage(bgImg, 0, 0, AppWindow.WINDOW_WIDTH, AppWindow.WINDOW_HEIGHT, this);
+        int squareSize = AppWindow.SQUARE_SIZE;
+        int x = 0, y = 0;
+        while(x < AppWindow.WINDOW_WIDTH){
+            while(y < AppWindow.WINDOW_HEIGHT){
+                g.drawImage(bgImg, x, y, squareSize, squareSize, this);
+                y += squareSize;
+            }
+            y = 0;
+            x += squareSize;
+        }
+        g.setColor(new Color(0, 0, 0, 40)); // alpha 80 for subtle darkness
+        g.fillRect(0, 0, AppWindow.WINDOW_WIDTH, AppWindow.WINDOW_HEIGHT);
+
+        g.drawImage(shell, squareSize, squareSize * 4, squareSize, squareSize, this);
+
     }
 
     // ===== GETTERS ======
