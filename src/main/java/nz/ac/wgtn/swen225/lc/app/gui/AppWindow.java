@@ -71,6 +71,7 @@ public class AppWindow extends JFrame {
         setupSingleScreen(playScreen = new PlayScreen(c), PlayState.name());
         setupSingleScreen(victoryScreen = new VictoryScreen(c), VictoryState.name());
         setupSingleScreen(defeatScreen = new DefeatScreen(c), DefeatState.name());
+        setupSingleScreen(helpScreen = new HelpScreen(c), HelpState.name());
 
         setContentPane(mainPanel);
     }
