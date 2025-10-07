@@ -16,7 +16,7 @@ public class DefeatScreen extends JPanel  {
         setLayout(new BorderLayout());
         JLabel title = new JLabel("Defeat :(((", SwingConstants.CENTER);
         title.setFont(MyFont.PIXEL.getFont(50));
-        title.setForeground(Color.WHITE);
+        title.setForeground(Color.RED);
         add(title, BorderLayout.CENTER);
 
         JButton startButton = new JButton("Restart from Level");

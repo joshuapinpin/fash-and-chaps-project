@@ -13,6 +13,7 @@ public class RendererController implements Controller {
     Drawable mazePanel;
     LoadingSounds bgMusic;
     float playVolume = -20f;
+    float pausedVolume = -35f;
 
     /**
      * Constructor initializes the renderer with the current domain state.
@@ -57,6 +58,11 @@ public class RendererController implements Controller {
     public void playMusic(){
         stopMusic(); // ensures no overlap
         bgMusic.playBackgroundMusic(playVolume);
+    }
+
+    public void whenPausedMusic(){
+        stopMusic();
+        bgMusic.playBackgroundMusic(pausedVolume);
     }
 
     /**

@@ -78,7 +78,9 @@ public class WindowController implements Controller {
      * Should be called when the game state changes.
      * @param screenName Name of the screen to show (e.g., "Start", "Play", "Victory", "Defeat").
      */
-    public void changeScreen(String screenName){w.showScreen(screenName);}
+    public void changeScreen(String screenName){
+        w.showScreen(screenName);
+    }
 
     /**
      * Show Info Panel
@@ -87,7 +89,6 @@ public class WindowController implements Controller {
     public void displayInfo(boolean doShow) {
         infoPanel.setVisible(doShow);
     }
-
 
     /**
      * Initialise the window with game info.
@@ -98,6 +99,18 @@ public class WindowController implements Controller {
         initialiseKeys();
         initialiseTimer();
         updateWindow();
+    }
+
+    /**
+     * Update the entire window (all panels).
+     */
+    public void updateWindow(){
+        updateLevel();
+        updateTimer();
+        updateKeys();
+        updateTreasure();
+        updateGamePanel();
+        logicPanels.forEach(JPanel::repaint);
     }
 
     private void initialiseTreasure() {
@@ -113,18 +126,6 @@ public class WindowController implements Controller {
     private void initialiseTimer() {
         int startTime = c.persistencyController().maxTime();
         timerPanel.initialisePanelInfo(startTime);
-    }
-
-    /**
-     * Update the entire window (all panels).
-     */
-    public void updateWindow(){
-        updateLevel();
-        updateTimer();
-        updateKeys();
-        updateTreasure();
-        updateGamePanel();
-        logicPanels.forEach(JPanel::repaint);
     }
 
     private void updateLevel(){

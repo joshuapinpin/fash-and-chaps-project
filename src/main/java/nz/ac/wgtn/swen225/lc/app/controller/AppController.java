@@ -180,9 +180,11 @@ public class AppController {
 
     /**
      * Exits the current game.
+     * Can only exit from start state.
+     * Otherwise, other states will return to start screen.
      */
     public void exitGame() {
-        System.out.println("Exiting Game...");
+        System.out.println("Exiting Game..." + state.getClass().getSimpleName());
         if(state instanceof StartState) System.exit(0);
         else setState(new StartState(this));
     }

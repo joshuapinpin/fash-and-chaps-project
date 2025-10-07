@@ -35,7 +35,6 @@ public class AppWindow extends JFrame {
     // Screens
     private StartScreen startScreen;
     private PlayScreen playScreen;
-    private PauseScreen pauseScreen;
     private VictoryScreen victoryScreen;
     private DefeatScreen defeatScreen;
     private HelpScreen helpScreen;
@@ -72,7 +71,6 @@ public class AppWindow extends JFrame {
         setupSingleScreen(playScreen = new PlayScreen(c), PlayState.name());
         setupSingleScreen(victoryScreen = new VictoryScreen(c), VictoryState.name());
         setupSingleScreen(defeatScreen = new DefeatScreen(c), DefeatState.name());
-        // TODO: setupSingleScreen(pauseScreen, new PauseScreen(c), PauseState.name());
 
         setContentPane(mainPanel);
     }

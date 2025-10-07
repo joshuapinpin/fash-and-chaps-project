@@ -23,10 +23,7 @@ public class StartScreen extends JPanel {
         this.c = c;
         setLayout(null);
         setupRootPanel();
-        rootPanel.add(Box.createVerticalGlue()); // Push content to center vertically
-        setupTitle();
-        setupButtons();
-        rootPanel.add(Box.createVerticalGlue()); // Push content up
+        setupContent();
         bgImg = LoadingImg.StartScreen.loadImage();
     }
 
@@ -40,6 +37,13 @@ public class StartScreen extends JPanel {
         add(rootPanel);
     }
 
+    private void setupContent(){
+        rootPanel.add(Box.createVerticalGlue()); // Push content to center vertically
+        setupTitle();
+        setupButtons();
+        rootPanel.add(Box.createVerticalGlue()); // Push content up
+    }
+
     private void setupTitle(){
         JLabel title = new JLabel("Fash and Chaps", SwingConstants.CENTER);
         title.setHorizontalAlignment(SwingConstants.CENTER);
@@ -51,7 +55,8 @@ public class StartScreen extends JPanel {
     }
 
     private void setupButtons(){
-        setupSingleButton("Start", e -> c.startNewGame(1));
+        setupSingleButton("Level 1", e -> c.startNewGame(1));
+        setupSingleButton("Level 2", e -> c.startNewGame(2));
         setupSingleButton("Help", e -> c.help());
         setupSingleButton("Exit", e -> c.exitGame());
     }
