@@ -49,7 +49,7 @@ public class AppController {
      */
     private AppController() {
         initialiseControllers();
-        setState(new StartState());
+        setState(new StartState(this));
     }
 
     private void initialiseControllers(){
@@ -178,7 +178,8 @@ public class AppController {
      */
     public void exitGame() {
         System.out.println("Exiting Game...");
-        System.exit(0);
+        if(state instanceof StartState) System.exit(0);
+        else setState(new StartState(this));
     }
 
     /**

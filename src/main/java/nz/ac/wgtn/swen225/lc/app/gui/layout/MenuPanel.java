@@ -50,7 +50,7 @@ public class MenuPanel extends JPanel implements ActionListener {
         setupSingleButton("Load", () -> controller.loadGame());
         setupSingleButton("Play", () -> controller.continueGame());
         setupSingleButton("Pause", () -> controller.pauseGame());
-        setupSingleButton("Exit", () -> controller.exitGame());
+        setupSingleButton("Home", () -> controller.exitGame());
     }
 
     private void setupSingleButton(String label, Runnable action){
