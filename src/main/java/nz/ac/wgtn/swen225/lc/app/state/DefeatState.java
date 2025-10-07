@@ -7,6 +7,7 @@ public record DefeatState(AppController c) implements GameState {
         c.windowController().changeScreen(name());
         c.timerController().pause();
         c.rendererController().stopMusic();
+        c.rendererController().playDefeatSound();
     }
     public void exit(AppController c) { c.exitGame(); }
     public void startNewGame(AppController c, int level) { c.startNewGame(level); }

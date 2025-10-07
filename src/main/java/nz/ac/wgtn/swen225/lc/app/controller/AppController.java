@@ -9,6 +9,8 @@ import nz.ac.wgtn.swen225.lc.domain.Direction;
 import nz.ac.wgtn.swen225.lc.domain.Maze;
 import nz.ac.wgtn.swen225.lc.renderer.Renderer;
 
+import java.util.List;
+
 
 /**
  * Central controller for game logic and flow.
@@ -32,6 +34,7 @@ public class AppController {
     // GAME MANAGEMENT Components
     private GameState state;
     private static final AppController APP = new AppController();
+    private List<Controller> controllers;
 
     /**
      * Factory method to return singleton AppController instance
@@ -51,12 +54,19 @@ public class AppController {
 
     private void initialiseControllers(){
         inputController = new InputController(this);
+
         timerController = new TimerController(this);
         persistencyController = new PersistencyController(this);
+
         domainController = new DomainController(this);
         rendererController = new RendererController(this, domainController);
         recorderController = new RecorderController(this, timerController);
         windowController = new WindowController(this);
+
+        // The Order of Controllers MATTERS (for atNewGame calls)
+        controllers = List.of(timerController, domainController, recorderController,
+                windowController, rendererController);
+
     }
 
     // ========== Game Controller Implementation ==========
@@ -103,15 +113,9 @@ public class AppController {
      * @param level The level to start the new game at
      */
     public void startNewGame(int level) {
-        timerController.startTimer(level);
+        persistencyController.setLevel(level);
+        controllers.forEach(Controller::atNewGame);
         setState(new PlayState(this));
-        domainController.initialiseDomain(level);
-        recorderController.stopRecording();
-        windowController.displayInfo(false);
-
-        rendererController.updateMaze(domainController);
-        windowController.initialiseWindow();
-
         System.out.println("Starting New Game at Level " + level);
     }
 
