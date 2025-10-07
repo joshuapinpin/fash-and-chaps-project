@@ -1,5 +1,4 @@
 package nz.ac.wgtn.swen225.lc.app.controller.module;
-
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 import nz.ac.wgtn.swen225.lc.app.controller.Controller;
 import nz.ac.wgtn.swen225.lc.app.controller.local.TimerController;
@@ -7,12 +6,12 @@ import nz.ac.wgtn.swen225.lc.app.state.AutoReplayState;
 import nz.ac.wgtn.swen225.lc.app.state.PausedState;
 import nz.ac.wgtn.swen225.lc.app.state.StepReplayState;
 import nz.ac.wgtn.swen225.lc.app.util.Input;
-import nz.ac.wgtn.swen225.lc.recorder.Play;
-import nz.ac.wgtn.swen225.lc.recorder.Save;
+import nz.ac.wgtn.swen225.lc.recorder.*;
 
 public class RecorderController implements Controller {
-    Play play;
-    Save save;
+    Play autoplayL1;
+    Play stepbystepL1;
+    Save saveL1;
     boolean isRecording = false;
     AppController controller;
     TimerController timerController;
@@ -24,16 +23,14 @@ public class RecorderController implements Controller {
     public RecorderController(AppController controller, TimerController timerController) {
         this.controller = controller;
         this.timerController = timerController;
-        play = new Play();
-        save = new Save();
+        autoplayL1 = AutoplayL1.of();
+        stepbystepL1 = StepByStepL1.of();
+        saveL1 = SaveL1.of();
     }
 
-    /**
-     * Called when a new game starts to reset recording state.
-     */
     @Override
     public void atNewGame(){
-        stopRecording();
+        isRecording = false;
     }
 
     /**
@@ -50,6 +47,7 @@ public class RecorderController implements Controller {
     public void stopRecording(){
         isRecording = false;
         System.out.println("Stopped Recording");
+        saveToFile();
     }
 
     /**
@@ -65,7 +63,7 @@ public class RecorderController implements Controller {
      * @param s Speed in milliseconds between moves.
      */
     public void setSpeed(int s) {
-        play.setSpeed(s);
+        autoplayL1.setSpeed(s);
     }
 
     /**
@@ -73,7 +71,7 @@ public class RecorderController implements Controller {
      */
     public void saveToFile(){
         isRecording = false;
-        save.saveToFile();
+        saveL1.updateMovement(Input.SAVE, controller, true);
     }
 
     /**
@@ -83,7 +81,7 @@ public class RecorderController implements Controller {
     public void stepByStep() {
         System.out.println("Step-By-Step Playing");
         controller.setState(new StepReplayState());
-        if(!play.stepByStep(controller))
+        if(!stepbystepL1.play(controller))
             controller.setState(new PausedState(controller));
     }
 
@@ -94,8 +92,8 @@ public class RecorderController implements Controller {
     public void autoPlay() {
         System.out.println("Auto-Playing");
         controller.setState(new AutoReplayState());
-        play.autoPlay(controller);
-        controller.setState(new PausedState(controller));
+        autoplayL1.play(controller);
+        // controller.setState(new PausedState(controller));
     }
 
     /**
@@ -104,7 +102,7 @@ public class RecorderController implements Controller {
      */
     public void addMovement(Input dir){
         if(!isRecording) return;
-        save.addMovement(dir);
+        saveL1.updateMovement(dir, controller, false);
     }
 
 
