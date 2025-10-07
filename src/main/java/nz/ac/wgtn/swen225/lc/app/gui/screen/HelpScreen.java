@@ -17,16 +17,22 @@ public class HelpScreen extends JPanel {
     private BufferedImage bgImg;
     private JPanel rootPanel;
     private JPanel controlsPanel;
+    private JPanel managementPanel;
     private JPanel helpPanel;
     private JPanel buttonPanel;
+
+    int fontSize= AppWindow.FONT_SIZE_H3;
 
     public HelpScreen(AppController c) {
         this.c = c;
         setLayout(new BorderLayout());
         setupTitlePanel();
         setupRootPanel();
-        setupHelpPanel();
+
         setupControlsPanel();
+        setupManagementPanel();
+
+        setupHelpPanel();
         setupButtonPanel();
         bgImg = LoadingImg.Background.loadImage();
     }
@@ -52,34 +58,55 @@ public class HelpScreen extends JPanel {
 
         helpPanel = new JPanel();
         controlsPanel = new JPanel();
+        managementPanel = new JPanel();
+        
+        JPanel rightPanel = new JPanel(new GridLayout(2,1));
+        rightPanel.setOpaque(false);
+        rightPanel.add(controlsPanel);
+        rightPanel.add(managementPanel);
 
         rootPanel.add(helpPanel);
-        rootPanel.add(controlsPanel);
+        rootPanel.add(rightPanel);
         add(rootPanel, BorderLayout.CENTER);
     }
 
-    private void setupControlsPanel() {
+    private void setupControlsPanel(){
         controlsPanel.setOpaque(false);
         controlsPanel.setLayout(new BoxLayout(controlsPanel, BoxLayout.Y_AXIS));
         controlsPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         controlsPanel.setAlignmentY(Component.CENTER_ALIGNMENT);
+
         controlsPanel.add(Box.createVerticalGlue());
-        addText("ARROW KEYS: Move Player", controlsPanel);
-        addText("SPACEBAR: Pause Game", controlsPanel);
-        addText("ESCAPE: Resumes Current Game", controlsPanel);
-        addText("CTRL 1: Start New Game (Level 1)", controlsPanel);
-        addText("CTRL 2: Start New Game (Level 2)", controlsPanel);
-        addText("CTRL X: Exit Game (Lose Current Game)", controlsPanel);
-        addText("CTRL S: Exit Game (Save Current Game)", controlsPanel);
-        addText("CTRL R: Resume Saved Game", controlsPanel);
+        addText("Game Controls", controlsPanel, AppWindow.FONT_SIZE_H2);
+        addText("ARROW KEYS: Move Player", controlsPanel,fontSize);
+        addText("SPACEBAR: Pause Game", controlsPanel,fontSize);
+        addText("ESCAPE: Resumes Current Game", controlsPanel,fontSize);
         controlsPanel.add(Box.createVerticalGlue());
+
     }
 
-    private void addText(String text, JPanel panel){
+    private void setupManagementPanel() {
+        managementPanel.setOpaque(false);
+        managementPanel.setLayout(new BoxLayout(managementPanel, BoxLayout.Y_AXIS));
+        managementPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        managementPanel.setAlignmentY(Component.CENTER_ALIGNMENT);
+        managementPanel.add(Box.createVerticalGlue());
+
+
+        addText("Game Management", managementPanel, AppWindow.FONT_SIZE_H2);
+        addText("CTRL 1: Start New Game (Level 1)", managementPanel,fontSize);
+        addText("CTRL 2: Start New Game (Level 2)", managementPanel,fontSize);
+        addText("CTRL X: Exit Game (Lose Current Game)", managementPanel,fontSize);
+        addText("CTRL S: Exit Game (Save Current Game)", managementPanel,fontSize);
+        addText("CTRL R: Resume Saved Game", managementPanel,fontSize);
+        managementPanel.add(Box.createVerticalGlue());
+    }
+
+    private void addText(String text, JPanel panel, int fontSize){
         JLabel label = new JLabel(text);
         label.setHorizontalAlignment(SwingConstants.CENTER);
         label.setVerticalAlignment(SwingConstants.CENTER);
-        label.setFont(MyFont.PIXEL.getFont(AppWindow.FONT_SIZE_H2));
+        label.setFont(MyFont.PIXEL.getFont(fontSize));
         label.setForeground(Color.WHITE);
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel.add(Box.createRigidArea(new Dimension(0, 15))); // Spacing between labels
@@ -87,6 +114,18 @@ public class HelpScreen extends JPanel {
     }
 
     private void setupHelpPanel() {
+        helpPanel.setOpaque(false);
+        helpPanel.setLayout(new GridLayout(8,1));
+
+        int fontSize = AppWindow.FONT_SIZE_H3;
+        addText("Pick up keys to open doors.", helpPanel, fontSize);
+        helpPanel.add(new JPanel());
+        addText("Collect coins to open chest.", helpPanel, fontSize);
+        helpPanel.add(new JPanel());
+        addText("Avoid crabs and puddles.", helpPanel, fontSize);
+        helpPanel.add(new JPanel());
+        addText("Reach sand castle to win!", helpPanel, fontSize);
+        helpPanel.add(new JPanel());
     }
 
 

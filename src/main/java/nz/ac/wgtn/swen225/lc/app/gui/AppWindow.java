@@ -1,7 +1,6 @@
 package nz.ac.wgtn.swen225.lc.app.gui;
 
 import java.awt.*;
-import java.util.List;
 
 import javax.swing.*;
 
@@ -25,7 +24,8 @@ public class AppWindow extends JFrame {
     public static final int MAZE_SIZE = SQUARE_SIZE * 9;
     public static final int HEADER_HEIGHT = SQUARE_SIZE * 2;
     public static final int FONT_SIZE_H1 = 40;
-    public static final int FONT_SIZE_H2 = 20;
+    public static final int FONT_SIZE_H2 = 30;
+    public static final int FONT_SIZE_H3 = 20;
 
     // GUI
     // Main
