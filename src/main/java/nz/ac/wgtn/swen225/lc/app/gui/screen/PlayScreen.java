@@ -6,11 +6,13 @@ import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
 import nz.ac.wgtn.swen225.lc.app.gui.layout.*;
 import nz.ac.wgtn.swen225.lc.app.gui.logic.InfoPanel;
+import nz.ac.wgtn.swen225.lc.domain.Position;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.Drawable;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Set;
 
 import static nz.ac.wgtn.swen225.lc.app.gui.AppWindow.MAZE_SIZE;
 
@@ -27,6 +29,8 @@ public class PlayScreen extends JPanel {
     private BufferedImage bgImg;
     private BufferedImage shell;
 
+    private Set<Position> shellPositions;
+
     /**
      * Constructor to initialize the main application window.
      * @param c AppController
@@ -36,7 +40,13 @@ public class PlayScreen extends JPanel {
         setupLayoutPanels();
         bgImg = LoadingImg.Water.loadImage();
         shell = LoadingImg.Shell.loadImage();
+        shellPositions = Set.of();
     }
+
+    private Position pos(int x, int y){
+        return new Position(x, y);
+    }
+
 
     private void setupLayoutPanels(){
         setLayout(new BorderLayout());
@@ -76,20 +86,24 @@ public class PlayScreen extends JPanel {
         super.paintComponent(g);
         //g.drawImage(bgImg, 0, 0, AppWindow.WINDOW_WIDTH, AppWindow.WINDOW_HEIGHT, this);
         int squareSize = AppWindow.SQUARE_SIZE;
-        int x = 0, y = 0;
-        while(x < AppWindow.WINDOW_WIDTH){
-            while(y < AppWindow.WINDOW_HEIGHT){
-                g.drawImage(bgImg, x, y, squareSize, squareSize, this);
-                y += squareSize;
+        for(int x = 0; x < AppWindow.WINDOW_COLS; x++){
+            for(int y = 0; y < AppWindow.WINDOW_ROWS; y++){
+                g.drawImage(bgImg, x * squareSize, y * squareSize, squareSize, squareSize, this);
             }
-            y = 0;
-            x += squareSize;
         }
+
+        // Darken the background
         g.setColor(new Color(0, 0, 0, 40)); // alpha 80 for subtle darkness
         g.fillRect(0, 0, AppWindow.WINDOW_WIDTH, AppWindow.WINDOW_HEIGHT);
 
-        g.drawImage(shell, squareSize, squareSize * 4, squareSize, squareSize, this);
+        // Shells
+        shellPositions.forEach(pos -> drawShell(g, pos, squareSize));
+    }
 
+    /** Helper Method for Drawing Shell */
+    private void drawShell(Graphics g, Position pos, int squareSize){
+        g.drawImage(shell, pos.getX() * squareSize + squareSize/4, pos.getY() * squareSize + squareSize/4,
+                squareSize/2, squareSize/2, this);
     }
 
     // ===== GETTERS ======

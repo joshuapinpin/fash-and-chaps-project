@@ -18,8 +18,10 @@ import nz.ac.wgtn.swen225.lc.app.util.MyFont;
 public class AppWindow extends JFrame {
     // Game Window Fields
     public static final int SQUARE_SIZE = 60; // 60 pixels
-    public static final int WINDOW_WIDTH = SQUARE_SIZE * 21;
-    public static final int WINDOW_HEIGHT = SQUARE_SIZE * 13;
+    public static final int WINDOW_COLS = 21;
+    public static final int WINDOW_ROWS = 13;
+    public static final int WINDOW_WIDTH = SQUARE_SIZE * WINDOW_COLS;
+    public static final int WINDOW_HEIGHT = SQUARE_SIZE * WINDOW_ROWS;
     public static final int MAZE_SIZE = SQUARE_SIZE * 9;
     public static final int HEADER_HEIGHT = SQUARE_SIZE * 2;
     public static final int FONT_SIZE_H1 = 40;
