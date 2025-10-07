@@ -1,6 +1,7 @@
 package nz.ac.wgtn.swen225.lc.app.controller.module;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
+import nz.ac.wgtn.swen225.lc.app.controller.Controller;
 import nz.ac.wgtn.swen225.lc.domain.*;
 import nz.ac.wgtn.swen225.lc.domain.entities.*;
 import nz.ac.wgtn.swen225.lc.domain.tiles.Tile;
@@ -10,7 +11,7 @@ import nz.ac.wgtn.swen225.lc.renderer.Renderer;
 import java.util.Collections;
 import java.util.List;
 
-public class DomainController {
+public class DomainController implements Controller {
     AppController c;
     Maze domain;
     Player player;
@@ -27,6 +28,14 @@ public class DomainController {
     }
 
     /**
+     * Called when a new game starts to initialize the domain for the current level.
+     */
+    @Override
+    public void atNewGame(){
+        initialiseDomain(c.persistencyController().level());
+    }
+
+    /**
      * Initialises the domain model for the specified level
      * @param level
      */
@@ -39,23 +48,20 @@ public class DomainController {
         this.player = domain.getPlayer();
         this.keysList = player.getKeys();
 
+        player.setTotalTreasures(c.persistencyController().maxTreasures());
+
         // Add Observers to the Domain
         domain.addObserver(Renderer.playSounds());
         domain.addObserver(new GameObserver() {
-            @Override public void onInfoMessage() {
-                c.windowController().displayInfo(true);
-            }
-            @Override public void onLevelComplete() {
-                c.victory();
-            }
-            @Override public void onPlayerDrown(Player player){
-                c.defeat();
-            }
+            @Override public void onInfoMessage() {c.windowController().displayInfo(true);}
+            @Override public void onLevelComplete() {c.victory();}
+            @Override public void onPlayerDrown(Player player){c.defeat();}
             @Override public void onPlayerDie(Player player){
                 c.defeat();
             }
         });
     }
+
 
     /**
      * Moves the player in the specified direction
