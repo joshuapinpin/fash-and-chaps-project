@@ -23,6 +23,7 @@ class FreeParser extends TileParser<Free> {
     public FreeParser(String symbol) {
         super(symbol, Free::of);
     }
+    String formatMessage = "Expected format F:Entity-COLOR:Monster-DIRECTION, where entity and monster are optional.";
 
     /**
      * Parse some String into a Free Tile.
@@ -39,17 +40,30 @@ class FreeParser extends TileParser<Free> {
             throw new IllegalArgumentException("Cannot parse into a Free tile: '"+tile+"'");
         }
         if (split.length > 3) {
-            String message = "Expected format F:Entity-COLOR:Monster-DIRECTION, where entity and monster are optional.";
-            throw new IllegalArgumentException(message);
+            throw new IllegalArgumentException(formatMessage+" Received: "+tile);
         }
 
         Free free = super.parse(surroundings, tile, position); // Free tile with no Entity on it
 
-        if (split.length == 1) { return free; }
-        if (split.length == 3) {
-            surroundings.setMonster(MonsterParser.parseMonster(split[2], position));
-        }
-        free.setCollectable(EntityParsers.parseEntity(surroundings, split[1]));
-        return free;
+        return switch(split.length) {
+            case 1 -> free;
+            case 2 -> {
+                if(EntityParsers.hasEntityName(split[1])) {
+                    free.setCollectable(EntityParsers.parseEntity(surroundings, split[1]));
+                }
+                else {
+                    surroundings.setMonster(MonsterParser.parseMonster(split[1], position));
+                }
+                yield free;
+            }
+            case 3 -> {
+                free.setCollectable(EntityParsers.parseEntity(surroundings, split[1]));
+                surroundings.setMonster(MonsterParser.parseMonster(split[2], position));
+                yield free;
+            }
+            default -> {
+                throw new  IllegalArgumentException(formatMessage+" Received: "+tile);
+            }
+        };
     }
 }

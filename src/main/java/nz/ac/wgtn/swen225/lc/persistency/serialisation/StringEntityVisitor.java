@@ -6,21 +6,21 @@ import nz.ac.wgtn.swen225.lc.persistency.parse.EntityParsers;
 public class StringEntityVisitor implements EntityVisitor<String> {
     @Override
     public String visitKey(Key key) {
-        return "K" + EntityParsers.separator + key.getColor().name();
+        return "Key" + EntityParsers.separator + key.getColor().name();
     }
 
     @Override
     public String visitDoor(Door door) {
-        return "D" + EntityParsers.separator + door.getColor().name();
+        return "Door" + EntityParsers.separator + door.getColor().name();
     }
 
     @Override
     public String visitExitLock(ExitLock exitLock) {
-        return "L";
+        return "ExitLock";
     }
 
     @Override
     public String visitTreasure(Treasure treasure) {
-        return "T";
+        return "Treasure";
     }
 }

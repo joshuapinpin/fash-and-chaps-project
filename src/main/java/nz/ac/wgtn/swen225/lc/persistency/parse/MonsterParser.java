@@ -7,7 +7,7 @@ import nz.ac.wgtn.swen225.lc.domain.Position;
  * Utility class to convert from a string representation of a crab to a crab (Monster) object.
  */
 public class MonsterParser {
-    public static final String separator = TileParsers.separator;
+    public static final String separator = EntityParsers.separator;
 
     /**
      * Create a crab at a given position, moving a given direction.
