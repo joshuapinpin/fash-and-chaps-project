@@ -34,6 +34,7 @@ public enum TileParsers {
     FreeP(new FreeParser("F"));
 
     private final TileParser<?> parser;
+    public static final String separator = ":";
     private static final Map<String, TileParser<?>> legend = new HashMap<>();
     public static final int MaxMonstersOnTile = 4;
     static {
@@ -50,7 +51,7 @@ public enum TileParsers {
      * @return - the Tile instance, otherwise an IllegalArgumentException is thrown.
      */
     public static Tile parseTile(GameState surroundings, String symbol, Position position) {
-        TileParser<?> parser = legend.get(symbol.split(TileParser.separator)[0]);
+        TileParser<?> parser = legend.get(symbol.split(TileParsers.separator)[0]);
         if (parser == null) {
             throw new IllegalArgumentException("Unknown symbol: " + symbol);
         }

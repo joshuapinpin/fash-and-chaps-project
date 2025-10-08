@@ -16,7 +16,6 @@ import java.util.function.Function;
  * @author Thomas Ru - 300658840
  */
 abstract class TileParser<T extends Tile> {
-    public static final String separator = ":";
     private static final Set<String> usedSymbols = new HashSet<>(); // enforce unique symbols
     private final Function<Position, T> defaultTileMaker;
     private final String symbol;

@@ -4,13 +4,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import nz.ac.wgtn.swen225.lc.domain.*;
-import nz.ac.wgtn.swen225.lc.domain.tiles.Tile;
-import nz.ac.wgtn.swen225.lc.persistency.parse.TileParsers;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Represents a game in a serialisation-friendly and human-friendly format.
@@ -18,6 +13,8 @@ import java.util.Objects;
  * @author Thomas Ru - 300658840
  */
 public class GameState {
+    private static Mapper<Maze, GameState> mapper = new GameMapper();
+
     private final int rows;
     private final int cols;
     private int keyCount = 0;
@@ -78,6 +75,15 @@ public class GameState {
     }
 
     /**
+     * Get the list of monsters in the game.
+     * @return - an unmodifiable BUT MUTABLE list
+     */
+    // TODO: discuss making monsters immutable w/ Hayley
+    public List<Monster> getMonsters() {
+        return Collections.unmodifiableList(monsters);
+    }
+
+    /**
      * Get number of rows in game board.
      * Used by Jackson to infer serialisation.
      * @return - integer number of rows.
@@ -96,34 +102,6 @@ public class GameState {
     }
 
     /**
-     * Gives the Maze object corresponding to the tiles and entities listed
-     * in the board. Note key and treasure counts are also determined as loading occurs.
-     * @return - the Maze object.
-     */
-    public Maze loadLevel() {
-        Maze maze = new Maze(rows, cols);
-        String symbol;
-        Position position;
-
-        // parse String symbol at each board position
-        for (int y = 0; y < rows; y++) {
-            for (int x = 0; x < cols; x++) {
-                symbol = Objects.requireNonNull(board[y][x], "Board is null at row="+x+", col="+y);
-                if (symbol.isEmpty()) {
-                    throw new IllegalArgumentException("Symbol cannot be empty");
-                }
-                position = new Position(x, y);
-                Tile tile = TileParsers.parseTile(this, symbol, position);
-                maze.setTileAt(tile);
-            }
-        }
-
-        monsters.forEach(maze::setMonster);
-        loaded = true;
-        return maze;
-    }
-
-    /**
      * Adds 1 to the number of keys in the level.
      */
     public void incrementKeys() { keyCount++; }
@@ -134,7 +112,10 @@ public class GameState {
      * @return - the integer number of keys.
      */
     public int keyCount() {
-        if (!loaded) { loadLevel(); }
+        if (!loaded) {
+            mapper.fromGameState(this);
+            loaded = true;
+        }
         return keyCount;
     }
 
@@ -149,9 +130,14 @@ public class GameState {
      * @return - the integer number of treasures.
      */
     public int treasureCount() {
-        if (!loaded) { loadLevel(); }
+        if (!loaded) {
+            mapper.fromGameState(this);
+            loaded = true;
+        }
         return treasureCount;
     }
+
+
 
     /**
      * Gives the String representation of a LevelMaker's board.

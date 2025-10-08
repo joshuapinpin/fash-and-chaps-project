@@ -34,7 +34,7 @@ class FreeParser extends TileParser<Free> {
     @Override // override parse for additional parsing of Entities on Free tiles
     public Free parse(GameState surroundings, String tile, Position position) {
         checkNonNull(surroundings, tile, position);
-        String[] split = tile.split(separator);
+        String[] split = tile.split(TileParsers.separator);
         if (split.length==0 || !split[0].equals(symbol())) {
             throw new IllegalArgumentException("Cannot parse into a Free tile: '"+tile+"'");
         }
