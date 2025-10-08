@@ -12,14 +12,14 @@ import java.util.function.Consumer;
  * Maze class representing the maze structure
  * Contains tiles, player reference, and dimensions
  * Provides methods to load maze from file and get tiles at positions
- * @author Hayley Far
+ * @author Hayley Far (300659131)
  */
 public class Maze {
     private Tile[][] tileGrid; //2D array of tiles: [rows][cols]
     private Player player; //reference to player in maze
     private int rows; int cols; //dimensions of maze
-    private List<GameObserver> observers = new ArrayList<>();
-    private List<Monster> monsters = new ArrayList<>();
+    private List<GameObserver> observers = new ArrayList<>(); //list of observers for game events
+    private List<Monster> monsters = new ArrayList<>(); //list of monsters in the maze
 
     /**
      * Constructor for maze with specified dimensions
@@ -69,8 +69,8 @@ public class Maze {
         }
         int x = p.getX();
         int y = p.getY();
+        //check bounds
         if (x < 0 || x >= cols || y < 0 || y >= rows) {
-            //may need to look at this with more testing
             throw new IndexOutOfBoundsException("Position out of maze bounds: " + p);
         }
         Tile tile = tileGrid[y][x];
@@ -94,22 +94,27 @@ public class Maze {
 
         int x = pos.getX();
         int y = pos.getY();
+        //check bounds
         if (x < 0 || x >= cols || y < 0 || y >= rows) {
             throw new IndexOutOfBoundsException("Position out of maze bounds: " + pos);
         }
-        tileGrid[y][x] = tile;
+        tileGrid[y][x] = tile; //set tile in grid
 
         assert getTileAt(pos) == tile : "Tile was not set correctly at position: " + pos;
     }
 
+    /**
+     * Handle player death
+     * Set player to dead state and notify observers
+     */
     public void playerDead(){
         if(!player.isAlive()){return;}
-        player.die();
+        player.die(); //set player to dead state
         observers.forEach(observer -> observer.onPlayerDie(player));
     }
 
     /**
-     * Get target tile in specified direction from current position
+     * Get target tile player wants to move in specified direction from current position
      * Used by player and monsters to determine next tile
      * @param currentPos current position
      * @param direction direction to get target tile
@@ -133,16 +138,17 @@ public class Maze {
     public void movePlayer(Direction direction){
         System.out.println("*DEBUG* Inside of the Domain Package Now");
 
-        //find tile in the direction player wants to move
         if(player == null || direction == null){
             throw new IllegalArgumentException("Player not set in maze");
         }
 
+        //find tile in the direction player wants to move
         Tile targetTile = targetTile(player.getPos(), direction);
 
         if(targetTile.isAccessible(this.player)){
             player.move(direction);
 
+            //check for collision with monsters after player moves
             for(Monster m : monsters){
                 if(m.getPos().equals(player.getPos())){
                     playerDead();
@@ -164,9 +170,8 @@ public class Maze {
      * If a monster collides with a wall, it updates its direction
      * Moves monster and checks for collision with player after move
      * Notify observers of any events (e.g., player death)
+     * This meethod to be called every game tick by the controller
      */
-    //this will be called by app/controller every game tick
-    //the monsters if for loop may not be in sync
     public void ping() {
         Consumer <GameObserver> collisionEvent = observer -> {};
 
@@ -179,6 +184,7 @@ public class Maze {
             }
 
             m.move();
+            //check for collision with player after monster moves
             if(m.getPos().equals(player.getPos())){
                 playerDead();
             }
@@ -228,6 +234,10 @@ public class Maze {
         return this.player;
     }
 
+    /**
+     * Add a monster to the maze
+     * @param m monster to add
+     */
     public void setMonster(Monster m){
         if(m == null){
             throw new IllegalArgumentException("Monster cannot be null");
@@ -259,6 +269,7 @@ public class Maze {
      * P = Player, K = Key, D = Door, T = Treasure, L = ExitLock
      * ~ = Water, W = Wall, F = Free, E = Exit, I = Info, M = Monster
      * Used for JUnit testing to verify maze layout
+     * Using visitor pattern to get symbol for tile and entity types
      * @param pos position to get symbol for
      * @return symbol representing tile at position
      */
@@ -273,6 +284,7 @@ public class Maze {
 
             @Override
             public String visitFree(Free free) {
+                //check if free tile has a collectable entity
                 if(free.getCollectable().isPresent()){
                     Entity entity = free.getCollectable().get();
                     return entity.accept(new EntityVisitor<String>() {

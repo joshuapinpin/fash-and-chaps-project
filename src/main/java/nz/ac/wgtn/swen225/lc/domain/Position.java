@@ -3,10 +3,11 @@ package nz.ac.wgtn.swen225.lc.domain;
 /**
  * Position class representing coordinates in the game grid
  * Used to track entity and player positions
+ * @author Hayley Far (300659131)
  */
 public class Position {
-    private int x;
-    private int y;
+    private int x; //x-coordinate
+    private int y; //y-coordinate
 
     /**
      * Constructor for position with specified coordinates
@@ -69,6 +70,10 @@ public class Position {
         return x == position.x && y == position.y;
     }
 
+    /**
+     * Override toString method for position
+     * @return string representation of position
+     */
     @Override
     public String toString() {
         return "x: "+this.x+" y: "+this.y;
