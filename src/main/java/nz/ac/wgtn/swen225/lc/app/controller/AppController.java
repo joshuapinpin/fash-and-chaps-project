@@ -156,6 +156,8 @@ public class AppController {
      */
     public void resumeGame() {
         // TODO: Implement resume logic
+        pauseGame();
+        persistencyController.loadGame();
         System.out.println("Game Loaded/Resume!");
     }
 
@@ -165,6 +167,8 @@ public class AppController {
      */
     public void saveGame(){
         //TODO: get Persistence to create a "save current game" method
+        pauseGame();
+        persistencyController.saveGame();
         System.out.println("Game Saved!");
     }
 

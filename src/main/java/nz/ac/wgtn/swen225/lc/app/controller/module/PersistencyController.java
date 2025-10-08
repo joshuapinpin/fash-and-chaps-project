@@ -2,6 +2,7 @@ package nz.ac.wgtn.swen225.lc.app.controller.module;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 import nz.ac.wgtn.swen225.lc.persistency.levelloader.Levels;
+import nz.ac.wgtn.swen225.lc.persistency.save.GamePersist;
 
 public class PersistencyController  {
     private AppController c;
@@ -11,7 +12,12 @@ public class PersistencyController  {
     private int maxTreasures;
     private int maxTime;
 
-    public PersistencyController(AppController c) {this.c = c;}
+    private GamePersist persist;
+
+    public PersistencyController(AppController c) {
+        this.c = c;
+        this.persist = new GamePersist();
+    }
 
     public Levels loadLevel(int level){
         if(level == 1) this.currentLevel = Levels.LevelOne;
@@ -26,6 +32,22 @@ public class PersistencyController  {
         this.maxKeys = currentLevel.maxKeys();
         this.maxTreasures = currentLevel.maxTreasures();
         this.maxTime = currentLevel.maxTime();
+    }
+
+    /**
+     * Save the current game state using the persistency module.
+     * Delegates the save operation to the GamePersist instance.
+     */
+    public void saveGame(){
+        persist.saveGame(c.domainController().domain(), c.windowController().window());
+    }
+
+    /**
+     * Load a previously saved game state using the persistency module.
+     * Delegates the load operation to the GamePersist instance.
+     */
+    public void loadGame(){
+        persist.loadGame(c.windowController().window());
     }
 
     // ========== GETTERS ==========
