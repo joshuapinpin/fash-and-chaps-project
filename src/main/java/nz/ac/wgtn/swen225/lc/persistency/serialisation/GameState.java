@@ -1,11 +1,11 @@
-package nz.ac.wgtn.swen225.lc.persistency.levelloader;
+package nz.ac.wgtn.swen225.lc.persistency.serialisation;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import nz.ac.wgtn.swen225.lc.domain.*;
 import nz.ac.wgtn.swen225.lc.domain.tiles.Tile;
-import nz.ac.wgtn.swen225.lc.persistency.levelloader.parse.TileParsers;
+import nz.ac.wgtn.swen225.lc.persistency.parse.TileParsers;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,29 +13,28 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Creates/loads level from human friendly JSON format.
+ * Represents a game in a serialisation-friendly and human-friendly format.
+ * Ready to be converted to/from JSON.
  * @author Thomas Ru - 300658840
  */
-public class LevelMaker {
+public class GameState {
     private final int rows;
     private final int cols;
     private int keyCount = 0;
     private int treasureCount = 0;
     private boolean loaded = false;
-    private List<Monster> monsters = new ArrayList<>();
+    private final List<Monster> monsters = new ArrayList<>();
 
     @JsonSerialize(using = BoardSerializer.class) // for pretty 2D array printing
     private String[][] board;
 
     /**
-     * Create LevelMaker object from ASCII art type array representing the board.
-     * Useful for testing, but in-game LevelMaker instances will be constructed
-     * directly from JSON.
+     * Create GameState object from ASCII art type array representing the board.
      * @param rows - the positive integer number of rows on the game board.
      * @param cols - the positive integer number of columns on the game board.
      */
     @JsonCreator
-    public LevelMaker(
+    public GameState(
             @JsonProperty("rows") int rows,
             @JsonProperty("cols") int cols
     ) {
@@ -179,14 +178,14 @@ public class LevelMaker {
         if (this == obj) return true;
         if(obj == null) return false;
         if (this.getClass() != obj.getClass()) return false;
-        LevelMaker other = (LevelMaker) obj;
+        GameState other = (GameState) obj;
         return rows==other.rows
                 && cols==other.cols
                 && Arrays.deepEquals(board, other.board);
     }
 
     /**
-     * Gives the hash of a LevelMaker, where equally sized boards with equal contents
+     * Gives the hash, where equally sized boards with equal contents
      * implies equal hashes.
      * @return - the hash as an integer.
      */

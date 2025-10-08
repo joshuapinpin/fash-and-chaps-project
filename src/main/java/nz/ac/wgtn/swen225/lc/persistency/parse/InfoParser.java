@@ -1,8 +1,8 @@
-package nz.ac.wgtn.swen225.lc.persistency.levelloader.parse;
+package nz.ac.wgtn.swen225.lc.persistency.parse;
 
 import nz.ac.wgtn.swen225.lc.domain.Position;
 import nz.ac.wgtn.swen225.lc.domain.tiles.Info;
-import nz.ac.wgtn.swen225.lc.persistency.levelloader.LevelMaker;
+import nz.ac.wgtn.swen225.lc.persistency.serialisation.GameState;
 
 import java.util.Objects;
 
@@ -27,7 +27,7 @@ class InfoParser extends TileParser<Info> {
      * @return - the Info Tile if possible, otherwise an IllegalArgumentException is thrown.
      */
     @Override // override parse because Info Tile constructor isn't a Function<Position, Tile>
-    public Info parse(LevelMaker surroundings, String tile, Position position) {
+    public Info parse(GameState surroundings, String tile, Position position) {
         checkNonNull(surroundings, tile, position);
         String[] split = tile.split(separator);
         if (!split[0].equals(symbol())) {

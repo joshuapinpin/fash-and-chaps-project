@@ -1,8 +1,8 @@
-package nz.ac.wgtn.swen225.lc.persistency.levelloader.parse;
+package nz.ac.wgtn.swen225.lc.persistency.parse;
 
 import nz.ac.wgtn.swen225.lc.domain.Position;
 import nz.ac.wgtn.swen225.lc.domain.tiles.*;
-import nz.ac.wgtn.swen225.lc.persistency.levelloader.LevelMaker;
+import nz.ac.wgtn.swen225.lc.persistency.serialisation.GameState;
 
 import java.util.*;
 
@@ -49,7 +49,7 @@ public enum TileParsers {
      * @param position - the Position of the Tile on the game board.
      * @return - the Tile instance, otherwise an IllegalArgumentException is thrown.
      */
-    public static Tile parseTile(LevelMaker surroundings, String symbol, Position position) {
+    public static Tile parseTile(GameState surroundings, String symbol, Position position) {
         TileParser<?> parser = legend.get(symbol.split(TileParser.separator)[0]);
         if (parser == null) {
             throw new IllegalArgumentException("Unknown symbol: " + symbol);

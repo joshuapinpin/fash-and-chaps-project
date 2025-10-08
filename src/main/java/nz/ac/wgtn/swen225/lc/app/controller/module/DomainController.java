@@ -5,7 +5,6 @@ import nz.ac.wgtn.swen225.lc.app.controller.Controller;
 import nz.ac.wgtn.swen225.lc.domain.*;
 import nz.ac.wgtn.swen225.lc.domain.entities.*;
 import nz.ac.wgtn.swen225.lc.domain.tiles.Tile;
-import nz.ac.wgtn.swen225.lc.persistency.levelloader.Levels;
 import nz.ac.wgtn.swen225.lc.renderer.Renderer;
 
 import java.util.Collections;

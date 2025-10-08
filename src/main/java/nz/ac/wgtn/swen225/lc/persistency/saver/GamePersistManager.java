@@ -1,9 +1,11 @@
-package nz.ac.wgtn.swen225.lc.persistency.save;
+package nz.ac.wgtn.swen225.lc.persistency.saver;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import nz.ac.wgtn.swen225.lc.domain.Maze;
-import nz.ac.wgtn.swen225.lc.persistency.save.util.FileDialog;
-import nz.ac.wgtn.swen225.lc.persistency.save.util.SwingFileDialog;
+import nz.ac.wgtn.swen225.lc.persistency.serialisation.FileIO;
+import nz.ac.wgtn.swen225.lc.persistency.serialisation.GameState;
+import nz.ac.wgtn.swen225.lc.persistency.serialisation.Mapper;
+import nz.ac.wgtn.swen225.lc.persistency.saver.gui.FileDialog;
+import nz.ac.wgtn.swen225.lc.persistency.saver.gui.SwingFileDialog;
 
 import javax.swing.*;
 import java.io.File;
@@ -14,22 +16,25 @@ import java.util.Optional;
 
 /**
  * Used within this package to allow a user to save/load game objects from JSON files via a Swing GUI.
- * @param <T> - a type of Maze (i.e. game board).
+ * @param <M> - a type of Maze (i.e. game board).
+ * @param <S> - a type of GameState, i.e. reduced representation of Maze suitable for serialisation.
+ * @author Thomas Ru - 300658840
  */
-class GamePersistManager<T extends Maze> implements PersistManager<T> {
-    private final FileDialog fileDialog;
-    private final ObjectMapper mapper; // used for jackson serialisation+deserialisation
-    private final Class<T> type; // used for Jackson deserialisation
+class GamePersistManager<M extends Maze, S extends GameState> implements PersistManager<M> {
+    private final FileDialog fileDialog = new SwingFileDialog();
+    private final FileIO<S> fileIO;
+    private final Mapper<M, S> mapper;
     private static final String extension = "json";
 
     /**
-     * Constructor requiring a class for Jackson deserialisation.
-     * @param - the class of the generic type.
+     * Creates a GamePersistManager given a way to convert between Maze, GameState, and file-written
+     * representation of GameState.
+     * @param fileIO - reads and writes GameState objects to file.
+     * @param mapper - converts from Maze to GameState, or vice versa.
      */
-    public GamePersistManager(Class<T> type) {
-        this.fileDialog = new SwingFileDialog();
-        this.mapper = new ObjectMapper();
-        this.type = type;
+    public GamePersistManager(FileIO<S> fileIO, Mapper<M, S> mapper) {
+        this.fileIO = fileIO;
+        this.mapper = mapper;
     }
 
     /**
@@ -38,12 +43,12 @@ class GamePersistManager<T extends Maze> implements PersistManager<T> {
      * @param parent - the parent JFrame/window.
      */
     @Override
-    public void save(T data, JFrame parent) {
+    public void save(M data, JFrame parent) {
         String defaultName = timestampName();
         fileDialog.showSaveDialog(parent, defaultName, extension)
                 .ifPresent(file -> {
                     try {
-                        mapper.writerWithDefaultPrettyPrinter().writeValue(file, data);
+                        fileIO.save(mapper.toGameState(data), file);
                         JOptionPane.showMessageDialog(parent,
                                 "File saved: " + file.getAbsolutePath(),
                                 "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -61,15 +66,16 @@ class GamePersistManager<T extends Maze> implements PersistManager<T> {
      * @return - an Optional of the Maze, which will be empty if nothing could be loaded.
      */
     @Override
-    public Optional<T> load(JFrame parent) {
+    public Optional<M> load(JFrame parent) {
         Optional<File> selected = fileDialog.showOpenDialog(parent, extension);
         if (selected.isEmpty()) {
             return Optional.empty();
         }
 
-        // deserialise the json to a Maze if possible
+        // deserialise to a Maze if possible
         try {
-            return Optional.of(mapper.readValue(selected.get(), type));
+            S gameState = fileIO.load(selected.get());
+            return Optional.of(mapper.fromGameState(gameState));
         } catch (IOException e) {
             JOptionPane.showMessageDialog(parent,
                     "Error loading: " + e.getMessage(),

@@ -1,7 +1,11 @@
-package nz.ac.wgtn.swen225.lc.persistency.levelloader;
+package nz.ac.wgtn.swen225.lc.persistency;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import nz.ac.wgtn.swen225.lc.app.util.Input;
 import nz.ac.wgtn.swen225.lc.domain.Maze;
+import nz.ac.wgtn.swen225.lc.persistency.serialisation.GameMapper;
+import nz.ac.wgtn.swen225.lc.persistency.serialisation.GameState;
+import nz.ac.wgtn.swen225.lc.persistency.serialisation.Mapper;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,6 +23,7 @@ public enum Levels {
     LevelTwo(2, 60);
 
     private static final String defaultPath = "/levels/Level";
+    private static final GameMapper mapper = new GameMapper();
 
     private boolean loaded = false;
     private final int levelNumber;
@@ -69,7 +74,7 @@ public enum Levels {
     public Maze load() {
         System.out.println("*DEBUG* Inside of the Persistency Package Now");
         // note: level loading sets maxKeys and maxTreasures
-        Maze level = load(levelNumber, this::createMaze);
+        Maze level = load(levelNumber, Levels::createMaze);
         loaded = true;
         return level;
     }
@@ -104,12 +109,9 @@ public enum Levels {
      * @param in - the given InputStream.
      * @return - the associated Maze instance.
      */
-    private Maze createMaze(InputStream in){
+    private static Maze createMaze(InputStream in){
         try {
-            LevelMaker level = new ObjectMapper().readValue(in, LevelMaker.class);
-            this.maxKeys = level.keyCount();
-            this.maxTreasures = level.treasureCount();
-            return level.loadLevel();
+            return mapper.fromGameState(new ObjectMapper().readValue(in, GameState.class));
         } catch (IOException e) {
             throw new Error("Deserialisation failed: "+e);
         }

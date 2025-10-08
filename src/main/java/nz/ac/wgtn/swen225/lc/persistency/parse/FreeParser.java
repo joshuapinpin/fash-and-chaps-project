@@ -1,16 +1,14 @@
-package nz.ac.wgtn.swen225.lc.persistency.levelloader.parse;
+package nz.ac.wgtn.swen225.lc.persistency.parse;
 
 import nz.ac.wgtn.swen225.lc.domain.Monster;
 import nz.ac.wgtn.swen225.lc.domain.Position;
 import nz.ac.wgtn.swen225.lc.domain.tiles.Free;
-import nz.ac.wgtn.swen225.lc.persistency.levelloader.LevelMaker;
+import nz.ac.wgtn.swen225.lc.persistency.serialisation.GameState;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
-import static nz.ac.wgtn.swen225.lc.persistency.levelloader.parse.TileParsers.MaxMonstersOnTile;
+import static nz.ac.wgtn.swen225.lc.persistency.parse.TileParsers.MaxMonstersOnTile;
 
 /**
  * Parses a String representation into a Free Tile, if possible.
@@ -34,7 +32,7 @@ class FreeParser extends TileParser<Free> {
      * @return - the Free Tile if possible, otherwise an IllegalArgumentException is thrown.
      */
     @Override // override parse for additional parsing of Entities on Free tiles
-    public Free parse(LevelMaker surroundings, String tile, Position position) {
+    public Free parse(GameState surroundings, String tile, Position position) {
         checkNonNull(surroundings, tile, position);
         String[] split = tile.split(separator);
         if (split.length==0 || !split[0].equals(symbol())) {
