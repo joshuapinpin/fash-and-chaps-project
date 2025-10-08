@@ -47,8 +47,8 @@ public class InputController implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if(c.state().equals(new StepReplayState(c))
-                || c.state().equals(new AutoReplayState(c))) return;
+        if(c.state() instanceof AutoReplayState
+                || c.state() instanceof StepReplayState) return;
 
 
         int keyCode = e.getKeyCode();
