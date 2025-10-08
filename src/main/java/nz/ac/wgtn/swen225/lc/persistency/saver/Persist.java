@@ -19,7 +19,7 @@ public class Persist<M extends Maze> {
      * Dependency injection for construction, useful for testing.
      * @param managerSupplier - supplies a PersistManager<Maze>
      */
-    Persist(Supplier<PersistManager<M>> managerSupplier) {
+    public Persist(Supplier<PersistManager<M>> managerSupplier) {
         this.gamePersistence = Objects.requireNonNull(managerSupplier).get();
     }
 

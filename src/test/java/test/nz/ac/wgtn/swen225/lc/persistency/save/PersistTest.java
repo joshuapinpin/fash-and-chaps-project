@@ -8,7 +8,9 @@ import nz.ac.wgtn.swen225.lc.domain.Player;
 import nz.ac.wgtn.swen225.lc.domain.Position;
 import nz.ac.wgtn.swen225.lc.domain.entities.EntityColor;
 import nz.ac.wgtn.swen225.lc.domain.entities.Key;
+import nz.ac.wgtn.swen225.lc.persistency.saver.Persist;
 import nz.ac.wgtn.swen225.lc.persistency.saver.PersistManager;
+import nz.ac.wgtn.swen225.lc.persistency.serialisation.*;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
@@ -17,8 +19,20 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PersistTest {
+    private String save =
+            "{"
+            +"\n  \"rows\" : 4,"
+            +"\n  \"cols\" : 4,"
+            +"\n  \"board\" : ["
+            +"\n [ \"F:Crab-RIGHT\", \"F:Door-ORANGE\", \"F:Door-GREEN:Crab-LEFT\", \"F\" ]"
+            +"\n, [ \"F:Key-ORANGE\", \"F:Key-GREEN:Crab-LEFT\", \"F:Treasure\", \"F:ExitLock\" ]"
+            +"\n, [ \"W\", \"~\", \"I:temporary\", \"E\" ]"
+            +"\n, [ \"~\", \"~\", \"~\", \"~\" ]"
+            +"\n ]"
+            +"\n}";
 
     private static Player defaultPlayer() {
         Player player = Player.of();
@@ -49,7 +63,13 @@ public class PersistTest {
 
     @Test
     public void testSerialisation() {
-        // use persist and a MockPersistManager
+        MockPersistManager mockManager = new MockPersistManager(save);
+        Persist<Maze> persist = new Persist<>(()->mockManager);
+        Optional<Maze> game = persist.loadGame(blankWindow());
+        assertTrue(game.isPresent());
+        persist.saveGame(game.get(), blankWindow());
+        String saved = mockManager.saveLog.getLast();
+        assertEquals(save, saved.replace("\r\n", "\n")); // so test OS independent
     }
 
 //    @Test
@@ -67,8 +87,8 @@ public class PersistTest {
 }
 
 class MockPersistManager implements PersistManager<Maze> {
-    ObjectMapper mapper = new ObjectMapper();
-    List<String> log = new ArrayList<>();
+    Mapper<Maze, GameState> stateMapper = new GameMapper();
+    List<String> saveLog = new ArrayList<>();
     String mockSave;
 
     MockPersistManager(String mockSave) {
@@ -78,8 +98,9 @@ class MockPersistManager implements PersistManager<Maze> {
     @Override
     public void save(Maze data, JFrame parent) { // do nothing with parent window and file dialogs
         try {
-            String save = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(data);
-            log.add(save);
+            GameState state = stateMapper.toGameState(data);
+            String save = new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(state);
+            saveLog.add(save);
         } catch (JsonProcessingException e) {
             throw new AssertionError(e);
         }
@@ -88,7 +109,8 @@ class MockPersistManager implements PersistManager<Maze> {
     @Override
     public Optional<Maze> load(JFrame parent) { // do nothing with parent window and file dialogs
         try {
-            return Optional.of(mapper.readValue(mockSave, Maze.class));
+            GameState game = new ObjectMapper().readValue(mockSave, GameState.class);
+            return Optional.of(stateMapper.fromGameState(game));
         } catch (JsonProcessingException e) {
             throw new AssertionError(e);
         }

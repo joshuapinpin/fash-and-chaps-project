@@ -1,6 +1,7 @@
 package nz.ac.wgtn.swen225.lc.persistency.serialisation;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import nz.ac.wgtn.swen225.lc.domain.*;
@@ -20,6 +21,7 @@ public class GameState {
     private int keyCount = 0;
     private int treasureCount = 0;
     private boolean loaded = false;
+    @JsonIgnore
     private final List<Monster> monsters = new ArrayList<>();
 
     @JsonSerialize(using = BoardSerializer.class) // for pretty 2D array printing
