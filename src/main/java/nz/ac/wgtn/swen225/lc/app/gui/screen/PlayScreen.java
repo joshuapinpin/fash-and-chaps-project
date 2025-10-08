@@ -32,7 +32,6 @@ public class PlayScreen extends JPanel {
 
     private AppController c;
     private BufferedImage bgImg;
-    private BufferedImage shell;
     private boolean displayingPause = false;
     private String previousCard = "";
 
@@ -45,8 +44,6 @@ public class PlayScreen extends JPanel {
         setupLayoutPanels();
         setupLayeredPanels();
         bgImg = LoadingImg.Background.loadImage();
-        shell = LoadingImg.Shell.loadImage();
-
     }
 
     private Position pos(int x, int y){
@@ -144,9 +141,9 @@ public class PlayScreen extends JPanel {
                 g.drawImage(bgImg, x * squareSize, y * squareSize, squareSize, squareSize, this);
             }
         }
-        // Darken the background
-        //g.setColor(new Color(0, 0, 0, 40)); // alpha 80 for subtle darkness
-        //g.fillRect(0, 0, AppWindow.WINDOW_WIDTH, AppWindow.WINDOW_HEIGHT);
+        //Darken the background
+        g.setColor(new Color(0, 0, 0, 60));
+        g.fillRect(0, 0, AppWindow.WINDOW_WIDTH, AppWindow.WINDOW_HEIGHT);
     }
 
     // ===== GETTERS ======
