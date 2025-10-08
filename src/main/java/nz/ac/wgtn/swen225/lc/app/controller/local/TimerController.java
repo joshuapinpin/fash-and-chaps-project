@@ -15,7 +15,7 @@ import javax.swing.Timer;
  * @author <Your Name>
  */
 public class TimerController implements ActionListener, Controller {
-    private static final int TIMER_INTERVAL = 100; // Timer ticks every 1/10 second
+    private static final int TIMER_INTERVAL = 50; // Timer ticks every 1/20 second
     private static final int TICKS_PER_SECOND = 1000/TIMER_INTERVAL; // Number of ticks per second
     private static final int LEVEL_1_TIME_LIMIT = 60; // Level 1 time limit in seconds
     private static final int LEVEL_2_TIME_LIMIT = 60; // Level 2 time limit in seconds
@@ -56,6 +56,10 @@ public class TimerController implements ActionListener, Controller {
         throw new IllegalArgumentException("Invalid Level: " + level);
     }
 
+    /**
+     * Called when a new game starts.
+     * Resets the timer based on the current level.
+     */
     @Override
     public void atNewGame(){
         restartTimer(c.persistencyController().level());
@@ -82,7 +86,6 @@ public class TimerController implements ActionListener, Controller {
             timer.stop();
             c.defeat();
         }
-        System.out.println("Time Left: " + getPreciseTimeMillis() + " seconds");
     }
 
     /**

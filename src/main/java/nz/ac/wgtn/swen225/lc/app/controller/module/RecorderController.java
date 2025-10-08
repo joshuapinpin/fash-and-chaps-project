@@ -29,6 +29,9 @@ public class RecorderController implements Controller {
         saveL1 = SaveL1.of();
     }
 
+    /**
+     * Reset recording state at the start of a new game.
+     */
     @Override
     public void atNewGame(){
         isRecording = false;
@@ -55,6 +58,7 @@ public class RecorderController implements Controller {
      * Stop recording the player's movements and save to file.
      */
     public void stopRecording(){
+        if(!isRecording) return;
         isRecording = false;
         System.out.println("Stopped Recording");
         saveToFile();

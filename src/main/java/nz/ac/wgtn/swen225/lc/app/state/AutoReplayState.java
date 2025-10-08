@@ -6,8 +6,7 @@ import nz.ac.wgtn.swen225.lc.domain.Direction;
 public record AutoReplayState(AppController c) implements GameState{
     public AutoReplayState{
         System.out.println("Entered: " + name());
-        c.timerController().restartTimer(c.level());
-        c.timerController().pause();
+        c.timerController().recorderMode();
     }
     public void moveUp(AppController c) { c.movePlayer(Direction.UP);}
     public void moveDown(AppController c) { c.movePlayer(Direction.DOWN);}
