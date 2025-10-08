@@ -18,6 +18,11 @@ import java.util.*;
  * Focus: exercise domain/app logic, surface unexpected exceptions.
  */
 public class FuzzTest {
+    /**
+     * Single place to control how long each fuzz test runs (ms). Override with -Dfuzz.ms=NNNN if desired.
+     * Adjust this constant (or provide the system property) instead of hunting through the method.
+     */
+    private static final long RUN_MS = Long.getLong("fuzz.ms", 15_000L); // change here e.g. 55_000L for longer sessions
 
     @Test
     @Timeout(60)
@@ -34,9 +39,8 @@ public class FuzzTest {
     }
 
     private void runFuzzer(int initialLevel) {
-        // Adjusted default duration: shortened to 15s to avoid long runs / audio build up.
-        // You can restore to 55_000L when longer exploration is desired.
-        long durationMillis = Long.getLong("fuzz.ms", 15_000L);
+        // Duration for this run (centralised in RUN_MS constant above)
+        long durationMillis = RUN_MS;
         long seed = Long.getLong("fuzz.seed", System.currentTimeMillis());
         Random rnd = new Random(seed);
         boolean logSeed = Boolean.getBoolean("fuzz.logSeed");
@@ -50,15 +54,8 @@ public class FuzzTest {
                     " enablePause=" + enablePause);
         }
 
-        final int MAX_AUDIO_FAILS = Integer.getInteger("fuzz.maxAudioFails", 5);
-        final int MAX_TOTAL_RESTARTS = Integer.getInteger("fuzz.maxRestarts", 25);
-        final int UNSTABLE_RESTART_THRESHOLD = Integer.getInteger("fuzz.unstableRestartThreshold", 6);
-        int audioFailCount = 0;
-        int restartCount = 0;
-        int unstableLoopCount = 0;
-        boolean disableRestarts = false;
-        boolean hadPlaySession = false; // becomes true once we are in Play and make at least one movement
-        long lastRestartTime = System.currentTimeMillis();
+    final int MAX_AUDIO_FAILS = Integer.getInteger("fuzz.maxAudioFails", 5);
+    int audioFailCount = 0;
 
         AppController controller = AppController.of();
         if (!safeStartNewGame(controller, initialLevel)) {
@@ -98,7 +95,7 @@ public class FuzzTest {
         Instant end = Instant.now().plusMillis(durationMillis);
         int moves = 0;
 
-        boolean pausedRecently = false;
+    boolean pausedRecently = false;
         long nonPlayStateStartMs = -1; // simplified: removed invalidInRow & forcedResumeAttempts
 
         int audioWarns = 0;
@@ -110,64 +107,38 @@ public class FuzzTest {
                 String stateName = controller.state().getClass().getSimpleName();
                 boolean isPlay = stateName.contains("Play");
 
-                if (isPlay && !hadPlaySession) {
-                    hadPlaySession = true;
-                }
-
-                // Early exit disabled to allow full duration run.
-                // if (disableRestarts && !isPlay && hadPlaySession) break;
-
                 if (!isPlay) {
                     if (nonPlayStateStartMs < 0) nonPlayStateStartMs = System.currentTimeMillis();
                 } else {
                     nonPlayStateStartMs = -1; // forcedResumeAttempts removed
                 }
 
-                if ((stateName.contains("Victory") || stateName.contains("Defeat")) && !disableRestarts) {
-                    long now = System.currentTimeMillis();
-                    if (now - lastRestartTime < 700) {
-                        unstableLoopCount++;
-                        if (unstableLoopCount >= UNSTABLE_RESTART_THRESHOLD) {
-                            System.out.println("[FUZZ][INFO] Unstable rapid win/lose loop. Disabling further restarts.");
-                            disableRestarts = true;
+                // Auto-restart on Victory or Defeat to keep session active (no disabling logic anymore)
+                if (stateName.contains("Victory") || stateName.contains("Defeat")) {
+                    boolean ok = safeStartNewGame(controller, initialLevel);
+                    if (!ok) {
+                        audioFailCount++;
+                        if (audioFailCount >= MAX_AUDIO_FAILS) {
+                            System.out.println("[FUZZ][WARN] Too many audio-related restart failures (" + audioFailCount + ") continuing without restart.");
                         }
                     } else {
-                        unstableLoopCount = 0;
-                    }
-                    lastRestartTime = now;
-
-                    if (!disableRestarts) {
-                        boolean ok = safeStartNewGame(controller, initialLevel);
-                        if (ok) {
-                            restartCount++;
-                            if (restartCount >= MAX_TOTAL_RESTARTS) {
-                                disableRestarts = true;
-                                System.out.println("[FUZZ][INFO] Restart limit reached (successful restarts). Disabling restarts.");
-                            }
-                        } else {
-                            audioFailCount++;
-                            System.out.println("[FUZZ][WARN] Restart failed (audioFailCount=" + audioFailCount + ")");
-                            if (audioFailCount >= MAX_AUDIO_FAILS) {
-                                disableRestarts = true;
-                                System.out.println("[FUZZ][INFO] Too many audio failures; disabling restarts.");
-                            }
-                        }
                         lastPos = currentPlayerPos(controller);
                         stagnationCounter = 0;
                         inShake = false;
                         shakeRemaining = 0;
-                        pausedRecently = false; // invalidInRow removed
-                        continue;
+                        pausedRecently = false;
                     }
+                    // Regardless, proceed to next loop iteration (do not send meta inputs in terminal states)
+                    continue;
                 }
 
-                if (!isPlay && !disableRestarts && (System.currentTimeMillis() - nonPlayStateStartMs) > 1000) {
+                if (!isPlay && (System.currentTimeMillis() - nonPlayStateStartMs) > 1000) {
                     boolean ok = forcePlayIfPaused(controller, initialLevel, rnd);
                     if (!ok) {
                         audioFailCount++;
-                        if (audioFailCount >= MAX_AUDIO_FAILS) {
-                            disableRestarts = true;
-                            System.out.println("[FUZZ][INFO] Disabling restarts after paused/audio failures.");
+                        // We no longer disable restarts; just log once threshold exceeded
+                        if (audioFailCount == MAX_AUDIO_FAILS) {
+                            System.out.println("[FUZZ][WARN] Reached audio fail threshold while paused.");
                         }
                     } else {
                         nonPlayStateStartMs = -1;
@@ -208,9 +179,9 @@ public class FuzzTest {
                             }
                         }
                         audioFailCount++;
-                        if (audioFailCount >= MAX_AUDIO_FAILS) {
-                            disableRestarts = true;
-                            System.out.println("[FUZZ][INFO] Audio fail threshold reached; restarts disabled.");
+                        // No longer disabling restarts; just note threshold
+                        if (audioFailCount == MAX_AUDIO_FAILS) {
+                            System.out.println("[FUZZ][WARN] Audio fail threshold reached (will continue attempts).");
                         }
                     } else {
                         dumpSequence(seed, executed, rte);
@@ -253,16 +224,14 @@ public class FuzzTest {
                     int treas = safeCountTreasures(controller);
                     int keys = safeCountKeys(controller);
                     System.out.printf(Locale.ROOT,
-                            "[FUZZ][STATE] moves=%d lvl=%d visited=%d treas=%d/%d keys=%d/%d state=%s restarts=%d audioFails=%d disableRestarts=%s dirSuc=%s%n",
+                            "[FUZZ][STATE] moves=%d lvl=%d visited=%d treas=%d/%d keys=%d/%d state=%s audioFails=%d dirSuc=%s%n",
                             moves,
                             controller.level(),
                             visited.size(),
                             treas, initialTreasure,
                             keys, initialKeys,
                             controller.state().getClass().getSimpleName(),
-                            restartCount,
                             audioFailCount,
-                            disableRestarts,
                             movementSuccessSummary(success, fail)
                     );
                 }
