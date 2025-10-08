@@ -12,8 +12,8 @@ public class RendererController implements Controller {
     Renderer renderer;
     Drawable mazePanel;
     LoadingSounds bgMusic;
-    float playVolume = -20f;
-    float pausedVolume = -35f;
+    float playVolume = -25f;
+    float pausedVolume = -40f;
 
     /**
      * Constructor initializes the renderer with the current domain state.
