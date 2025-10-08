@@ -82,6 +82,7 @@ public class TimerController implements ActionListener, Controller {
             timer.stop();
             c.defeat();
         }
+        System.out.println("Time Left: " + getPreciseTimeMillis() + " seconds");
     }
 
     /**
@@ -116,7 +117,11 @@ public class TimerController implements ActionListener, Controller {
         return (preciseTime / TICKS_PER_SECOND);
     }
 
-    public int getPreciseTime(){
-        return preciseTime;
+    /**
+     * Gets the remaining time in milliseconds.
+     * @return The remaining time in milliseconds.
+     */
+    public int getPreciseTimeMillis(){
+        return preciseTime * TIMER_INTERVAL;
     }
 }
