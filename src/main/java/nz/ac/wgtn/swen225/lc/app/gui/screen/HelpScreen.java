@@ -10,6 +10,7 @@ import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.List;
 
 public class HelpScreen extends JPanel {
     private AppController c;
@@ -22,6 +23,8 @@ public class HelpScreen extends JPanel {
     private JPanel buttonPanel;
 
     int fontSize= AppWindow.FONT_SIZE_H3;
+    int headerSize = AppWindow.FONT_SIZE_H2;
+    int helpSize = 25;
 
     public HelpScreen(AppController c) {
         this.c = c;
@@ -54,12 +57,11 @@ public class HelpScreen extends JPanel {
     private void setupRootPanel(){
         rootPanel = new JPanel(new GridLayout(1,2));
         rootPanel.setOpaque(false);
-        rootPanel.setBackground(new Color(255,0,0,80));
 
         helpPanel = new JPanel();
         controlsPanel = new JPanel();
         managementPanel = new JPanel();
-        
+
         JPanel rightPanel = new JPanel(new GridLayout(2,1));
         rightPanel.setOpaque(false);
         rightPanel.add(controlsPanel);
@@ -77,7 +79,7 @@ public class HelpScreen extends JPanel {
         controlsPanel.setAlignmentY(Component.CENTER_ALIGNMENT);
 
         controlsPanel.add(Box.createVerticalGlue());
-        addText("Game Controls", controlsPanel, AppWindow.FONT_SIZE_H2);
+        addText("Game Controls", controlsPanel, headerSize);
         addText("ARROW KEYS: Move Player", controlsPanel,fontSize);
         addText("SPACEBAR: Pause Game", controlsPanel,fontSize);
         addText("ESCAPE: Resumes Current Game", controlsPanel,fontSize);
@@ -93,7 +95,7 @@ public class HelpScreen extends JPanel {
         managementPanel.add(Box.createVerticalGlue());
 
 
-        addText("Game Management", managementPanel, AppWindow.FONT_SIZE_H2);
+        addText("Game Management", managementPanel, headerSize);
         addText("CTRL 1: Start New Game (Level 1)", managementPanel,fontSize);
         addText("CTRL 2: Start New Game (Level 2)", managementPanel,fontSize);
         addText("CTRL X: Exit Game (Lose Current Game)", managementPanel,fontSize);
@@ -102,32 +104,38 @@ public class HelpScreen extends JPanel {
         managementPanel.add(Box.createVerticalGlue());
     }
 
-    private void addText(String text, JPanel panel, int fontSize){
-        JLabel label = new JLabel(text);
-        label.setHorizontalAlignment(SwingConstants.CENTER);
-        label.setVerticalAlignment(SwingConstants.CENTER);
-        label.setFont(MyFont.PIXEL.getFont(fontSize));
-        label.setForeground(Color.WHITE);
-        label.setAlignmentX(Component.CENTER_ALIGNMENT);
-        panel.add(Box.createRigidArea(new Dimension(0, 15))); // Spacing between labels
-        panel.add(label);
-    }
-
     private void setupHelpPanel() {
         helpPanel.setOpaque(false);
         helpPanel.setLayout(new GridLayout(8,1));
 
-        int fontSize = AppWindow.FONT_SIZE_H3;
-        addText("Pick up keys to open doors.", helpPanel, fontSize);
-        helpPanel.add(new JPanel());
-        addText("Collect coins to open chest.", helpPanel, fontSize);
-        helpPanel.add(new JPanel());
-        addText("Avoid crabs and puddles.", helpPanel, fontSize);
-        helpPanel.add(new JPanel());
-        addText("Reach sand castle to win!", helpPanel, fontSize);
-        helpPanel.add(new JPanel());
+        JPanel panel = new JPanel();
+
+        addTextWithPanel("Pick up keys to open doors.", helpPanel, helpSize);
+        addImageToPanel(List.of(LoadingImg.GreenKey.loadImage(),LoadingImg.GreenDoor.loadImage()), helpPanel);
+        addTextWithPanel("Collect coins to open chest.", helpPanel, helpSize);
+        addImageToPanel(List.of(LoadingImg.Treasure.loadImage(),LoadingImg.ExitLock.loadImage()), helpPanel);
+        addTextWithPanel("Avoid crabs and puddles.", helpPanel, helpSize);
+        addImageToPanel(List.of(LoadingImg.enemyCrab.loadImage(),LoadingImg.Water.loadImage()), helpPanel);
+        addTextWithPanel("Reach sand castle to win!", helpPanel, helpSize);
+        addImageToPanel(List.of(LoadingImg.Exit.loadImage()), helpPanel);
     }
 
+    private void addImageToPanel(List<BufferedImage> imgs, JPanel mainPanel){
+        int numImgs = imgs.size();
+        int offset = (AppWindow.WINDOW_WIDTH/4) - (numImgs * AppWindow.SQUARE_SIZE / 2);
+        int squareSize = AppWindow.SQUARE_SIZE;
+        JPanel panel = new JPanel(null){
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                for(int i = 0; i < numImgs; i++){
+                    g.drawImage(imgs.get(i), offset + i * squareSize, 0, squareSize, squareSize, this);
+                }
+            }
+        };
+        panel.setOpaque(false);
+        mainPanel.add(panel);
+    }
 
     private void setupButtonPanel(){
         buttonPanel = new JPanel(new BorderLayout());
@@ -143,6 +151,24 @@ public class HelpScreen extends JPanel {
         buttonPanel.add(button);
 
         add(buttonPanel, BorderLayout.SOUTH);
+    }
+
+    private void addTextWithPanel(String text, JPanel mainPanel, int fontSize){
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setOpaque(false);
+        addText(text, panel, fontSize);
+        mainPanel.add(panel);
+    }
+
+    private void addText(String text, JPanel panel, int fontSize){
+        JLabel label = new JLabel(text);
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        label.setVerticalAlignment(SwingConstants.CENTER);
+        label.setFont(MyFont.PIXEL.getFont(fontSize));
+        label.setForeground(Color.WHITE);
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(Box.createRigidArea(new Dimension(0, 15))); // Spacing between labels
+        panel.add(label);
     }
 
     @Override
