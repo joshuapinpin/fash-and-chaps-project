@@ -6,6 +6,7 @@ import nz.ac.wgtn.swen225.lc.domain.Position;
 import nz.ac.wgtn.swen225.lc.domain.entities.Entity;
 import nz.ac.wgtn.swen225.lc.domain.tiles.Tile;
 import nz.ac.wgtn.swen225.lc.persistency.parse.EntityParsers;
+import nz.ac.wgtn.swen225.lc.persistency.parse.MonsterParser;
 import nz.ac.wgtn.swen225.lc.persistency.parse.TileParsers;
 
 import java.util.Objects;
@@ -87,6 +88,10 @@ public class GameMapper implements Mapper<Maze, GameState> {
      * @return - 'Crab'.
      */
     private String monsterToString(Monster monster) {
-        return "Crab";
+        StringBuilder result = new StringBuilder();
+        result.append("Crab");
+        result.append(MonsterParser.separator);
+        result.append(monster.getDirection().name());
+        return result.toString();
     }
 }

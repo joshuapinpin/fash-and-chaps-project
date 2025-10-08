@@ -38,35 +38,18 @@ class FreeParser extends TileParser<Free> {
         if (split.length==0 || !split[0].equals(symbol())) {
             throw new IllegalArgumentException("Cannot parse into a Free tile: '"+tile+"'");
         }
+        if (split.length > 3) {
+            String message = "Expected format F:Entity-COLOR:Monster-DIRECTION, where entity and monster are optional.";
+            throw new IllegalArgumentException(message);
+        }
 
         Free free = super.parse(surroundings, tile, position); // Free tile with no Entity on it
 
-        // find entity, if present
-        List<String> entities = Arrays.stream(split)
-                .skip(1)
-                .filter(EntityParsers::hasEntityName)
-                .toList();
-
-        // find monsters, if present (e.g. crab)
-        List<String> monsters = Arrays.stream(split)
-                .skip(1)
-                .filter(s -> !EntityParsers.hasEntityName(s))
-                .limit(MaxMonstersOnTile)
-                .toList();
-
-        if (entities.size() > 1) {
-            throw new IllegalArgumentException("Tiles can only have one entity: '"+tile+"'");
+        if (split.length == 1) { return free; }
+        if (split.length == 3) {
+            surroundings.setMonster(MonsterParser.parseMonster(split[2], position));
         }
-
-        // parse entity (if any)
-        entities.stream()
-                .findFirst()
-                .map(s -> EntityParsers.parseEntity(surroundings, s))
-                .ifPresent(free::setCollectable);
-
-        // parse monsters (if any)
-        monsters.forEach(s -> surroundings.setMonster(Monster.of(position))); // TODO: make this more robust!
-
+        free.setCollectable(EntityParsers.parseEntity(surroundings, split[1]));
         return free;
     }
 }
