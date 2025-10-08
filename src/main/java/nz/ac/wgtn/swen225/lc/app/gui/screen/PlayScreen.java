@@ -6,11 +6,14 @@ import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
 import nz.ac.wgtn.swen225.lc.app.gui.layout.*;
 import nz.ac.wgtn.swen225.lc.app.gui.logic.InfoPanel;
+import nz.ac.wgtn.swen225.lc.app.state.PausedState;
+import nz.ac.wgtn.swen225.lc.domain.Position;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.Drawable;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.List;
 
 import static nz.ac.wgtn.swen225.lc.app.gui.AppWindow.MAZE_SIZE;
 
@@ -21,11 +24,17 @@ public class PlayScreen extends JPanel {
     private RightPanel rightPanel;
     private Drawable gamePanel;
     private InfoPanel infoPanel;
+    private PausePanel pausePanel;
     private GameLayeredPane layeredPane;
+
+    private CardLayout cardLayout;
+    private JPanel overlayPanel;
 
     private AppController c;
     private BufferedImage bgImg;
     private BufferedImage shell;
+    private boolean displayingPause = false;
+    private String previousCard = "";
 
     /**
      * Constructor to initialize the main application window.
@@ -34,13 +43,21 @@ public class PlayScreen extends JPanel {
     public PlayScreen(AppController c){
         this.c = c;
         setupLayoutPanels();
-        bgImg = LoadingImg.Water.loadImage();
+        setupLayeredPanels();
+        bgImg = LoadingImg.Background.loadImage();
         shell = LoadingImg.Shell.loadImage();
+
     }
+
+    private Position pos(int x, int y){
+        return new Position(x, y);
+    }
+
 
     private void setupLayoutPanels(){
         setLayout(new BorderLayout());
         infoPanel = new InfoPanel(c);
+        pausePanel = new PausePanel(c);
 
         setupSingleLayoutPanel(titlePanel = new TitlePanel(c), BorderLayout.NORTH);
         setupSingleLayoutPanel(menuPanel = new MenuPanel(c), BorderLayout.SOUTH);
@@ -48,11 +65,8 @@ public class PlayScreen extends JPanel {
         setupSingleLayoutPanel(rightPanel = new RightPanel(c), BorderLayout.EAST);
         gamePanel = setupGamePanel();
 
-        layeredPane = new GameLayeredPane();
-        layeredPane.add(gamePanel, JLayeredPane.DEFAULT_LAYER);
-        layeredPane.add(infoPanel, JLayeredPane.PALETTE_LAYER);
-        add(layeredPane, BorderLayout.CENTER);
     }
+
     private void setupSingleLayoutPanel(JPanel panel, String position){
         add(panel, position);
     }
@@ -67,33 +81,79 @@ public class PlayScreen extends JPanel {
         gamePanel.setBackground(Color.RED);
         gamePanel.setBorder(BorderFactory.createLineBorder(Color.white, 5));
         gamePanel.setVisible(true);
-        //layoutPanels.add(gamePanel);
         return gamePanel;
     }
+
+    private void setupLayeredPanels(){
+        JPanel blankPanel = new JPanel();
+        blankPanel.setOpaque(false);
+        blankPanel.setVisible(false);
+        blankPanel.setBounds(0,0, MAZE_SIZE, MAZE_SIZE);
+
+        cardLayout = new CardLayout();
+        overlayPanel = new JPanel(cardLayout);
+        overlayPanel.setOpaque(false);
+        overlayPanel.setVisible(true);
+        overlayPanel.setBounds(0,0, MAZE_SIZE, MAZE_SIZE);
+
+        overlayPanel.add(blankPanel, "Blank");
+        overlayPanel.add(infoPanel, InfoPanel.name());
+        overlayPanel.add(pausePanel, PausedState.name());
+
+
+        layeredPane = new GameLayeredPane();
+        layeredPane.add(gamePanel, JLayeredPane.DEFAULT_LAYER);
+        layeredPane.add(overlayPanel, JLayeredPane.PALETTE_LAYER);
+
+        add(layeredPane, BorderLayout.CENTER);
+    }
+
+    public void changeOverlay(String name){
+        cardLayout.show(overlayPanel, name);
+        displayingPause = false;
+    }
+
+    public void displayInfo(){
+        previousCard = InfoPanel.name();
+        changeOverlay(InfoPanel.name());
+    }
+
+    public void displayPause(){
+        changeOverlay(PausedState.name());
+        displayingPause = true;
+    }
+
+    public void displayBlank(){
+        previousCard = "Blank";
+        changeOverlay("Blank");
+    }
+
+    public void displayPrevious(){
+        System.out.println("Displaying previous overlay");
+        changeOverlay(previousCard);
+    }
+
+
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        //g.drawImage(bgImg, 0, 0, AppWindow.WINDOW_WIDTH, AppWindow.WINDOW_HEIGHT, this);
         int squareSize = AppWindow.SQUARE_SIZE;
-        int x = 0, y = 0;
-        while(x < AppWindow.WINDOW_WIDTH){
-            while(y < AppWindow.WINDOW_HEIGHT){
-                g.drawImage(bgImg, x, y, squareSize, squareSize, this);
-                y += squareSize;
+        for(int x = 0; x < AppWindow.WINDOW_COLS; x++){
+            for(int y = 0; y < AppWindow.WINDOW_ROWS; y++){
+                g.drawImage(bgImg, x * squareSize, y * squareSize, squareSize, squareSize, this);
             }
-            y = 0;
-            x += squareSize;
         }
-        g.setColor(new Color(0, 0, 0, 40)); // alpha 80 for subtle darkness
-        g.fillRect(0, 0, AppWindow.WINDOW_WIDTH, AppWindow.WINDOW_HEIGHT);
-
-        g.drawImage(shell, squareSize, squareSize * 4, squareSize, squareSize, this);
-
+        // Darken the background
+        //g.setColor(new Color(0, 0, 0, 40)); // alpha 80 for subtle darkness
+        //g.fillRect(0, 0, AppWindow.WINDOW_WIDTH, AppWindow.WINDOW_HEIGHT);
     }
 
     // ===== GETTERS ======
     public LeftPanel leftPanel(){ return leftPanel;}
     public Drawable gamePanel(){ return gamePanel;}
     public InfoPanel infoPanel(){ return infoPanel;}
+    public PausePanel pausePanel(){ return pausePanel;}
+
+    public boolean isPaused(){ return displayingPause;}
 }

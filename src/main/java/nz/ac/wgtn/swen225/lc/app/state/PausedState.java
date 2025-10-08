@@ -5,6 +5,8 @@ import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 public record PausedState(AppController c) implements GameState {
     public PausedState{
         c.timerController().pause();
+        c.rendererController().stopMusic();
+        c.windowController().displayPause(true);
     }
     public void resume(AppController c){c.resumeGame();}
     public void save(AppController c){c.saveGame();}

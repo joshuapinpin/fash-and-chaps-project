@@ -35,6 +35,10 @@ public enum LoadingImg {
     Sand("imgs/sand.png"),
     Water("imgs/water.png"),
 
+    Arrows("imgs/arrows.png"),
+    Spacebar("imgs/spacebar.png"),
+    PlainSquare("imgs/plainSquare.png"),
+
     StartScreen("imgs/startScreen.png"),
     LoseScreen("imgs/loseScreen.png"),
     WinScreen("imgs/winScreen.png"),

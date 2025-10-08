@@ -32,7 +32,7 @@ public class TitlePanel extends JPanel{
     private void setupTitle(){
         JLabel title = new JLabel("Fash and Chaps");
         title.setFont(MyFont.PIXEL.getFont(90));
-        title.setForeground(Color.white);
+        title.setForeground(new Color(0xffffff));
         title.setVerticalAlignment(SwingConstants.CENTER);
         title.setHorizontalAlignment(SwingConstants.CENTER);
         add(title);
@@ -42,15 +42,5 @@ public class TitlePanel extends JPanel{
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-//        int squareSize = AppWindow.SQUARE_SIZE;
-//        int x = 0, y = 0;
-//        while(x < AppWindow.WINDOW_WIDTH){
-//            while(y < AppWindow.HEADER_HEIGHT){
-//                g.drawImage(bgImg, x, y, squareSize, squareSize, this);
-//                y += squareSize;
-//            }
-//            y = 0;
-//            x += squareSize;
-//        }
     }
 }

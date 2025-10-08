@@ -49,7 +49,7 @@ public class AppController {
      */
     private AppController() {
         initialiseControllers();
-        setState(new StartState());
+        setState(new StartState(this));
     }
 
     private void initialiseControllers(){
@@ -64,8 +64,13 @@ public class AppController {
         windowController = new WindowController(this);
 
         // The Order of Controllers MATTERS (for atNewGame calls)
-        controllers = List.of(timerController, domainController, recorderController,
-                windowController, rendererController);
+        controllers = List.of(
+                timerController,
+                domainController,
+                recorderController,
+                windowController,
+                rendererController
+        );
 
     }
 
@@ -132,7 +137,7 @@ public class AppController {
      * Continues the game from a paused state.
      */
     public void continueGame() {
-        setState(new PlayState(this));
+        if(!(state instanceof PlayState)) setState(new PlayState(this));
         System.out.println("Continuing Game");
     }
 
@@ -145,13 +150,13 @@ public class AppController {
     }
 
     /**
-     * Resumes a saved game
-     * Load game from file selector.
-     * Get from persistency
+     * Loads a saved game state.
+     * Opens a file chooser to select the saved game file.
+     * Uses Persistence to retrieve the saved state and update the domain model.
      */
     public void resumeGame() {
         // TODO: Implement resume logic
-        System.out.println("Game Resumed");
+        System.out.println("Game Loaded/Resume!");
     }
 
     /**
@@ -164,21 +169,14 @@ public class AppController {
     }
 
     /**
-     * Loads a saved game state.
-     * Opens a file chooser to select the saved game file.
-     * Uses Persistence to retrieve the saved state and update the domain model.
-     */
-    public void loadGame(){
-        // TODO: get Persistence to create a "load saved game" method, which returns a Domain object
-        System.out.println("Game Loaded!");
-    }
-
-    /**
      * Exits the current game.
+     * Can only exit from start state.
+     * Otherwise, other states will return to start screen.
      */
     public void exitGame() {
-        System.out.println("Exiting Game...");
-        System.exit(0);
+        System.out.println("Exiting Game..." + state.getClass().getSimpleName());
+        if(state instanceof StartState) System.exit(0);
+        else setState(new StartState(this));
     }
 
     /**

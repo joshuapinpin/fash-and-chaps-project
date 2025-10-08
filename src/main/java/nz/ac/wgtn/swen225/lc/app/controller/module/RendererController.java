@@ -13,6 +13,7 @@ public class RendererController implements Controller {
     Drawable mazePanel;
     LoadingSounds bgMusic;
     float playVolume = -20f;
+    float pausedVolume = -35f;
 
     /**
      * Constructor initializes the renderer with the current domain state.
@@ -32,6 +33,7 @@ public class RendererController implements Controller {
      */
     @Override
     public void atNewGame(){
+        resetMusic();
         updateMaze(c.domainController());
     }
 
@@ -58,6 +60,11 @@ public class RendererController implements Controller {
         bgMusic.playBackgroundMusic(playVolume);
     }
 
+    public void whenPausedMusic(){
+        stopMusic();
+        bgMusic.playBackgroundMusic(pausedVolume);
+    }
+
     /**
      * Stop background music.
      */
@@ -66,16 +73,32 @@ public class RendererController implements Controller {
         catch(NullPointerException e){}
     }
 
+    /**
+     * Restart background music from the beginning.
+     */
+    public void resetMusic(){
+        bgMusic.restartBackgroundMusic();
+    }
+
+    /**
+     * Play victory sound effect
+     */
     public void playVictorySound(){
         stopMusic();
         LoadingSounds.VictorySound.playSoundEffect(playVolume);
     }
 
+    /**
+     * Play defeat sound effect
+     */
     public void playDefeatSound(){
         stopMusic();
         LoadingSounds.LosingSound.playSoundEffect(playVolume);
     }
 
+    /**
+     * Play drowning sound effect
+     */
     public void playDrowningSound(){
         LoadingSounds.PlayerDrownSound.playSoundEffect(playVolume);
     }
