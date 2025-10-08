@@ -20,6 +20,9 @@ public class Monster {
      * @param pos starting position of the monster
      */
     Monster(Position pos){
+        if(pos == null){
+            throw new IllegalArgumentException("Position cannot be null");
+        }
         this.position = pos;
     }
 

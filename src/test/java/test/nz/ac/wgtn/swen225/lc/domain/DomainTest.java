@@ -14,12 +14,16 @@ import static org.junit.jupiter.api.Assertions.*;
  * DomainTest class for testing domain classes, JUnits
  * Sets up a maze and player for testing purposes
  * Tests player movement, tile interactions, and maze layout
- * @author Hayley Far
+ * @author Hayley Far (300659141)
  */
 public class DomainTest {
-    private Maze maze;
-    private Player player;
+    private Maze maze; //maze instance for testing
+    private Player player; //player instance for testing
 
+    /**
+     * Sets up a simple maze layout for testing
+     * Contains all types of tiles and entities for level 1
+     */
     void miniGame(){
         maze = new Maze(5, 5);
         player = Player.of();
@@ -27,10 +31,6 @@ public class DomainTest {
 
         maze.setPlayer(player);
         this.player.setTotalTreasures(4); //for testing purposes, to be set when maze is loaded
-
-        //need at least one observer to make sure it executes the consumer that picks up key etc
-        //BECAUSE the picking up key logic (onEnter() in Free) is connected to the consumer
-        maze.addObserver(new GameObserver() {});
 
         //setting tiles in the maze
         maze.setTileAt(Wall.of(new Position(0,0)));
@@ -81,6 +81,10 @@ public class DomainTest {
         maze.setTileAt(Free.of(new Position(4,4)));
     }
 
+    /**
+     * Sets up a simple maze layout for testing monster functionality
+     * Contains player and monster
+     */
     void monsterGame(){
         maze = new Maze(4, 4);
         player = Player.of();
@@ -113,6 +117,10 @@ public class DomainTest {
 
     }
 
+    /**
+     * Sets up a simple maze layout for testing water functionality
+     * Contains player and water tiles
+     */
     void waterGame(){
         maze = new Maze(2, 2);
         player = Player.of();
@@ -137,6 +145,7 @@ public class DomainTest {
         assertEquals(5, maze.getRows());
         assertEquals(5, maze.getCols());
 
+        //invalid dimensions
         assertThrows(IllegalArgumentException.class, ()-> {
             Maze invalidMaze = new Maze(0, 5);
         });
@@ -156,7 +165,7 @@ public class DomainTest {
                 "K W L W F \n" +
                 "F W E W F \n";
         assertEquals(expectedLayout, maze.toString());
-
+        //check total number of tiles
         assertEquals(25, maze.getTileGrid().length * maze.getTileGrid()[0].length);
     }
 
@@ -164,11 +173,13 @@ public class DomainTest {
     void testPlayerStartPosition() {
         miniGame();
         assertThrows(IllegalArgumentException.class, ()-> {
-            maze.setPlayer(null);
+            maze.setPlayer(null); //invalid player
         });
         assertThrows(IllegalArgumentException.class, ()-> {
-            player.initialiseStartPos(0,0);
+            player.initialiseStartPos(0,0); //invalid maze dimensions
         });
+
+        //valid player setup
         assertEquals(player, maze.getPlayer());
         assertEquals(new Position(2,2), player.getPos());
         assertEquals("P", maze.getSymbol(new Position(2,2)));
@@ -179,13 +190,16 @@ public class DomainTest {
         miniGame();
         Position p1 = new Position(1,1);
         assertThrows(IndexOutOfBoundsException.class, ()-> {
-            Position p = new Position(-1,0);
+            Position p = new Position(-1,0); //invalid position
         });
+
+        //test position updates
         p1.setX(3);
         p1.setY(4);
         assertEquals("x: 3 y: 4", p1.toString());
-        assertEquals(true, p1.equals(new Position(3,4)));
+        assertTrue(p1.equals(new Position(3,4)));
 
+        //invalid position updates
         assertThrows(IllegalArgumentException.class, ()-> {
             p1.setX(-1);
         });
@@ -198,25 +212,25 @@ public class DomainTest {
     void testFreeTile(){
         miniGame();
 
-        //get free tile object to test
+        //get free tile object to test its methods
         Tile freeTile = maze.getTileAt(new Position(0,2));
         Free free = (Free) freeTile;
-        assertEquals(true, free.equals(Free.of(new Position(0,2))));
+        assertTrue(free.equals(Free.of(new Position(0, 2))));
 
         assertThrows(IllegalArgumentException.class, ()-> {
-            Tile t = Free.of(null);
+            Tile t = Free.of(null); //invalid position
         });
 
         assertThrows(IllegalArgumentException.class, ()-> {
-            free.onEnter(null);
+            free.onEnter(null); //invalid player
         });
 
         assertThrows(IllegalArgumentException.class, ()-> {
-            free.isAccessible(null);
+            free.isAccessible(null); //invalid player
         });
 
         assertThrows(IllegalArgumentException.class, ()-> {
-            free.setCollectable(null);
+            free.setCollectable(null); //invalid collectable
         });
 
     }
@@ -230,7 +244,7 @@ public class DomainTest {
 
         assertEquals(new Position(2,1), Direction.UP.apply(new Position(2,2)));
         assertThrows(IllegalArgumentException.class, ()-> {
-            player.getDirection().apply(null);
+            player.getDirection().apply(null); //invalid position
         });
         }
 
@@ -238,19 +252,19 @@ public class DomainTest {
     void testPlayerMove() {
         miniGame();
         maze.movePlayer(Direction.UP);
-        assertEquals(new Position(2,2), player.getPos()); //cannot through locked door
-        maze.movePlayer(Direction.LEFT);
-        assertEquals(new Position(1,2), player.getPos()); //on info tile
+        assertEquals(new Position(2,2), player.getPos()); //cannot through locked door, so position should remain unchanged
+        maze.movePlayer(Direction.LEFT); //on info tile
+        assertEquals(new Position(1,2), player.getPos());
         maze.movePlayer(Direction.LEFT);
         maze.movePlayer(Direction.DOWN); //gets orange key
         maze.movePlayer(Direction.UP);
 
         assertThrows(IndexOutOfBoundsException.class, ()-> {
-            maze.movePlayer(Direction.LEFT);
+            maze.movePlayer(Direction.LEFT); //out of bounds
         });
 
         assertThrows(IllegalArgumentException.class, ()-> {
-            maze.movePlayer(null);
+            maze.movePlayer(null); //invalid direction
         });
     }
 
@@ -258,11 +272,11 @@ public class DomainTest {
     void testAliveState(){
         miniGame();
         assertThrows(IllegalArgumentException.class, ()-> {
-            player.move(null);
+            player.move(null); //invalid direction
         });
 
         assertThrows(IllegalArgumentException.class, ()-> {
-            player.addKey(null);
+            player.addKey(null); //invalid key
         });
 
         int treasuresBefore = player.getTreasuresCollected();
@@ -274,13 +288,13 @@ public class DomainTest {
     void testDeadState(){
         miniGame();
         player.die();
-        player.move(Direction.LEFT);
+        player.move(Direction.LEFT); //should just return
         assertEquals(new Position(2,2), player.getPos()); //position should remain unchanged
-        player.collectTreasure();
+        player.collectTreasure(); //should just return
         assertEquals(0, player.getTreasuresCollected()); //treasure count should remain unchanged
-        player.addKey(Key.of(EntityColor.GREEN));
+        player.addKey(Key.of(EntityColor.GREEN)); //should just return
         assertEquals(0, player.getKeys().size()); //key count should remain unchanged
-        assertEquals(false, player.isAlive());
+        assertFalse(player.isAlive());
     }
 
     @Test
@@ -290,11 +304,11 @@ public class DomainTest {
         //get wall tile object to test
         Tile wallTile = maze.getTileAt(new Position(3,3));
         Wall wall = (Wall) wallTile;
-        assertEquals(true, wall.equals(Wall.of(new Position(3,3))));
+        assertTrue(wall.equals(Wall.of(new Position(3, 3))));
 
 
         maze.movePlayer(Direction.RIGHT);
-        maze.movePlayer(Direction.DOWN); //wall tile
+        maze.movePlayer(Direction.DOWN); //wall tile, cannot pass
         assertEquals(Wall.of(new Position (3,3)), maze.getTileAt(new Position(3,3)));
         assertEquals(new Position(3,2), player.getPos()); // Position should remain unchanged
     }
@@ -303,20 +317,16 @@ public class DomainTest {
     void testTileExceptions(){
         miniGame();
         assertThrows(IllegalArgumentException.class, ()-> {
-            maze.setTileAt(null);
+            maze.setTileAt(null); //invalid tile
         });
 
         assertThrows(IndexOutOfBoundsException.class, ()-> {
-            maze.getTileAt(new Position(-1,0));
-        });
-
-        assertThrows(IllegalArgumentException.class, ()-> {
-            maze.setTileAt(null);
+            maze.getTileAt(new Position(-1,0)); //invalid position
         });
 
         assertThrows(IllegalArgumentException.class, ()-> {
             Tile t = Wall.of(null);
-            maze.setTileAt(t);
+            maze.setTileAt(t); //invalid position
         });
 
         assertThrows(IndexOutOfBoundsException.class, ()-> {
@@ -325,7 +335,7 @@ public class DomainTest {
         });
 
         assertThrows(IllegalArgumentException.class, ()-> {
-            maze.targetTile(null, null);
+            maze.targetTile(null, null); //invalid position and direction
         });
     }
 
@@ -337,10 +347,10 @@ public class DomainTest {
         Tile keyTile = maze.getTileAt(new Position(4,2));
         Free freeTile = (Free) keyTile;
         Key greenKey = (Key) freeTile.getCollectable().get();
-        assertEquals(true, greenKey.equals(Key.of(EntityColor.GREEN)));
+        assertTrue(greenKey.equals(Key.of(EntityColor.GREEN)));
 
         assertThrows(IllegalArgumentException.class, ()-> {
-            greenKey.onInteract(null);
+            greenKey.onInteract(null); //invalid player
         });
 
         maze.movePlayer(Direction.RIGHT);
@@ -359,7 +369,7 @@ public class DomainTest {
         maze.movePlayer(Direction.RIGHT);
         maze.movePlayer(Direction.RIGHT); //back to the middle
         maze.movePlayer(Direction.UP); //to open door
-        assertEquals(new Position(2,1), player.getPos()); //door should be open
+        assertEquals(new Position(2,1), player.getPos()); //door should be open so player to move through
 
         maze.movePlayer(Direction.UP);
         maze.movePlayer(Direction.LEFT); //collect treasure
@@ -373,27 +383,27 @@ public class DomainTest {
         Tile doorTileBefore = maze.getTileAt(new Position(2,1));
         Free freeTileBefore = (Free) doorTileBefore;
         Door door = (Door) freeTileBefore.getCollectable().get(); //orange door
-        assertEquals(true, door.equals(Door.of(EntityColor.ORANGE)));
+        assertTrue(door.equals(Door.of(EntityColor.ORANGE)));
 
         assertThrows(IllegalArgumentException.class, ()-> {
-            door.onInteract(null);
+            door.onInteract(null); //invalid player
         });
 
         assertThrows(IllegalStateException.class, ()-> { //player does not have key yet
-            door.onInteract(player);
+            door.onInteract(player); //should not be able to open
         });
 
         assertThrows(IllegalArgumentException.class, ()-> {
-            door.canInteract(null);
+            door.canInteract(null); //invalid player
         });
 
-        assertEquals(false, door.hasCorrectKey(player)); //should not have key yet
+        assertFalse(door.hasCorrectKey(player)); //should not have key yet
         player.addKey(Key.of(EntityColor.ORANGE));
-        assertEquals(true, door.hasCorrectKey(player));
-        assertEquals(true, door.canInteract(player)); //should be able to open now
+        assertTrue(door.hasCorrectKey(player));
+        assertTrue(door.canInteract(player)); //should be able to open now
 
         assertThrows(IllegalArgumentException.class, ()-> {
-            door.hasCorrectKey(null);
+            door.hasCorrectKey(null); //invalid player
         });
 
     }
@@ -408,10 +418,10 @@ public class DomainTest {
         Tile treasureTile = maze.getTileAt(new Position(1,0));
         Free freeTile = (Free) treasureTile;
         Treasure treasure = (Treasure) freeTile.getCollectable().get();
-        assertEquals(true, treasure.equals(Treasure.of()));
+        assertTrue(treasure.equals(Treasure.of()));
 
         assertThrows(IllegalArgumentException.class, ()-> {
-            treasure.onInteract(null);
+            treasure.onInteract(null); //invalid player
         });
 
         player.collectTreasure();
@@ -419,7 +429,7 @@ public class DomainTest {
         player.collectTreasure();
         player.collectTreasure();
         player.collectTreasure();
-        assertEquals(true, player.allTreasuresCollected());
+        assertTrue(player.allTreasuresCollected());
         assertThrows(IllegalStateException.class, ()-> {
             treasure.onInteract(player); //all treasures already collected
         });
@@ -433,22 +443,22 @@ public class DomainTest {
         Tile exitLockTile = maze.getTileAt(new Position(2,3));
         Free freeTile = (Free) exitLockTile;
         ExitLock exitLock = (ExitLock) freeTile.getCollectable().get();
-        assertEquals(true, exitLock.equals(ExitLock.of()));
+        assertTrue(exitLock.equals(ExitLock.of()));
 
         //cannot pass through exit lock yet
-        assertEquals(false, exitLock.canInteract(player));
+        assertFalse(exitLock.canInteract(player));
         assertThrows(IllegalArgumentException.class, ()-> {
-            exitLock.canInteract(null);
+            exitLock.canInteract(null); //invalid player
         });
 
         assertThrows(IllegalArgumentException.class, ()-> {
-            maze.movePlayer(null);
+            maze.movePlayer(null); //invalid direction
         });
 
         player.collectTreasure(); //collecting all treasures
 
         assertThrows(IllegalArgumentException.class, ()-> {
-            exitLock.onInteract(null);
+            exitLock.onInteract(null); //invalid player
         });
         maze.movePlayer(Direction.DOWN); //to exit lock
         assertEquals(new Position(2,3), player.getPos()); //should be able to
@@ -463,7 +473,7 @@ public class DomainTest {
         //get info tile object to test
         Tile infoTile = maze.getTileAt(new Position(1,2));
         Info info = (Info) infoTile;
-        assertEquals(true, info.equals(Info.of("Info", new Position(1,2))));
+        assertTrue(info.equals(Info.of("Info", new Position(1, 2))));
     }
 
     @Test
@@ -472,10 +482,10 @@ public class DomainTest {
         //get exit tile object to test
         Tile exitTile = maze.getTileAt(new Position(2,4));
         Exit exit = (Exit) exitTile;
-        assertEquals(true, exit.equals(Exit.of(new Position(2,4))));
+        assertTrue(exit.equals(Exit.of(new Position(2, 4))));
 
         assertThrows(IllegalArgumentException.class, ()-> {
-            exit.onEnter(null);
+            exit.onEnter(null); //invalid player
         });
     }
 
@@ -493,7 +503,10 @@ public class DomainTest {
         assertEquals(expectedLayout, maze.toString());
 
         assertThrows(IllegalArgumentException.class, ()-> {
-            maze.setMonster(null);
+            maze.setMonster(null); //invalid monster
+        });
+        assertThrows(IllegalArgumentException.class, ()-> {
+            Monster m = Monster.of(null); //invalid position of monster
         });
     }
 
@@ -531,8 +544,8 @@ public class DomainTest {
         List<Monster> monsters= maze.getMonsters();
         Monster m1 = monsters.get(0);
 
-        maze.movePlayer(Direction.UP);
-        assertEquals(false, player.isAlive());
+        maze.movePlayer(Direction.UP); //player hits monster
+        assertFalse(player.isAlive());
     }
 
     @Test
@@ -544,7 +557,7 @@ public class DomainTest {
         maze.ping(); //monster moves left
         maze.movePlayer(Direction.UP);
         maze.ping(); //monster moves right and hits player
-        assertEquals(false, player.isAlive());
+        assertFalse(player.isAlive());
 
         maze.playerDead(); //should just return
     }
@@ -567,18 +580,18 @@ public class DomainTest {
         //get water tile object to test
         Tile waterTile = maze.getTileAt(new Position(0,1));
         Water water = (Water) waterTile;
-        assertEquals(true, water.equals(Water.of(new Position(0,1))));
+        assertTrue(water.equals(Water.of(new Position(0, 1))));
 
         assertThrows(IllegalArgumentException.class, ()-> {
-            Tile t = Water.of(null);
+            Tile t = Water.of(null); //invalid position
         });
 
         assertThrows(IllegalArgumentException.class, ()-> {
-            water.onEnter(null);
+            water.onEnter(null); //invalid player
         });
 
         assertEquals(new Position(1,1), player.getPos());
-        maze.movePlayer(Direction.LEFT); //player going onto water tile
-        assertEquals(false, player.isAlive());
+        maze.movePlayer(Direction.LEFT); //player going onto water tile, should drown
+        assertFalse(player.isAlive());
     }
 }
