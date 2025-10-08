@@ -12,11 +12,11 @@ import java.util.function.Consumer;
  * Wall class representing a wall tile in the game
  * Wall is impassable and does not allow player movement
  * Inherits from Tile class
- * @author Hayley Far
+ * @author Hayley Far (300659141)
  */
 public class Wall extends Tile {
-    private record WallKey(Position pos){}
-    private static final Map<WallKey, Wall> cache = new HashMap<>();
+    private record WallKey(Position pos){} // Record to represent unique key for wall caching based on position
+    private static final Map<WallKey, Wall> cache = new HashMap<>(); // Cache to store created wall instances
 
     /**
      * Private constructor for wall with specified WallKey
@@ -28,7 +28,7 @@ public class Wall extends Tile {
 
     /**
      * Static factory method to create or retrieve a wall tile with specified position
-     * Uses caching to avoid duplicate wall instances at the same position
+     * Uses caching to avoid duplicate wall instances (Flyweight pattern)
      * @param pos position of the wall tile
      * @return Wall instance at the specified position
      */
@@ -75,6 +75,7 @@ public class Wall extends Tile {
     /**
      * Accept method for visitor pattern
      * @param visitor TileVisitor instance
+     * @param <T> return type of the visitor operation
      * @return result of visitor's visitWall method
      */
     @Override

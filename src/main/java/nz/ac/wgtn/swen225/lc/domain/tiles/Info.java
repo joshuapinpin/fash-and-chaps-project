@@ -10,7 +10,7 @@ import java.util.function.Consumer;
  * Info class representing an informational tile in the game
  * When the player enters this tile, a message is displayed
  * Inherits from Tile class
- * @author Hayley Far
+ * @author Hayley Far (300659141)
  */
 public class Info extends Tile {
     private final String message;
@@ -37,7 +37,7 @@ public class Info extends Tile {
 
     /**
      * Method to handle player entering the info tile
-     * Displays the informational message to the player
+     * Displays the informational message to the player, by using observer pattern
      * @param p player entering the info tile
      * @return Consumer to notify observers of informational message
      */

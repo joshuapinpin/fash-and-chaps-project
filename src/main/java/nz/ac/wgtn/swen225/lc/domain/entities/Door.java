@@ -9,10 +9,10 @@ import java.util.function.Consumer;
  * Door class representing a door entity in the game
  * Doors have a color and can be opened with a matching key
  * Implements Entity interface for interaction
- * @author Hayley Far
+ * @author Hayley Far (300659141)
  */
 public class Door implements Entity {
-    private final EntityColor doorColor;
+    private final EntityColor doorColor; //color of the door
     private boolean isOpen = false; //state of the door
 
     /**
@@ -33,7 +33,7 @@ public class Door implements Entity {
     }
 
     /**
-     * Check if the player has the correct key for the door
+     * Check if the player has the correct key for the door by its color
      * @param p player to check
      * @return true if player has the correct key, false otherwise
      */
@@ -47,6 +47,7 @@ public class Door implements Entity {
     /**
      * Method to handle player interaction with the door
      * To be able to unlock door with the correct key
+     * Note: PLayer accessibility should be checked via canInteract() before calling this method
      * @param p player interacting with the door
      * @return Consumer to notify observers of door opening
     */
@@ -83,7 +84,8 @@ public class Door implements Entity {
 
     /**
      * Check if the door can be interacted with (pre interaction check)
-     * Door can be interacted with if it is open or if the player has a matching key
+     * Door can be interacted with if it is open or if the player has a matching key in their collection
+     * @param p player to check
      * @return true if the door can be interacted with, false otherwise
      */
     @Override
@@ -111,6 +113,7 @@ public class Door implements Entity {
     /**
      * Accept method for visitor pattern
      * @param visitor EntityVisitor instance
+     * @param <T> return type of the visitor operation
      * @return result of visitor's visitDoor method
      */
     @Override

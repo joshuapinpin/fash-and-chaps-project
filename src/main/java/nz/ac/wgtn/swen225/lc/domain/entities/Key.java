@@ -9,10 +9,10 @@ import java.util.function.Consumer;
  * Key class representing a key entity in the game
  * Keys have a color and can be collected by the player
  * Implements Entity interface for interaction
- * @author Hayley Far
+ * @author Hayley Far (300659141)
  */
 public class Key implements Entity {
-    private final EntityColor keyColor;
+    private final EntityColor keyColor; //color of the key
 
     /**
      * Constructor for key with specified color
@@ -33,7 +33,7 @@ public class Key implements Entity {
 
     /**
      * Method to handle player interaction with the key
-     * To be able to collect the key
+     * To be able to collect the key and add to player's inventory
      * @param p player interacting with the key
      * @return Consumer to notify observers of key collection
      */
@@ -73,6 +73,7 @@ public class Key implements Entity {
     /**
      * Accept method for visitor pattern
      * @param visitor the visitor to accept
+     * @param <T> the return type of the visitor's visitKey method
      * @return result of visitor's visitKey method
      */
     @Override

@@ -9,14 +9,13 @@ import java.util.function.Consumer;
  * ExitLock class representing the exit lock entity in the game
  * ExitLock is impassable until all treasures are collected
  * Implements Entity interface for interaction
- * @author Hayley Far
+ * @author Hayley Far (300659141)
  */
 public class ExitLock implements Entity {
     private boolean isPassable = false; //state of the exit lock
 
     /**
      * Constructor for exit lock
-     * Subject to change in terms of parameters
      */
     ExitLock(){}
 
