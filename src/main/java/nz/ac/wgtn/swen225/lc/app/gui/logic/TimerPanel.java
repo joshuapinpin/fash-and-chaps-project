@@ -28,6 +28,7 @@ public class TimerPanel extends JPanel implements LogicPanel {
 
     @Override
     public void updatePanel(int info) {
+        if(info < 0 ) {timerLabel.setText("XX"); return;}
         if(info <= 10) timerLabel.setForeground(new Color(255, 69, 69));
         timerLabel.setText(info + "");
     }
