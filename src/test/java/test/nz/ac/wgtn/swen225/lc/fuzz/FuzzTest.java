@@ -34,7 +34,9 @@ public class FuzzTest {
     }
 
     private void runFuzzer(int initialLevel) {
-        long durationMillis = Long.getLong("fuzz.ms", 55_000L);
+        // Adjusted default duration: shortened to 15s to avoid long runs / audio build up.
+        // You can restore to 55_000L when longer exploration is desired.
+        long durationMillis = Long.getLong("fuzz.ms", 15_000L);
         long seed = Long.getLong("fuzz.seed", System.currentTimeMillis());
         Random rnd = new Random(seed);
         boolean logSeed = Boolean.getBoolean("fuzz.logSeed");
@@ -48,7 +50,6 @@ public class FuzzTest {
                     " enablePause=" + enablePause);
         }
 
-        // PATCH START: revised thresholds / tracking
         final int MAX_AUDIO_FAILS = Integer.getInteger("fuzz.maxAudioFails", 5);
         final int MAX_TOTAL_RESTARTS = Integer.getInteger("fuzz.maxRestarts", 25);
         final int UNSTABLE_RESTART_THRESHOLD = Integer.getInteger("fuzz.unstableRestartThreshold", 6);
@@ -58,7 +59,6 @@ public class FuzzTest {
         boolean disableRestarts = false;
         boolean hadPlaySession = false; // becomes true once we are in Play and make at least one movement
         long lastRestartTime = System.currentTimeMillis();
-        // PATCH END
 
         AppController controller = AppController.of();
         if (!safeStartNewGame(controller, initialLevel)) {
@@ -66,7 +66,6 @@ public class FuzzTest {
             return;
         }
 
-        // Inputs
         List<Input> movement = List.of(Input.MOVE_UP, Input.MOVE_DOWN, Input.MOVE_LEFT, Input.MOVE_RIGHT);
         List<Input> meta = enablePause
                 ? List.of(Input.RESUME, Input.CONTINUE, Input.PAUSE, Input.SAVE)
@@ -100,9 +99,7 @@ public class FuzzTest {
         int moves = 0;
 
         boolean pausedRecently = false;
-        int invalidInRow = 0;
-        long nonPlayStateStartMs = -1;
-        int forcedResumeAttempts = 0;
+        long nonPlayStateStartMs = -1; // simplified: removed invalidInRow & forcedResumeAttempts
 
         int audioWarns = 0;
         final int AUDIO_WARN_LIMIT = 10;
@@ -113,28 +110,20 @@ public class FuzzTest {
                 String stateName = controller.state().getClass().getSimpleName();
                 boolean isPlay = stateName.contains("Play");
 
-                // Mark that we actually got a usable play session
                 if (isPlay && !hadPlaySession) {
                     hadPlaySession = true;
                 }
 
-                // Early exit only allowed if we already had a valid play session
-                if (disableRestarts && !isPlay && hadPlaySession) {
-                    System.out.println("[FUZZ][INFO] Exiting early: not in Play, restarts disabled, play session already achieved.");
-                    break;
-                }
+                // Early exit disabled to allow full duration run.
+                // if (disableRestarts && !isPlay && hadPlaySession) break;
 
                 if (!isPlay) {
                     if (nonPlayStateStartMs < 0) nonPlayStateStartMs = System.currentTimeMillis();
                 } else {
-                    nonPlayStateStartMs = -1;
-                    forcedResumeAttempts = 0;
+                    nonPlayStateStartMs = -1; // forcedResumeAttempts removed
                 }
 
-                // Victory/Defeat handling with improved logic
                 if ((stateName.contains("Victory") || stateName.contains("Defeat")) && !disableRestarts) {
-
-                    // Detect rapid churn (unstable loop)
                     long now = System.currentTimeMillis();
                     if (now - lastRestartTime < 700) {
                         unstableLoopCount++;
@@ -150,7 +139,7 @@ public class FuzzTest {
                     if (!disableRestarts) {
                         boolean ok = safeStartNewGame(controller, initialLevel);
                         if (ok) {
-                            restartCount++; // count only successful restarts entering Play
+                            restartCount++;
                             if (restartCount >= MAX_TOTAL_RESTARTS) {
                                 disableRestarts = true;
                                 System.out.println("[FUZZ][INFO] Restart limit reached (successful restarts). Disabling restarts.");
@@ -167,13 +156,11 @@ public class FuzzTest {
                         stagnationCounter = 0;
                         inShake = false;
                         shakeRemaining = 0;
-                        pausedRecently = false;
-                        invalidInRow = 0;
+                        pausedRecently = false; // invalidInRow removed
                         continue;
                     }
                 }
 
-                // Paused watchdog (unchanged except break condition)
                 if (!isPlay && !disableRestarts && (System.currentTimeMillis() - nonPlayStateStartMs) > 1000) {
                     boolean ok = forcePlayIfPaused(controller, initialLevel, rnd);
                     if (!ok) {
@@ -183,24 +170,13 @@ public class FuzzTest {
                             System.out.println("[FUZZ][INFO] Disabling restarts after paused/audio failures.");
                         }
                     } else {
-                        forcedResumeAttempts = 0;
                         nonPlayStateStartMs = -1;
-                        pausedRecently = false;
+                        pausedRecently = false; // forcedResumeAttempts removed
                     }
                 }
 
-                // If restarts disabled but we never had a play session, try one last forced start
-                if (!isPlay && disableRestarts && !hadPlaySession) {
-                    if (safeStartNewGame(controller, initialLevel)) {
-                        System.out.println("[FUZZ][INFO] Final forced start succeeded after disabling restarts.");
-                        continue;
-                    } else {
-                        System.out.println("[FUZZ][INFO] Final forced start failed; exiting.");
-                        break;
-                    }
-                }
+                // Final forced start block removed to avoid early termination.
 
-                // Select next input
                 Input next;
                 if (!isPlay) {
                     next = rnd.nextBoolean() ? Input.RESUME : Input.CONTINUE;
@@ -252,16 +228,14 @@ public class FuzzTest {
                     if (moved) {
                         success.merge(next,1,Integer::sum);
                         lastSuccessfulDir = next;
-                        stagnationCounter = 0;
-                        invalidInRow = 0;
+                        stagnationCounter = 0; // invalidInRow removed
                         if (after != null) visited.add(after);
                     } else {
                         fail.merge(next,1,Integer::sum);
-                        stagnationCounter++;
-                        invalidInRow++;
+                        stagnationCounter++; // invalidInRow removed
                     }
                 } else {
-                    if (isPlay) invalidInRow = 0; else invalidInRow++;
+                    // invalidInRow logic removed
                 }
 
                 if (movementInput && !inShake && stagnationCounter >= stagnationThreshold) {
@@ -316,7 +290,6 @@ public class FuzzTest {
         }
     }
 
-    // Returns true if ended in PlayState
     private boolean safeStartNewGame(AppController controller, int level) {
         for (int attempt = 1; attempt <= 3; attempt++) {
             try {
