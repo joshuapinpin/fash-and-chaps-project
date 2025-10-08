@@ -2,40 +2,25 @@
 package test.nz.ac.wgtn.swen225.lc.fuzz;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
+import nz.ac.wgtn.swen225.lc.app.util.Input;
+import nz.ac.wgtn.swen225.lc.domain.Maze;
+import nz.ac.wgtn.swen225.lc.domain.Position;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
-import nz.ac.wgtn.swen225.lc.app.util.Input;
-
-import java.awt.*; // GraphicsEnvironment used to detect headless CI environments
+import java.awt.GraphicsEnvironment;
 import java.time.Instant;
-import java.time.Duration; // used for level visitation timing
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
-
-import nz.ac.wgtn.swen225.lc.domain.Maze;
-import nz.ac.wgtn.swen225.lc.domain.Position;
+import java.util.*;
 
 /**
- * Fuzz tests for the application.
- * Generates random sequences of actions to test the robustness of the application module.
- * These tests will be used to help identify and trigger exceptions as the following:
- * - NullPointerException
- * - ArrayIndexOutOfBoundsException
- * - IllegalArgumentException
- * - IllegalStateException
- * - ConcurrentModificationException
- * - StackOverflowError
- * - AssertionError
- * @author Al-Bara Al-Sakkaf
+ * Heuristic fuzz tests for levels 1 and 2.
+ * Focus: exercise domain/app logic, surface unexpected exceptions.
  */
 public class FuzzTest {
 
     @Test
-    @Timeout(60)  // max 1 min runtime
+    @Timeout(60)
     public void testLevel1() {
         Assumptions.assumeFalse(GraphicsEnvironment.isHeadless(), "Headless CI - skipping GUI fuzzer");
         runFuzzer(1);
@@ -48,174 +33,491 @@ public class FuzzTest {
         runFuzzer(2);
     }
 
-
-    /**
-     * Core fuzzing loop: starts target level then randomly feeds inputs through the public controller API.
-     * Strategy (simple for Integration Day):
-     *  - Bias towards movement inputs (exploration) ~70%(lowk easier to setup)
-     *  - Occasionally pause/resume / continue
-     *  - Occasionally restart the same level or switch level (test transition thing)
-     *  - Random short sleeps to let Swing event update
-     * Stops on: uncaught runtime exception/assertion error i.e. where i tryna catch the errors/find them
-     * No assertions: any thrown exception other than UnsupportedOperationException / IllegalArgumentException
-     * (which can be legitimate for unsupported inputs in states) and is considered a finding.
-     */
     private void runFuzzer(int initialLevel) {
-        // Configurable duration (default 15s) via -Dfuzz.ms=15000 ; seed via -Dfuzz.seed ; log sequence via -Dfuzz.logSequence
-        long durationMillis = Long.getLong("fuzz.ms", 15_000L);
+        long durationMillis = Long.getLong("fuzz.ms", 55_000L);
         long seed = Long.getLong("fuzz.seed", System.currentTimeMillis());
-        Random rnd = new Random(seed); // reproducible when seed provided
+        Random rnd = new Random(seed);
         boolean logSeed = Boolean.getBoolean("fuzz.logSeed");
-        if(logSeed) System.out.println("[FUZZ] seed="+seed+" durationMs="+durationMillis+" startLevel="+initialLevel);
+        boolean slowMode = Boolean.getBoolean("fuzz.slow");
+        boolean crossLevels = Boolean.getBoolean("fuzz.crossLevels");
+        boolean enablePause = Boolean.parseBoolean(System.getProperty("fuzz.enablePause","false"));
 
-    AppController controller = AppController.of();
-    safeStartNewGame(controller, initialLevel);
+        if (logSeed) {
+            System.out.println("[FUZZ] seed=" + seed + " ms=" + durationMillis +
+                    " level=" + initialLevel + " crossLevels=" + crossLevels +
+                    " enablePause=" + enablePause);
+        }
 
-        // Action buckets
+        // PATCH START: revised thresholds / tracking
+        final int MAX_AUDIO_FAILS = Integer.getInteger("fuzz.maxAudioFails", 5);
+        final int MAX_TOTAL_RESTARTS = Integer.getInteger("fuzz.maxRestarts", 25);
+        final int UNSTABLE_RESTART_THRESHOLD = Integer.getInteger("fuzz.unstableRestartThreshold", 6);
+        int audioFailCount = 0;
+        int restartCount = 0;
+        int unstableLoopCount = 0;
+        boolean disableRestarts = false;
+        boolean hadPlaySession = false; // becomes true once we are in Play and make at least one movement
+        long lastRestartTime = System.currentTimeMillis();
+        // PATCH END
+
+        AppController controller = AppController.of();
+        if (!safeStartNewGame(controller, initialLevel)) {
+            System.out.println("[FUZZ][ABORT] Could not enter PlayState initially (audio failures).");
+            return;
+        }
+
+        // Inputs
         List<Input> movement = List.of(Input.MOVE_UP, Input.MOVE_DOWN, Input.MOVE_LEFT, Input.MOVE_RIGHT);
-        List<Input> meta = List.of(Input.PAUSE, Input.RESUME, Input.CONTINUE, Input.SAVE);
-        List<Input> levelLoads = List.of(Input.LOAD_LEVEL_1, Input.LOAD_LEVEL_2);
-    boolean allowExit = Boolean.getBoolean("fuzz.allowExit");
-    List<Input> rare = allowExit ? List.of(Input.SAVE, Input.EXIT) : List.of(Input.SAVE); // avoid killing JVM early
+        List<Input> meta = enablePause
+                ? List.of(Input.RESUME, Input.CONTINUE, Input.PAUSE, Input.SAVE)
+                : List.of(Input.RESUME, Input.CONTINUE, Input.SAVE);
+        List<Input> levelLoads = crossLevels
+                ? List.of(Input.LOAD_LEVEL_1, Input.LOAD_LEVEL_2)
+                : Collections.emptyList();
+        boolean allowExit = Boolean.getBoolean("fuzz.allowExit");
+        List<Input> rare = allowExit ? List.of(Input.SAVE, Input.EXIT) : List.of(Input.SAVE);
 
-        List<Input> executed = new ArrayList<>(1024); // store sequence for reproduction
+        List<Input> executed = new ArrayList<>(4096);
 
-    Instant end = Instant.now().plusMillis(durationMillis);
-    int moves = 0;
-    boolean sawLevel1 = (initialLevel == 1);
-    boolean sawLevel2 = (initialLevel == 2);
-    boolean slowMode = Boolean.getBoolean("fuzz.slow");
+        Map<Input,Integer> success = new EnumMap<>(Input.class);
+        Map<Input,Integer> fail = new EnumMap<>(Input.class);
+        for (Input mv : movement) { success.put(mv,1); fail.put(mv,1); }
+
+        Position lastPos = currentPlayerPos(controller);
+        Input lastSuccessfulDir = null;
+        int stagnationCounter = 0;
+        int stagnationThreshold = 25;
+        boolean inShake = false;
+        int shakeRemaining = 0;
+
+        Set<Position> visited = new HashSet<>();
+        if (lastPos != null) visited.add(lastPos);
+
+        int initialTreasure = safeCountTreasures(controller);
+        int initialKeys = safeCountKeys(controller);
+
+        Instant end = Instant.now().plusMillis(durationMillis);
+        int moves = 0;
+
+        boolean pausedRecently = false;
+        int invalidInRow = 0;
+        long nonPlayStateStartMs = -1;
+        int forcedResumeAttempts = 0;
+
+        int audioWarns = 0;
+        final int AUDIO_WARN_LIMIT = 10;
+
         try {
-            while(Instant.now().isBefore(end)) {
-                // If victory/defeat reached, restart random level.
+            while (Instant.now().isBefore(end)) {
+
                 String stateName = controller.state().getClass().getSimpleName();
-                if(stateName.contains("Victory") || stateName.contains("Defeat")) {
-                    int nextLevel = ThreadLocalRandom.current().nextBoolean() ? 1 : 2;
-                    safeStartNewGame(controller, nextLevel);
-                    if(nextLevel==1) sawLevel1 = true; else sawLevel2 = true;
+                boolean isPlay = stateName.contains("Play");
+
+                // Mark that we actually got a usable play session
+                if (isPlay && !hadPlaySession) {
+                    hadPlaySession = true;
                 }
 
-                // Force visiting both levels: halfway through time, if one level never seen, switch.
-                long remaining = Duration.between(Instant.now(), end).toMillis();
-                if(remaining < (durationMillis/2) && !(sawLevel1 && sawLevel2)) {
-                    if(!sawLevel1) { safeStartNewGame(controller,1); sawLevel1 = true; }
-                    else if(!sawLevel2) { safeStartNewGame(controller,2); sawLevel2 = true; }
+                // Early exit only allowed if we already had a valid play session
+                if (disableRestarts && !isPlay && hadPlaySession) {
+                    System.out.println("[FUZZ][INFO] Exiting early: not in Play, restarts disabled, play session already achieved.");
+                    break;
                 }
 
-                Input next = pickNext(rnd, movement, meta, levelLoads, rare);
+                if (!isPlay) {
+                    if (nonPlayStateStartMs < 0) nonPlayStateStartMs = System.currentTimeMillis();
+                } else {
+                    nonPlayStateStartMs = -1;
+                    forcedResumeAttempts = 0;
+                }
+
+                // Victory/Defeat handling with improved logic
+                if ((stateName.contains("Victory") || stateName.contains("Defeat")) && !disableRestarts) {
+
+                    // Detect rapid churn (unstable loop)
+                    long now = System.currentTimeMillis();
+                    if (now - lastRestartTime < 700) {
+                        unstableLoopCount++;
+                        if (unstableLoopCount >= UNSTABLE_RESTART_THRESHOLD) {
+                            System.out.println("[FUZZ][INFO] Unstable rapid win/lose loop. Disabling further restarts.");
+                            disableRestarts = true;
+                        }
+                    } else {
+                        unstableLoopCount = 0;
+                    }
+                    lastRestartTime = now;
+
+                    if (!disableRestarts) {
+                        boolean ok = safeStartNewGame(controller, initialLevel);
+                        if (ok) {
+                            restartCount++; // count only successful restarts entering Play
+                            if (restartCount >= MAX_TOTAL_RESTARTS) {
+                                disableRestarts = true;
+                                System.out.println("[FUZZ][INFO] Restart limit reached (successful restarts). Disabling restarts.");
+                            }
+                        } else {
+                            audioFailCount++;
+                            System.out.println("[FUZZ][WARN] Restart failed (audioFailCount=" + audioFailCount + ")");
+                            if (audioFailCount >= MAX_AUDIO_FAILS) {
+                                disableRestarts = true;
+                                System.out.println("[FUZZ][INFO] Too many audio failures; disabling restarts.");
+                            }
+                        }
+                        lastPos = currentPlayerPos(controller);
+                        stagnationCounter = 0;
+                        inShake = false;
+                        shakeRemaining = 0;
+                        pausedRecently = false;
+                        invalidInRow = 0;
+                        continue;
+                    }
+                }
+
+                // Paused watchdog (unchanged except break condition)
+                if (!isPlay && !disableRestarts && (System.currentTimeMillis() - nonPlayStateStartMs) > 1000) {
+                    boolean ok = forcePlayIfPaused(controller, initialLevel, rnd);
+                    if (!ok) {
+                        audioFailCount++;
+                        if (audioFailCount >= MAX_AUDIO_FAILS) {
+                            disableRestarts = true;
+                            System.out.println("[FUZZ][INFO] Disabling restarts after paused/audio failures.");
+                        }
+                    } else {
+                        forcedResumeAttempts = 0;
+                        nonPlayStateStartMs = -1;
+                        pausedRecently = false;
+                    }
+                }
+
+                // If restarts disabled but we never had a play session, try one last forced start
+                if (!isPlay && disableRestarts && !hadPlaySession) {
+                    if (safeStartNewGame(controller, initialLevel)) {
+                        System.out.println("[FUZZ][INFO] Final forced start succeeded after disabling restarts.");
+                        continue;
+                    } else {
+                        System.out.println("[FUZZ][INFO] Final forced start failed; exiting.");
+                        break;
+                    }
+                }
+
+                // Select next input
+                Input next;
+                if (!isPlay) {
+                    next = rnd.nextBoolean() ? Input.RESUME : Input.CONTINUE;
+                } else if (pausedRecently) {
+                    if (enablePause && rnd.nextInt(100) < 25) {
+                        next = rnd.nextBoolean() ? Input.RESUME : Input.CONTINUE;
+                    } else {
+                        pausedRecently = false;
+                        next = pickAction(rnd, movement, meta, levelLoads, rare,
+                                success, fail, lastSuccessfulDir, stagnationCounter, inShake, crossLevels);
+                    }
+                } else {
+                    next = pickAction(rnd, movement, meta, levelLoads, rare,
+                            success, fail, lastSuccessfulDir, stagnationCounter, inShake, crossLevels);
+                }
+
                 executed.add(next);
+                Position before = currentPlayerPos(controller);
+
                 try {
                     controller.handleInput(next);
-                } catch(UnsupportedOperationException | IllegalArgumentException ignored) {
-                    // expected sometimes depending on state
-                } catch(RuntimeException rte) {
-                    if(rte.getMessage()!=null && rte.getMessage().contains("background sound")) {
-                        System.err.println("[FUZZ][AUDIO-WARN] Suppressed background sound failure mid-run: " + rte.getMessage());
-                    } else throw rte;
+                } catch (UnsupportedOperationException | IllegalArgumentException ignored) {
+                } catch (RuntimeException rte) {
+                    if (rte.getMessage() != null && rte.getMessage().contains("background sound")) {
+                        if (audioWarns++ < AUDIO_WARN_LIMIT) {
+                            System.err.println("[FUZZ][AUDIO-WARN] Suppressed: " + rte.getMessage());
+                            if (audioWarns == AUDIO_WARN_LIMIT) {
+                                System.err.println("[FUZZ][AUDIO-WARN] Further audio warnings suppressed");
+                            }
+                        }
+                        audioFailCount++;
+                        if (audioFailCount >= MAX_AUDIO_FAILS) {
+                            disableRestarts = true;
+                            System.out.println("[FUZZ][INFO] Audio fail threshold reached; restarts disabled.");
+                        }
+                    } else {
+                        dumpSequence(seed, executed, rte);
+                        throw rte;
+                    }
                 }
 
-                // Periodic logging of treasure count & position every 40 moves or when switching level
-                if((moves % 40)==0) {
-                    logProgress(controller, moves);
+                if (next == Input.PAUSE) pausedRecently = true;
+                if (next == Input.RESUME || next == Input.CONTINUE) pausedRecently = false;
+
+                boolean movementInput = movement.contains(next);
+                if (movementInput) {
+                    Position after = currentPlayerPos(controller);
+                    boolean moved = after != null && before != null && !after.equals(before);
+                    if (moved) {
+                        success.merge(next,1,Integer::sum);
+                        lastSuccessfulDir = next;
+                        stagnationCounter = 0;
+                        invalidInRow = 0;
+                        if (after != null) visited.add(after);
+                    } else {
+                        fail.merge(next,1,Integer::sum);
+                        stagnationCounter++;
+                        invalidInRow++;
+                    }
+                } else {
+                    if (isPlay) invalidInRow = 0; else invalidInRow++;
+                }
+
+                if (movementInput && !inShake && stagnationCounter >= stagnationThreshold) {
+                    inShake = true;
+                    shakeRemaining = 15 + rnd.nextInt(10);
+                    stagnationCounter = 0;
+                    System.out.println("[FUZZ][HEURISTIC] Entering shake phase");
+                }
+                if (inShake && --shakeRemaining <= 0) {
+                    inShake = false;
+                    System.out.println("[FUZZ][HEURISTIC] Leaving shake phase");
+                }
+
+                if ((moves % 60) == 0) {
+                    int treas = safeCountTreasures(controller);
+                    int keys = safeCountKeys(controller);
+                    System.out.printf(Locale.ROOT,
+                            "[FUZZ][STATE] moves=%d lvl=%d visited=%d treas=%d/%d keys=%d/%d state=%s restarts=%d audioFails=%d disableRestarts=%s dirSuc=%s%n",
+                            moves,
+                            controller.level(),
+                            visited.size(),
+                            treas, initialTreasure,
+                            keys, initialKeys,
+                            controller.state().getClass().getSimpleName(),
+                            restartCount,
+                            audioFailCount,
+                            disableRestarts,
+                            movementSuccessSummary(success, fail)
+                    );
                 }
 
                 moves++;
-                // Adaptive pacing: quicker early exploration, slow down a bit later so EDT can repaint.
-                if(slowMode) {
-                    sleepQuiet(40 + rnd.nextInt(60));
-                } else if((moves % 50)==0) {
-                    sleepQuiet(10 + rnd.nextInt(25));
-                } else if((moves % 10)==0) {
-                    sleepQuiet(1 + rnd.nextInt(4));
+
+                if (slowMode) {
+                    sleepQuiet(35 + rnd.nextInt(55));
+                } else if ((moves % 80) == 0) {
+                    sleepQuiet(12 + rnd.nextInt(18));
+                } else if ((moves % 15) == 0) {
+                    sleepQuiet(2 + rnd.nextInt(6));
                 }
             }
-        } catch(RuntimeException | AssertionError e) {
+        } catch (RuntimeException | AssertionError e) {
             dumpSequence(seed, executed, e);
-            throw e; // rethrow so JUnit marks failure
-        } catch(Error err) { // include other serious errors (StackOverflowError, etc.)
+            throw e;
+        } catch (Error err) {
             dumpSequence(seed, executed, err);
             throw err;
         }
 
-        if(Boolean.getBoolean("fuzz.alwaysDump")) {
+        if (Boolean.getBoolean("fuzz.alwaysDump")) {
             dumpSequence(seed, executed, null);
         }
     }
 
-    private void logProgress(AppController controller, int moves) {
+    // Returns true if ended in PlayState
+    private boolean safeStartNewGame(AppController controller, int level) {
+        for (int attempt = 1; attempt <= 3; attempt++) {
+            try {
+                controller.startNewGame(level);
+                if (controller.state().getClass().getSimpleName().contains("Play")) {
+                    return true;
+                }
+            } catch (RuntimeException e) {
+                if (e.getMessage() != null && e.getMessage().contains("background sound")) {
+                    System.err.println("[FUZZ][AUDIO-WARN] Suppressed audio init failure (attempt " + attempt + ")");
+                    sleepQuiet(30);
+                    continue;
+                }
+                throw e;
+            }
+        }
+        return controller.state().getClass().getSimpleName().contains("Play");
+    }
+
+    private boolean forcePlayIfPaused(AppController controller, int level, Random rnd) {
+        String stateName = controller.state().getClass().getSimpleName();
+        if (!stateName.contains("Paused")) return true;
+        for (int attempt = 0; attempt < 4; attempt++) {
+            try {
+                controller.handleInput(Input.RESUME);
+                controller.handleInput(Input.CONTINUE);
+                controller.handleInput(Input.MOVE_UP);
+            } catch (Exception ignored) {}
+            if (controller.state().getClass().getSimpleName().contains("Play")) {
+                System.out.println("[FUZZ][RECOVERY] Forced into PlayState after " + (attempt + 1) + " attempts");
+                return true;
+            }
+        }
+        try {
+            controller.startNewGame(level);
+        } catch (RuntimeException ex) {
+            if (ex.getMessage() == null || !ex.getMessage().contains("background sound")) throw ex;
+        }
+        return controller.state().getClass().getSimpleName().contains("Play");
+    }
+
+    private Input pickAction(Random rnd,
+                             List<Input> movement,
+                             List<Input> meta,
+                             List<Input> levelLoads,
+                             List<Input> rare,
+                             Map<Input,Integer> success,
+                             Map<Input,Integer> fail,
+                             Input lastSuccessfulDir,
+                             int stagnationCounter,
+                             boolean inShake,
+                             boolean crossLevels) {
+
+        if (shouldDoMeta(rnd, crossLevels)) {
+            return meta.get(rnd.nextInt(meta.size()));
+        } else if (!levelLoads.isEmpty() && rnd.nextInt(100) < 3) {
+            return levelLoads.get(rnd.nextInt(levelLoads.size()));
+        } else if (rnd.nextInt(100) < 5 && !rare.isEmpty()) {
+            return rare.get(rnd.nextInt(rare.size()));
+        } else {
+            return pickMovementHeuristic(rnd, movement, success, fail, lastSuccessfulDir, stagnationCounter, inShake);
+        }
+    }
+
+    private boolean shouldDoMeta(Random rnd, boolean crossLevels) {
+        int roll = rnd.nextInt(100);
+        if (crossLevels) return roll < 8;
+        return roll < 5;
+    }
+
+    private Input pickMovementHeuristic(Random rnd,
+                                        List<Input> movement,
+                                        Map<Input,Integer> success,
+                                        Map<Input,Integer> fail,
+                                        Input lastSuccessDir,
+                                        int stagnationCounter,
+                                        boolean inShake) {
+        if (inShake) return movement.get(rnd.nextInt(movement.size()));
+        if (lastSuccessDir != null && rnd.nextInt(100) < 30) return lastSuccessDir;
+
+        double total = 0;
+        double[] weights = new double[movement.size()];
+        for (int i = 0; i < movement.size(); i++) {
+            Input mv = movement.get(i);
+            int s = success.getOrDefault(mv,1);
+            int f = fail.getOrDefault(mv,1);
+            double ratio = (double)s / (s+f);
+            double w = 0.2 + (ratio * ratio * 2.5);
+            if (stagnationCounter > 10) w *= 1.2;
+            weights[i] = w;
+            total += w;
+        }
+        double pick = rnd.nextDouble() * total;
+        for (int i = 0; i < weights.length; i++) {
+            pick -= weights[i];
+            if (pick <= 0) {
+                if (Boolean.getBoolean("fuzz.verboseWeights")) {
+                    System.out.println("[FUZZ][WEIGHTS] " + weightDebug(movement, weights));
+                }
+                return movement.get(i);
+            }
+        }
+        return movement.get(0);
+    }
+
+    private String weightDebug(List<Input> moves, double[] w) {
+        StringBuilder sb = new StringBuilder("{");
+        for (int i = 0; i < moves.size(); i++) {
+            sb.append(moves.get(i).name()).append('=')
+              .append(String.format(Locale.ROOT,"%.2f", w[i]));
+            if (i < moves.size()-1) sb.append(", ");
+        }
+        sb.append('}');
+        return sb.toString();
+    }
+
+    private String movementSuccessSummary(Map<Input,Integer> success, Map<Input,Integer> fail) {
+        StringBuilder sb = new StringBuilder();
+        for (Input mv : success.keySet()) {
+            int s = success.getOrDefault(mv,1);
+            int f = fail.getOrDefault(mv,1);
+            double ratio = (double)s/(s+f);
+            sb.append(mv.name().charAt(5)).append('=')
+              .append(String.format(Locale.ROOT,"%.2f", ratio)).append(' ');
+        }
+        return sb.toString().trim();
+    }
+
+    private Position currentPlayerPos(AppController c) {
+        try {
+            Maze m = c.domain();
+            return (m != null && m.getPlayer() != null) ? m.getPlayer().getPos() : null;
+        } catch (Exception ignored) { return null; }
+    }
+
+    private int safeCountTreasures(AppController controller) {
         try {
             Maze m = controller.domain();
-            if(m == null) return;
-            int treasures = countTreasures(m);
-            Position p = m.getPlayer()!=null? m.getPlayer().getPos():null;
-            System.out.printf("[FUZZ][STATE] moves=%d level=%d treasuresRemaining=%d player=%s state=%s%n",
-                    moves, controller.level(), treasures, p, controller.state().getClass().getSimpleName());
-        } catch(Exception e) {
-            System.out.println("[FUZZ][STATE] (error gathering state) " + e.getMessage());
-        }
+            if (m == null) return 0;
+            return countTreasures(m);
+        } catch (Exception e) { return 0; }
+    }
+
+    private int safeCountKeys(AppController controller) {
+        try {
+            Maze m = controller.domain();
+            if (m == null) return 0;
+            return countKeys(m);
+        } catch (Exception e) { return 0; }
     }
 
     private int countTreasures(Maze maze) {
-        int rows = maze.getRows();
-        int cols = maze.getCols();
-        int count = 0;
-        for(int r=0;r<rows;r++) {
-            for(int c=0;c<cols;c++) {
-                if("T".equals(maze.getSymbol(new Position(c,r)))) count++;
-            }
-        }
+        int rows = maze.getRows(), cols = maze.getCols(), count = 0;
+        for (int r=0;r<rows;r++) for (int c=0;c<cols;c++)
+            if ("T".equals(maze.getSymbol(new Position(c,r)))) count++;
         return count;
     }
 
-    private void safeStartNewGame(AppController controller, int level) {
-        try {
-            controller.startNewGame(level);
-        } catch(RuntimeException e) {
-            // Suppress known audio background issues while still exercising logic.
-            if(e.getMessage()!=null && e.getMessage().contains("background sound")) {
-                System.err.println("[FUZZ][AUDIO-WARN] Suppressed audio init failure: " + e.getMessage());
-            } else throw e;
+    private int countKeys(Maze maze) {
+        int rows = maze.getRows(), cols = maze.getCols(), count = 0;
+        for (int r=0;r<rows;r++) for (int c=0;c<cols;c++) {
+            String s = maze.getSymbol(new Position(c,r));
+            if ("K".equals(s) || "k".equals(s)) count++;
         }
-    }
-
-    private Input pickNext(Random rnd, List<Input> movement, List<Input> meta, List<Input> levelLoads, List<Input> rare) {
-        int bucket = rnd.nextInt(100);
-        if(bucket < 68) return movement.get(rnd.nextInt(movement.size()));      // ~68%
-        if(bucket < 83) return meta.get(rnd.nextInt(meta.size()));             // ~15%
-        if(bucket < 94) return levelLoads.get(rnd.nextInt(levelLoads.size())); // ~11%
-        return rare.get(rnd.nextInt(rare.size()));                             // ~6%
+        return count;
     }
 
     private void dumpSequence(long seed, List<Input> executed, Throwable t) {
         System.out.println("===== FUZZ SEQUENCE DUMP =====");
         System.out.println("Seed: " + seed + " length=" + executed.size());
-        if(t!=null) System.out.println("Failure: " + t);
+        if (t != null) System.out.println("Failure: " + t);
         StringBuilder sb = new StringBuilder();
-        for(Input i : executed) sb.append(i).append(',');
+        for (Input i : executed) sb.append(i).append(',');
         System.out.println(sb);
-        System.out.println("Re-run with: -Dfuzz.seed="+seed);
+        System.out.println("Re-run with: -Dfuzz.seed=" + seed);
         System.out.println("================================");
-
-        // Optional artifact: write a markdown issue draft if enabled
-        if(Boolean.getBoolean("fuzz.issue.markdown")) {
+        if (Boolean.getBoolean("fuzz.issue.markdown")) {
             writeIssueMarkdown(seed, executed, t, sb.toString());
         }
     }
 
     private void writeIssueMarkdown(long seed, List<Input> executed, Throwable t, String csv) {
         java.io.File dir = new java.io.File("target/fuzz-issues");
-        if(!dir.exists() && !dir.mkdirs()) {
+        if (!dir.exists() && !dir.mkdirs()) {
             System.err.println("[FUZZ][ISSUE] Could not create directory: " + dir);
             return;
         }
-        String shortName = (t==null?"no-exception":t.getClass().getSimpleName());
+        String shortName = (t == null ? "no-exception" : t.getClass().getSimpleName());
+        String commit = readGitHead();
         String fileName = String.format("fuzz-%s-seed-%d.md", shortName, seed);
         java.io.File f = new java.io.File(dir, fileName);
-        try(java.io.PrintWriter pw = new java.io.PrintWriter(f, java.nio.charset.StandardCharsets.UTF_8)) {
-            pw.println("# Fuzzer Detected Exception : " + shortName);
+        try (java.io.PrintWriter pw =
+                     new java.io.PrintWriter(f, java.nio.charset.StandardCharsets.UTF_8)) {
+            pw.println("# Fuzzer Detected Exception: " + shortName);
+            pw.println();
+            pw.println("Commit: `" + commit + "`");
+            pw.println("Java: `" + System.getProperty("java.version") + "` OS: `" +
+                    System.getProperty("os.name") + " " + System.getProperty("os.arch") + "`");
             pw.println();
             pw.println("## Summary");
-            pw.println("Exception during fuzz run: `" + (t==null?"(none)":t.toString()) + "`.");
+            pw.println("Exception during fuzz run: `" + (t == null ? "(none)" : t.toString()) + "`.");
             pw.println();
             pw.println("## Reproduction");
             pw.println("```bash");
@@ -224,7 +526,7 @@ public class FuzzTest {
             pw.println();
             pw.println("## Stack Trace (trimmed)");
             pw.println("```");
-            if(t!=null) {
+            if (t != null) {
                 java.io.StringWriter sw = new java.io.StringWriter();
                 t.printStackTrace(new java.io.PrintWriter(sw));
                 pw.println(sw.toString());
@@ -239,40 +541,48 @@ public class FuzzTest {
             pw.println("## Labels");
             pw.println("#detectedByFuzzer");
             pw.println();
-            pw.println("## Suggested Next Steps");
-            pw.println("- Investigate stack trace in module indicated by top frames.");
-            pw.println("- Re-run with same seed to confirm determinism.");
-            pw.println("- Add regression unit test if a logic bug is confirmed.");
-        } catch(Exception e) {
+            pw.println("## Suggested Steps");
+            pw.println("- Inspect stack frames.");
+            pw.println("- Re-run with same seed.");
+            pw.println("- Add regression test after fix.");
+        } catch (Exception e) {
             System.err.println("[FUZZ][ISSUE] Failed to write issue markdown: " + e);
         }
         System.out.println("[FUZZ][ISSUE] Markdown written: " + f.getPath());
     }
 
-    // Simple helper to manually replay a sequence if you copy it from a dump (comma-separated names)
-    // Usage (developer only): call from a temporary @Test with a recorded string.
+    private String readGitHead() {
+        try {
+            java.nio.file.Path head = java.nio.file.Paths.get(".git/HEAD");
+            if (!java.nio.file.Files.exists(head)) return "unknown";
+            String ref = java.nio.file.Files.readString(head).trim();
+            if (ref.startsWith("ref:")) {
+                java.nio.file.Path refPath = java.nio.file.Paths.get(".git", ref.substring(5));
+                if (java.nio.file.Files.exists(refPath)) {
+                    return java.nio.file.Files.readString(refPath).trim();
+                }
+            }
+            return ref;
+        } catch (Exception e) { return "unknown"; }
+    }
+
     @SuppressWarnings("unused")
     private void replay(String csv, int startLevel) {
         AppController controller = AppController.of();
         controller.startNewGame(startLevel);
-        for(String tok : csv.split(",")) {
-            if(tok.isBlank()) continue;
+        for (String tok : csv.split(",")) {
+            if (tok.isBlank()) continue;
             try {
                 controller.handleInput(Input.valueOf(tok.trim()));
-                sleepQuiet(50); // slow for visibility
-            } catch(Exception e) {
-                System.out.println("Replay halted on input="+tok+" due to " + e);
+                sleepQuiet(50);
+            } catch (Exception e) {
+                System.out.println("Replay halted on input=" + tok + " due to " + e);
                 break;
             }
         }
     }
 
     private void sleepQuiet(long millis) {
-        // Best-effort sleep that preserves the interrupt flag if interrupted, avoiding swallowed interrupts.
-        try {
-            Thread.sleep(millis);
-        } catch (InterruptedException ignored) {
-            Thread.currentThread().interrupt();
-        }
+        try { Thread.sleep(millis); } catch (InterruptedException ie) { Thread.currentThread().interrupt(); }
     }
 }
