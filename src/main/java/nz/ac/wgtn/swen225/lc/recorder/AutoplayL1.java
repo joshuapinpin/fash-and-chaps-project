@@ -83,11 +83,10 @@ public class AutoplayL1 implements Play{
         pos = 0;
         prevTimeLeft = 0;
         SaveL1.inputTime iT = saveList.get(pos);
-        Input dir = iT.direction();
-        int timeLeft = iT.timeLeft();
+        int timeLeft = iT.timeLeftMilli();
         // Calculate delay for THIS move
         int timeDiff = Math.max(0, prevTimeLeft - timeLeft);
-        int delay = (timeDiff * 1000) / speed;
+        int delay = (int) timeDiff/speed;
         autoplayTimer = new Timer(delay, e -> processNextMove(ac));
         autoplayTimer.setRepeats(false); // makes process iterative
         autoplayTimer.start();
@@ -101,16 +100,16 @@ public class AutoplayL1 implements Play{
         // Get and execute CURRENT move
         SaveL1.inputTime iT = saveList.get(pos);
         Input dir = iT.direction();
-        int timeLeft = iT.timeLeft();
+        int timeLeft = iT.timeLeftMilli();
         // Execute THIS move
         ac.handleInput(dir);
         prevTimeLeft = timeLeft;
         pos++;
         // Calculate delay for NEXT move
         SaveL1.inputTime nextMove = saveList.get(pos);
-        int nextTimeLeft = nextMove.timeLeft();
-        int timeDiff = Math.max(1, prevTimeLeft - nextTimeLeft);
-        int delay = (timeDiff * 1000) / speed;
+        int nextTimeLeft = nextMove.timeLeftMilli();
+        int timeDiff = Math.max(0, prevTimeLeft - nextTimeLeft);
+        int delay = (int) timeDiff/speed;
         // schedule next move
         autoplayTimer.setInitialDelay(delay);
         autoplayTimer.restart();
