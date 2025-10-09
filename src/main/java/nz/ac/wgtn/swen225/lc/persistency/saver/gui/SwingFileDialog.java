@@ -58,7 +58,7 @@ public class SwingFileDialog implements FileDialog {
         if (!file.getName().toLowerCase().endsWith("." + extension.toLowerCase())) {
             file = new File(file.getAbsolutePath() + "." + extension);
         }
-        if (file.exists() &&  confirmOverwrite(parent)) {
+        if (file.exists() && !confirmOverwrite(parent)) {
             return Optional.empty();
         }
 
