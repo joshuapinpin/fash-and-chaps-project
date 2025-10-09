@@ -1,7 +1,7 @@
-package nz.ac.wgtn.swen225.lc.persistency.levelloader.parse;
+package nz.ac.wgtn.swen225.lc.persistency.parse;
 
 import nz.ac.wgtn.swen225.lc.domain.entities.*;
-import nz.ac.wgtn.swen225.lc.persistency.levelloader.LevelMaker;
+import nz.ac.wgtn.swen225.lc.persistency.serialisation.GameState;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -20,7 +20,7 @@ public enum EntityParsers {
      */
     DoorP("Door") {
         @Override
-        public Entity parse(LevelMaker surroundings, String entity) {
+        public Entity parse(GameState surroundings, String entity) {
             return this.parseWithColor(surroundings, entity, Door::of);
         }
     },
@@ -29,7 +29,7 @@ public enum EntityParsers {
      */
     KeyP("Key") {
         @Override
-        public Entity parse(LevelMaker surroundings, String entity) {
+        public Entity parse(GameState surroundings, String entity) {
             surroundings.incrementKeys();
             return this.parseWithColor(surroundings, entity, Key::of);
         }
@@ -39,7 +39,7 @@ public enum EntityParsers {
      */
     ExitLockP("ExitLock") {
         @Override
-        public Entity parse(LevelMaker surroundings, String entity) {
+        public Entity parse(GameState surroundings, String entity) {
             return this.parse(surroundings, entity, ExitLock::of);
         }
     },
@@ -48,7 +48,7 @@ public enum EntityParsers {
      */
     TreasureP("Treasure") {
         @Override
-        public Entity parse(LevelMaker surroundings, String entity) {
+        public Entity parse(GameState surroundings, String entity) {
             surroundings.incrementTreasures();
             return this.parse(surroundings, entity, Treasure::of);
         }
@@ -57,7 +57,7 @@ public enum EntityParsers {
     private final String entityName;
     public static final String separator = "-";
     private static final Map<String, EntityParsers> mapper;
-    abstract Entity parse(LevelMaker surroundings, String entity);
+    abstract Entity parse(GameState surroundings, String entity);
 
     static { // create legend to map from each entity name to the relevant EntityParser
         mapper = Arrays
@@ -82,7 +82,7 @@ public enum EntityParsers {
      * @param surroundings - the LevelMaker level surrounding the entity.
      * @return - the Entity instance created from the String.
      */
-    public static Entity parseEntity(LevelMaker surroundings, String entity) {
+    public static Entity parseEntity(GameState surroundings, String entity) {
         EntityParsers result = mapper.get(entity.split(separator)[0]);
         if (result == null) {throw new IllegalArgumentException("No such entity: " + entity);}
         return result.parse(surroundings, entity);
@@ -112,7 +112,7 @@ public enum EntityParsers {
      * @param creator - the factory for new Entities as a Supplier<Entity>.
      * @return - the Entity instance.
      */
-    Entity parse(LevelMaker surroundings, String entity, Supplier<Entity> creator) {
+    Entity parse(GameState surroundings, String entity, Supplier<Entity> creator) {
         if (entity.equals(entityName())) {
             return creator.get();
         }
@@ -126,7 +126,7 @@ public enum EntityParsers {
      * @param creator - the factory for new Entities as a Function<EntityColor, Entity>.
      * @return - the Entity instance.
      */
-    Entity parseWithColor(LevelMaker surroundings, String entity, Function<EntityColor, Entity> creator) {
+    Entity parseWithColor(GameState surroundings, String entity, Function<EntityColor, Entity> creator) {
         String[] split = entity.split(separator);
 
         if(split.length != 2) {

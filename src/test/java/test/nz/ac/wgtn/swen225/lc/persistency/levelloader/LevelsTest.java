@@ -1,4 +1,4 @@
-package test.nz.ac.wgtn.swen225.lc.persistency;
+package test.nz.ac.wgtn.swen225.lc.persistency.levelloader;
 
 import nz.ac.wgtn.swen225.lc.domain.Position;
 import nz.ac.wgtn.swen225.lc.domain.tiles.Free;
@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import nz.ac.wgtn.swen225.lc.domain.Maze;
-import nz.ac.wgtn.swen225.lc.persistency.levelloader.Levels;
+import nz.ac.wgtn.swen225.lc.persistency.Levels;
 
 import java.io.IOException;
 import java.io.InputStream;

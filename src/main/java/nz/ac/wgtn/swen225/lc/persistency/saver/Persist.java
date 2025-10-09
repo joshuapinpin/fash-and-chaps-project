@@ -1,4 +1,4 @@
-package nz.ac.wgtn.swen225.lc.persistency.save;
+package nz.ac.wgtn.swen225.lc.persistency.saver;
 
 import nz.ac.wgtn.swen225.lc.domain.Maze;
 
@@ -13,23 +13,23 @@ import java.util.function.Supplier;
  * via Swing dialogs.
  * @author Thomas Ru - 300658840
  */
-public class Persist<T extends Maze> {
-    private final PersistManager<T> gamePersistence;
+public class Persist<M extends Maze> {
+    private final PersistManager<M> gamePersistence;
     /**
      * Dependency injection for construction, useful for testing.
      * @param managerSupplier - supplies a PersistManager<Maze>
      */
-    Persist(Supplier<PersistManager<T>> managerSupplier) {
+    public Persist(Supplier<PersistManager<M>> managerSupplier) {
         this.gamePersistence = Objects.requireNonNull(managerSupplier).get();
     }
 
     /**
-     * Given a specific game board, writes it to file as JSON.
+     * Given a specific game board, writes it to file.
      * Useful inside a listener.
      * @param maze - the Maze game board to save.
      * @param app - the Swing game window, for choosing where to save.
      */
-    public void saveGame(T maze, JFrame app) {
+    public void saveGame(M maze, JFrame app) {
         Objects.requireNonNull(maze, "Cannot save null game board.");
         Objects.requireNonNull(app, "Cannot create file dialog with null window.");
         gamePersistence.save(maze, app);
@@ -41,7 +41,7 @@ public class Persist<T extends Maze> {
      * @param app - the Swing game window, for choosing which game to load.
      * @return an Optional<Maze> object representing the previously saved game.
      */
-    public Optional<T> loadGame(JFrame app) {
+    public Optional<M> loadGame(JFrame app) {
         return gamePersistence.load(app);
     }
 }

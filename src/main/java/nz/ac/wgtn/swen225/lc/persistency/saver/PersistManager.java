@@ -1,13 +1,13 @@
-package nz.ac.wgtn.swen225.lc.persistency.save;
+package nz.ac.wgtn.swen225.lc.persistency.saver;
 
 import javax.swing.JFrame;
 import java.util.Optional;
 
 /**
  * API for serialising and deserialising objects, via graphical dialogs.
- * @param <T> - the type of object to serialise/deserialise.
+ * @param <T> - the datatype to serialise/deserialise.
  */
-interface PersistManager<T> {
+public interface PersistManager<T> {
     /**
      * Given some object, allow a user to save it to a file of their choice.
      * @param data - the object to serialise.
