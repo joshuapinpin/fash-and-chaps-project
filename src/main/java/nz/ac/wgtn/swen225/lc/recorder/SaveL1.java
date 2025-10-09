@@ -3,8 +3,8 @@ import nz.ac.wgtn.swen225.lc.app.util.*;
 import nz.ac.wgtn.swen225.lc.app.controller.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
-import javax.swing.*;
 import java.io.*;
+import javax.swing.*;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -61,10 +61,13 @@ public class SaveL1 implements Save{
     private void saveToFile(){
         System.out.println("*DEBUG* Inside of the Recorder Package Now");
         File playerMovements = chooseFile();
+        if (playerMovements == null) {
+            return;
+        }
         try {
             mapper.writerWithDefaultPrettyPrinter().writeValue(playerMovements, saveList);
         } catch(IOException e){
-            throw new Error(e);
+            JOptionPane.showMessageDialog(null, "Failed to save file: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

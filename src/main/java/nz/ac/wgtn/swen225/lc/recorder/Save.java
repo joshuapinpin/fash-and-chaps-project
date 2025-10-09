@@ -26,7 +26,10 @@ public interface Save{
                 fileChoice = new File(fileChoice.getParentFile(), fileChoice.getName() + ".json");
             }
         }
-        assert fileChoice != null: "File not created";
+        else {
+            // user canceled or closed dialog
+            JOptionPane.showMessageDialog(null, "File selection canceled.", "Warning", JOptionPane.WARNING_MESSAGE);
+        }
         return fileChoice;
     }
 }
