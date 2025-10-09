@@ -170,7 +170,7 @@ public class Maze {
      * If a monster collides with a wall, it updates its direction
      * Moves monster and checks for collision with player after move
      * Notify observers of any events (e.g., player death)
-     * This meethod to be called every game tick by the controller
+     * This method to be called every game tick by the controller
      */
     public void ping() {
         Consumer <GameObserver> collisionEvent = observer -> {};

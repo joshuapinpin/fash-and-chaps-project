@@ -48,7 +48,7 @@ public class DomainTest {
         maze.setTileAt(tileWithTreasure);
 
         maze.setTileAt(Wall.of(new Position(1,1)));
-        maze.setTileAt(Info.of("Info", new Position(1,2)));
+        maze.setTileAt(Info.of(new Position(1,2)));
         maze.setTileAt(Wall.of(new Position(1,3)));
         maze.setTileAt(Wall.of(new Position(1,4)));
         //--------------------------------
@@ -473,7 +473,7 @@ public class DomainTest {
         //get info tile object to test
         Tile infoTile = maze.getTileAt(new Position(1,2));
         Info info = (Info) infoTile;
-        assertTrue(info.equals(Info.of("Info", new Position(1, 2))));
+        assertTrue(info.equals(Info.of(new Position(1, 2))));
     }
 
     @Test
