@@ -21,12 +21,31 @@ public class PersistencyController  {
         this.persist = new GamePersist();
     }
 
+    /** Load the specified level and update relevant fields.
+     * @param level Level number to load (1 or 2)
+     * @return The loaded Levels enum
+     * @throws IllegalArgumentException if the level is invalid
+     */
     public Levels loadLevel(int level){
         if(level == 1) this.currentLevel = Levels.LevelOne;
         else if(level == 2) this.currentLevel = Levels.LevelTwo;
         else throw new IllegalArgumentException("Invalid level: " + level);
         updateFields(level);
         return currentLevel;
+    }
+
+    /**
+     * Load a saved game from persistent storage.
+     * Updates the domain controller with the loaded maze state.
+     * @throws IllegalStateException if no game is loaded
+     */
+    public void loadGame(){
+        Optional<Maze> domainOptional = persist.loadGame(c.windowController().window());
+        if(domainOptional.isEmpty()) throw new IllegalStateException("No game loaded.");
+
+        c.domainController().updateDomain(domainOptional.get());
+        updateFields(1);
+        c.continueGame();
     }
 
     private void updateFields(int level){
@@ -36,20 +55,14 @@ public class PersistencyController  {
         this.maxTime = currentLevel.maxTime();
     }
 
-    public void loadGame(){
-        Optional<Maze> domainOptional = persist.loadGame(c.windowController().window());
-        if(domainOptional.isEmpty()) {
-            throw new IllegalStateException("No game loaded.");
-        }
-        c.domainController().updateDomain(domainOptional.get());
-        c.continueGame();
-    }
-
+    /**
+     * Save the current game state to persistent storage.
+     * Captures the current domain and window state.
+     */
     public void saveGame(){
         persist.saveGame(c.domainController().domain(),
                 c.windowController().window());
     }
-
 
     // ========== GETTERS ==========
     public void setLevel(int level){loadLevel(level);}

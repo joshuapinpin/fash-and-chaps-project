@@ -41,7 +41,7 @@ public class AppController {
      * @return The single instance of AppController
      */
     public static AppController of() {
-        return APP;
+        return new AppController();
     }
 
     /**
@@ -122,6 +122,8 @@ public class AppController {
         controllers.forEach(Controller::atNewGame);
         setState(new PlayState(this));
         System.out.println("Starting New Game at Level " + level);
+
+        System.out.println("Monsters: " + domainController().domain().getMonsters().size());
     }
 
     /**
