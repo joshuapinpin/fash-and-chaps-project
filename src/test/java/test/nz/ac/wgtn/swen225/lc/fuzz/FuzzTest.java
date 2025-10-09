@@ -184,14 +184,14 @@ public class FuzzTest {
                 } else if (pausedRecently) {
                     if (enablePause && rnd.nextInt(100) < 25) {
                         next = rnd.nextBoolean() ? Input.RESUME : Input.CONTINUE;
-                    } else {
-                        pausedRecently = false;
-                        next = pickAction(rnd, movement, meta, levelLoads, rare,
-                                success, fail, lastSuccessfulDir, stagnationCounter, inShake, crossLevels);
+            } else {
+                pausedRecently = false;
+                next = pickAction(controller, rnd, movement, meta, levelLoads, rare,
+                    success, fail, lastSuccessfulDir, stagnationCounter, inShake, crossLevels);
                     }
                 } else {
-                    next = pickAction(rnd, movement, meta, levelLoads, rare,
-                            success, fail, lastSuccessfulDir, stagnationCounter, inShake, crossLevels);
+            next = pickAction(controller, rnd, movement, meta, levelLoads, rare,
+                success, fail, lastSuccessfulDir, stagnationCounter, inShake, crossLevels);
                 }
 
                 executed.add(next);
@@ -366,7 +366,8 @@ public class FuzzTest {
      * @param crossLevels whether level load actions are allowed
      * @return chosen input
      */
-    private Input pickAction(Random rnd,
+    private Input pickAction(AppController controller,
+                             Random rnd,
                              List<Input> movement,
                              List<Input> meta,
                              List<Input> levelLoads,
@@ -385,7 +386,7 @@ public class FuzzTest {
         } else if (rnd.nextInt(100) < 5 && !rare.isEmpty()) {
             return rare.get(rnd.nextInt(rare.size()));
         } else {
-            return pickMovementHeuristic(rnd, movement, success, fail, lastSuccessfulDir, stagnationCounter, inShake);
+            return pickMovementHeuristic(controller, rnd, movement, success, fail, lastSuccessfulDir, stagnationCounter, inShake);
         }
     }
 
@@ -415,7 +416,8 @@ public class FuzzTest {
      * @param inShake whether the fuzzer is in a shake phase
      * @return chosen movement input
      */
-    private Input pickMovementHeuristic(Random rnd,
+    private Input pickMovementHeuristic(AppController controller,
+                                        Random rnd,
                                         List<Input> movement,
                                         Map<Input,Integer> success,
                                         Map<Input,Integer> fail,
@@ -434,6 +436,27 @@ public class FuzzTest {
             double ratio = (double)s / (s+f);
             double w = 0.2 + (ratio * ratio * 2.5);
             if (stagnationCounter > 10) w *= 1.2;
+            // Bias away from hazards and toward rewards by peeking the next tile symbol
+            try {
+                String sym = peekNextSymbol(controller, mv);
+                if (sym == null) {
+                    w *= 0.3; // out of bounds/unknown
+                } else if ("~".equals(sym)) {
+                    w *= 0.10; // water is lethal
+                } else if ("M".equals(sym)) {
+                    w *= 0.20; // monster
+                } else if ("W".equals(sym)) {
+                    w *= 0.20; // wall
+                } else if ("D".equals(sym)) {
+                    w *= 0.60; // door: de-prioritize unless we happen to have key
+                } else if ("T".equals(sym) || "K".equals(sym)) {
+                    w *= 1.60; // treasure/key
+                } else if ("E".equals(sym)) {
+                    w *= 1.20; // exit is okay
+                }
+            } catch (Exception ignore) {
+                // if domain not ready, keep base w
+            }
             weights[i] = w;
             total += w;
         }
@@ -448,6 +471,27 @@ public class FuzzTest {
             }
         }
         return movement.get(0);
+    }
+
+    /**
+     * Peek the symbol at the next cell if the given movement were applied.
+     * Returns null if outside maze bounds or if the domain/player is unavailable.
+     */
+    private String peekNextSymbol(AppController controller, Input mv) {
+        Maze m = controller.domain();
+        if (m == null || m.getPlayer() == null) return null;
+        Position p = m.getPlayer().getPos();
+        int x = p.getX();
+        int y = p.getY();
+        switch (mv) {
+            case MOVE_UP -> y -= 1;
+            case MOVE_DOWN -> y += 1;
+            case MOVE_LEFT -> x -= 1;
+            case MOVE_RIGHT -> x += 1;
+            default -> { return null; }
+        }
+        if (x < 0 || y < 0 || y >= m.getRows() || x >= m.getCols()) return null;
+        return m.getSymbol(new Position(x, y));
     }
 
     private String weightDebug(List<Input> moves, double[] w) {
