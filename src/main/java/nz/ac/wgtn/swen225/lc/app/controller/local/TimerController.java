@@ -15,7 +15,7 @@ import javax.swing.Timer;
  * @author <Your Name>
  */
 public class TimerController implements ActionListener, Controller {
-    private static final int TIMER_INTERVAL = 50; // Timer ticks every 1/20 second
+    private static final int TIMER_INTERVAL = 100; // Timer ticks every 1/10 second
     private static final int TICKS_PER_SECOND = 1000/TIMER_INTERVAL; // Number of ticks per second
     private static final int LEVEL_1_TIME_LIMIT = 60; // Level 1 time limit in seconds
     private static final int LEVEL_2_TIME_LIMIT = 60; // Level 2 time limit in seconds
@@ -108,6 +108,15 @@ public class TimerController implements ActionListener, Controller {
      */
     public void restartTimer(int level) {
         this.preciseTime = getTimeLimitForLevel(level);
+        timer.restart();
+    }
+
+    /**
+     * Starts the timer from a specific time in seconds.
+     * @param newTime The time in seconds to start the timer from.
+     */
+    public void startTimerFrom(int newTime){
+        this.preciseTime = newTime * TICKS_PER_SECOND;
         timer.restart();
     }
 
