@@ -2,6 +2,10 @@ package nz.ac.wgtn.swen225.lc.app.state;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 
+/**
+ * Paused state of the game.
+ * @author Josh Pinpin (300662880)
+ */
 public record PausedState(AppController c) implements GameState {
     public PausedState{
         c.timerController().pause();

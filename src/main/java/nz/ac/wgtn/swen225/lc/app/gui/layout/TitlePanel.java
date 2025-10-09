@@ -9,6 +9,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+/**
+ * TitlePanel is a JPanel that displays the title of the application.
+ * @author Joshua Pinpin (Student ID: 300662880)
+ */
 public class TitlePanel extends JPanel{
     public static int PANEL_WIDTH = AppWindow.WINDOW_WIDTH;
     public static int PANEL_HEIGHT = AppWindow.HEADER_HEIGHT;

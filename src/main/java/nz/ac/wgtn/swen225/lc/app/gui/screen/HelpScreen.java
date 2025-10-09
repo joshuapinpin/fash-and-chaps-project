@@ -12,6 +12,11 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
+/**
+ * Help screen panel.
+ * Displays instructions on how to play the game, including controls and game mechanics.
+ * @author Joshua Pinpin (Student ID: 300662880)
+ */
 public class HelpScreen extends JPanel {
     private AppController c;
 
@@ -26,6 +31,9 @@ public class HelpScreen extends JPanel {
     int headerSize = AppWindow.FONT_SIZE_H2;
     int helpSize = 25;
 
+    /**
+     * Create the panel.
+     */
     public HelpScreen(AppController c) {
         this.c = c;
         setLayout(new BorderLayout());

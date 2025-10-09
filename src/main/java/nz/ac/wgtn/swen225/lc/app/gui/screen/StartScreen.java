@@ -13,6 +13,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
+/**
+ * The start screen of the game.
+ * @author Joshua Pinpin (Student ID: 300662880)
+ */
 public class StartScreen extends JPanel {
     private AppController c;
     private BufferedImage bgImg;
@@ -20,6 +24,10 @@ public class StartScreen extends JPanel {
     int width = AppWindow.WINDOW_WIDTH/2;
     int height = AppWindow.WINDOW_HEIGHT/2;
 
+    /**
+     * Create a new start screen.
+     * @param c The app controller.
+     */
     public StartScreen(AppController c) {
         this.c = c;
         setLayout(null);
@@ -58,11 +66,9 @@ public class StartScreen extends JPanel {
     private void setupButtons(){
         JPanel leftPanel = new JPanel();
         setupLayoutPanel(leftPanel);
-        //leftPanel.setPreferredSize(new Dimension(width/2, 0));
 
         JPanel rightPanel = new JPanel();
         setupLayoutPanel(rightPanel);
-        //rightPanel.setPreferredSize(new Dimension(width/2, 0));
 
         setupSingleButton("Level 1", e -> c.handleInput(Input.LOAD_LEVEL_1), leftPanel);
         setupSingleButton("Level 2", e -> c.handleInput(Input.LOAD_LEVEL_2), rightPanel);

@@ -9,6 +9,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+/**
+ * Panel to display the number of treasures collected.
+ * @author Joshua Pinpin (Student ID: 300662880)
+ */
 public class TreasurePanel extends JPanel implements LogicPanel {
     AppController c;
     int treasuresCollected;
@@ -21,12 +25,19 @@ public class TreasurePanel extends JPanel implements LogicPanel {
         setOpaque(false);
     }
 
+    /**
+     * Initialise the panel with the total number of treasures.
+     * @param info Total number of treasures.
+     */
     @Override
     public void initialisePanelInfo(int info){
         totalTreasures = info;
     }
 
-
+    /**
+     * Update the panel with the number of treasures collected.
+     * @param info Number of treasures collected.
+     */
     @Override
     public void updatePanel(int info) {
         treasuresCollected = info;

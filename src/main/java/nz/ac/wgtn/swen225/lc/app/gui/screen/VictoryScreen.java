@@ -12,6 +12,11 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
+/**
+ * Victory screen panel.
+ * Displays options to start a new game, load a game, or return to the home screen.
+ * @author Joshua Pinpin (Student ID: 300662880)
+ */
 public class VictoryScreen extends JPanel {
     private BufferedImage bgImg;
     private AppController c;
@@ -20,6 +25,9 @@ public class VictoryScreen extends JPanel {
     int height = AppWindow.WINDOW_HEIGHT/2;
     int buttonGap = 20;
 
+    /**
+     * Create the panel.
+     */
     public VictoryScreen(AppController c) {
         this.c = c;
         setLayout(new BorderLayout());

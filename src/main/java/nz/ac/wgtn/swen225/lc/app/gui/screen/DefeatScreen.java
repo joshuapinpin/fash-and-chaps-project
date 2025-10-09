@@ -12,6 +12,11 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
+/**
+ * The defeat screen displayed when the player loses the game.
+ * Provides options to restart levels, load a game, or return home.
+ * @author Joshua Pinpin (Student ID: 300662880)
+ */
 public class DefeatScreen extends JPanel  {
     private AppController c;
     private JPanel titlePanel;
@@ -21,6 +26,10 @@ public class DefeatScreen extends JPanel  {
     int height = AppWindow.WINDOW_HEIGHT/2;
     int buttonGap = 20;
 
+    /**
+     * Constructor for the DefeatScreen.
+     * @param c The application controller to handle user inputs.
+     */
     public DefeatScreen(AppController c) {
         this.c = c;
         setLayout(new BorderLayout());

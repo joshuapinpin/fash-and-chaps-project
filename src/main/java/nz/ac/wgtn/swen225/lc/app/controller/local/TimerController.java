@@ -12,7 +12,7 @@ import javax.swing.Timer;
  * Manages the countdown timer for each level.
  * Notifies AppController when time runs out.
  *
- * @author <Your Name>
+ * @author Joshua Pinpin (Student ID: 300662880)
  */
 public class TimerController implements ActionListener, Controller {
     private static final int TIMER_INTERVAL = 100; // Timer ticks every 1/10 second
@@ -65,6 +65,10 @@ public class TimerController implements ActionListener, Controller {
         restartTimer(c.persistencyController().level());
     }
 
+    /**
+     * Called when loading a saved game for recorder
+     * Pauses the timer.
+     */
     public void recorderMode() {
         c.timerController().restartTimer(c.level());
         c.timerController().pause();
