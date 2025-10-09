@@ -52,6 +52,7 @@ public class DomainController implements Controller {
     public void initialiseDomain(int level){
         // Load Level
         this.domain = c.persistencyController().loadLevel(level).load();
+        System.out.println("INTIAL SIZE = "+domain.getMonsters().size());
         initialiseDomainFields();
 
     }

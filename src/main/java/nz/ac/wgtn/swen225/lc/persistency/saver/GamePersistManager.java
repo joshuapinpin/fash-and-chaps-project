@@ -3,6 +3,7 @@ package nz.ac.wgtn.swen225.lc.persistency.saver;
 import nz.ac.wgtn.swen225.lc.domain.Maze;
 import nz.ac.wgtn.swen225.lc.persistency.serialisation.FileIO;
 import nz.ac.wgtn.swen225.lc.persistency.serialisation.GameState;
+import nz.ac.wgtn.swen225.lc.persistency.serialisation.LoadedMaze;
 import nz.ac.wgtn.swen225.lc.persistency.serialisation.Mapper;
 import nz.ac.wgtn.swen225.lc.persistency.saver.gui.FileDialog;
 import nz.ac.wgtn.swen225.lc.persistency.saver.gui.SwingFileDialog;
@@ -20,10 +21,10 @@ import java.util.Optional;
  * @param <S> - a type of GameState, i.e. reduced representation of Maze suitable for serialisation.
  * @author Thomas Ru - 300658840
  */
-class GamePersistManager<M extends Maze, S extends GameState> implements PersistManager<M> {
+class GamePersistManager implements PersistManager<LoadedMaze> {
     private final FileDialog fileDialog = new SwingFileDialog();
-    private final FileIO<S> fileIO;
-    private final Mapper<M, S> mapper;
+    private final FileIO<GameState> fileIO;
+    private final Mapper<LoadedMaze, GameState> mapper;
     private static final String extension = "json";
 
     /**
@@ -32,7 +33,7 @@ class GamePersistManager<M extends Maze, S extends GameState> implements Persist
      * @param fileIO - reads and writes GameState objects to file.
      * @param mapper - converts from Maze to GameState, or vice versa.
      */
-    public GamePersistManager(FileIO<S> fileIO, Mapper<M, S> mapper) {
+    public GamePersistManager(FileIO<GameState> fileIO, Mapper<LoadedMaze, GameState> mapper) {
         this.fileIO = fileIO;
         this.mapper = mapper;
     }
@@ -42,13 +43,12 @@ class GamePersistManager<M extends Maze, S extends GameState> implements Persist
      * @param data - the Maze object to save.
      * @param parent - the parent JFrame/window.
      */
-    @Override
-    public void save(M data, JFrame parent) {
+    public void save(Maze data, int levelNumber, int maxTreasures, int time, JFrame parent) {
         String defaultName = timestampName();
         fileDialog.showSaveDialog(parent, defaultName, extension)
                 .ifPresent(file -> {
                     try {
-                        fileIO.save(mapper.toState(data), file);
+                        fileIO.save(mapper.toState(new LoadedMaze(data, levelNumber, maxTreasures, time)), file);
                         JOptionPane.showMessageDialog(parent,
                                 "File saved: " + file.getAbsolutePath(),
                                 "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -60,13 +60,17 @@ class GamePersistManager<M extends Maze, S extends GameState> implements Persist
                 });
     }
 
+    @Override
+    public void save(LoadedMaze data, JFrame parent) {
+        save(data.maze(), data.levelNumber(), data.maxTreasure(), data.time(), parent);
+    }
     /**
      * Allow user to load a game from JSON via GUI.
      * @param parent - the parent JFrame/window.
      * @return - an Optional of the Maze, which will be empty if nothing could be loaded.
      */
     @Override
-    public Optional<M> load(JFrame parent) {
+    public Optional<LoadedMaze> load(JFrame parent) {
         Optional<File> selected = fileDialog.showOpenDialog(parent, extension);
         if (selected.isEmpty()) {
             return Optional.empty();
@@ -74,7 +78,7 @@ class GamePersistManager<M extends Maze, S extends GameState> implements Persist
 
         // deserialise to a Maze if possible
         try {
-            S gameState = fileIO.load(selected.get());
+            GameState gameState = fileIO.load(selected.get());
             return Optional.of(mapper.fromState(gameState));
         } catch (IOException e) {
             JOptionPane.showMessageDialog(parent,
