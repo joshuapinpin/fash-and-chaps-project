@@ -42,11 +42,14 @@ public class PersistencyController  {
         if(domainOptional.isEmpty()) {
             throw new IllegalStateException("No game loaded.");
         }
+        c.windowController().window().requestFocusInWindow();
         LoadedMaze lm = domainOptional.get();
         level = lm.levelNumber();
+        loadLevel(level);
         c.domainController().updateDomain(lm.maze());
         c.timerController().startTimerFrom(lm.time());
-        c.domainController().
+        c.windowController().atNewGame();
+        c.rendererController().atNewGame();
         c.continueGame();
     }
 
@@ -56,6 +59,8 @@ public class PersistencyController  {
                 maxTreasures,
                 c.timerController().getTimeLeft(),
                 c.windowController().window());
+
+        c.windowController().window().requestFocusInWindow();
     }
 
 
