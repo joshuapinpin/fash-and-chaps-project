@@ -9,12 +9,11 @@ import java.util.function.Consumer;
  * Treasure class representing a treasure entity in the game
  * Treasures can be collected by the player to decrease the treasure count
  * Implements Entity interface for interaction
- * @author Hayley Far
+ * @author Hayley Far (300659141)
  */
 public class Treasure implements Entity {
     /**
      * Constructor for treasure
-     * Subject to change in terms of parameters
      */
     Treasure(){}
 
@@ -66,6 +65,7 @@ public class Treasure implements Entity {
     /**
      * Accept method for visitor pattern
      * @param visitor the visitor to accept
+     * @param <T> the return type of the visitor's operation
      * @return result of visitor's visitTreasure method
      */
     @Override

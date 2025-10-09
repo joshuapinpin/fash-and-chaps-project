@@ -1,14 +1,18 @@
-package test.nz.ac.wgtn.swen225.lc.persistency;
+package test.nz.ac.wgtn.swen225.lc.persistency.levelloader;
 
-import nz.ac.wgtn.swen225.lc.persistency.levelloader.LevelMaker;
+import nz.ac.wgtn.swen225.lc.persistency.serialisation.GameState;
+import nz.ac.wgtn.swen225.lc.persistency.serialisation.PlayerState;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class LevelMakerTest {
+public class GameStateTest {
+    public static PlayerState playerState = new PlayerState(1,1,2,"UP", List.of("GREEN"));
     @Test
     public void testCounts() {
-        LevelMaker level = new LevelMaker(2, 4);
+        GameState level = new GameState(2, 4, playerState);
         String[][] board = {
                 {"F:Key-ORANGE", "F:Key-GREEN", "F:Key-PURPLE", "F:Key-PINK"},
                 {"F:Treasure", "~", "F", "F:Treasure"}

@@ -12,7 +12,7 @@ import java.util.List;
  * Provides methods to move, collect treasure, and manage keys
  *
  * Player starts in the center of the maze, based on maze size from rows and cols
- * @author Hayley Far
+ * @author Hayley Far (300659131)
  */
 public class Player{
 
@@ -22,7 +22,7 @@ public class Player{
     private int totalTreasures; //total number of treasures in the maze level
     private int treasuresCollected; //number of treasures collected by player
 
-    private PlayerState state = new AliveState();
+    private PlayerState state = new AliveState(); //initial state is Alive
 
     /**
      * Constructor for player with specified starting position
@@ -55,10 +55,34 @@ public class Player{
         return new Player();
     }
 
+    //Delegate to state
+    /**
+     * Method to move the player in a specified direction based on current state
+     * @param d direction to move in
+     */
     public void move(Direction d){state.move(d);}
+
+    /**
+     * Method to collect a treasure based on current state
+     */
     public void collectTreasure(){state.collectTreasure();}
+
+    /**
+     * Method to add a key to the player's collection based on current state
+     * @param k key to add
+     */
     public void addKey(Key k){state.addKey(k);}
+
+    /**
+     * Method to set the player's state to Dead
+     * Player can no longer move, collect treasures, or add keys
+     */
     public void die(){state = new DeadState();}
+
+    /**
+     * Check if player is alive based on current state
+     * @return true if alive, false if dead
+     */
     public boolean isAlive(){return state.isAlive();}
 
     /**
@@ -105,7 +129,7 @@ public class Player{
         }
 
         /**
-         * Method to decrement the treasure count when a treasure is collected
+         * Method to increment the treasure count when a treasure is collected
          */
         @Override
         public void collectTreasure(){
@@ -128,12 +152,33 @@ public class Player{
      * Player cannot move, collect treasures, or add keys
      */
     protected class DeadState implements PlayerState{
+        /**
+         * Method to move the player in a specified direction
+         * No action taken as player is dead
+         * @param direction direction to move in
+         */
         @Override
         public void move(Direction direction){}
+
+        /**
+         * Method to add a key to the player's collection
+         * No action taken as player is dead
+         * @param k key to add
+         */
         @Override
         public void addKey(Key k){}
+
+        /**
+         * Method to increment the treasure count when a treasure is collected
+         * No action taken as player is dead
+         */
         @Override
         public void collectTreasure(){}
+
+        /**
+         * Check if player is alive
+         * @return true if alive, false if dead
+         */
         @Override
         public boolean isAlive(){return false;}
     }
@@ -188,8 +233,7 @@ public class Player{
     }
 
     /**
-     * Check if player has collected on treasures in current level of maze
-     * Using the treasuresLeft counter
+     * Check if player has collected all treasures in current level of maze
      * @return true if all treasures collected, false otherwise
      */
     public boolean allTreasuresCollected(){

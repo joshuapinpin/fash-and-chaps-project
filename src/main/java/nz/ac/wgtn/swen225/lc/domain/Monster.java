@@ -8,18 +8,21 @@ import java.util.function.Consumer;
  * Represents a monster in the game
  * Monsters can move horizontally in the maze and interact with the player
  * If a monster collides with the player, the player dies
- * @author Hayley Far
+ * @author Hayley Far (300659131)
  */
 public class Monster {
 
     private Position position; // Starting position of the monster
-    private Direction direction = Direction.LEFT;
+    private Direction direction = Direction.LEFT; // Initial direction of the monster
 
     /**
      * Constructor for monster with specified position
      * @param pos starting position of the monster
      */
     Monster(Position pos){
+        if(pos == null){
+            throw new IllegalArgumentException("Position cannot be null");
+        }
         this.position = pos;
     }
 
