@@ -1,8 +1,8 @@
-package nz.ac.wgtn.swen225.lc.persistency.levelloader.parse;
+package nz.ac.wgtn.swen225.lc.persistency.parse;
 
 import nz.ac.wgtn.swen225.lc.domain.Position;
 import nz.ac.wgtn.swen225.lc.domain.tiles.*;
-import nz.ac.wgtn.swen225.lc.persistency.levelloader.LevelMaker;
+import nz.ac.wgtn.swen225.lc.persistency.serialisation.GameState;
 
 import java.util.*;
 
@@ -27,13 +27,14 @@ public enum TileParsers {
     /**
      * Stores a parser for Info Tiles.
      */
-    InfoP(new InfoParser("I")),
+    InfoP(new TileParser<Info>("I", Info::of) {}),
     /**
      * Stores a parser for Free Tiles.
      */
     FreeP(new FreeParser("F"));
 
     private final TileParser<?> parser;
+    public static final String separator = ":";
     private static final Map<String, TileParser<?>> legend = new HashMap<>();
     public static final int MaxMonstersOnTile = 4;
     static {
@@ -49,8 +50,8 @@ public enum TileParsers {
      * @param position - the Position of the Tile on the game board.
      * @return - the Tile instance, otherwise an IllegalArgumentException is thrown.
      */
-    public static Tile parseTile(LevelMaker surroundings, String symbol, Position position) {
-        TileParser<?> parser = legend.get(symbol.split(TileParser.separator)[0]);
+    public static Tile parseTile(GameState surroundings, String symbol, Position position) {
+        TileParser<?> parser = legend.get(symbol.split(TileParsers.separator)[0]);
         if (parser == null) {
             throw new IllegalArgumentException("Unknown symbol: " + symbol);
         }

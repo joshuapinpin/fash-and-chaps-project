@@ -1,7 +1,7 @@
 package nz.ac.wgtn.swen225.lc.app.controller.module;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
-import nz.ac.wgtn.swen225.lc.persistency.levelloader.Levels;
+import nz.ac.wgtn.swen225.lc.persistency.Levels;
 
 public class PersistencyController  {
     private AppController c;

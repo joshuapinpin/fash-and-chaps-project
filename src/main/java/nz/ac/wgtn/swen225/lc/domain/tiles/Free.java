@@ -12,7 +12,7 @@ import java.util.function.Consumer;
  * Free class representing a free tile in the game
  * Free tiles can optionally contain a collectable entity (Key, Door, ExitLock or Treasure)
  * Inherits from Tile class
- * @author Hayley Far
+ * @author Hayley Far (300659141)
  */
 public class Free extends Tile {
     private Optional<Entity> collectable = Optional.empty(); // Optional collectable entity on the tile
@@ -50,18 +50,18 @@ public class Free extends Tile {
             throw new IllegalArgumentException("Player cannot be null");
         }
 
-        final Consumer<GameObserver> entityEvent;
+        final Consumer<GameObserver> entityEvent; //observer result for any entity interaction
 
         //using if else because consumer needs to be final or effectively final
         if(collectable.isPresent()){
             entityEvent = collectable.get().onInteract(p);
-            if(collectable.get().removeEntity()) {
+            if(collectable.get().removeEntity()) { //if entity was collected
                 collectable = Optional.empty();// Remove the entity after collection
                 assert !collectable.isPresent() : "Collectable should have been removed";
             }
         }
         else {
-            entityEvent = observer -> {};
+            entityEvent = observer -> {}; //if no entity, do nothing
         }
 
         //returning an observer which first notifies of player move, then of entity interaction
@@ -74,6 +74,7 @@ public class Free extends Tile {
     /**
      * Free tile is accessible unless it contains an impassable entity (ExitLock or closed Door)
      * Used to check if the player can move onto the tile beforehand
+     * @param p player attempting to access the tile
      * @return true if the tile is accessible, false otherwise
      */
     @Override
@@ -84,7 +85,7 @@ public class Free extends Tile {
         if(collectable.isPresent()){
             return collectable.get().canInteract(p);
         }
-        return true;
+        return true; //is accessible if no entity present
     }
 
     /**
@@ -124,6 +125,7 @@ public class Free extends Tile {
     /**
      * Accept method for visitor pattern
      * @param visitor TileVisitor instance
+     * @param <T> return type of the visitor operation
      * @return result from visitor's visitFree method
      */
     @Override

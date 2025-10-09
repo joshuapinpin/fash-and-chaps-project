@@ -1,8 +1,8 @@
-package nz.ac.wgtn.swen225.lc.persistency.levelloader.parse;
+package nz.ac.wgtn.swen225.lc.persistency.parse;
 
 import nz.ac.wgtn.swen225.lc.domain.Position;
 import nz.ac.wgtn.swen225.lc.domain.tiles.Tile;
-import nz.ac.wgtn.swen225.lc.persistency.levelloader.LevelMaker;
+import nz.ac.wgtn.swen225.lc.persistency.serialisation.GameState;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -16,7 +16,6 @@ import java.util.function.Function;
  * @author Thomas Ru - 300658840
  */
 abstract class TileParser<T extends Tile> {
-    public static final String separator = ":";
     private static final Set<String> usedSymbols = new HashSet<>(); // enforce unique symbols
     private final Function<Position, T> defaultTileMaker;
     private final String symbol;
@@ -64,7 +63,7 @@ abstract class TileParser<T extends Tile> {
      * @param position - the Position of the Tile.
      * @return - the concrete Tile instance.
      */
-    public T parse(LevelMaker surroundings, String tile, Position position) {
+    public T parse(GameState surroundings, String tile, Position position) {
         checkNonNull(surroundings, tile, position);
         checkTileStartsWithSymbol(tile);
         T result = defaultTileMaker.apply(position);
@@ -78,7 +77,7 @@ abstract class TileParser<T extends Tile> {
      * @param tile - the String instance.
      * @param position - the Position instance.
      */
-    protected void checkNonNull(LevelMaker surroundings, String tile, Position position) {
+    protected void checkNonNull(GameState surroundings, String tile, Position position) {
         Objects.requireNonNull(surroundings, "LevelMaker surroundings cannot be null.");
         Objects.requireNonNull(tile, "String cannot be null.");
         Objects.requireNonNull(position, "Position cannot be null.");
