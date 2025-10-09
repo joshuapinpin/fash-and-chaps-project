@@ -6,8 +6,9 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Handles images from file path to load into the game
- * Saves images as enum objects to be used throughout game
+ * Enum to handle images from file path to load into the game
+ * Saves images to be used throughout game
+ * @author Emily Ung (300663254)
  */
 public enum LoadingImg {
     PlayerUp("imgs/playerUp.png"),
@@ -46,8 +47,8 @@ public enum LoadingImg {
     RockButton("imgs/rockButton.png"),
     Shell("imgs/shell.png");
 
-    private final String filename;
-    private BufferedImage image;
+    private final String filename; //name of file
+    private BufferedImage image;//actual image
     
     /**
      * Constructor for the enum
@@ -66,7 +67,7 @@ public enum LoadingImg {
 
     /**
      * Gets the image of enum
-     * @return - buffered image
+     * @return - buffered image of needed image
      */
     public BufferedImage loadImage() {
         return image;

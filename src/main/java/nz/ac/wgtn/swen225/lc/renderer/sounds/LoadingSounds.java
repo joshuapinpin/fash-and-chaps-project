@@ -5,6 +5,11 @@ import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;
 import javax.sound.sampled.*;
 import java.io.InputStream;
 
+/**
+ * Loads different sounds and music
+ * Used enums to store and hold sounds to be played within the game
+ * @author Emily Ung (300663254)
+ */
 public enum LoadingSounds {
     VictorySound("sounds/victory.wav"),
     LosingSound("sounds/losing.wav"),
@@ -45,7 +50,7 @@ public enum LoadingSounds {
             Clip clip = null;
             try {
                 clip = AudioSystem.getClip();
-                clip.open(loadSound()); // gets audio data
+                clip.open(loadSound()); //gets audio data
 
                 //controls volume of sound
                 FloatControl changeVol = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
@@ -55,8 +60,8 @@ public enum LoadingSounds {
                 //makes sure the whole clip gets played
                 Thread.sleep(clip.getMicrosecondLength() / 1000);
             } catch(Exception e) { throw new RuntimeException("Error playing sound effect: " + filename, e); }
-            finally{ if(clip != null){ clip.close();}}
-        }).start(); // starts the thread
+            finally{ if(clip != null){ clip.close();}} //ensures clip is closed to not crash
+        }).start(); //starts the thread
     }
 
     /**

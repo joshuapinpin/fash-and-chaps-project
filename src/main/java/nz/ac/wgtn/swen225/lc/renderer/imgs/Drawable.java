@@ -17,6 +17,7 @@ import java.util.List;
 /**
  * Creates a JPanel of all tiles needed to be loaded
  * Parses through List of tiles, checking which images to show
+ * @author Emily Ung (300663254)
  */
 public class Drawable extends JPanel{
     Tile[][] allTiles; //array of all the tiles in the world

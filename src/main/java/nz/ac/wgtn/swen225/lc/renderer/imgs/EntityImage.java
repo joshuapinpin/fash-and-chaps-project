@@ -5,6 +5,11 @@ import nz.ac.wgtn.swen225.lc.domain.entities.*;
 import java.awt.image.BufferedImage;
 import java.util.Map;
 
+/**
+ * Concrete Visitor Class to implement Visitor Pattern
+ * Draws the specific entity image
+ * @author Emily Ung (300663254)
+ */
 public class EntityImage implements EntityVisitor<BufferedImage>{
 
     Map<EntityColor, LoadingImg> keyLookUpTable = Map.of(    //lookup table for key entities (to see colour)
