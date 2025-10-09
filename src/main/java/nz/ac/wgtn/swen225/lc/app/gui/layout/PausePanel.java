@@ -20,6 +20,7 @@ public class PausePanel extends JPanel {
         label.setForeground(Color.WHITE);
         label.setHorizontalAlignment(SwingConstants.CENTER);
         label.setVerticalAlignment(SwingConstants.CENTER);
+        label.setBorder(BorderFactory.createLineBorder(Color.white, 5));
         add(label);
     }
 }
