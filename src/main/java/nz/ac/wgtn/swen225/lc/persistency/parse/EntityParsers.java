@@ -30,7 +30,6 @@ public enum EntityParsers {
     KeyP("Key") {
         @Override
         public Entity parse(GameState surroundings, String entity) {
-            surroundings.incrementKeys();
             return this.parseWithColor(surroundings, entity, Key::of);
         }
     },
@@ -49,7 +48,6 @@ public enum EntityParsers {
     TreasureP("Treasure") {
         @Override
         public Entity parse(GameState surroundings, String entity) {
-            surroundings.incrementTreasures();
             return this.parse(surroundings, entity, Treasure::of);
         }
     };

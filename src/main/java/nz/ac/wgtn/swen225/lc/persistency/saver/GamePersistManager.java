@@ -65,7 +65,7 @@ class GamePersistManager implements PersistManager<LoadedMaze> {
     @Override
     public void save(LoadedMaze data, JFrame parent) {
         LevelInfo meta = data.levelInfo();
-        save(data.maze(), data.time(), meta.levelNumber(), meta.maxTreasures(), meta.maxKeys(), parent);
+        save(data.maze(), meta.levelNumber(), meta.maxTreasures(), meta.maxKeys(), data.time(), parent);
     }
 
     /**
