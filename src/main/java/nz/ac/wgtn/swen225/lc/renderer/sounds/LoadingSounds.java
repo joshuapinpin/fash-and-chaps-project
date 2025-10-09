@@ -29,7 +29,7 @@ public enum LoadingSounds {
     LoadingSounds(String name) { this.filename = name;}
 
     /**
-     * Loads the file for sound to each enum 
+     * Loads the file for sound to each enum
      * @return returns an AudioInputStream used to find sound/load sound
      */
     AudioInputStream loadSound() {
