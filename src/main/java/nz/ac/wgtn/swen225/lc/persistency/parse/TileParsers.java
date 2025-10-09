@@ -27,7 +27,7 @@ public enum TileParsers {
     /**
      * Stores a parser for Info Tiles.
      */
-    InfoP(new InfoParser("I")),
+    InfoP(new TileParser<Info>("I", Info::of) {}),
     /**
      * Stores a parser for Free Tiles.
      */

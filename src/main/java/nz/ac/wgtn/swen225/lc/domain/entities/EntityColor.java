@@ -3,7 +3,7 @@ package nz.ac.wgtn.swen225.lc.domain.entities;
 /**
  * Enum representing key colors in the game
  * Used to differentiate between different keys
- * @author Hayley Far
+ * @author Hayley Far (300659141)
  */
 public enum EntityColor {
     ORANGE,
