@@ -112,7 +112,7 @@ public enum Levels {
             GameState gameState = new ObjectMapper().readValue(in, GameState.class);
             maxKeys = gameState.keyCount();
             maxTreasures = gameState.treasureCount();
-            return mapper.fromState(gameState);
+            return mapper.fromState(gameState).maze();
         } catch (IOException e) {
             throw new Error("Deserialisation failed: "+e);
         }
@@ -141,4 +141,6 @@ public enum Levels {
         if (!loaded) { load(); }
         return maxTreasures;
     }
+
+    public int levelNumber() { return levelNumber; }
 }

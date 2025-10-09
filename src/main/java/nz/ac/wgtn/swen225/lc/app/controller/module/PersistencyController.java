@@ -4,6 +4,7 @@ import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 import nz.ac.wgtn.swen225.lc.domain.Maze;
 import nz.ac.wgtn.swen225.lc.persistency.Levels;
 import nz.ac.wgtn.swen225.lc.persistency.saver.GamePersist;
+import nz.ac.wgtn.swen225.lc.persistency.serialisation.LoadedMaze;
 
 import java.util.Optional;
 
@@ -37,16 +38,22 @@ public class PersistencyController  {
     }
 
     public void loadGame(){
-        Optional<Maze> domainOptional = persist.loadGame(c.windowController().window());
+        //Optional<Maze> domainOptional = persist.loadGame(c.windowController().window());
+        Optional<LoadedMaze> domainOptional = persist.loadGame(c.windowController().window());
         if(domainOptional.isEmpty()) {
             throw new IllegalStateException("No game loaded.");
         }
-        c.domainController().updateDomain(domainOptional.get());
+        LoadedMaze lm = domainOptional.get();
+        c.domainController().updateDomain(lm.maze());
+        c.domainController().
         c.continueGame();
     }
 
     public void saveGame(){
         persist.saveGame(c.domainController().domain(),
+                currentLevel.levelNumber(),
+                maxTreasures,
+                c.timerController().getTimeLeft(),
                 c.windowController().window());
     }
 

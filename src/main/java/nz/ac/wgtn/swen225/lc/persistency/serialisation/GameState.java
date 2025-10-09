@@ -14,10 +14,13 @@ import java.util.*;
  * @author Thomas Ru - 300658840
  */
 public class GameState {
-    private static Mapper<Maze, GameState> mapper = new GameMapper();
+    private static Mapper<LoadedMaze, GameState> mapper = new GameMapper();
 
     private final int rows;
     private final int cols;
+    private int levelNumber;
+    private int maxTreasure;
+    private int time;
     private PlayerState player;
     private int keyCount = 0;
     private int treasureCount = 0;
@@ -37,6 +40,9 @@ public class GameState {
     public GameState(
             @JsonProperty("rows") int rows,
             @JsonProperty("cols") int cols,
+            @JsonProperty("levelNumber") int levelNumber,
+            @JsonProperty("maxTreasure") int maxTreasure,
+            @JsonProperty("time") int time,
             @JsonProperty("player") PlayerState player
     ) {
         boolean minSize = rows > 0 && cols > 0;
@@ -46,14 +52,22 @@ public class GameState {
 
         this.rows = rows;
         this.cols = cols;
+        this.levelNumber = levelNumber;
+        this.maxTreasure = maxTreasure;
+        this.time = time;
         this.player = Objects.requireNonNull(player, "PlayerState cannot be null.");
         board = new String[rows][cols];
     }
 
+    public int getLevelNumber() { return levelNumber; }
+    public void setLevelNumber(int i) { levelNumber = i; }
+    public int getMaxTreasure() { return maxTreasure; }
+    public void setMaxTreasure(int max) { maxTreasure = max; }
+    public int getTime() { return time; }
+    public void setTime(int t) { time = t; }
     public PlayerState getPlayer() {
         return player;
     }
-
     public void setPlayer(PlayerState player) {
         this.player = player;
     }
