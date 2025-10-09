@@ -29,7 +29,7 @@ public enum LoadingSounds {
     LoadingSounds(String name) { this.filename = name;}
 
     /**
-     * Loads the file for sound to each enum
+     * Loads the file for sound to each enum 
      * @return returns an AudioInputStream used to find sound/load sound
      */
     AudioInputStream loadSound() {
@@ -47,20 +47,21 @@ public enum LoadingSounds {
      */
     public void playSoundEffect(float volume) {
         new Thread(() -> {
-            Clip clip = null;
             try {
-                clip = AudioSystem.getClip();
+                Clip clip = AudioSystem.getClip();
                 clip.open(loadSound()); //gets audio data
 
                 //controls volume of sound
                 FloatControl changeVol = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
                 changeVol.setValue(volume);
-                clip.start();
 
-                //makes sure the whole clip gets played
-                Thread.sleep(clip.getMicrosecondLength() / 1000);
+                //ensures the clip plays fully and closes the clip
+                clip.addLineListener(event -> {
+                    if (event.getType() == LineEvent.Type.STOP) { clip.close();}
+                });
+
+                clip.start();
             } catch(Exception e) { throw new RuntimeException("Error playing sound effect: " + filename, e); }
-            finally{ if(clip != null){ clip.close();}} //ensures clip is closed to not crash
         }).start(); //starts the thread
     }
 
@@ -74,15 +75,13 @@ public enum LoadingSounds {
                     BGCLIP = AudioSystem.getClip();
                     BGCLIP.open(loadSound()); //gets the audio
                 }
-
                 //controls volume of sound
                 FloatControl changeVol = (FloatControl) BGCLIP.getControl(FloatControl.Type.MASTER_GAIN);
                 changeVol.setValue(volume);
 
                 BGCLIP.start();
                 BGCLIP.loop(Clip.LOOP_CONTINUOUSLY); // loops the music
-
-            } catch (Exception e) { throw new RuntimeException("Error playing background sound: " + filename, e); }
+            } catch(Exception e) { throw new RuntimeException("Error playing background sound: " + filename, e); }
     }
 
     /**
@@ -101,5 +100,4 @@ public enum LoadingSounds {
     public void stopBackgroundMusic(){
         if(BGCLIP != null && BGCLIP.isRunning()){BGCLIP.stop(); }
     }
-
 }

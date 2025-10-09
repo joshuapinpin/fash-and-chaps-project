@@ -72,5 +72,4 @@ public enum LoadingImg {
     public BufferedImage loadImage() {
         return image;
     }
-
 }
