@@ -14,7 +14,6 @@ public class PausePanel extends JPanel {
         this.c = c;
         setLayout(new BorderLayout());
         setOpaque(true);
-        setBorder(BorderFactory.createLineBorder(Color.white, 5));
         setBackground(new Color(0, 0, 0, 150)); // Semi-transparent background
         JLabel label = new JLabel("PAUSED");
         label.setFont(MyFont.PIXEL.getFont(AppWindow.FONT_SIZE_H1));

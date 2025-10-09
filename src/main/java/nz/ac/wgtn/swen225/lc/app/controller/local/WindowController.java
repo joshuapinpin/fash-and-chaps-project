@@ -41,7 +41,7 @@ public class WindowController implements Controller {
      */
     public WindowController(AppController c){
         this.c = c;
-        this.w = new AppWindow(c);
+        this.w = AppWindow.of(c);
         setupGamePanels();
     }
 
@@ -95,11 +95,18 @@ public class WindowController implements Controller {
         else playScreen.displayBlank();
     }
 
+    /**
+     * Show Pause Panel
+     * @param doShow true to show, false to hide
+     */
     public void displayPause(boolean doShow){
         if(doShow) playScreen.displayPause();
         else playScreen.displayBlank();
     }
 
+    /**
+     * Display the previous panel before info or pause.
+     */
     public void displayPrevious(){
         playScreen.displayPrevious();
     }
@@ -157,7 +164,7 @@ public class WindowController implements Controller {
     }
 
     private void updateTreasure(){
-        int treasuresCollected = c.domainController().player().getTreasuresCollected();
+        int treasuresCollected = c.domain().getPlayer().getTreasuresCollected();
         treasurePanel.updatePanel(treasuresCollected);
     }
 

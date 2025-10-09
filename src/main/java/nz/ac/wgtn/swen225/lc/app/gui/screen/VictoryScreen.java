@@ -2,6 +2,7 @@ package nz.ac.wgtn.swen225.lc.app.gui.screen;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
+import nz.ac.wgtn.swen225.lc.app.util.Input;
 import nz.ac.wgtn.swen225.lc.app.util.MyButton;
 import nz.ac.wgtn.swen225.lc.app.util.MyFont;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;
@@ -58,6 +59,7 @@ public class VictoryScreen extends JPanel {
     private void setupButtons(){
         setupSingleButton("Level 1", e -> c.startNewGame(1));
         setupSingleButton("Level 2", e -> c.startNewGame(2));
+        setupSingleButton("Load Game", e -> c.handleInput(Input.RESUME));
         setupSingleButton("Home", e -> c.exitGame());
     }
 

@@ -17,11 +17,21 @@ public class PersistencyController  {
     private int maxTreasures;
     private int maxTime;
 
+    /**
+     * Constructor for PersistencyController.
+     * @param c Reference to the main AppController
+     */
     public PersistencyController(AppController c) {
         this.c = c;
         this.persist = new GamePersist();
     }
 
+    /**
+     * Loads the specified level.
+     * @param level Level number to load (1 or 2)
+     * @return The loaded level enum
+     * @throws IllegalArgumentException if the level number is invalid
+     */
     public Levels loadLevel(int level){
         if(level == 1) this.currentLevel = Levels.LevelOne;
         else if(level == 2) this.currentLevel = Levels.LevelTwo;
@@ -37,25 +47,38 @@ public class PersistencyController  {
         this.maxTime = currentLevel.maxTime();
     }
 
+    /**
+     * Loads a saved game if one exists.
+     * If no saved game exists, does nothing.
+     */
     public void loadGame(){
         Optional<LoadedMaze> domainOptional = persist.loadGame(c.windowController().window());
-        if(domainOptional.isEmpty()) {
-            throw new IllegalStateException("No game loaded.");
-        }
+
+        c.inputController().clearPressedKeys();// To prevent stuck keys
+
+        if(domainOptional.isEmpty()) return;
+        c.windowController().window().requestFocusInWindow();
         LoadedMaze lm = domainOptional.get();
         level = lm.levelNumber();
+        loadLevel(level);
         c.domainController().updateDomain(lm.maze());
         c.timerController().startTimerFrom(lm.time());
-        c.domainController().
+        c.windowController().atNewGame();
+        c.rendererController().atNewGame();
         c.continueGame();
     }
 
+    /**
+     * Saves the current game state.
+     */
     public void saveGame(){
         persist.saveGame(c.domainController().domain(),
                 currentLevel.levelNumber(),
                 maxTreasures,
                 c.timerController().getTimeLeft(),
                 c.windowController().window());
+
+        c.inputController().clearPressedKeys();
     }
 
 

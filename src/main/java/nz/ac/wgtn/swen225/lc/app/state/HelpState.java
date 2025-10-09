@@ -8,7 +8,5 @@ public record HelpState(AppController c) implements GameState{
         c.rendererController().stopMusic();
     }
     public void exit(AppController c){c.exitGame();}
-    public void continueGame(AppController c){c.continueGame();}
-
     public static String name(){return "HelpState";}
 }
