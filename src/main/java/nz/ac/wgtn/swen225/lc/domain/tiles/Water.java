@@ -12,11 +12,11 @@ import java.util.function.Consumer;
  * Water class representing a water tile in the game
  * Water is impassable and causes the player to drown (to be implemented in level 2)
  * Inherits from Tile class
- * @author Hayley Far
+ * @author Hayley Far (300659141)
  */
 public class Water extends Tile{
-    private record WaterKey(Position pos){}
-    private static final Map<WaterKey,Water> cache = new HashMap<>();
+    private record WaterKey(Position pos){} // Record to represent unique key for water caching based on position
+    private static final Map<WaterKey,Water> cache = new HashMap<>(); // Cache to store created water instances
 
     /**
      * Private constructor for water with specified WaterKey
@@ -27,7 +27,7 @@ public class Water extends Tile{
     }
 
     /**
-     * Static factory method to create a water tile with specified position
+     * Static factory method to create a water tile with specified position (Flyweight pattern)
      * @param pos position of the water tile
      * @return new Water instance
      */
@@ -41,7 +41,7 @@ public class Water extends Tile{
 
     /**
      * Method to handle player entering the water tile
-     * Currently unimplemented, to be defined for level 2 when player drowns
+     * Player to drown in water (die), using observer pattern to notify observers of drowning
      * @param player player entering the water tile
      * @return Consumer to notify observers of player drowning
      */
@@ -70,6 +70,7 @@ public class Water extends Tile{
     /**
      * Accept method for visitor pattern
      * @param visitor TileVisitor instance
+     * @param <T> return type of the visitor's operation
      * @return result of visitor's visitWater method
      */
     @Override

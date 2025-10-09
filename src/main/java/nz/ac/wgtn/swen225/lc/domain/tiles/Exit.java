@@ -10,11 +10,9 @@ import java.util.function.Consumer;
  * Exit class representing the exit tile in the game
  * The player can enter this tile to finish the level
  * Extends Tile class to inherit tile properties
- * @author Hayley Far
+ * @author Hayley Far (300659141)
  */
 public class Exit extends Tile {
-
-    //Potential field of GameController to trigger level complete?
 
     /**
      * Constructor for exit tile with specified position
@@ -35,7 +33,7 @@ public class Exit extends Tile {
 
     /**
      * Method to handle player entering the exit tile
-     * Triggers level completion when the player enters this tile
+     * Triggers level completion when the player enters this tile using observer pattern
      * @param p player entering the exit tile
      * @return Consumer to notify observers of level completion
      */
