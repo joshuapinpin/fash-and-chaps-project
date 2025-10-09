@@ -17,7 +17,7 @@ import java.util.ArrayList;
  * @author Arushi Bhatnagar Stewart
  */
 public class SaveL1 implements Save{
-    public record inputTime(Input direction, Integer timeLeft){}
+    public record inputTime(Input direction, Integer timeLeftMilli){}
     private static final SaveL1 saveInstance = new SaveL1();
     private List<inputTime> saveList;
     private final ObjectMapper mapper;
@@ -51,7 +51,7 @@ public class SaveL1 implements Save{
     /** */
     private void addMovement(Input direction, AppController ac) {
         System.out.println("*DEBUG* Inside of the Recorder Package Now");
-        int timeLeft = ac.timerController().getTimeLeft();
+        int timeLeft = ac.timerController().getPreciseTimeMillis();
         saveList.add(new inputTime(direction, timeLeft));
     }
     /** This is the core method of this class.

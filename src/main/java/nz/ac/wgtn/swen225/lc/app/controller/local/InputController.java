@@ -15,7 +15,7 @@ import java.util.*;
  * @author <Your Name>
  */
 public class InputController implements KeyListener {
-    private final AppController controller;
+    private final AppController c;
     private final Map<KeyCombo, KeyAction> inputs;
     private final Set<Integer> pressedKeys = new HashSet<>();
 
@@ -26,7 +26,7 @@ public class InputController implements KeyListener {
     private interface KeyAction {void execute(AppController gameController);}
 
     public InputController(AppController controller) {
-        this.controller = controller;
+        this.c = controller;
         this.inputs = new HashMap<>();
         setupInputs();
     }
@@ -47,8 +47,8 @@ public class InputController implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if(controller.state().equals(new StepReplayState())
-                || controller.state().equals(new AutoReplayState())) return;
+        if(c.state() instanceof AutoReplayState
+                || c.state() instanceof StepReplayState) return;
 
 
         int keyCode = e.getKeyCode();
@@ -62,7 +62,7 @@ public class InputController implements KeyListener {
 
         // Displays the key pressed for debugging on terminal
         var keyText = KeyEvent.getKeyText(keyCode);
-        if (action != null) action.execute(controller);
+        if (action != null) action.execute(c);
     }
     @Override public void keyTyped(KeyEvent e) {}
     @Override public void keyReleased(KeyEvent e) {
