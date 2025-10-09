@@ -8,6 +8,10 @@ import nz.ac.wgtn.swen225.lc.persistency.serialisation.LoadedMaze;
 
 import java.util.Optional;
 
+/**
+ * Controller for handling game persistency (saving and loading).
+ * @author Joshua Pinpin (Student ID: 300662880)
+ */
 public class PersistencyController  {
     private AppController c;
     private Levels currentLevel;

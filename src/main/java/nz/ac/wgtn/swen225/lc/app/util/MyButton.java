@@ -9,6 +9,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
+/**
+ * A utility class for creating customized JButton instances with specific styles and behaviors.
+ * @author Joshua Pinpin (Student ID: 300662880)
+ */
 public class MyButton {
     JButton button;
 

@@ -19,6 +19,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * RightPanel class for the GUI
+ * Contains buttons and slider for recorder controls
+ * @author Joshua Pinpin (Student ID: 300662880)
+ */
 public class RightPanel extends JPanel implements ActionListener, ChangeListener {
     public static final int PANEL_WIDTH = AppWindow.SQUARE_SIZE * 6 ;
     public static final int PANEL_HEIGHT = AppWindow.MAZE_SIZE;

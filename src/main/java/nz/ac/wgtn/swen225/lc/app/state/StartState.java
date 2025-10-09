@@ -2,6 +2,10 @@ package nz.ac.wgtn.swen225.lc.app.state;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 
+/**
+ * The state when the game is at the start screen.
+ * @author Joshua Pinpin (Student ID: 300662880)
+ */
 public record StartState(AppController c) implements GameState{
     public StartState{
         c.windowController().changeScreen(name());

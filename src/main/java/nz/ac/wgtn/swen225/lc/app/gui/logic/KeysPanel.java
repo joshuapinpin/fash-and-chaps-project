@@ -13,7 +13,11 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Map;
 
-
+/**
+ * KeysPanel class for the GUI
+ * Displays the keys the player has collected
+ * @author Joshua Pinpin (Student ID: 300662880)
+ */
 public class KeysPanel extends JPanel implements LogicPanel {
     AppController c;
     List<Key> keys;
@@ -22,7 +26,10 @@ public class KeysPanel extends JPanel implements LogicPanel {
 
     private Map<EntityColor, BufferedImage> imageKeyMap;
 
-
+    /**
+     * Constructor for KeysPanel.
+     * @param c AppController
+     */
     public KeysPanel(AppController c) {
         this.c = c;
         imageKeyMap = Map.of(
@@ -36,12 +43,19 @@ public class KeysPanel extends JPanel implements LogicPanel {
         setOpaque(false);
     }
 
+    /**
+     * Initialise the panel with the maximum number of keys that can be collected.
+     * @param info Maximum number of keys
+     */
     @Override
     public void initialisePanelInfo(int info){
         maxKeys = info;
     }
 
-
+    /**
+     * Update the panel with the current number of keys collected.
+     * @param info Not used
+     */
     @Override
     public void updatePanel(int info) {
         keys = c.domain().getPlayer().getKeys();

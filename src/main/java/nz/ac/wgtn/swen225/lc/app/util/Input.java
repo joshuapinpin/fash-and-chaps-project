@@ -1,5 +1,9 @@
 package nz.ac.wgtn.swen225.lc.app.util;
 
+/**
+ * Enum representing possible user inputs in the game.
+ * @author Joshua Pinpin (Student ID: 300662880)
+ */
 public enum Input {
     MOVE_UP,
     MOVE_DOWN,
