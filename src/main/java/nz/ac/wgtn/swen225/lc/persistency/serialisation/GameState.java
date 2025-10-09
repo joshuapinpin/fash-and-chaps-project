@@ -146,6 +146,10 @@ public class GameState {
         return keyCount;
     }
 
+    public void loaded() {
+        loaded = true;
+    }
+
     /**
      * Adds 1 to the number of treasures in the level.
      */

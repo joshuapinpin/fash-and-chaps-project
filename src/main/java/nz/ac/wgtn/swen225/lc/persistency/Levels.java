@@ -110,9 +110,10 @@ public enum Levels {
     private Maze createMaze(InputStream in){
         try {
             GameState gameState = new ObjectMapper().readValue(in, GameState.class);
+            Maze maze = mapper.fromState(gameState).maze();
             maxKeys = gameState.keyCount();
             maxTreasures = gameState.treasureCount();
-            return mapper.fromState(gameState).maze();
+            return maze;
         } catch (IOException e) {
             throw new Error("Deserialisation failed: "+e);
         }

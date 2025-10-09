@@ -54,7 +54,6 @@ public class GameMapper implements Mapper<LoadedMaze, GameState> {
         });
 
         gameState.setBoard(board);
-        //gameState.setPlayer(playerMapper.toState(data.getPlayer()));
         return gameState;
     }
 
@@ -93,10 +92,15 @@ public class GameMapper implements Mapper<LoadedMaze, GameState> {
             }
         }
 
-        state.getMonsters().forEach(maze::setMonster);
+        System.out.println(state.getMonsters().size());
+        state.getMonsters().forEach(m->{
+            maze.setMonster(m);
+            System.out.println("added monster");
+        });
         Player player = playerMapper.fromState(state.getPlayer());
         player.setTotalTreasures(state.getMaxTreasure());
         maze.setPlayer(player);
+        state.loaded();
         return new LoadedMaze(maze, state.getLevelNumber(), state.getMaxTreasure(), state.getTime());
     }
 
