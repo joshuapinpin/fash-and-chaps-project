@@ -28,9 +28,7 @@ public interface Play {
     public default void startPlay(){
         // sets the game to position at start of recording
     }
-    public default void stopPlay(){
-        // sets the game to position at the end of recording
-    }
+    /** */
     public default File getFile(){
         File fileChoice = null;
         JFileChooser fileChooser = new JFileChooser();

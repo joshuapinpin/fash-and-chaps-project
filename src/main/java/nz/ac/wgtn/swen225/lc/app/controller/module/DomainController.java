@@ -35,17 +35,35 @@ public class DomainController implements Controller {
     }
 
     /**
+     * Updates the domain model with a new maze state
+     * @param maze
+     */
+    public void updateDomain(Maze maze){
+        System.out.println("PLAYER TREASURES: " + player.getTreasuresCollected());
+        this.domain = maze;
+        initialiseDomainFields();
+
+    }
+
+    /**
      * Initialises the domain model for the specified level
      * @param level
      */
     public void initialiseDomain(int level){
         // Load Level
         this.domain = c.persistencyController().loadLevel(level).load();
+        System.out.println("INTIAL SIZE = "+domain.getMonsters().size());
+        initialiseDomainFields();
 
+    }
+
+    private void initialiseDomainFields(){
         // Initialise Domain Fields
         this.tileGrid = domain.getTileGrid();
         this.player = domain.getPlayer();
         this.keysList = player.getKeys();
+
+        System.out.println("PLAYER TREASURES: " + player.getTreasuresCollected());
 
         player.setTotalTreasures(c.persistencyController().maxTreasures());
 

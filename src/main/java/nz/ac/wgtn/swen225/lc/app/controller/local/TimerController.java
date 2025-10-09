@@ -15,13 +15,14 @@ import javax.swing.Timer;
  * @author <Your Name>
  */
 public class TimerController implements ActionListener, Controller {
-    private static final int TIMER_INTERVAL = 1000; // Timer ticks every second
-    private static final int LEVEL_1_TIME_LIMIT = 61; // Level 1 time limit in seconds
-    private static final int LEVEL_2_TIME_LIMIT = 61; // Level 2 time limit in seconds
+    private static final int TIMER_INTERVAL = 100; // Timer ticks every 1/10 second
+    private static final int TICKS_PER_SECOND = 1000/TIMER_INTERVAL; // Number of ticks per second
+    private static final int LEVEL_1_TIME_LIMIT = 60; // Level 1 time limit in seconds
+    private static final int LEVEL_2_TIME_LIMIT = 60; // Level 2 time limit in seconds
 
     private final AppController c;
     private final Timer timer;
-    private int timeLeft;
+    private int preciseTime;
 
     /**
      * Initializes the TimerController with a reference to the AppController.
@@ -38,7 +39,7 @@ public class TimerController implements ActionListener, Controller {
      */
     public TimerController(AppController controller, int initialTime) {
         this.c = controller;
-        this.timeLeft = initialTime;
+        this.preciseTime = initialTime * TICKS_PER_SECOND;
         // TODO: Initialize timer
         timer = new Timer(TIMER_INTERVAL, this);
         timer.setInitialDelay(0);
@@ -50,14 +51,23 @@ public class TimerController implements ActionListener, Controller {
      * @return The time limit in seconds.
      */
     public static int getTimeLimitForLevel(int level) {
-        if(level == 1) return LEVEL_1_TIME_LIMIT;
-        else if(level == 2) return LEVEL_2_TIME_LIMIT;
+        if(level == 1) return LEVEL_1_TIME_LIMIT * TICKS_PER_SECOND;
+        else if(level == 2) return LEVEL_2_TIME_LIMIT * TICKS_PER_SECOND;
         throw new IllegalArgumentException("Invalid Level: " + level);
     }
 
+    /**
+     * Called when a new game starts.
+     * Resets the timer based on the current level.
+     */
     @Override
     public void atNewGame(){
         restartTimer(c.persistencyController().level());
+    }
+
+    public void recorderMode() {
+        c.timerController().restartTimer(c.level());
+        c.timerController().pause();
     }
 
     /**
@@ -67,13 +77,15 @@ public class TimerController implements ActionListener, Controller {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(timeLeft > 0) timeLeft--;
-        if(timeLeft == 0) {
+        if(preciseTime > 0) preciseTime --;
+        if(preciseTime % TICKS_PER_SECOND == 0) {
+            c.windowController().updateWindow();
+            c.domainController().moveCrab();
+        }
+        if(preciseTime == 0) {
             timer.stop();
             c.defeat();
         }
-        c.windowController().updateWindow();
-        c.domainController().moveCrab();
     }
 
     /**
@@ -95,7 +107,16 @@ public class TimerController implements ActionListener, Controller {
      * @param level The level number to set the time limit for.
      */
     public void restartTimer(int level) {
-        this.timeLeft = getTimeLimitForLevel(level);
+        this.preciseTime = getTimeLimitForLevel(level);
+        timer.restart();
+    }
+
+    /**
+     * Starts the timer from a specific time in seconds.
+     * @param newTime The time in seconds to start the timer from.
+     */
+    public void startTimerFrom(int newTime){
+        this.preciseTime = newTime * TICKS_PER_SECOND;
         timer.restart();
     }
 
@@ -105,6 +126,14 @@ public class TimerController implements ActionListener, Controller {
      * @return The remaining time in seconds.
      */
     public int getTimeLeft() {
-        return timeLeft;
+        return (preciseTime / TICKS_PER_SECOND);
+    }
+
+    /**
+     * Gets the remaining time in milliseconds.
+     * @return The remaining time in milliseconds.
+     */
+    public int getPreciseTimeMillis(){
+        return preciseTime * TIMER_INTERVAL;
     }
 }
