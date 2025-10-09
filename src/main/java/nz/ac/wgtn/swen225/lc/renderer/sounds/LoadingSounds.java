@@ -42,8 +42,9 @@ public enum LoadingSounds {
      */
     public void playSoundEffect(float volume) {
         new Thread(() -> {
+            Clip clip = null;
             try {
-                Clip clip = AudioSystem.getClip();
+                clip = AudioSystem.getClip();
                 clip.open(loadSound()); // gets audio data
 
                 //controls volume of sound
@@ -54,6 +55,7 @@ public enum LoadingSounds {
                 //makes sure the whole clip gets played
                 Thread.sleep(clip.getMicrosecondLength() / 1000);
             } catch(Exception e) { throw new RuntimeException("Error playing sound effect: " + filename, e); }
+            finally{ if(clip != null){ clip.close();}}
         }).start(); // starts the thread
     }
 
@@ -85,8 +87,6 @@ public enum LoadingSounds {
         if(BGCLIP != null){
             BGCLIP.stop();
             BGCLIP.setFramePosition(0); //resets the clip to beginning
-            //BGCLIP.start();
-            //BGCLIP.loop(Clip.LOOP_CONTINUOUSLY);
         }
     }
 
