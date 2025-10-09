@@ -122,6 +122,8 @@ public class AppController {
         controllers.forEach(Controller::atNewGame);
         setState(new PlayState(this));
         System.out.println("Starting New Game at Level " + level);
+
+        System.out.println("Monsters: " + domainController().domain().getMonsters().size());
     }
 
     /**
@@ -155,7 +157,8 @@ public class AppController {
      * Uses Persistence to retrieve the saved state and update the domain model.
      */
     public void resumeGame() {
-        // TODO: Implement resume logic
+        if(state instanceof PlayState) pauseGame();
+        persistencyController.loadGame();
         System.out.println("Game Loaded/Resume!");
     }
 
@@ -164,8 +167,10 @@ public class AppController {
      * Get from persistency
      */
     public void saveGame(){
-        //TODO: get Persistence to create a "save current game" method
+        if(state instanceof PlayState) pauseGame();
+        persistencyController.saveGame();
         System.out.println("Game Saved!");
+        exitGame();
     }
 
     /**

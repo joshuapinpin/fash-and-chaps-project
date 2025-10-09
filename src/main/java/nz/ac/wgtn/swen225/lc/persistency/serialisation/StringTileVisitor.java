@@ -27,7 +27,7 @@ public class StringTileVisitor implements TileVisitor<String> {
 
     @Override
     public String visitInfo(Info info) {
-        return "I:temporary"; // TODO: update when Hayley has Info fix ready to merge.
+        return "I";
     }
 
     @Override

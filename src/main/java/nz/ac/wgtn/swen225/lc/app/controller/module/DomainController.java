@@ -35,13 +35,28 @@ public class DomainController implements Controller {
     }
 
     /**
+     * Updates the domain model with a new maze state
+     * @param maze New maze state to set as the domain
+     */
+    public void updateDomain(Maze maze){
+        this.domain = maze;
+        initialiseDomainFields();
+        System.out.println("PLAYER TREASURES: " + player.getTreasuresCollected());
+        System.out.println("PLAYER KEYS: " + player.getKeys().size());
+    }
+
+    /**
      * Initialises the domain model for the specified level
-     * @param level
+     * @param level Level number to load
      */
     public void initialiseDomain(int level){
         // Load Level
         this.domain = c.persistencyController().loadLevel(level).load();
+        initialiseDomainFields();
 
+    }
+
+    private void initialiseDomainFields(){
         // Initialise Domain Fields
         this.tileGrid = domain.getTileGrid();
         this.player = domain.getPlayer();
@@ -68,7 +83,6 @@ public class DomainController implements Controller {
      */
     public void movePlayer(Direction dir){
         if(domain == null) throw new RuntimeException("Cannot move player: Domain is null.");
-        // TODO: need a better and safer way to turn info on and off
         c.windowController().displayInfo(false);
         domain.movePlayer(dir);
     }
@@ -80,7 +94,6 @@ public class DomainController implements Controller {
     public void moveCrab(){
         domain.ping();
     }
-
 
     // ========== GETTERS AND SETTERS ==========
     public Maze domain() {return domain;}

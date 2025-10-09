@@ -40,6 +40,13 @@ public class AppWindow extends JFrame {
     private HelpScreen helpScreen;
 
     private final AppController c; // Reference to AppController
+    private static AppWindow window;
+
+
+    public static AppWindow of(AppController c) {
+        if(window == null) window = new AppWindow(c);
+        return window;
+    }
 
     /**
      * Constructor to initialize the main application window.
