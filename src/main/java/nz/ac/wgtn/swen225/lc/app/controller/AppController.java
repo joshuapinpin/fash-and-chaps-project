@@ -41,7 +41,7 @@ public class AppController {
      * @return The single instance of AppController
      */
     public static AppController of() {
-        return new AppController();
+        return APP;
     }
 
     /**
