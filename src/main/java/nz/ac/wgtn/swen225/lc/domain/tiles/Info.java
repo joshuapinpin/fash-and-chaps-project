@@ -47,14 +47,6 @@ public class Info extends Tile {
     }
 
     /**
-     * Getter for informational message
-     * @return informational message
-     */
-    public String getMessage(){
-        return message;
-    }
-
-    /**
      * Override equals method to compare info tiles based on position and message
      * @param obj object to compare with
      * @return true if info tiles are equal, false otherwise

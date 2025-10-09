@@ -65,7 +65,6 @@ public class RightPanel extends JPanel implements ActionListener, ChangeListener
 
         JLabel helpLabel = new JLabel();
         allComps.add(helpLabel);
-        setupSingleButton("HELP", controller::help);
     }
 
     private void setupRecorderButtons(){
@@ -135,15 +134,5 @@ public class RightPanel extends JPanel implements ActionListener, ChangeListener
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-//        int squareSize = AppWindow.SQUARE_SIZE;
-//        int x = 0, y = 0;
-//        while(x < PANEL_WIDTH){
-//            while(y < PANEL_HEIGHT){
-//                g.drawImage(bgImg, x, y, squareSize, squareSize, this);
-//                y += squareSize;
-//            }
-//            y = 0;
-//            x += squareSize;
-//        }
     }
 }

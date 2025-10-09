@@ -85,8 +85,8 @@ public enum LoadingSounds {
         if(BGCLIP != null){
             BGCLIP.stop();
             BGCLIP.setFramePosition(0); //resets the clip to beginning
-            BGCLIP.start();
-            BGCLIP.loop(Clip.LOOP_CONTINUOUSLY);
+            //BGCLIP.start();
+            //BGCLIP.loop(Clip.LOOP_CONTINUOUSLY);
         }
     }
 

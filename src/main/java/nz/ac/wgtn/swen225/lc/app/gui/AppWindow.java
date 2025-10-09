@@ -1,7 +1,6 @@
 package nz.ac.wgtn.swen225.lc.app.gui;
 
 import java.awt.*;
-import java.util.List;
 
 import javax.swing.*;
 
@@ -18,12 +17,15 @@ import nz.ac.wgtn.swen225.lc.app.util.MyFont;
 public class AppWindow extends JFrame {
     // Game Window Fields
     public static final int SQUARE_SIZE = 60; // 60 pixels
-    public static final int WINDOW_WIDTH = SQUARE_SIZE * 21;
-    public static final int WINDOW_HEIGHT = SQUARE_SIZE * 13;
+    public static final int WINDOW_COLS = 21;
+    public static final int WINDOW_ROWS = 13;
+    public static final int WINDOW_WIDTH = SQUARE_SIZE * WINDOW_COLS;
+    public static final int WINDOW_HEIGHT = SQUARE_SIZE * WINDOW_ROWS;
     public static final int MAZE_SIZE = SQUARE_SIZE * 9;
     public static final int HEADER_HEIGHT = SQUARE_SIZE * 2;
     public static final int FONT_SIZE_H1 = 40;
-    public static final int FONT_SIZE_H2 = 20;
+    public static final int FONT_SIZE_H2 = 30;
+    public static final int FONT_SIZE_H3 = 20;
 
     // GUI
     // Main
@@ -33,7 +35,6 @@ public class AppWindow extends JFrame {
     // Screens
     private StartScreen startScreen;
     private PlayScreen playScreen;
-    private PauseScreen pauseScreen;
     private VictoryScreen victoryScreen;
     private DefeatScreen defeatScreen;
     private HelpScreen helpScreen;
@@ -70,7 +71,7 @@ public class AppWindow extends JFrame {
         setupSingleScreen(playScreen = new PlayScreen(c), PlayState.name());
         setupSingleScreen(victoryScreen = new VictoryScreen(c), VictoryState.name());
         setupSingleScreen(defeatScreen = new DefeatScreen(c), DefeatState.name());
-        // TODO: setupSingleScreen(pauseScreen, new PauseScreen(c), PauseState.name());
+        setupSingleScreen(helpScreen = new HelpScreen(c), HelpState.name());
 
         setContentPane(mainPanel);
     }
