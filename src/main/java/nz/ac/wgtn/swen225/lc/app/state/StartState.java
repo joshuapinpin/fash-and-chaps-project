@@ -9,6 +9,7 @@ public record StartState(AppController c) implements GameState{
         c.rendererController().stopMusic();
     }
     public void exit(AppController c) { c.exitGame(); }
+    public void resume(AppController c) { c.resumeGame();}
     public void startNewGame(AppController c, int level) { c.startNewGame(level); }
 
     public static String name(){return "StartState";}

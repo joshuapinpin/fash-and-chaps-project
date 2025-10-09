@@ -45,10 +45,17 @@ public class InputController implements KeyListener {
         inputs.put(new KeyCombo(KeyEvent.VK_ESCAPE, false), c -> c.handleInput(Input.CONTINUE));
     }
 
+    /**
+     * Clears the set of currently pressed keys.
+     * Useful for resetting state when needed.
+     */
+    public void clearPressedKeys() {
+        pressedKeys.clear();
+    }
+
     @Override
     public void keyPressed(KeyEvent e) {
-        if(c.state() instanceof AutoReplayState
-                || c.state() instanceof StepReplayState) return;
+        if(c.state() instanceof AutoReplayState || c.state() instanceof StepReplayState) return;
 
 
         int keyCode = e.getKeyCode();
@@ -62,7 +69,11 @@ public class InputController implements KeyListener {
 
         // Displays the key pressed for debugging on terminal
         var keyText = KeyEvent.getKeyText(keyCode);
-        if (action != null) action.execute(c);
+        if (action != null) {
+            action.execute(c);
+            System.out.println("Key Pressed: " + keyText + (ctrl ? " + Ctrl" : ""));
+        }
+
     }
     @Override public void keyTyped(KeyEvent e) {}
     @Override public void keyReleased(KeyEvent e) {

@@ -157,7 +157,7 @@ public class AppController {
      * Uses Persistence to retrieve the saved state and update the domain model.
      */
     public void resumeGame() {
-        pauseGame();
+        if(state instanceof PlayState) pauseGame();
         persistencyController.loadGame();
         System.out.println("Game Loaded/Resume!");
     }
@@ -167,9 +167,10 @@ public class AppController {
      * Get from persistency
      */
     public void saveGame(){
-        pauseGame();
+        if(state instanceof PlayState) pauseGame();
         persistencyController.saveGame();
         System.out.println("Game Saved!");
+        exitGame();
     }
 
     /**
