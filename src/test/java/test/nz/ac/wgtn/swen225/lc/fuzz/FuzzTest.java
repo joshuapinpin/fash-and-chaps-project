@@ -17,12 +17,12 @@ import java.util.*;
  * Heuristic fuzz tests for Levels 1 and 2 of the game.
  *
  * Goals:
- * - Exercise domain and application logic end-to-end via {@link AppController}.
- * - Surface unexpected exceptions and write reproduction artifacts when failures occur.
+ * - Exercise domain and application logic end-to-end via.
+ * - Surface unexpected exceptions and write reproduction issues when failures occur.
  * - Keep execution bounded by time for predictable CI runs.
  *
  * Usage:
- * - Override duration with {@code -Dfuzz.ms=55000} to run longer locally.
+ * - Global variable to control run duration (default 15s).
  * - Re-run a failing sequence with {@code -Dfuzz.seed=...}.
  * - Extra logs with {@code -Dfuzz.logSeed=true} and {@code -Dfuzz.verboseWeights=true}.
  *
@@ -290,6 +290,7 @@ public class FuzzTest {
     }
 
     /**
+     * Helper method used by the fuzzer incase of audio issues.
      * Attempts to start a new game for the specified level, retrying a few times if
      * an audio initialization failure occurs. Non-audio exceptions are rethrown.
      *
@@ -317,6 +318,7 @@ public class FuzzTest {
     }
 
     /**
+     * Used incase game Pauses for too long and cannot resume.
      * If the game is currently in a paused state, attempts to resume back into Play.
      * Falls back to starting a new game if resume attempts do not succeed.
      *
