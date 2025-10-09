@@ -1,10 +1,11 @@
-package nz.ac.wgtn.swen225.lc.persistency.serialisation;
+package nz.ac.wgtn.swen225.lc.persistency.serialisation.game;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import nz.ac.wgtn.swen225.lc.domain.*;
+import nz.ac.wgtn.swen225.lc.persistency.serialisation.player.PlayerState;
 
 import java.util.*;
 
@@ -14,17 +15,12 @@ import java.util.*;
  * @author Thomas Ru - 300658840
  */
 public class GameState {
-    private static Mapper<LoadedMaze, GameState> mapper = new GameMapper();
-
     private final int rows;
     private final int cols;
-    private int levelNumber;
-    private int maxTreasure;
-    private int time;
+    private final int time;
+    private final LevelInfo levelInfo;
     private PlayerState player;
-    private int keyCount = 0;
-    private int treasureCount = 0;
-    private boolean loaded = false;
+
     @JsonIgnore
     private final List<Monster> monsters = new ArrayList<>();
 
@@ -40,9 +36,8 @@ public class GameState {
     public GameState(
             @JsonProperty("rows") int rows,
             @JsonProperty("cols") int cols,
-            @JsonProperty("levelNumber") int levelNumber,
-            @JsonProperty("maxTreasure") int maxTreasure,
             @JsonProperty("time") int time,
+            @JsonProperty("levelInfo") LevelInfo levelInfo,
             @JsonProperty("player") PlayerState player
     ) {
         boolean minSize = rows > 0 && cols > 0;
@@ -52,25 +47,16 @@ public class GameState {
 
         this.rows = rows;
         this.cols = cols;
-        this.levelNumber = levelNumber;
-        this.maxTreasure = maxTreasure;
         this.time = time;
+        this.levelInfo = Objects.requireNonNull(levelInfo, "Level metadata cannot be null.");
         this.player = Objects.requireNonNull(player, "PlayerState cannot be null.");
         board = new String[rows][cols];
     }
 
-    public int getLevelNumber() { return levelNumber; }
-    public void setLevelNumber(int i) { levelNumber = i; }
-    public int getMaxTreasure() { return maxTreasure; }
-    public void setMaxTreasure(int max) { maxTreasure = max; }
     public int getTime() { return time; }
-    public void setTime(int t) { time = t; }
-    public PlayerState getPlayer() {
-        return player;
-    }
-    public void setPlayer(PlayerState player) {
-        this.player = player;
-    }
+    public LevelInfo getLevelInfo() { return levelInfo; }
+    public PlayerState getPlayer() { return player; }
+    public void setPlayer(PlayerState player) {this.player = player; }
 
     /**
      * Gets the board with String symbols representing each tile.
@@ -89,86 +75,48 @@ public class GameState {
      * Sets the board of String symbols representing all the tiles in a level.
      * @param board - the String[][] board.
      */
-    public void setBoard(String[][] board) {
-        this.board = board;
-    }
+    public void setBoard(String[][] board) { this.board = Objects.requireNonNull(board); }
 
     /**
      * Add a monster to the level.
      * @param monster - the Monster (e.g. crab).
      */
-    public void setMonster(Monster monster) {
-        monsters.add(monster);
-    }
+    public void setMonster(Monster monster) { monsters.add(Objects.requireNonNull(monster)); }
 
     /**
      * Get the list of monsters in the game.
      * @return - an unmodifiable BUT MUTABLE list
      */
     // TODO: discuss making monsters immutable w/ Hayley
-    public List<Monster> getMonsters() {
-        return Collections.unmodifiableList(monsters);
-    }
+    public List<Monster> getMonsters() { return Collections.unmodifiableList(monsters); }
 
     /**
      * Get number of rows in game board.
      * Used by Jackson to infer serialisation.
      * @return - integer number of rows.
      */
-    public int getRows() {
-        return rows;
-    }
+    public int getRows() { return rows; }
 
     /**
      * Get number of columns in game board.
      * Used by Jackson to infer serialisation.
      * @return - integer number of columns.
      */
-    public int getCols() {
-        return cols;
-    }
-
-    /**
-     * Adds 1 to the number of keys in the level.
-     */
-    public void incrementKeys() { keyCount++; }
+    public int getCols() { return cols; }
 
     /**
      * Gets the number of keys in the level (i.e. maximum).
      * Useful for testing.
      * @return - the integer number of keys.
      */
-    public int keyCount() {
-        if (!loaded) {
-            mapper.fromState(this);
-            loaded = true;
-        }
-        return keyCount;
-    }
-
-    public void loaded() {
-        loaded = true;
-    }
-
-    /**
-     * Adds 1 to the number of treasures in the level.
-     */
-    public void incrementTreasures() { treasureCount++; }
+    public int maxKeys() { return levelInfo.maxKeys(); }
 
     /**
      * Gets the number of treasures in the level (i.e. maximum).
      * Useful for testing.
      * @return - the integer number of treasures.
      */
-    public int treasureCount() {
-        if (!loaded) {
-            mapper.fromState(this);
-            loaded = true;
-        }
-        return treasureCount;
-    }
-
-
+    public int maxTreasures() { return levelInfo.maxTreasures(); }
 
     /**
      * Gives the String representation of a LevelMaker's board.

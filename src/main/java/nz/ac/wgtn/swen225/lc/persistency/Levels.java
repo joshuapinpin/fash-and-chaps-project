@@ -2,8 +2,8 @@ package nz.ac.wgtn.swen225.lc.persistency;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import nz.ac.wgtn.swen225.lc.domain.Maze;
-import nz.ac.wgtn.swen225.lc.persistency.serialisation.GameMapper;
-import nz.ac.wgtn.swen225.lc.persistency.serialisation.GameState;
+import nz.ac.wgtn.swen225.lc.persistency.serialisation.game.GameMapper;
+import nz.ac.wgtn.swen225.lc.persistency.serialisation.game.GameState;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -111,8 +111,8 @@ public enum Levels {
         try {
             GameState gameState = new ObjectMapper().readValue(in, GameState.class);
             Maze maze = mapper.fromState(gameState).maze();
-            maxKeys = gameState.keyCount();
-            maxTreasures = gameState.treasureCount();
+            maxKeys = gameState.maxKeys();
+            maxTreasures = gameState.maxTreasures();
             return maze;
         } catch (IOException e) {
             throw new Error("Deserialisation failed: "+e);

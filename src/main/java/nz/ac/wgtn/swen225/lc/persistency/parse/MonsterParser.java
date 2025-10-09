@@ -1,5 +1,6 @@
 package nz.ac.wgtn.swen225.lc.persistency.parse;
 
+import nz.ac.wgtn.swen225.lc.domain.Direction;
 import nz.ac.wgtn.swen225.lc.domain.Monster;
 import nz.ac.wgtn.swen225.lc.domain.Position;
 
@@ -8,6 +9,7 @@ import nz.ac.wgtn.swen225.lc.domain.Position;
  */
 public class MonsterParser {
     public static final String separator = EntityParsers.separator;
+    public static final String name = "Crab";
 
     /**
      * Create a crab at a given position, moving a given direction.
@@ -18,17 +20,18 @@ public class MonsterParser {
     static Monster parseMonster(String monster, Position position) {
         String[] split = monster.split(separator);
         if (split.length != 2) {
-            throw new IllegalArgumentException("Monster must be in format Crab-DIRECTION");
+            throw new IllegalArgumentException("Monster must be in format "+name+"-DIRECTION");
         }
-        if (!split[0].equals("Crab")) {
-            throw new IllegalArgumentException("Monster type not supported: " + monster);
+        if (!split[0].equals(name)) {
+            throw new IllegalArgumentException("Monster name not recognised: " + monster);
         }
 
-        Monster result = Monster.of(position);
+        Monster monsterResult = Monster.of(position);
         // crabs move left by default, make it move right if needed
-        if (!result.getDirection().name().equals(split[1])) {
-            result.updateDirection();
+        Direction monsterDirection = Direction.valueOf(split[1]);
+        if (!monsterResult.getDirection().equals(monsterDirection)) {
+            monsterResult.updateDirection(); // reverse direction
         }
-        return result;
+        return monsterResult;
     }
 }

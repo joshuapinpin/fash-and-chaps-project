@@ -1,4 +1,4 @@
-package nz.ac.wgtn.swen225.lc.persistency.serialisation;
+package nz.ac.wgtn.swen225.lc.persistency.serialisation.api;
 
 /**
  * API for converting between a data type and a serialisable representation of it.

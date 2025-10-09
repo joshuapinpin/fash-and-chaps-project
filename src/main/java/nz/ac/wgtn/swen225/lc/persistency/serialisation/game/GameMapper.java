@@ -1,13 +1,15 @@
-package nz.ac.wgtn.swen225.lc.persistency.serialisation;
+package nz.ac.wgtn.swen225.lc.persistency.serialisation.game;
 
 import nz.ac.wgtn.swen225.lc.domain.Maze;
 import nz.ac.wgtn.swen225.lc.domain.Monster;
 import nz.ac.wgtn.swen225.lc.domain.Player;
 import nz.ac.wgtn.swen225.lc.domain.Position;
 import nz.ac.wgtn.swen225.lc.domain.tiles.Tile;
-import nz.ac.wgtn.swen225.lc.persistency.Levels;
+import nz.ac.wgtn.swen225.lc.persistency.domainutil.StringTileVisitor;
 import nz.ac.wgtn.swen225.lc.persistency.parse.MonsterParser;
 import nz.ac.wgtn.swen225.lc.persistency.parse.TileParsers;
+import nz.ac.wgtn.swen225.lc.persistency.serialisation.player.PlayerMapper;
+import nz.ac.wgtn.swen225.lc.persistency.serialisation.api.Mapper;
 
 import java.util.Objects;
 
@@ -24,13 +26,12 @@ public class GameMapper implements Mapper<LoadedMaze, GameState> {
      * @param data - the Maze.
      * @return - a GameState representation ready for writing to file.
      */
-    public GameState toState(Maze data, int levelNumber, int maxTreasures, int time) {
+    public GameState toState(Maze data, int levelNumber, int maxTreasures, int maxKeys, int time) {
         GameState gameState = new GameState(
                 data.getRows(),
                 data.getCols(),
-                levelNumber,
-                maxTreasures,
                 time,
+                new LevelInfo(levelNumber, maxKeys, maxTreasures),
                 playerMapper.toState(data.getPlayer())
         );
         StringTileVisitor tileToString = new StringTileVisitor();
@@ -46,10 +47,8 @@ public class GameMapper implements Mapper<LoadedMaze, GameState> {
         }
 
         // append monster strings on
-        System.out.println(data.getMonsters()); // TODO: remove
         data.getMonsters().forEach(m->{
             Position pos = m.getPos();
-            System.out.println("at position x="+pos.getX()+", y="+pos.getY()); //TODO: remove
             board[pos.getY()][pos.getX()] += TileParsers.separator + monsterToString(m);
         });
 
@@ -60,7 +59,8 @@ public class GameMapper implements Mapper<LoadedMaze, GameState> {
 
     @Override
     public GameState toState(LoadedMaze data) {
-        return toState(data.maze(), data.levelNumber(), data.maxTreasure(), data.time());
+        LevelInfo meta = data.levelInfo();
+        return toState(data.maze(), meta.levelNumber(), meta.maxTreasures(), meta.maxKeys(), data.time());
     }
 
     /**
@@ -76,10 +76,10 @@ public class GameMapper implements Mapper<LoadedMaze, GameState> {
         int cols = state.getCols();
         String[][] board = state.getBoard();
         Maze maze = new Maze(rows, cols);
-        String symbol;
-        Position position;
 
         // parse String symbol at each board position
+        String symbol;
+        Position position;
         for (int y = 0; y < rows; y++) {
             for (int x = 0; x < cols; x++) {
                 symbol = Objects.requireNonNull(board[y][x], "Board is null at row=" + x + ", col=" + y);
@@ -92,16 +92,11 @@ public class GameMapper implements Mapper<LoadedMaze, GameState> {
             }
         }
 
-        System.out.println(state.getMonsters().size());
-        state.getMonsters().forEach(m->{
-            maze.setMonster(m);
-            System.out.println("added monster");
-        });
+        state.getMonsters().forEach(maze::setMonster);
         Player player = playerMapper.fromState(state.getPlayer());
-        player.setTotalTreasures(state.getMaxTreasure());
+        player.setTotalTreasures(state.maxTreasures());
         maze.setPlayer(player);
-        state.loaded();
-        return new LoadedMaze(maze, state.getLevelNumber(), state.getMaxTreasure(), state.getTime());
+        return new LoadedMaze(maze, state.getTime(), state.getLevelInfo());
     }
 
     /**

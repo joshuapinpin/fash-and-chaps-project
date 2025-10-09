@@ -1,14 +1,8 @@
 package nz.ac.wgtn.swen225.lc.persistency.parse;
 
-import nz.ac.wgtn.swen225.lc.domain.Monster;
 import nz.ac.wgtn.swen225.lc.domain.Position;
 import nz.ac.wgtn.swen225.lc.domain.tiles.Free;
-import nz.ac.wgtn.swen225.lc.persistency.serialisation.GameState;
-
-import java.util.Arrays;
-import java.util.List;
-
-import static nz.ac.wgtn.swen225.lc.persistency.parse.TileParsers.MaxMonstersOnTile;
+import nz.ac.wgtn.swen225.lc.persistency.serialisation.game.GameState;
 
 /**
  * Parses a String representation into a Free Tile, if possible.

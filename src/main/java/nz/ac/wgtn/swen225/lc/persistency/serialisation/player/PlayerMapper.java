@@ -1,11 +1,11 @@
-package nz.ac.wgtn.swen225.lc.persistency.serialisation;
+package nz.ac.wgtn.swen225.lc.persistency.serialisation.player;
 
 import nz.ac.wgtn.swen225.lc.domain.Direction;
 import nz.ac.wgtn.swen225.lc.domain.Player;
 import nz.ac.wgtn.swen225.lc.domain.Position;
 import nz.ac.wgtn.swen225.lc.domain.entities.EntityColor;
 import nz.ac.wgtn.swen225.lc.domain.entities.Key;
-import nz.ac.wgtn.swen225.lc.persistency.parse.EntityParsers;
+import nz.ac.wgtn.swen225.lc.persistency.serialisation.api.Mapper;
 
 import java.util.List;
 
@@ -15,7 +15,6 @@ public class PlayerMapper implements Mapper<Player, PlayerState> {
         Position pos = data.getPos();
         int treasures = data.getTreasuresCollected();
         int maxTreasures = data.getTotalTreasures();
-        System.out.println("max treasures: " + maxTreasures);
         String direction = data.getDirection().name();
         List<String> keyColors = data.getKeys()
                 .stream()

@@ -1,10 +1,11 @@
 package nz.ac.wgtn.swen225.lc.persistency.saver;
 
 import nz.ac.wgtn.swen225.lc.domain.Maze;
-import nz.ac.wgtn.swen225.lc.persistency.serialisation.FileIO;
-import nz.ac.wgtn.swen225.lc.persistency.serialisation.GameState;
-import nz.ac.wgtn.swen225.lc.persistency.serialisation.LoadedMaze;
-import nz.ac.wgtn.swen225.lc.persistency.serialisation.Mapper;
+import nz.ac.wgtn.swen225.lc.persistency.serialisation.api.FileIO;
+import nz.ac.wgtn.swen225.lc.persistency.serialisation.game.GameState;
+import nz.ac.wgtn.swen225.lc.persistency.serialisation.game.LevelInfo;
+import nz.ac.wgtn.swen225.lc.persistency.serialisation.game.LoadedMaze;
+import nz.ac.wgtn.swen225.lc.persistency.serialisation.api.Mapper;
 import nz.ac.wgtn.swen225.lc.persistency.saver.gui.FileDialog;
 import nz.ac.wgtn.swen225.lc.persistency.saver.gui.SwingFileDialog;
 
@@ -43,12 +44,13 @@ class GamePersistManager implements PersistManager<LoadedMaze> {
      * @param data - the Maze object to save.
      * @param parent - the parent JFrame/window.
      */
-    public void save(Maze data, int levelNumber, int maxTreasures, int time, JFrame parent) {
+    public void save(Maze data, int levelNumber, int maxTreasures, int maxKeys, int time, JFrame parent) {
         String defaultName = timestampName();
         fileDialog.showSaveDialog(parent, defaultName, extension)
                 .ifPresent(file -> {
                     try {
-                        fileIO.save(mapper.toState(new LoadedMaze(data, levelNumber, maxTreasures, time)), file);
+                        LevelInfo levelInfo = new LevelInfo(levelNumber, maxKeys, maxTreasures);
+                        fileIO.save(mapper.toState(new LoadedMaze(data, time, levelInfo)), file);
                         JOptionPane.showMessageDialog(parent,
                                 "File saved: " + file.getAbsolutePath(),
                                 "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -62,8 +64,10 @@ class GamePersistManager implements PersistManager<LoadedMaze> {
 
     @Override
     public void save(LoadedMaze data, JFrame parent) {
-        save(data.maze(), data.levelNumber(), data.maxTreasure(), data.time(), parent);
+        LevelInfo meta = data.levelInfo();
+        save(data.maze(), data.time(), meta.levelNumber(), meta.maxTreasures(), meta.maxKeys(), parent);
     }
+
     /**
      * Allow user to load a game from JSON via GUI.
      * @param parent - the parent JFrame/window.
@@ -93,7 +97,7 @@ class GamePersistManager implements PersistManager<LoadedMaze> {
      * @return - the file name as a String.
      */
     private String timestampName() {
-        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String timestamp = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date());
         return "chaps_save_" + timestamp + "." + extension;
     }
 }

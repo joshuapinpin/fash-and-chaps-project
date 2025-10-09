@@ -1,4 +1,4 @@
-package nz.ac.wgtn.swen225.lc.persistency.serialisation;
+package nz.ac.wgtn.swen225.lc.persistency.serialisation.player;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -6,12 +6,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 public class PlayerState {
-    private int x;
-    private int y;
-    private int treasures;
-    private int maxTreasures;
-    private String direction;
-    private List<String> keyColors;
+    private final int x;
+    private final int y;
+    private final int treasures;
+    private final int maxTreasures;
+    private final String direction;
+    private final List<String> keyColors;
 
     @JsonCreator
     public  PlayerState(
