@@ -18,6 +18,7 @@ public class GameState {
 
     private final int rows;
     private final int cols;
+    private PlayerState player;
     private int keyCount = 0;
     private int treasureCount = 0;
     private boolean loaded = false;
@@ -35,7 +36,8 @@ public class GameState {
     @JsonCreator
     public GameState(
             @JsonProperty("rows") int rows,
-            @JsonProperty("cols") int cols
+            @JsonProperty("cols") int cols,
+            @JsonProperty("player") PlayerState player
     ) {
         boolean minSize = rows > 0 && cols > 0;
         if (!minSize) {
@@ -44,7 +46,16 @@ public class GameState {
 
         this.rows = rows;
         this.cols = cols;
+        this.player = Objects.requireNonNull(player, "PlayerState cannot be null.");
         board = new String[rows][cols];
+    }
+
+    public PlayerState getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(PlayerState player) {
+        this.player = player;
     }
 
     /**
@@ -115,7 +126,7 @@ public class GameState {
      */
     public int keyCount() {
         if (!loaded) {
-            mapper.fromGameState(this);
+            mapper.fromState(this);
             loaded = true;
         }
         return keyCount;
@@ -133,7 +144,7 @@ public class GameState {
      */
     public int treasureCount() {
         if (!loaded) {
-            mapper.fromGameState(this);
+            mapper.fromState(this);
             loaded = true;
         }
         return treasureCount;

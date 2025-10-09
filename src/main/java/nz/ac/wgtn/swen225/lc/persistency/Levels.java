@@ -112,7 +112,7 @@ public enum Levels {
             GameState gameState = new ObjectMapper().readValue(in, GameState.class);
             maxKeys = gameState.keyCount();
             maxTreasures = gameState.treasureCount();
-            return mapper.fromGameState(gameState);
+            return mapper.fromState(gameState);
         } catch (IOException e) {
             throw new Error("Deserialisation failed: "+e);
         }

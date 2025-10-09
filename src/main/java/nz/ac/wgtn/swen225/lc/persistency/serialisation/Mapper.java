@@ -1,16 +1,14 @@
 package nz.ac.wgtn.swen225.lc.persistency.serialisation;
 
-import nz.ac.wgtn.swen225.lc.domain.Maze;
-
 /**
- * API for converting between a type of Maze and a type of GameState.
- * Whereas Maze represents the game directly, GameState holds the same information but
+ * API for converting between a data type and a serialisable representation of it.
+ * E.g. whereas Maze represents the game directly, GameState holds the same information but
  * in a format which is suitable for writing to and reading from file.
- * @param <M> - the type of Maze.
- * @param <S> - the type of GameState.
+ * @param <T> - the type of data.
+ * @param <S> - the type of state.
  * @author Thomas Ru - 300658840
  */
-public interface Mapper<M extends Maze, S extends GameState> {
-    S toGameState(M maze);
-    M fromGameState(S gameState);
+public interface Mapper<T, S> {
+    S toState(T data);
+    T fromState(S state);
 }

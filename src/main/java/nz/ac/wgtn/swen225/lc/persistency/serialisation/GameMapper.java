@@ -15,34 +15,36 @@ import java.util.Objects;
  * @author Thomas Ru - 300658840
  */
 public class GameMapper implements Mapper<Maze, GameState> {
+    private final PlayerMapper playerMapper = new PlayerMapper();
 
     /**
      * Convert from a Maze to its GameState representation.
-     * @param maze - the Maze.
+     * @param data - the Maze.
      * @return - a GameState representation ready for writing to file.
      */
     @Override
-    public GameState toGameState(Maze maze) {
-        GameState gameState = new GameState(maze.getRows(), maze.getCols());
+    public GameState toState(Maze data) {
+        GameState gameState = new GameState(data.getRows(), data.getCols(), playerMapper.toState(data.getPlayer()));
         StringTileVisitor tileToString = new StringTileVisitor();
         Tile tile;
 
         // tiles and entities as strings
         String[][] board = gameState.getBoard();
-        for (int y = 0; y < maze.getRows(); y++) {
-            for (int x = 0; x < maze.getCols(); x++) {
-                tile =  maze.getTileAt(new Position(x, y));
+        for (int y = 0; y < data.getRows(); y++) {
+            for (int x = 0; x < data.getCols(); x++) {
+                tile =  data.getTileAt(new Position(x, y));
                 board[y][x] = tile.accept(tileToString);
             }
         }
 
         // append monster strings on
-        maze.getMonsters().forEach(m->{
+        data.getMonsters().forEach(m->{
             Position pos = m.getPos();
             board[pos.getY()][pos.getX()] += TileParsers.separator + monsterToString(m);
         });
 
         gameState.setBoard(board);
+        gameState.setPlayer(playerMapper.toState(data.getPlayer()));
         return gameState;
     }
 
@@ -51,14 +53,14 @@ public class GameMapper implements Mapper<Maze, GameState> {
      * Gives the Maze object corresponding to the tiles and entities stored
      * in the GameState. Note key and treasure counts are also determined as loading occurs,
      * and the GameState object is mutated to reflect this.
-     * @param gameState - the gameState, which may be constructed from JSON.
+     * @param state - the gameState, which may be constructed from JSON.
      * @return - the Maze object.
      */
     @Override
-    public Maze fromGameState(GameState gameState) {
-        int rows = gameState.getRows();
-        int cols = gameState.getCols();
-        String[][] board = gameState.getBoard();
+    public Maze fromState(GameState state) {
+        int rows = state.getRows();
+        int cols = state.getCols();
+        String[][] board = state.getBoard();
         Maze maze = new Maze(rows, cols);
         String symbol;
         Position position;
@@ -71,12 +73,13 @@ public class GameMapper implements Mapper<Maze, GameState> {
                     throw new IllegalArgumentException("Symbol cannot be empty");
                 }
                 position = new Position(x, y);
-                Tile tile = TileParsers.parseTile(gameState, symbol, position); // TODO: this sets the no. of keys/treasures in gameState, please refactor!
+                Tile tile = TileParsers.parseTile(state, symbol, position); // TODO: this sets the no. of keys/treasures in gameState, please refactor!
                 maze.setTileAt(tile);
             }
         }
 
-        gameState.getMonsters().forEach(maze::setMonster);
+        state.getMonsters().forEach(maze::setMonster);
+        maze.setPlayer(playerMapper.fromState(state.getPlayer()));
         return maze;
     }
 

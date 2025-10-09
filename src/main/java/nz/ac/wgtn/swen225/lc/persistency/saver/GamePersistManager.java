@@ -48,7 +48,7 @@ class GamePersistManager<M extends Maze, S extends GameState> implements Persist
         fileDialog.showSaveDialog(parent, defaultName, extension)
                 .ifPresent(file -> {
                     try {
-                        fileIO.save(mapper.toGameState(data), file);
+                        fileIO.save(mapper.toState(data), file);
                         JOptionPane.showMessageDialog(parent,
                                 "File saved: " + file.getAbsolutePath(),
                                 "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -75,7 +75,7 @@ class GamePersistManager<M extends Maze, S extends GameState> implements Persist
         // deserialise to a Maze if possible
         try {
             S gameState = fileIO.load(selected.get());
-            return Optional.of(mapper.fromGameState(gameState));
+            return Optional.of(mapper.fromState(gameState));
         } catch (IOException e) {
             JOptionPane.showMessageDialog(parent,
                     "Error loading: " + e.getMessage(),
