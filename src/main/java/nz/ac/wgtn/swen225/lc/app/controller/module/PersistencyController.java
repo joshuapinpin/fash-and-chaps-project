@@ -38,12 +38,12 @@ public class PersistencyController  {
     }
 
     public void loadGame(){
-        //Optional<Maze> domainOptional = persist.loadGame(c.windowController().window());
         Optional<LoadedMaze> domainOptional = persist.loadGame(c.windowController().window());
         if(domainOptional.isEmpty()) {
             throw new IllegalStateException("No game loaded.");
         }
         LoadedMaze lm = domainOptional.get();
+        level = lm.levelNumber();
         c.domainController().updateDomain(lm.maze());
         c.timerController().startTimerFrom(lm.time());
         c.domainController().
