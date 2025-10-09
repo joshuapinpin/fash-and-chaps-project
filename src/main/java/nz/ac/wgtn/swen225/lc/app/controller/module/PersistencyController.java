@@ -45,6 +45,7 @@ public class PersistencyController  {
         }
         LoadedMaze lm = domainOptional.get();
         c.domainController().updateDomain(lm.maze());
+        c.timerController().startTimerFrom(lm.time());
         c.domainController().
         c.continueGame();
     }
