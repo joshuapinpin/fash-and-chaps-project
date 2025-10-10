@@ -1,18 +1,21 @@
 package nz.ac.wgtn.swen225.lc.domain;
 
-import nz.ac.wgtn.swen225.lc.domain.entities.*;
-import nz.ac.wgtn.swen225.lc.domain.tiles.Tile;
-import nz.ac.wgtn.swen225.lc.domain.tiles.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Maze class representing the maze structure
  * Contains tiles, player reference, and dimensions
  * Provides methods to load maze from file and get tiles at positions
+ * @author Hayley Far (300659131)
  */
 public class Maze {
     private Tile[][] tileGrid; //2D array of tiles: [rows][cols]
     private Player player; //reference to player in maze
     private int rows; int cols; //dimensions of maze
+    private List<GameObserver> observers = new ArrayList<>(); //list of observers for game events
+    private List<Monster> monsters = new ArrayList<>(); //list of monsters in the maze
 
     /**
      * Constructor for maze with specified dimensions
@@ -20,134 +23,27 @@ public class Maze {
      * @param cols number of columns
      */
     public Maze(int rows, int cols){
+        if(rows <= 0 || cols <= 0){
+            throw new IllegalArgumentException("Maze dimensions must be positive");
+        }
         this.rows = rows;
         this.cols = cols;
         this.tileGrid = new Tile[rows][cols];
 
         //initialise player and set start position
-        this.player = Player.getInstance();
+        this.player = Player.of();
         this.player.initialiseStartPos(rows, cols);
+
+        assert player != null : "Player instance is null";
+        assert tileGrid != null : "Tile grid is null";
     }
 
     /**
-     * Add default tiles to maze for testing purposes for integration
-     * To delete later
-     * In a real implementation, tiles would be loaded from a file
+     * Adding an observer to the maze
+     * @param o observer to add
      */
-    public void addTiles(){
-        setTileAt(Free.of(new Position(0,0)));
-        setTileAt(Free.of(new Position(1,0)));
-        setTileAt(Wall.of(new Position(2,0)));
-        setTileAt(Free.of(new Position(3,0)));
-        setTileAt(Free.of(new Position(4,0)));
-        setTileAt(Free.of(new Position(5,0)));
-        setTileAt(Wall.of(new Position(6,0)));
-        setTileAt(Free.of(new Position(7,0)));
-        setTileAt(Free.of(new Position(8,0)));
-
-        Free tileWithTreasure = Free.of(new Position(0,1));
-        tileWithTreasure.setCollectable(Treasure.of());
-        setTileAt(tileWithTreasure);
-        setTileAt(Free.of(new Position(1,1)));
-        setTileAt(Wall.of(new Position(2,1)));
-        setTileAt(Free.of(new Position(3,1)));
-        setTileAt(Free.of(new Position(4,1)));
-        Free tileWithKey = Free.of(new Position(5,1));
-        tileWithKey.setCollectable(Key.of("orange"));
-        setTileAt(tileWithKey);
-        setTileAt(Wall.of(new Position(6,1)));
-        setTileAt(Free.of(new Position(7,1)));
-        setTileAt(Free.of(new Position(8,1)));
-
-        setTileAt(Wall.of(new Position(0,2)));
-        setTileAt(Wall.of(new Position(1,2)));
-        setTileAt(Wall.of(new Position(2,2)));
-        setTileAt(Free.of(new Position(3,2)));
-        setTileAt(Free.of(new Position(4,2)));
-        setTileAt(Free.of(new Position(5,2)));
-        setTileAt(Wall.of(new Position(6,2)));
-        setTileAt(Wall.of(new Position(7,2)));
-        setTileAt(Wall.of(new Position(8,2)));
-
-        setTileAt(Free.of(new Position(0,3)));
-        setTileAt(Wall.of(new Position(1,3)));
-        setTileAt(Free.of(new Position(2,3)));
-        setTileAt(Free.of(new Position(3,3)));
-        setTileAt(Free.of(new Position(4,3)));
-        setTileAt(Free.of(new Position(5,3)));
-        setTileAt(Free.of(new Position(6,3)));
-        setTileAt(Wall.of(new Position(7,3)));
-        setTileAt(Free.of(new Position(8,3)));
-
-        setTileAt(Free.of(new Position(0,4)));
-        Free tileWithDoor = Free.of(new Position(1,4));
-        tileWithDoor.setCollectable(Door.of("purple"));
-        setTileAt(tileWithDoor);
-        setTileAt(Free.of(new Position(2,4)));
-        setTileAt(Free.of(new Position(3,4)));
-        setTileAt(Info.of("Info", new Position(4,4)));
-        setTileAt(Free.of(new Position(5,4)));
-        setTileAt(Free.of(new Position(6,4)));
-        Free tileWithDoor2 = Free.of(new Position(7,4));
-        tileWithDoor2.setCollectable(Door.of("orange"));
-        setTileAt(tileWithDoor2);
-        setTileAt(Free.of(new Position(8,4)));
-
-        setTileAt(Free.of(new Position(0,5)));
-        setTileAt(Wall.of(new Position(1,5)));
-        setTileAt(Free.of(new Position(2,5)));
-        setTileAt(Free.of(new Position(3,5)));
-        setTileAt(Free.of(new Position(4,5)));
-        setTileAt(Free.of(new Position(5,5)));
-        setTileAt(Free.of(new Position(6,5)));
-        setTileAt(Wall.of(new Position(7,5)));
-        setTileAt(Free.of(new Position(8,5)));
-
-        setTileAt(Free.of(new Position(0,6)));
-        setTileAt(Wall.of(new Position(1,6)));
-        setTileAt(Wall.of(new Position(2,6)));
-        setTileAt(Free.of(new Position(3,6)));
-        setTileAt(Free.of(new Position(4,6)));
-        setTileAt(Free.of(new Position(5,6)));
-        setTileAt(Wall.of(new Position(6,6)));
-        setTileAt(Wall.of(new Position(7,6)));
-        setTileAt(Free.of(new Position(8,6)));
-
-        setTileAt(Free.of(new Position(0,7)));
-        setTileAt(Wall.of(new Position(1,7)));
-        setTileAt(Free.of(new Position(2,7)));
-        setTileAt(Free.of(new Position(3,7)));
-        setTileAt(Free.of(new Position(4,7)));
-        setTileAt(Free.of(new Position(5,7)));
-        Free tileWithTreasure2 = Free.of(new Position(6,7));
-        tileWithTreasure2.setCollectable(Treasure.of());
-        setTileAt(tileWithTreasure2);
-        setTileAt(Wall.of(new Position(7,7)));
-        setTileAt(Free.of(new Position(8,7)));
-
-        setTileAt(Free.of(new Position(0,8)));
-        setTileAt(Wall.of(new Position(1,8)));
-        setTileAt(Free.of(new Position(2,8)));
-        setTileAt(Free.of(new Position(3,8)));
-        setTileAt(Free.of(new Position(4,8)));
-        setTileAt(Free.of(new Position(5,8)));
-        setTileAt(Free.of(new Position(6,8)));
-        setTileAt(Wall.of(new Position(7,8)));
-        Free tileWithKey2 = Free.of(new Position(8,8));
-        tileWithKey2.setCollectable(Key.of("purple"));
-        setTileAt(tileWithKey2);
-
-        setTileAt(Free.of(new Position(0,9)));
-        setTileAt(Wall.of(new Position(1,9)));
-        setTileAt(Free.of(new Position(2,9)));
-        setTileAt(Wall.of(new Position(3,9)));
-        Free tileWithExitLock = Free.of(new Position(4,9));
-        tileWithExitLock.setCollectable(ExitLock.of());
-        setTileAt(tileWithExitLock);
-        setTileAt(Wall.of(new Position(5,9)));
-        setTileAt(Free.of(new Position(6,9)));
-        setTileAt(Wall.of(new Position(7,9)));
-        setTileAt(Free.of(new Position(8,9)));
+    public void addObserver(GameObserver o){
+        this.observers.add(o);
     }
 
     /**
@@ -164,12 +60,19 @@ public class Maze {
      * @return tile at position
      */
     public Tile getTileAt(Position p){
+        if(p == null){
+            throw new IllegalArgumentException("Position cannot be null");
+        }
         int x = p.getX();
         int y = p.getY();
+        //check bounds
         if (x < 0 || x >= cols || y < 0 || y >= rows) {
             throw new IndexOutOfBoundsException("Position out of maze bounds: " + p);
         }
-        return tileGrid[y][x];
+        Tile tile = tileGrid[y][x];
+        assert tile != null : "Tile at position " + p + " is null";
+
+        return tile;
     }
 
     /**
@@ -177,39 +80,111 @@ public class Maze {
      * @param tile tile to set
      */
     public void setTileAt(Tile tile) {
-        assert tile != null : "Tile cannot be null";
+        if(tile == null){
+            throw new IllegalArgumentException("Tile cannot be null");
+        }
         Position pos = tile.getPos();
-        assert pos != null : "Tile position cannot be null";
+        if(pos == null){
+            throw new IllegalArgumentException("Tile position cannot be null");
+        }
 
         int x = pos.getX();
         int y = pos.getY();
+        //check bounds
         if (x < 0 || x >= cols || y < 0 || y >= rows) {
             throw new IndexOutOfBoundsException("Position out of maze bounds: " + pos);
         }
-        tileGrid[y][x] = tile;
+        tileGrid[y][x] = tile; //set tile in grid
 
         assert getTileAt(pos) == tile : "Tile was not set correctly at position: " + pos;
     }
 
     /**
+     * Handle player death
+     * Set player to dead state and notify observers
+     */
+    public void playerDead(){
+        if(!player.isAlive()){return;}
+        player.die(); //set player to dead state
+        observers.forEach(observer -> observer.onPlayerDie(player));
+    }
+
+    /**
+     * Get target tile player wants to move in specified direction from current position
+     * Used by player and monsters to determine next tile
+     * @param currentPos current position
+     * @param direction direction to get target tile
+     * @return target tile in direction from current position
+     */
+    public Tile targetTile(Position currentPos, Direction direction){
+        if(currentPos == null || direction == null){
+            throw new IllegalArgumentException("Player not set in maze");
+        }
+
+        Position toMove = direction.apply(currentPos);
+        return getTileAt(toMove);
+    }
+
+    /**
      * Move player in specified direction if target tile is accessible
      * The direction dependent on what user input is
+     * Notify observers of player movement and any entity interactions when player enters a tile
      * @param direction direction to move player
      */
     public void movePlayer(Direction direction){
-        //find tile in the direction player wants to move
-        if(player == null){
-            throw new NullPointerException("Player not set in maze");
+        System.out.println("*DEBUG* Inside of the Domain Package Now");
+
+        if(player == null || direction == null){
+            throw new IllegalArgumentException("Player not set in maze");
         }
 
-        Position toMove = direction.apply(player.getPos());
-        Tile targetTile = getTileAt(toMove);
+        //find tile in the direction player wants to move
+        Tile targetTile = targetTile(player.getPos(), direction);
 
         if(targetTile.isAccessible(this.player)){
             player.move(direction);
-            targetTile.onEnter(player);
+
+            //check for collision with monsters after player moves
+            for(Monster m : monsters){
+                if(m.getPos().equals(player.getPos())){
+                    playerDead();
+                }
+            }
+
+            Consumer<GameObserver> event = targetTile.onEnter(player);
+            observers.forEach(event); //notify all observers of this event
+
+            assert player.getPos().equals(targetTile.getPos()) : "Player did not move to the correct position";
         }
         player.setDirection(direction); //update player direction regardless of move success
+        assert player.getDirection() == direction : "Player direction not updated correctly";
+    }
+
+    /**
+     * Update all monsters in the maze
+     * Each monster moves in its current direction
+     * If a monster collides with a wall, it updates its direction
+     * Moves monster and checks for collision with player after move
+     * Notify observers of any events (e.g., player death)
+     * This method to be called every game tick by the controller
+     */
+    public void ping() {
+        Consumer <GameObserver> collisionEvent = observer -> {};
+
+        for (Monster m : monsters) {
+            //check if next tile in direction is a wall
+            Tile targetTile = targetTile(m.getPos(), m.getDirection());
+
+            if (targetTile instanceof Wall) {
+                m.updateDirection();
+            }
+
+            m.move();
+            //check for collision with player after monster moves
+            if(m.getPos().equals(player.getPos())){
+                playerDead();
+            }
+        }
     }
 
     /**
@@ -229,10 +204,21 @@ public class Maze {
     }
 
     /**
+     * Getter for list of monsters in maze
+     * @return list of monsters
+     */
+    public List<Monster> getMonsters(){
+        return this.monsters;
+    }
+
+    /**
      * Setter for player reference in maze
      * @param player player to set
      */
     public void setPlayer(Player player){
+        if(player == null){
+            throw new IllegalArgumentException("Player cannot be null");
+        }
         this.player = player;
     }
 
@@ -242,6 +228,17 @@ public class Maze {
      */
     public Player getPlayer(){
         return this.player;
+    }
+
+    /**
+     * Add a monster to the maze
+     * @param m monster to add
+     */
+    public void setMonster(Monster m){
+        if(m == null){
+            throw new IllegalArgumentException("Monster cannot be null");
+        }
+        this.monsters.add(m);
     }
 
     /**
@@ -266,37 +263,51 @@ public class Maze {
     /**
      * Get symbol for tile at specified position for string representation
      * P = Player, K = Key, D = Door, T = Treasure, L = ExitLock
-     * ~ = Water, W = Wall, F = Free, E = Exit, I = Info
+     * ~ = Water, W = Wall, F = Free, E = Exit, I = Info, M = Monster
+     * Used for JUnit testing to verify maze layout
+     * Using visitor pattern to get symbol for tile and entity types
      * @param pos position to get symbol for
      * @return symbol representing tile at position
      */
     public String getSymbol(Position pos) {
         if (player != null && player.getPos().equals(pos)) return "P";
+        if(monsters.stream().anyMatch(m-> m.getPos().equals(pos))) return "M";
         Tile tile = getTileAt(pos);
 
-        if (tile instanceof Wall) {
-            return "W";
-        } else if (tile instanceof Free) {
-            Free freeTile = (Free) tile;
-            if (freeTile.getCollectable().isPresent()) {
-                Entity entity = freeTile.getCollectable().get();
-                if (entity instanceof Key) {
-                    return "K";
-                } else if (entity instanceof Door) {
-                    return "D";
-                } else if (entity instanceof Treasure) {
-                    return "T";
-                } else if (entity instanceof ExitLock) {
-                    return "L";
+        return tile.accept(new TileVisitor<String>() {
+            @Override
+            public String visitWall(Wall wall) {return "W";}
+
+            @Override
+            public String visitFree(Free free) {
+                //check if free tile has a collectable entity
+                if(free.getCollectable().isPresent()){
+                    Entity entity = free.getCollectable().get();
+                    return entity.accept(new EntityVisitor<String>() {
+                        @Override
+                        public String visitKey(Key key) {return "K";}
+
+                        @Override
+                        public String visitDoor(Door door) {return "D";}
+
+                        @Override
+                        public String visitExitLock(ExitLock exitLock) {return "L";}
+
+                        @Override
+                        public String visitTreasure(Treasure treasure) {return "T";}
+                    });
                 }
+                return "F";
             }
-        } else if (tile instanceof Exit) {
-            return "E";
-        } else if (tile instanceof Water) {
-            return "~";
-        } else if (tile instanceof Info){
-            return "I";
-        }
-        return "F";
+
+            @Override
+            public String visitInfo(Info info) {return "I";}
+
+            @Override
+            public String visitWater(Water water) {return "~";}
+
+            @Override
+            public String visitExit(Exit exit) {return "E";}
+        });
     }
 }

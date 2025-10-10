@@ -1,12 +1,13 @@
 package nz.ac.wgtn.swen225.lc.app.gui;
 
-import nz.ac.wgtn.swen225.lc.app.controller.GameController;
-import nz.ac.wgtn.swen225.lc.app.controller.InputController;
+import java.awt.*;
 
 import javax.swing.*;
-import javax.swing.JPanel;
-import java.awt.*;
-import java.util.List;
+
+import nz.ac.wgtn.swen225.lc.app.controller.AppController;
+import nz.ac.wgtn.swen225.lc.app.gui.screen.*;
+import nz.ac.wgtn.swen225.lc.app.state.*;
+import nz.ac.wgtn.swen225.lc.app.util.MyFont;
 
 /**
  * Main application window/frame. Contains UI components and embeds the game panel from renderer.
@@ -16,118 +17,101 @@ import java.util.List;
 public class AppWindow extends JFrame {
     // Game Window Fields
     public static final int SQUARE_SIZE = 60; // 60 pixels
-    public static final int WINDOW_WIDTH = 1260;
-    public static final int WINDOW_HEIGHT = 780;
+    public static final int WINDOW_COLS = 21;
+    public static final int WINDOW_ROWS = 13;
+    public static final int WINDOW_WIDTH = SQUARE_SIZE * WINDOW_COLS;
+    public static final int WINDOW_HEIGHT = SQUARE_SIZE * WINDOW_ROWS;
     public static final int MAZE_SIZE = SQUARE_SIZE * 9;
     public static final int HEADER_HEIGHT = SQUARE_SIZE * 2;
+    public static final int FONT_SIZE_H1 = 40;
+    public static final int FONT_SIZE_H2 = 30;
+    public static final int FONT_SIZE_H3 = 20;
 
-    // Controllers
-    private GameController controller; // Reference to GameController
-    private InputController inputController;
+    // GUI
+    // Main
+    private CardLayout cardLayout;
+    private JPanel mainPanel;
 
-    // PANELS
-    private List<JPanel> allPanels;
-    private JPanel titlePanel;
-    private JPanel rootPanel;
-    private JPanel gamePanel;// Reference to MazePanel (from renderer)
-    private JPanel leftPanel; // Reference to LeftPanel
-    private JPanel rightPanel;
-    
-    // Bottom
-    private JPanel menuPanel;
-    
+    // Screens
+    private StartScreen startScreen;
+    private PlayScreen playScreen;
+    private VictoryScreen victoryScreen;
+    private DefeatScreen defeatScreen;
+    private HelpScreen helpScreen;
 
-    public AppWindow(GameController controller, InputController inputController) {
-        // TODO: Set up window, menus, status bar, and embed MazePanel
-        super("Fash and Chaps :D");
-        this.controller = controller;
-        this.inputController = inputController;
-        setupWindow();
-        setupPanels();
-        //setupDialogs();
+    private final AppController c; // Reference to AppController
+    private static AppWindow window;
 
+
+    public static AppWindow of(AppController c) {
+        if(window == null) window = new AppWindow(c);
+        return window;
     }
 
     /**
-     * Sets up the main game window (JFrame) properties.
+     * Constructor to initialize the main application window.
+     * @param controller
      */
+    public AppWindow(AppController controller) {
+        // TODO: Set up window, menus, status bar, and embed MazePanel
+        super("Fash and Chaps :D");
+        this.c = controller;
+        setupWindow();
+        setupScreens();
+    }
+
     private void setupWindow(){
-        addKeyListener(inputController);
+        addKeyListener(c.inputController());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
         pack();
-        setLayout(new BorderLayout());
         setFocusable(true);
         requestFocusInWindow();
         setResizable(false);
         setVisible(true);
-        System.out.println("Initialised Game Window (JFrame)");
     }
 
-    private void setupPanels(){
-        // Main Panels
-        titlePanel = new TitlePanel(controller);
-        menuPanel = new MenuPanel(controller);
-        rootPanel = new RootPanel(controller);
-        gamePanel = setupMazePanel();
-        leftPanel = new LeftPanel(controller);
-        rightPanel = new RightPanel(controller, inputController);
+    private void setupScreens(){
+        cardLayout = new CardLayout();
+        mainPanel = new JPanel(cardLayout);
+        setupSingleScreen(startScreen = new StartScreen(c), StartState.name());
+        setupSingleScreen(playScreen = new PlayScreen(c), PlayState.name());
+        setupSingleScreen(victoryScreen = new VictoryScreen(c), VictoryState.name());
+        setupSingleScreen(defeatScreen = new DefeatScreen(c), DefeatState.name());
+        setupSingleScreen(helpScreen = new HelpScreen(c), HelpState.name());
 
-        allPanels = List.of(titlePanel, menuPanel, rootPanel, gamePanel, leftPanel, rightPanel);
-
-        // Main Frame
-        add(titlePanel, BorderLayout.NORTH);
-        add(menuPanel, BorderLayout.SOUTH);
-        add(rootPanel);
-
-        // Middle
-        rootPanel.add(leftPanel);
-        rootPanel.add(gamePanel);
-        rootPanel.add(rightPanel);
-        System.out.println("Initialised Panels");
+        setContentPane(mainPanel);
     }
 
-    private JPanel setupMazePanel(){
-        JPanel panel = controller.getRenderer().getPanel();
-        panel.setPreferredSize(new Dimension(MAZE_SIZE, MAZE_SIZE));
-        panel.setMinimumSize(new Dimension(MAZE_SIZE, MAZE_SIZE));
-        panel.setMaximumSize(new Dimension(MAZE_SIZE, MAZE_SIZE));
-//        panel.setBorder(BorderFactory.createLineBorder(new Color(0x362702), 5));
-        return panel;
-        //return controller.getRenderer().getPanel();
+    private void setupSingleScreen(JPanel panel, String name){
+        mainPanel.add(panel, name);
+        //screenPanels.add(panel);
     }
 
-    // ===== INTERACTIONS WITH CONTROLLER =====
-
-    public void showPauseDialog() {
+    /**
+     * Utility method to format JLabels consistently.
+     * @param label JLabel to format
+     * @param fontSize Font size to apply
+     */
+    public static void formatLabel(JLabel label, int fontSize){
+        label.setFont(MyFont.PIXEL.getFont(fontSize));
+        label.setForeground(Color.white);
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        label.setVerticalAlignment(SwingConstants.CENTER);
     }
 
-    public void showHelpDialog() {
-    }
-    public void removePauseDialog() {
-    }
-
-    public void showErrorDialog(String message) {
-    }
-
-    public void showMessageDialog(String message, String title) {
-    }
-
-    public void updateWindow(){
-        allPanels.forEach(JPanel::repaint);
+    /**
+     * Show a specific screen by name.
+     * @param name Name of the screen to show
+     */
+    public void showScreen(String name){
+        cardLayout.show(mainPanel, name);
+        revalidate();
+        repaint();
+        requestFocusInWindow();
     }
 
-
-    // TODO: Must decide what things are needed to be updated in the status bar
-    public void updateStatus() {
-        // TODO: Update status bar with current game info
-    }
-
-
-
-    // Getters
-    public static int getWindowWidth() {return WINDOW_WIDTH;}
-    public static int getWindowHeight() {return WINDOW_HEIGHT;}
-
+    // ====== GETTERS ======
+    public PlayScreen playScreen() {return playScreen;}
 
 }

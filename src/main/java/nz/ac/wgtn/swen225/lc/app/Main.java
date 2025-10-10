@@ -1,6 +1,6 @@
 package nz.ac.wgtn.swen225.lc.app;
 
-import nz.ac.wgtn.swen225.lc.app.controller.GameController;
+import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 
 import javax.swing.*;
 
@@ -13,10 +13,10 @@ import javax.swing.*;
 public class Main {
     public static void main(String[] args) {
         // Set the look and feel to the system default (optional)
-        try {UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());}
+        try {UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());}
         catch (Exception e) {e.printStackTrace();}
 
         // Start the UI on the Event Dispatch Thread
-        SwingUtilities.invokeLater(GameController::of);
+        SwingUtilities.invokeLater(AppController::of);
     }
 }

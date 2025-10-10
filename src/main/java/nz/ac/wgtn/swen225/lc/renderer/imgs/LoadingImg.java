@@ -6,28 +6,26 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Handles images from file path to load into the game
- * Saves images as enum objects to be used throughout game
+ * Enum to handle images from file path to load into the game
+ * Saves images to be used throughout game
+ * @author Emily Ung (300663254)
  */
 public enum LoadingImg {
     PlayerUp("imgs/playerUp.png"),
     PlayerDown("imgs/playerDown.png"),
     PlayerLeft("imgs/playerLeft.png"),
     PlayerRight("imgs/playerRight.png"),
-
     enemyCrab("imgs/enemyCrab.png"),
 
     Treasure("imgs/treasure.png"),
     PurpleKey("imgs/purpleKey.png"),
     PinkKey("imgs/pinkKey.png"),
     OrangeKey("imgs/orangeKey.png"),
-    BlueKey("imgs/blueKey.png"),
     GreenKey("imgs/greenKey.png"),
 
     PurpleDoor("imgs/purpleDoor.png"),
     PinkDoor("imgs/pinkDoor.png"),
     OrangeDoor("imgs/orangeDoor.png"),
-    BlueDoor("imgs/blueDoor.png"),
     GreenDoor("imgs/greenDoor.png"),
 
     Exit("imgs/exit.png"),
@@ -36,32 +34,42 @@ public enum LoadingImg {
 
     Rock("imgs/wall.png"),
     Sand("imgs/sand.png"),
-    Water("imgs/water.png");
+    Water("imgs/water.png"),
 
+    Arrows("imgs/arrows.png"),
+    Spacebar("imgs/spacebar.png"),
+    PlainSquare("imgs/plainSquare.png"),
 
-    private final String filename;
-    private BufferedImage image;
+    StartScreen("imgs/startScreen.png"),
+    LoseScreen("imgs/loseScreen.png"),
+    WinScreen("imgs/winScreen.png"),
+    Background("imgs/bgWater.png"),
+    RockButton("imgs/rockButton.png"),
+    Shell("imgs/shell.png");
 
-    /*
-    *   Constructor for the enum
-    *   Loads and saves the image to an enum
-    *   @param filename: name of the image file
+    private final String filename; //name of file
+    private BufferedImage image;//actual image
+    
+    /**
+     * Constructor for the enum
+     * Loads and saves the image to an enum
+     * @param filename: name of the image file
      */
     LoadingImg(String filename){
         this.filename = filename;
         try{
-            InputStream stream = LoadingImg.class.getResourceAsStream("/" + filename);
+            InputStream stream = LoadingImg.class.getResourceAsStream("/" + filename); //gets the image path as stream
             if(stream == null) {throw new RuntimeException("Cannot find the image file: " + filename);}
             this.image = ImageIO.read(stream);
             stream.close();
-        } catch(IOException e){ throw new RuntimeException("Error loading: " + filename, e);}
+        } catch(IOException e){ throw new RuntimeException("Error loading the image: " + filename, e);}
     }
 
-    /*
-     * Gets the buffered image
+    /**
+     * Gets the image of enum
+     * @return - buffered image of needed image
      */
     public BufferedImage loadImage() {
         return image;
     }
-
 }

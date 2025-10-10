@@ -1,25 +1,24 @@
 package nz.ac.wgtn.swen225.lc.renderer;
 
+import nz.ac.wgtn.swen225.lc.domain.GameObserver;
+import nz.ac.wgtn.swen225.lc.domain.Monster;
 import nz.ac.wgtn.swen225.lc.domain.Player;
-import nz.ac.wgtn.swen225.lc.domain.tiles.Tile;
+import nz.ac.wgtn.swen225.lc.domain.Door;
+import nz.ac.wgtn.swen225.lc.domain.Key;
+import nz.ac.wgtn.swen225.lc.domain.Tile;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.Drawable;
-import nz.ac.wgtn.swen225.lc.renderer.imgs.TileDummy;
-
-import javax.swing.*;
+import nz.ac.wgtn.swen225.lc.renderer.sounds.LoadingSounds;
 import java.util.List;
 
 /**
- * Helps to control what to call etc
+ * Controls how panels and tiles are drawn within the game
+ * Controls when sounds are played
+ * @author Emily Ung (300663254)
  */
 public class Renderer {
-    //call Josh's methods
     public static int X_PANEL_WIDTH;
     public static int Y_PANEL_HEIGHT;
-    Drawable drawable;
-
-//    public static Renderer of() {
-//        return new Renderer();
-//    }
+    Drawable drawable; //current JPanel to be drawn
 
     /**
      * Gets the dimensions of the JPanel
@@ -34,29 +33,48 @@ public class Renderer {
     /**
      * Constructor for Renderer that sets a Drawable
      */
-    public Renderer(Tile[][] currentTiles, Player player){
-        drawable = new Drawable(currentTiles, player);
+    public Renderer(Tile[][] currentTiles, Player player, List<Monster> monsters){
+        drawable = new Drawable(currentTiles, player, monsters);
     }
 
     /**
      * Returns the panel
      * @return - returns the JPanel
      */
-    public Drawable getPanel(){
-        return drawable;
-    }
+    public Drawable getPanel(){ return drawable;}
 
+    /**
+     * Observes game events to play sound effects
+     * @return - an observer
+     */
+    public static GameObserver playSounds(){
+        return new GameObserver(){
+            /**
+             * Plays key collection sound
+             * @param key - key object
+             */
+            @Override
+            public void onKeyCollected(Key key) { LoadingSounds.KeySound.playSoundEffect(-20.f); }
 
-    public static void main(String[] args) {
-        Renderer renderer = new Renderer(null, null);
-        SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("Test Image Display");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            /**
+             * Plays treasure collection sound
+             */
+            @Override
+            public void onTreasureCollected() { LoadingSounds.CoinSound.playSoundEffect(-20.f); }
 
-            frame.add(renderer.getPanel());
-            frame.pack(); // Use pack() to respect preferred size
-            frame.setLocationRelativeTo(null);
-            frame.setVisible(true);
-        });
+            /**
+             * Plays door unlocking sound
+             * @param door - door object
+             */
+            @Override
+            public void onDoorOpened(Door door) { LoadingSounds.UnlockedSound.playSoundEffect(-10.f); }
+
+            /**
+             * Plays water sounds when player dies in water
+             * @param player - current player
+             */
+            @Override
+            public void onPlayerDrown(Player player) { LoadingSounds.PlayerDrownSound.playSoundEffect(-20.f); }
+        };
     }
 }

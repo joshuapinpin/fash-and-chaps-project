@@ -3,10 +3,11 @@ package nz.ac.wgtn.swen225.lc.domain;
 /**
  * Position class representing coordinates in the game grid
  * Used to track entity and player positions
+ * @author Hayley Far (300659131)
  */
 public class Position {
-    private int x;
-    private int y;
+    private int x; //x-coordinate
+    private int y; //y-coordinate
 
     /**
      * Constructor for position with specified coordinates
@@ -14,6 +15,9 @@ public class Position {
      * @param y y-coordinate
      */
     public Position(int x, int y){
+        if(x < 0 || y < 0){
+            throw new IndexOutOfBoundsException("Coordinates cannot be negative");
+        }
         this.x = x;
         this.y = y;
     }
@@ -35,6 +39,9 @@ public class Position {
      * @param i new x-coordinate
      */
     public void setX(int i){
+        if(i < 0){
+            throw new IllegalArgumentException("Coordinate cannot be negative");
+        }
         this.x = i;
     }
 
@@ -43,6 +50,9 @@ public class Position {
      * @param i new y-coordinate
      */
     public void setY(int i){
+        if(i < 0){
+            throw new IllegalArgumentException("Coordinate cannot be negative");
+        }
         this.y = i;
     }
 
@@ -60,4 +70,12 @@ public class Position {
         return x == position.x && y == position.y;
     }
 
+    /**
+     * Override toString method for position
+     * @return string representation of position
+     */
+    @Override
+    public String toString() {
+        return "x: "+this.x+" y: "+this.y;
+    }
 }

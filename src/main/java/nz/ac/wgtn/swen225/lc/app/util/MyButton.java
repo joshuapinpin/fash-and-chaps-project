@@ -9,16 +9,26 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
+/**
+ * A utility class for creating customized JButton instances with specific styles and behaviors.
+ * @author Joshua Pinpin (Student ID: 300662880)
+ */
 public class MyButton {
     JButton button;
 
+    /** Factory method to create a button with specified properties.
+     * @param name The text to display on the button.
+     * @param w The width of the button.
+     * @param h The height of the button.
+     * @param fontSize The font size of the button text.
+     * @param img The background image for the button (can be null).
+     * @return A JButton instance with the specified properties.
+     */
     public static JButton of(String name, int w, int h, int fontSize, BufferedImage img){
         return new MyButton(name, w, h, fontSize, img).button();
     }
 
-    public JButton button(){
-        return button;
-    }
+    private JButton button(){return button;}
 
     private MyButton(String name, int w, int h, int fontSize, BufferedImage img){
         button = new JButton(name){
@@ -52,16 +62,7 @@ public class MyButton {
 
             @Override
             protected void paintComponent(Graphics g) {
-                int x = 0, y = 0;
-                while(x < w){
-                    while(y < h){
-                        g.drawImage(img, x, y,
-                                AppWindow.SQUARE_SIZE, AppWindow.SQUARE_SIZE, this);
-                        y += AppWindow.SQUARE_SIZE;
-                    }
-                    y = 0;
-                    x += AppWindow.SQUARE_SIZE;
-                }
+                if(img != null) drawImg(g);
                 if (hovered) {
                     // Draw a semi-transparent black overlay for a darker tint
                     g.setColor(new Color(0, 0, 0, 80)); // alpha 80 for subtle darkness
@@ -73,11 +74,26 @@ public class MyButton {
                 }
                 super.paintComponent(g);
             }
+
+            private void drawImg(Graphics g){
+                int x = 0, y = 0;
+                while(x < w){
+                    while(y < h){
+                        g.drawImage(img, x, y,
+                                AppWindow.SQUARE_SIZE, AppWindow.SQUARE_SIZE, this);
+                        y += AppWindow.SQUARE_SIZE;
+                    }
+                    y = 0;
+                    x += AppWindow.SQUARE_SIZE;
+                }
+            }
         };
 
         button.setContentAreaFilled(false);
         button.setOpaque(false);
         button.setFont(MyFont.PIXEL.getFont(fontSize));
         button.setForeground(Color.white);
+        button.setBorderPainted(false);
+        button.setBorder(BorderFactory.createEmptyBorder());
     }
 }
