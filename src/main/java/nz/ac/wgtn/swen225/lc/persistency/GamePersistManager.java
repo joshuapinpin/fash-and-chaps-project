@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -41,6 +42,8 @@ class GamePersistManager implements PersistManager<LoadedMaze> {
      * @param parent - the parent JFrame/window.
      */
     public boolean save(Maze data, int levelNumber, int maxTreasures, int maxKeys, int time, JFrame parent) {
+        Objects.requireNonNull(data, "Cannot save null game board.");
+        Objects.requireNonNull(parent, "Cannot create file dialog with null window.");
         String defaultName = timestampName();
         Optional<File> fileOpt = fileDialog.showSaveDialog(parent, defaultName, extension);
 

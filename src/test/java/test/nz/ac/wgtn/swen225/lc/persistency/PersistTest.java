@@ -74,17 +74,13 @@ public class PersistTest {
         assertEquals(1, player.getTotalTreasures());
     }
 
-    private static JFrame blankWindow() {
-        return new JFrame("Testing window, parent to file dialogs.");
-    }
-
     @Test
     public void testSerialisation() {
         MockPersistManager mockManager = new MockPersistManager(save);
         Persist persist = new Persist(()->mockManager);
-        Optional<LoadedMaze> game = persist.loadGame(blankWindow());
+        Optional<LoadedMaze> game = persist.loadGame(null);
         assertTrue(game.isPresent());
-        persist.saveGame(game.get().maze(), levelNumber, maxTreasures, maxKeys, time, blankWindow());
+        persist.saveGame(game.get().maze(), levelNumber, maxTreasures, maxKeys, time, null);
         String saved = mockManager.saveLog.getLast();
         assertEquals(save.replaceAll("\\s+", ""), saved.replaceAll("\\s+", "")); // so test OS independent
     }
