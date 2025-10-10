@@ -3,8 +3,7 @@ package test.nz.ac.wgtn.swen225.lc.fuzz;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 import nz.ac.wgtn.swen225.lc.app.util.Input;
-import nz.ac.wgtn.swen225.lc.domain.Maze;
-import nz.ac.wgtn.swen225.lc.domain.Position;
+import nz.ac.wgtn.swen225.lc.domain.*;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
@@ -731,5 +730,98 @@ public class FuzzTest {
      */
     private void sleepQuiet(long millis) {
         try { Thread.sleep(millis); } catch (InterruptedException ie) { Thread.currentThread().interrupt(); }
+    }
+
+    // ====== Tiny domain micro-tests (no GUI) to stabilize coverage ======
+    // These are quick, deterministic checks that bump domain coverage without adding new files.
+
+    private static class CountingObserver implements GameObserver {
+        int moves, keys, treasures, doors, drowns;
+        @Override public void onPlayerMove(Position newPosition) { moves++; }
+        @Override public void onKeyCollected(Key key) { /* not asserted here */ }
+        @Override public void onTreasureCollected() { treasures++; }
+        @Override public void onDoorOpened(Door door) { doors++; }
+        @Override public void onPlayerDrown(Player player) { drowns++; }
+    }
+
+    private Maze newFilledMaze(int rows, int cols) {
+        Maze m = new Maze(rows, cols);
+        for (int r = 0; r < rows; r++) for (int c = 0; c < cols; c++)
+            m.setTileAt(Free.of(new Position(c, r)));
+        return m;
+    }
+
+    @Test
+    public void microDomainCoverage() {
+        // 3x3 maze fully free; player starts at center (1,1)
+        Maze m = newFilledMaze(3,3);
+        CountingObserver obs = new CountingObserver();
+        m.addObserver(obs);
+
+        // Water on the right; moving RIGHT should drown and notify
+        m.setTileAt(Water.of(new Position(2,1)));
+        m.movePlayer(Direction.RIGHT);
+        org.junit.jupiter.api.Assertions.assertFalse(m.getPlayer().isAlive());
+        org.junit.jupiter.api.Assertions.assertEquals(1, obs.drowns);
+
+        // Reset: new maze; test door blocks then opens with key
+        m = newFilledMaze(3,3); obs = new CountingObserver(); m.addObserver(obs);
+        Free doorFree = Free.of(new Position(0,1));
+        doorFree.setCollectable(Door.of(EntityColor.ORANGE));
+        m.setTileAt(doorFree);
+        Position start = m.getPlayer().getPos();
+        m.movePlayer(Direction.LEFT);
+        org.junit.jupiter.api.Assertions.assertEquals(start, m.getPlayer().getPos());
+        m.getPlayer().addKey(Key.of(EntityColor.ORANGE));
+        m.movePlayer(Direction.LEFT);
+        org.junit.jupiter.api.Assertions.assertEquals(new Position(0,1), m.getPlayer().getPos());
+        org.junit.jupiter.api.Assertions.assertEquals(1, obs.doors);
+
+        // ExitLock blocks until all treasures collected
+        m = newFilledMaze(3,3);
+        m.getPlayer().setTotalTreasures(1);
+        Free lockFree = Free.of(new Position(1,0));
+        lockFree.setCollectable(ExitLock.of());
+        m.setTileAt(lockFree);
+        start = m.getPlayer().getPos();
+        m.movePlayer(Direction.UP);
+        org.junit.jupiter.api.Assertions.assertEquals(start, m.getPlayer().getPos());
+        m.getPlayer().collectTreasure();
+        m.movePlayer(Direction.UP);
+        org.junit.jupiter.api.Assertions.assertEquals(new Position(1,0), m.getPlayer().getPos());
+
+        // Symbols and monster
+        m = newFilledMaze(3,3);
+        m.setTileAt(Wall.of(new Position(0,0)));
+        Free k = Free.of(new Position(2,0)); k.setCollectable(Key.of(EntityColor.GREEN)); m.setTileAt(k);
+        Free t = Free.of(new Position(0,2)); t.setCollectable(Treasure.of()); m.setTileAt(t);
+        m.setTileAt(Exit.of(new Position(2,2)));
+        m.setTileAt(Info.of(new Position(1,0)));
+        m.setTileAt(Water.of(new Position(0,1)));
+        org.junit.jupiter.api.Assertions.assertEquals("W", m.getSymbol(new Position(0,0)));
+        org.junit.jupiter.api.Assertions.assertEquals("K", m.getSymbol(new Position(2,0)));
+        org.junit.jupiter.api.Assertions.assertEquals("T", m.getSymbol(new Position(0,2)));
+        org.junit.jupiter.api.Assertions.assertEquals("E", m.getSymbol(new Position(2,2)));
+        org.junit.jupiter.api.Assertions.assertEquals("I", m.getSymbol(new Position(1,0)));
+        org.junit.jupiter.api.Assertions.assertEquals("~", m.getSymbol(new Position(0,1)));
+        org.junit.jupiter.api.Assertions.assertEquals("P", m.getSymbol(m.getPlayer().getPos()));
+        m.setMonster(Monster.of(new Position(1,2)));
+        org.junit.jupiter.api.Assertions.assertEquals("M", m.getSymbol(new Position(1,2)));
+
+        // Monster ping: place wall to force direction flip, then collide into player
+        m = newFilledMaze(3,3);
+        m.setTileAt(Wall.of(new Position(0,1))); // facing LEFT -> flip to RIGHT
+        m.getPlayer().setPos(new Position(2,1));
+        Monster mon = Monster.of(new Position(1,1));
+        m.setMonster(mon);
+        m.ping();
+        org.junit.jupiter.api.Assertions.assertEquals(Direction.RIGHT, mon.getDirection());
+        org.junit.jupiter.api.Assertions.assertEquals(new Position(2,1), mon.getPos());
+        org.junit.jupiter.api.Assertions.assertFalse(m.getPlayer().isAlive());
+
+        // Position negative setters throw
+        Position p = new Position(1,1);
+        org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () -> p.setX(-1));
+        org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () -> p.setY(-1));
     }
 }
