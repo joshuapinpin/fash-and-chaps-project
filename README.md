@@ -9,7 +9,7 @@
 
 ## Game Logic:
 - You are the **seagull**, and the aim is to collect all the **coins** to open the **treasure chest** to get back home to your **sand castle**.
-- Coins can be in **locked doors** which need to be unlocked with the corresponding **key** matching the door colour
+- Coins and Keys can be in **locked doors** which need to be unlocked with the corresponding **key** matching the door colour
 - Be careful and avoid the **crabs and puddles**, which are obstacles for the seagull in level 2.
 - Go to the **seahorse** which provides info about playing the level in a pop up
 
@@ -31,7 +31,7 @@
 
 ### Recording a game (under RECORDER in GUI on right pane):
 - **START:** to start recording
-- **STOP:** to stop recording and store in a json format file
+- **STOP:** to stop recording and store in a JSON format file
 - **AUTO-PLAY:** after recording, plays full recorded game, adjusting replay speed on slider
 - **STEP-BY-STEP:** player recorded game from file, click on the button each time for each step
 
@@ -43,8 +43,7 @@
 - **HOME:** takes you back to the home screen of game
 
 ### Other displays on GUI (left pane):
-- **LEVEL:** current level user is player
+- **LEVEL:** current level that the user is playing
 - **TIMER:** time left to complete the game
-- **KEYS:** keys collected by user so far in level
-- **TREASURE:** coins collected by user so far in level
-
+- **KEYS:** keys collected by the user so far in the current level
+- **TREASURE:** coins collected by the user so far in the current level
