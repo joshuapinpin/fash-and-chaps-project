@@ -36,7 +36,6 @@ public enum TileParsers {
     private final TileParser<?> parser;
     public static final String separator = ":";
     private static final Map<String, TileParser<?>> legend = new HashMap<>();
-    public static final int MaxMonstersOnTile = 4;
     static {
         for (TileParsers tp : values()) {
             legend.put(tp.parser.symbol(), tp.parser);
@@ -45,7 +44,7 @@ public enum TileParsers {
 
     /**
      * Utility method to parse any given String into a Tile, if formatted correctly.
-     * @param surroundings - the LevelMaker context for the TileParser strategies, has the whole game board.
+     * @param surroundings - the GameState context for the TileParser strategies, has the whole game board.
      * @param symbol - the String supposedly representing a Tile.
      * @param position - the Position of the Tile on the game board.
      * @return - the Tile instance, otherwise an IllegalArgumentException is thrown.

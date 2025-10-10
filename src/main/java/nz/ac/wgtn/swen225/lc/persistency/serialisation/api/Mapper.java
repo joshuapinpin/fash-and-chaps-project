@@ -9,6 +9,17 @@ package nz.ac.wgtn.swen225.lc.persistency.serialisation.api;
  * @author Thomas Ru - 300658840
  */
 public interface Mapper<T, S> {
+    /**
+     * Convert some fully fledged data instance into a reduced state instance
+     * @param data - the data of type T
+     * @return - the state of type S
+     */
     S toState(T data);
+
+    /**
+     * Convert some reduced state instance into a  fully fledged data instance
+     * @param state - the state of type S
+     * @return - the data of type T
+     */
     T fromState(S state);
 }

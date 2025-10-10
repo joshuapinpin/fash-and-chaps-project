@@ -6,6 +6,7 @@ import java.util.Optional;
 /**
  * API for serialising and deserialising objects, via graphical dialogs.
  * @param <T> - the datatype to serialise/deserialise.
+ * @author Thomas Ru - 300658840
  */
 public interface PersistManager<T> {
     /**

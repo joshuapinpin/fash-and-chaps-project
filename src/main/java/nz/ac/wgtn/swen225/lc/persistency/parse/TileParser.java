@@ -11,7 +11,7 @@ import java.util.function.Function;
 
 /**
  * Represents the mapping from a human-readable String symbol which represents a
- * particular Tile type, to instances of that Tile. Strategy for LevelMaker.
+ * particular Tile type, to instances of that Tile. Strategy for GameState parsing.
  * All TileParsers should be registered under the TileParsers enum to ensure uniqueness.
  * @author Thomas Ru - 300658840
  */
@@ -58,7 +58,7 @@ abstract class TileParser<T extends Tile> {
      * Executes parsing strategy for the LevelMaker context.
      * Basic implementation which can be readily overridden -
      * simply checks parameters are valid then
-     * @param surroundings - the LevelMaker context for the TileParser strategy, has the whole gameboard.
+     * @param surroundings - the GameState for the TileParser strategy, has the whole gameboard.
      * @param tile - the String which is supposed to represent a Tile.
      * @param position - the Position of the Tile.
      * @return - the concrete Tile instance.
@@ -72,8 +72,8 @@ abstract class TileParser<T extends Tile> {
     }
 
     /**
-     * Utility method to check whether parse(LevelMaker,String,Position) has non-null arguments.
-     * @param surroundings - the LevelMaker instance.
+     * Utility method to check whether parse(GameState,String,Position) has non-null arguments.
+     * @param surroundings - the GameState instance.
      * @param tile - the String instance.
      * @param position - the Position instance.
      */

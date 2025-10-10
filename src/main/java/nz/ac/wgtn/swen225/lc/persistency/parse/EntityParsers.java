@@ -77,7 +77,7 @@ public enum EntityParsers {
     /**
      * Utility method to parse any given String into an Entity, if formatted correctly.
      * @param entity - the String representation.
-     * @param surroundings - the LevelMaker level surrounding the entity.
+     * @param surroundings - the GameState surroundings of the entity (context for EntityParser strategy)
      * @return - the Entity instance created from the String.
      */
     public static Entity parseEntity(GameState surroundings, String entity) {

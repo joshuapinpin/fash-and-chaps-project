@@ -6,6 +6,7 @@ import nz.ac.wgtn.swen225.lc.domain.Position;
 
 /**
  * Utility class to convert from a string representation of a crab to a crab (Monster) object.
+ * @author Thomas Ru - 300658840
  */
 public class MonsterParser {
     public static final String separator = EntityParsers.separator;

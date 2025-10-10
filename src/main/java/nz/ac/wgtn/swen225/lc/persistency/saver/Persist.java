@@ -29,6 +29,10 @@ public class Persist {
      * Given a specific game board, writes it to file.
      * Useful inside a listener.
      * @param maze - the Maze game board to save.
+     * @param levelNumber - the current level (e.g. 1, 2)
+     * @param maxTreasures - the maximum number of treasures on the current level.
+     * @param maxKeys - the maximum number of keys on the current level.
+     * @param time - the time left for this play-through.
      * @param app - the Swing game window, for choosing where to save.
      */
     public void saveGame(Maze maze, int levelNumber, int maxTreasures, int maxKeys, int time, JFrame app) {
@@ -41,7 +45,7 @@ public class Persist {
      * Load a game from a previously saved JSON file.
      * Allows the user to choose a file, then constructs and returns the corresponding Maze game board.
      * @param app - the Swing game window, for choosing which game to load.
-     * @return an Optional<Maze> object representing the previously saved game.
+     * @return an Optional<LoadedMaze> object representing the previously saved game.
      */
     public Optional<LoadedMaze> loadGame(JFrame app) {
         return gamePersistence.load(app);

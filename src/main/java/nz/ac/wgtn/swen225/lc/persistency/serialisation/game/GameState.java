@@ -28,7 +28,7 @@ public class GameState {
     private String[][] board;
 
     /**
-     * Create GameState object from ASCII art type array representing the board.
+     * Create GameState object from ASCII-art-looking array representing the board.
      * @param rows - the positive integer number of rows on the game board.
      * @param cols - the positive integer number of columns on the game board.
      */
@@ -119,8 +119,8 @@ public class GameState {
     public int maxTreasures() { return levelInfo.maxTreasures(); }
 
     /**
-     * Gives the String representation of a LevelMaker's board.
-     * @return - a prettified version of the LevelMaker's 2D array board.
+     * Gives the String representation of a GameState's game board.
+     * @return - a prettified version of the GameStates's 2D string array board.
      */
     @Override
     public String toString() {
@@ -134,8 +134,8 @@ public class GameState {
         return result.toString();
     }
 
-    /**
-     * Compare whether some object is structurally equal to a LevelMaker.
+    /** // rows cols time levelinfo player(state) monsters board
+     * Compare whether some object is structurally equal to a GameState.
      * @param obj - the reference object with which to compare.
      * @return - true if they are equal, false otherwise.
      */
@@ -146,6 +146,10 @@ public class GameState {
         GameState other = (GameState) obj;
         return rows==other.rows
                 && cols==other.cols
+                && time==other.time
+                && levelInfo.equals(other.levelInfo)
+                && player.equals(other.player)
+                && monsters.equals(other.monsters)
                 && Arrays.deepEquals(board, other.board);
     }
 
@@ -155,6 +159,14 @@ public class GameState {
      * @return - the hash as an integer.
      */
     @Override public int hashCode() {
-        return Objects.hash(rows, cols, Arrays.deepHashCode(board));
+        return Objects.hash(
+                rows,
+                cols,
+                time,
+                levelInfo,
+                player,
+                monsters,
+                Arrays.deepHashCode(board)
+        );
     }
 }

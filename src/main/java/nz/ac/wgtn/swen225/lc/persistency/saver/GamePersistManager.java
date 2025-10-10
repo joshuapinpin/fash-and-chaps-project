@@ -17,9 +17,8 @@ import java.util.Date;
 import java.util.Optional;
 
 /**
- * Used within this package to allow a user to save/load game objects from JSON files via a Swing GUI.
- * @param <M> - a type of Maze (i.e. game board).
- * @param <S> - a type of GameState, i.e. reduced representation of Maze suitable for serialisation.
+ * Used within this package to allow a user to save/load game objects
+ * from JSON files via a Swing GUI.
  * @author Thomas Ru - 300658840
  */
 class GamePersistManager implements PersistManager<LoadedMaze> {
@@ -29,8 +28,8 @@ class GamePersistManager implements PersistManager<LoadedMaze> {
     private static final String extension = "json";
 
     /**
-     * Creates a GamePersistManager given a way to convert between Maze, GameState, and file-written
-     * representation of GameState.
+     * Creates a GamePersistManager given a way to convert between Maze, GameState,
+     * and go to/from file-written representation of GameState.
      * @param fileIO - reads and writes GameState objects to file.
      * @param mapper - converts from Maze to GameState, or vice versa.
      */
@@ -42,6 +41,10 @@ class GamePersistManager implements PersistManager<LoadedMaze> {
     /**
      * Allow user to save a game to JSON via GUI, with a default file name based on the time and date.
      * @param data - the Maze object to save.
+     * @param levelNumber - the current level (e.g. 1, 2)
+     * @param maxTreasures - the maximum number of treasures on the current level.
+     * @param maxKeys - the maximum number of keys on the current level.
+     * @param time - the time left for this play-through.
      * @param parent - the parent JFrame/window.
      */
     public void save(Maze data, int levelNumber, int maxTreasures, int maxKeys, int time, JFrame parent) {
@@ -62,6 +65,12 @@ class GamePersistManager implements PersistManager<LoadedMaze> {
                 });
     }
 
+    /**
+     * Present for completeness/implementing the interface.
+     * Saves a LoadedMaze to file.
+     * @param data - the LoadedMaze
+     * @param parent - the parent window for the GUI file choosing popup.
+     */
     @Override
     public void save(LoadedMaze data, JFrame parent) {
         LevelInfo meta = data.levelInfo();

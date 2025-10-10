@@ -11,9 +11,7 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import com.fasterxml.jackson.databind.JsonNode;
 import nz.ac.wgtn.swen225.lc.persistency.serialisation.game.LevelInfo;
-import nz.ac.wgtn.swen225.lc.persistency.serialisation.game.LoadedMaze;
 
 /**
  * Level loading API, each level is a singleton.
@@ -52,6 +50,7 @@ public enum Levels {
      * Given the level number, constructs a Level singleton.
      * @param levelNumber - the level number.
      * @param maxTime - the maximum level duration in pings.
+     * @param mapper - used to map from GameState to Maze.
      */
     Levels(int levelNumber, int maxTime, GameMapper mapper) {
         if (levelNumber <= 0) { throw new  IllegalArgumentException("Level number must be positive."); }
@@ -84,11 +83,11 @@ public enum Levels {
 
     /**
      * Utility method, useful for testing.
-     * Given a level number and way to map from an InputStream to a LevelMaker,
+     * Given a level number and way to map from an InputStream to a GameState,
      * loads the associated level from JSON file.
      * @param i - the level number.
      * @param mapper - the mapping function.
-     * @return - the Maze instance loaded from file.
+     * @return - the GameState instance loaded from file.
      */
     public static GameState load(int i, Function<InputStream, GameState> mapper) {
         if (mapper == null) { throw new IllegalArgumentException("Mapper cannot be null."); }
@@ -107,10 +106,9 @@ public enum Levels {
     }
 
     /**
-     * Takes a given InputStream from reading a JSON, returns the corresponding Maze instance.
-     * Also sets the maxKeys and maxTreasures fields using the information from the Maze.
+     * Takes a given InputStream from reading a JSON, returns the corresponding GameState instance.
      * @param in - the given InputStream.
-     * @return - the associated Maze instance.
+     * @return - the GameState read from file.
      */
     private GameState loadState(InputStream in){
         try {
@@ -120,6 +118,10 @@ public enum Levels {
         }
     }
 
+    /**
+     * Getter for the level number
+     * @return - the level number
+     */
     public int levelNumber() { return levelNumber; }
 
     /**
