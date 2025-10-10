@@ -1,4 +1,4 @@
-package test.nz.ac.wgtn.swen225.lc.persistency.save;
+package test.nz.ac.wgtn.swen225.lc.persistency;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,12 +7,13 @@ import nz.ac.wgtn.swen225.lc.domain.Player;
 import nz.ac.wgtn.swen225.lc.domain.Position;
 import nz.ac.wgtn.swen225.lc.domain.EntityColor;
 import nz.ac.wgtn.swen225.lc.domain.Key;
-import nz.ac.wgtn.swen225.lc.persistency.saver.Persist;
-import nz.ac.wgtn.swen225.lc.persistency.saver.PersistManager;
-import nz.ac.wgtn.swen225.lc.persistency.serialisation.*;
-import org.junit.jupiter.api.Disabled;
+import nz.ac.wgtn.swen225.lc.persistency.Persist;
+import nz.ac.wgtn.swen225.lc.persistency.PersistManager;
+import nz.ac.wgtn.swen225.lc.persistency.Mapper;
+import nz.ac.wgtn.swen225.lc.persistency.GameMapper;
+import nz.ac.wgtn.swen225.lc.persistency.GameState;
+import nz.ac.wgtn.swen225.lc.persistency.LoadedMaze;
 import org.junit.jupiter.api.Test;
-import test.nz.ac.wgtn.swen225.lc.persistency.levelloader.GameStateTest;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -23,24 +24,43 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PersistTest {
-    private String save =
-            "{"
-            +"\n  \"rows\" : 4,"
-            +"\n  \"cols\" : 4,"
-            +"\n  \"board\" : ["
-            +"\n [ \"F:Crab-RIGHT\", \"F:Door-ORANGE\", \"F:Door-GREEN:Crab-LEFT\", \"F\" ]"
-            +"\n, [ \"F:Key-ORANGE\", \"F:Key-GREEN:Crab-LEFT\", \"F:Treasure\", \"F:ExitLock\" ]"
-            +"\n, [ \"W\", \"~\", \"I:temporary\", \"E\" ]"
-            +"\n, [ \"~\", \"~\", \"~\", \"~\" ]"
-            +"\n ]"
-            +"\n}";
+    private final int levelNumber = 1;
+    private final int maxTreasures = 4;
+    private final int maxKeys = 2;
+    private final int time = 60;
+    private final String save =
+            """
+                    {\
+                      "rows" : 4,\
+                      "cols" : 4,\
+                      "time" : 60,\
+                      "levelInfo" : {\
+                      "levelNumber" : 1,\
+                      "maxKeys" : 2,\
+                      "maxTreasures" : 4\
+                      },\
+                      "player" : {\
+                        "x" : 1,\
+                        "y" : 1,\
+                        "treasures" : 1,\
+                        "maxTreasures" : 2,\
+                        "direction" : "UP",\
+                        "keyColors" : [ "GREEN" ]\
+                      },\
+                      "board" : [\
+                        [ "F:Crab-RIGHT", "F:Door-ORANGE", "F:Door-GREEN:Crab-LEFT", "F" ]\
+                        , [ "F:Key-ORANGE", "F:Key-GREEN:Crab-LEFT", "F:Treasure", "F:ExitLock" ]\
+                        , [ "W", "~", "I", "E" ]\
+                        , [ "~", "~", "~", "~" ]\
+                      ]\
+                    }\
+            """;
 
     private static Player defaultPlayer() {
         Player player = Player.of();
         player.addKey(Key.of(EntityColor.GREEN));
-        player.addKey(Key.of(EntityColor.ORANGE));
-        player.setPos(new Position(1, 2));
-        player.setDirection(Direction.RIGHT);
+        player.setPos(new Position(1, 1));
+        player.setDirection(Direction.UP);
         player.setTotalTreasures(3);
         player.collectTreasure();
         return player;
@@ -54,38 +74,16 @@ public class PersistTest {
         assertEquals(1, player.getTotalTreasures());
     }
 
-    private static JFrame blankWindow() {
-        JFrame frame = new JFrame("Testing window, parent to file dialogs.");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(300, 200);
-        frame.setVisible(true);
-        return frame;
-    }
-
-    @Disabled // TODO: update the test string to include player
     @Test
     public void testSerialisation() {
         MockPersistManager mockManager = new MockPersistManager(save);
         Persist persist = new Persist(()->mockManager);
-        Optional<LoadedMaze> game = persist.loadGame(blankWindow());
+        Optional<LoadedMaze> game = persist.loadGame(null);
         assertTrue(game.isPresent());
-        //persist.saveGame(game.get(), blankWindow());
+        persist.saveGame(game.get().maze(), levelNumber, maxTreasures, maxKeys, time, null);
         String saved = mockManager.saveLog.getLast();
-        assertEquals(save, saved.replace("\r\n", "\n")); // so test OS independent
+        assertEquals(save.replaceAll("\\s+", ""), saved.replaceAll("\\s+", "")); // so test OS independent
     }
-
-//    @Test
-//    public void testPlayerRoundTrip() {
-//        ObjectMapper mapper = new ObjectMapper();
-//        Player player = defaultPlayer();
-//        try {
-//            String serialised = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(player);
-//            Player deserialised = mapper.readValue(serialised, Player.class);
-//            assertDefaultPlayer(deserialised);
-//        } catch (JsonProcessingException e) {
-//            throw new AssertionError(e);
-//        }
-//    }
 }
 
 class MockPersistManager implements PersistManager<LoadedMaze> {
@@ -98,12 +96,13 @@ class MockPersistManager implements PersistManager<LoadedMaze> {
     }
 
     @Override
-    public void save(LoadedMaze data, JFrame parent) { // do nothing with parent window and file dialogs
+    public boolean save(LoadedMaze data, JFrame parent) { // do nothing with parent window and file dialogs
         try {
             GameState state = stateMapper.toState(data);
             state.setPlayer(GameStateTest.playerState);
             String save = new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(state);
             saveLog.add(save);
+            return true;
         } catch (JsonProcessingException e) {
             throw new AssertionError(e);
         }

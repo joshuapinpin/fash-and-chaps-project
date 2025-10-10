@@ -2,8 +2,6 @@ package nz.ac.wgtn.swen225.lc.persistency;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import nz.ac.wgtn.swen225.lc.domain.Maze;
-import nz.ac.wgtn.swen225.lc.persistency.serialisation.GameMapper;
-import nz.ac.wgtn.swen225.lc.persistency.serialisation.GameState;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,17 +15,17 @@ import java.util.stream.Collectors;
  * @author Thomas Ru - 300658840
  */
 public enum Levels {
-    LevelOne(1, 60),
-    LevelTwo(2, 60);
+    LevelOne(1, 60, new GameMapper()),
+    LevelTwo(2, 60, new GameMapper());
 
     private static final String defaultPath = "/levels/Level";
-    private static final GameMapper mapper = new GameMapper();
+    private static final String extension = ".json";
 
-    private boolean loaded = false;
+    private final GameMapper mapper;
     private final int levelNumber;
     private final int maxTime;
-    private int maxKeys;
-    private int maxTreasures;
+    private final GameState gameState;
+    private final LevelInfo levelInfo;
 
 
     static {
@@ -49,12 +47,17 @@ public enum Levels {
      * Given the level number, constructs a Level singleton.
      * @param levelNumber - the level number.
      * @param maxTime - the maximum level duration in pings.
+     * @param mapper - used to map from GameState to Maze.
      */
-    Levels(int levelNumber, int maxTime) {
+    Levels(int levelNumber, int maxTime, GameMapper mapper) {
         if (levelNumber <= 0) { throw new  IllegalArgumentException("Level number must be positive."); }
         if (maxTime <= 0) { throw new  IllegalArgumentException("Level timeout must be positive."); }
         this.levelNumber = levelNumber;
         this.maxTime = maxTime;
+        this.mapper = mapper;
+
+        gameState = load(levelNumber, this::loadState);
+        levelInfo = gameState.getLevelInfo();
     }
 
     /**
@@ -72,23 +75,21 @@ public enum Levels {
     public Maze load() {
         System.out.println("*DEBUG* Inside of the Persistency Package Now");
         // note: level loading sets maxKeys and maxTreasures
-        Maze level = load(levelNumber, this::createMaze);
-        loaded = true;
-        return level;
+        return mapper.fromState(gameState).maze();
     }
 
     /**
      * Utility method, useful for testing.
-     * Given a level number and way to map from an InputStream to a LevelMaker,
+     * Given a level number and way to map from an InputStream to a GameState,
      * loads the associated level from JSON file.
      * @param i - the level number.
      * @param mapper - the mapping function.
-     * @return - the Maze instance loaded from file.
+     * @return - the GameState instance loaded from file.
      */
-    public static Maze load(int i, Function<InputStream, Maze> mapper) {
+    public static GameState load(int i, Function<InputStream, GameState> mapper) {
         if (mapper == null) { throw new IllegalArgumentException("Mapper cannot be null."); }
 
-        String location = defaultPath+i+".json";
+        String location = defaultPath+i+extension;
         try (InputStream in = Levels.class.getResourceAsStream(location)) {
             if (in == null) {throw new IOException("Level "+i+" not found, "+location);}
             return Objects.requireNonNull(mapper.apply(in), "Level JSON deserialised to null.");
@@ -102,22 +103,23 @@ public enum Levels {
     }
 
     /**
-     * Takes a given InputStream from reading a JSON, returns the corresponding Maze instance.
-     * Also sets the maxKeys and maxTreasures fields using the information from the Maze.
+     * Takes a given InputStream from reading a JSON, returns the corresponding GameState instance.
      * @param in - the given InputStream.
-     * @return - the associated Maze instance.
+     * @return - the GameState read from file.
      */
-    private Maze createMaze(InputStream in){
+    private GameState loadState(InputStream in){
         try {
-            GameState gameState = new ObjectMapper().readValue(in, GameState.class);
-            Maze maze = mapper.fromState(gameState).maze();
-            maxKeys = gameState.keyCount();
-            maxTreasures = gameState.treasureCount();
-            return maze;
+            return new ObjectMapper().readValue(in, GameState.class);
         } catch (IOException e) {
             throw new Error("Deserialisation failed: "+e);
         }
     }
+
+    /**
+     * Getter for the level number
+     * @return - the level number
+     */
+    public int levelNumber() { return levelNumber; }
 
     /**
      * Getter for the maximum level duration.
@@ -130,8 +132,7 @@ public enum Levels {
      * @return - the integer no. of keys.
      */
     public int maxKeys() {
-        if (!loaded) { load(); }
-        return maxKeys;
+        return levelInfo.maxKeys();
     }
 
     /**
@@ -139,9 +140,6 @@ public enum Levels {
      * @return the integer no. of treasures.
      */
     public int maxTreasures() {
-        if (!loaded) { load(); }
-        return maxTreasures;
+        return levelInfo.maxTreasures();
     }
-
-    public int levelNumber() { return levelNumber; }
 }

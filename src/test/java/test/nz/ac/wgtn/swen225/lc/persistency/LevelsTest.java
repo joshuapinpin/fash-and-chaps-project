@@ -1,7 +1,9 @@
-package test.nz.ac.wgtn.swen225.lc.persistency.levelloader;
+package test.nz.ac.wgtn.swen225.lc.persistency;
 
 import nz.ac.wgtn.swen225.lc.domain.Position;
 import nz.ac.wgtn.swen225.lc.domain.Free;
+import nz.ac.wgtn.swen225.lc.persistency.GameState;
+import nz.ac.wgtn.swen225.lc.persistency.LevelInfo;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,10 +19,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 record TestData(int number){}
 
 public class LevelsTest {
-    private static Maze mapper(InputStream in){
+    private static GameState mapper(InputStream in){
         try {
             TestData level = new ObjectMapper().readValue(in, TestData.class);
-            return new Maze(level.number(), level.number());
+            int n = level.number();
+            return new GameState(n, n, n,
+                    new LevelInfo(1, 1, 1),
+                    GameStateTest.playerState
+            );
         } catch (IOException e) {
             throw new Error("Deserialisation failed: "+e);
         }
@@ -33,7 +39,8 @@ public class LevelsTest {
 
     @Test
     public void testValid() {
-        Maze result = Levels.load(67, LevelsTest::mapper);
+        GameState state = Levels.load(67, LevelsTest::mapper);
+        Maze result = new Maze(state.getRows(), state.getCols());
         for (int y=0; y<result.getRows(); y++) {
             for (int x=0; x<result.getCols(); x++) {
                 result.setTileAt(Free.of(new Position(x, y)));
