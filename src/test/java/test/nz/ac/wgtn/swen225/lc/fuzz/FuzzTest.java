@@ -23,7 +23,6 @@ public class FuzzTest {
      * Adjust this constant (or provide the system property) instead of hunting through the method.
      */
     private static final long RUN_MS = Long.getLong("fuzz.ms", 15_000L); // change here e.g. 55_000L for longer sessions
-
     @Test
     @Timeout(60)
     public void testLevel1() {

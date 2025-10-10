@@ -1,7 +1,6 @@
 package nz.ac.wgtn.swen225.lc.persistency.serialisation;
 
-import nz.ac.wgtn.swen225.lc.domain.entities.Entity;
-import nz.ac.wgtn.swen225.lc.domain.tiles.*;
+import nz.ac.wgtn.swen225.lc.domain.*;
 import nz.ac.wgtn.swen225.lc.persistency.parse.TileParsers;
 
 import java.util.Optional;

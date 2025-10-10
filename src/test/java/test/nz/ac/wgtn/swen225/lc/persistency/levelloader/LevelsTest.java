@@ -1,7 +1,7 @@
 package test.nz.ac.wgtn.swen225.lc.persistency.levelloader;
 
 import nz.ac.wgtn.swen225.lc.domain.Position;
-import nz.ac.wgtn.swen225.lc.domain.tiles.Free;
+import nz.ac.wgtn.swen225.lc.domain.Free;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
