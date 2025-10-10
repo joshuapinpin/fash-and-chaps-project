@@ -2,8 +2,8 @@ package nz.ac.wgtn.swen225.lc.recorder;
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 import nz.ac.wgtn.swen225.lc.app.util.Input;
 import nz.ac.wgtn.swen225.lc.domain.Maze;
-import nz.ac.wgtn.swen225.lc.persistency.serialisation.GameMapper;
-import nz.ac.wgtn.swen225.lc.persistency.serialisation.GameState;
+import nz.ac.wgtn.swen225.lc.persistency.serialisation.game.GameMapper;
+import nz.ac.wgtn.swen225.lc.persistency.serialisation.game.GameState;
 
 import javax.swing.*;
 import java.io.File;

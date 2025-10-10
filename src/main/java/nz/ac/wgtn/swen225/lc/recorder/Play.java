@@ -3,8 +3,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import nz.ac.wgtn.swen225.lc.app.controller.*;
 import nz.ac.wgtn.swen225.lc.domain.Maze;
-import nz.ac.wgtn.swen225.lc.persistency.serialisation.GameMapper;
-import nz.ac.wgtn.swen225.lc.persistency.serialisation.GameState;
+import nz.ac.wgtn.swen225.lc.persistency.serialisation.game.GameMapper;
+import nz.ac.wgtn.swen225.lc.persistency.serialisation.game.GameState;
+
 import java.io.File;
 import javax.swing.*;
 import java.io.*;
@@ -27,6 +28,11 @@ public interface Play {
     public void reset();
     /** */
     public void setSpeed(int s);
+    /** */
+    public default void startPlay(){
+        // sets the game to position at start of recording
+
+    }
     /** */
     public default File getFile(){
         File fileChoice = null;

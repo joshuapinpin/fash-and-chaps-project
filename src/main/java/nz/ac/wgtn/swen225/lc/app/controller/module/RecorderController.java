@@ -40,6 +40,7 @@ public class RecorderController implements Controller {
     @Override
     public void atNewGame(){
         isRecording = false;
+        saveL1.reset();
     }
 
     /**
