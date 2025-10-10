@@ -7,10 +7,13 @@ import nz.ac.wgtn.swen225.lc.domain.Position;
 import nz.ac.wgtn.swen225.lc.domain.tiles.Tile;
 import nz.ac.wgtn.swen225.lc.persistency.domainutil.StringTileVisitor;
 import nz.ac.wgtn.swen225.lc.persistency.parse.MonsterParser;
+import nz.ac.wgtn.swen225.lc.persistency.parse.ParsedTile;
 import nz.ac.wgtn.swen225.lc.persistency.parse.TileParsers;
 import nz.ac.wgtn.swen225.lc.persistency.serialisation.player.PlayerMapper;
 import nz.ac.wgtn.swen225.lc.persistency.serialisation.api.Mapper;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -80,6 +83,7 @@ public class GameMapper implements Mapper<LoadedMaze, GameState> {
         // parse String symbol at each board position
         String symbol;
         Position position;
+        List<ParsedTile<?>> parsedTiles = new ArrayList<>();
         for (int y = 0; y < rows; y++) {
             for (int x = 0; x < cols; x++) {
                 symbol = Objects.requireNonNull(board[y][x], "Board is null at row=" + x + ", col=" + y);
@@ -87,12 +91,15 @@ public class GameMapper implements Mapper<LoadedMaze, GameState> {
                     throw new IllegalArgumentException("Symbol cannot be empty");
                 }
                 position = new Position(x, y);
-                Tile tile = TileParsers.parseTile(state, symbol, position); // TODO: this sets the no. of keys/treasures in gameState, please refactor!
-                maze.setTileAt(tile);
+                parsedTiles.add(TileParsers.parseTile(state, symbol, position));
             }
         }
 
-        state.getMonsters().forEach(maze::setMonster);
+        parsedTiles.forEach(info->{
+            Tile tile = info.tile();
+            if (info.monster().isPresent()) {maze.setMonster(info.monster().get());}
+            maze.setTileAt(tile);
+        });
         Player player = playerMapper.fromState(state.getPlayer());
         player.setTotalTreasures(state.maxTreasures());
         maze.setPlayer(player);

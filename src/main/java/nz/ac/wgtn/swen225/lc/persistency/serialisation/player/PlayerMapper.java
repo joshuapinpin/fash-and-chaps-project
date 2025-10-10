@@ -26,13 +26,13 @@ public class PlayerMapper implements Mapper<Player, PlayerState> {
     @Override
     public Player fromState(PlayerState state) {
         Player player = Player.of();
-        player.setPos(new Position(state.getX(), state.getY()) );
-        player.setDirection(Direction.valueOf(state.getDirection()));
-        player.setTotalTreasures(state.getMaxTreasures());
-        for (int i = 0; i < state.getTreasures(); i++) {
+        player.setPos(new Position(state.x(), state.y()) );
+        player.setDirection(Direction.valueOf(state.direction()));
+        player.setTotalTreasures(state.maxTreasures());
+        for (int i = 0; i < state.treasures(); i++) {
             player.collectTreasure();
         }
-        state.getKeyColors().forEach(c->player.addKey(Key.of(EntityColor.valueOf(c))));
+        state.keyColors().forEach(c->player.addKey(Key.of(EntityColor.valueOf(c))));
         return player;
     }
 }

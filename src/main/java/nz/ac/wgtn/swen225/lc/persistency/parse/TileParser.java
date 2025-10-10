@@ -63,12 +63,12 @@ abstract class TileParser<T extends Tile> {
      * @param position - the Position of the Tile.
      * @return - the concrete Tile instance.
      */
-    public T parse(GameState surroundings, String tile, Position position) {
+    public ParsedTile<T> parse(GameState surroundings, String tile, Position position) {
         checkNonNull(surroundings, tile, position);
         checkTileStartsWithSymbol(tile);
-        T result = defaultTileMaker.apply(position);
-        return Objects.requireNonNull(result, "Parsing function returned null.");
-        // note LevelMaker context currently unused, but kept as parameter for future-proofing
+        T result = Objects.requireNonNull(defaultTileMaker.apply(position), "Parsing function returned null.");
+        return new ParsedTile<>(result);
+        // note GameState context currently unused, but kept as parameter for future-proofing
     }
 
     /**

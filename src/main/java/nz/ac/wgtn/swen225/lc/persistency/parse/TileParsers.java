@@ -50,7 +50,7 @@ public enum TileParsers {
      * @param position - the Position of the Tile on the game board.
      * @return - the Tile instance, otherwise an IllegalArgumentException is thrown.
      */
-    public static Tile parseTile(GameState surroundings, String symbol, Position position) {
+    public static ParsedTile<?> parseTile(GameState surroundings, String symbol, Position position) {
         TileParser<?> parser = legend.get(symbol.split(TileParsers.separator)[0]);
         if (parser == null) {
             throw new IllegalArgumentException("Unknown symbol: " + symbol);
