@@ -2,9 +2,12 @@ package nz.ac.wgtn.swen225.lc.recorder;
 import nz.ac.wgtn.swen225.lc.app.util.*;
 import nz.ac.wgtn.swen225.lc.app.controller.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import nz.ac.wgtn.swen225.lc.domain.Maze;
+import nz.ac.wgtn.swen225.lc.persistency.serialisation.GameMapper;
+import nz.ac.wgtn.swen225.lc.persistency.serialisation.GameState;
 import java.io.File;
-import javax.swing.*;
 import java.io.*;
+import javax.swing.*;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -17,10 +20,12 @@ import java.util.ArrayList;
  * @author Arushi Bhatnagar Stewart
  */
 public class SaveL1 implements Save{
-    public record inputTime(Input direction, Integer timeLeftMilli){}
+    public record Moves(Input direction, Integer timeLeftMilli){}
+    public record FullGame(List<Moves> saveList, GameState state){};
     private static final SaveL1 saveInstance = new SaveL1();
-    private List<inputTime> saveList;
+    private List<Moves> saveList;
     private final ObjectMapper mapper;
+    private GameState gs;
     /** Method to add the Input objects (the directions/movements)
      * of the character to the movements list.
      *
@@ -41,9 +46,17 @@ public class SaveL1 implements Save{
         saveList = new ArrayList<>();
     }
     /** */
+    public void startRecording(AppController ac){
+        Maze maze = ac.domain();
+        int levelNumber = ac.level();
+        int maxTreasures = ac.persistencyController().maxTreasures();
+        int maxKeys = ac.persistencyController().maxKeys();
+        int timeLeft = ac.timerController().getTimeLeft();
+        //gs = new GameMapper().toState(maze, levelNumber, maxTreasures, maxKeys, timeLeft);
+    }
     public void updateMovement(Input direction, AppController ac, boolean toSave){
         if(toSave){
-            saveToFile();
+            saveToFile(ac);
             return;
         }
         addMovement(direction, ac);
@@ -52,19 +65,23 @@ public class SaveL1 implements Save{
     private void addMovement(Input direction, AppController ac) {
         System.out.println("*DEBUG* Inside of the Recorder Package Now");
         int timeLeft = ac.timerController().getPreciseTimeMillis();
-        saveList.add(new inputTime(direction, timeLeft));
+        saveList.add(new Moves(direction, timeLeft));
     }
     /** This is the core method of this class.
      * In this method, we create a file and write
      * elements in the movement list to the file
      */
-    private void saveToFile(){
+    private void saveToFile(AppController ac){
         System.out.println("*DEBUG* Inside of the Recorder Package Now");
+
         File playerMovements = chooseFile();
+        if (playerMovements == null) {
+            return;
+        }
         try {
             mapper.writerWithDefaultPrettyPrinter().writeValue(playerMovements, saveList);
         } catch(IOException e){
-            throw new Error(e);
+            JOptionPane.showMessageDialog(null, "Failed to save file: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

@@ -17,6 +17,11 @@ import java.util.stream.Stream;
 
 import static nz.ac.wgtn.swen225.lc.app.gui.AppWindow.MAZE_SIZE;
 
+/**
+ * Controller for the main application window.
+ * Manages the display and updating of various panels within the window.
+ * @author Joshua Pinpin (Student ID: 300662880)
+ */
 public class WindowController implements Controller {
     AppController c;
     AppWindow w;

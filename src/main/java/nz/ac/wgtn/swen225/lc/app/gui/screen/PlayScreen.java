@@ -17,6 +17,10 @@ import java.util.List;
 
 import static nz.ac.wgtn.swen225.lc.app.gui.AppWindow.MAZE_SIZE;
 
+/**
+ * The main play screen for the game, containing all panels and the game view.
+ * @author Joshua Pinpin (Student ID: 300662880)
+ */
 public class PlayScreen extends JPanel {
     private TitlePanel titlePanel;
     private MenuPanel menuPanel;
@@ -45,11 +49,6 @@ public class PlayScreen extends JPanel {
         setupLayeredPanels();
         bgImg = LoadingImg.Background.loadImage();
     }
-
-    private Position pos(int x, int y){
-        return new Position(x, y);
-    }
-
 
     private void setupLayoutPanels(){
         setLayout(new BorderLayout());
@@ -105,32 +104,46 @@ public class PlayScreen extends JPanel {
         add(layeredPane, BorderLayout.CENTER);
     }
 
+    /**
+     * Change the overlay panel to the specified panel.
+     * @param name The name of the panel to display.
+     */
     public void changeOverlay(String name){
         cardLayout.show(overlayPanel, name);
         displayingPause = false;
     }
 
+    /**
+     * Display the info panel overlay.
+     */
     public void displayInfo(){
         previousCard = InfoPanel.name();
         changeOverlay(InfoPanel.name());
     }
 
+    /**
+     * Display the pause panel overlay.
+     */
     public void displayPause(){
         changeOverlay(PausedState.name());
         displayingPause = true;
     }
 
+    /**
+     * Display a blank overlay (no overlay).
+     */
     public void displayBlank(){
         previousCard = "Blank";
         changeOverlay("Blank");
     }
 
+    /**
+     * Display the previous overlay panel.
+     */
     public void displayPrevious(){
         System.out.println("Displaying previous overlay");
         changeOverlay(previousCard);
     }
-
-
 
     @Override
     protected void paintComponent(Graphics g) {

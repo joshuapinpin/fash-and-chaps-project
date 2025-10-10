@@ -3,6 +3,10 @@ package nz.ac.wgtn.swen225.lc.app.state;
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 import nz.ac.wgtn.swen225.lc.domain.Direction;
 
+/**
+ * State when the game is in step replay mode.
+ * @author Joshua Pinpin (Student ID: 300662880)
+ */
 public record StepReplayState(AppController c) implements GameState {
     public StepReplayState{
         System.out.println("Entered: " + name());

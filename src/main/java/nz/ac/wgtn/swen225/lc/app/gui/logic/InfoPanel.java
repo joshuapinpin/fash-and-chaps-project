@@ -7,6 +7,11 @@ import nz.ac.wgtn.swen225.lc.app.util.MyFont;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * InfoPanel class for the GUI
+ * Displays game instructions to the player
+ * @author Joshua Pinpin (Student ID: 300662880)
+ */
 public class InfoPanel extends JPanel {
     public static final int PANEL_X = 10;
     public static final int PANEL_Y = 10;
@@ -15,6 +20,10 @@ public class InfoPanel extends JPanel {
 
     JPanel helperPanel;
 
+    /**
+     * Constructor for InfoPanel.
+     * @param controller AppController
+     */
     public InfoPanel(AppController controller) {
         setOpaque(false);
         setLayout(null);

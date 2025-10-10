@@ -1,7 +1,5 @@
 package nz.ac.wgtn.swen225.lc.app.gui.layout;
 
-
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridLayout;

@@ -19,6 +19,14 @@ import nz.ac.wgtn.swen225.lc.app.util.Input;
 import nz.ac.wgtn.swen225.lc.app.util.MyButton;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;
 
+/**
+ * MenuPanel class represents the top menu panel with buttons for game control.
+ * It includes buttons for Pause, Save, Load, Play, and Home.
+ * Each button is associated with a specific action in the AppController.
+ * The panel is designed to fit within the application's window dimensions.
+ *
+ * @author Joshua Pinpin (Student ID: 300662880)
+ */
 public class MenuPanel extends JPanel implements ActionListener {
     // Size fields
     public static final int PANEL_WIDTH = AppWindow.WINDOW_WIDTH;
