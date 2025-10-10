@@ -3,8 +3,8 @@ import nz.ac.wgtn.swen225.lc.app.util.*;
 import nz.ac.wgtn.swen225.lc.app.controller.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import nz.ac.wgtn.swen225.lc.domain.Maze;
-import nz.ac.wgtn.swen225.lc.persistency.serialisation.GameMapper;
-import nz.ac.wgtn.swen225.lc.persistency.serialisation.GameState;
+import nz.ac.wgtn.swen225.lc.persistency.serialisation.game.GameMapper;
+import nz.ac.wgtn.swen225.lc.persistency.serialisation.game.GameState;
 import java.io.File;
 import java.io.*;
 import javax.swing.*;
@@ -52,7 +52,7 @@ public class SaveL1 implements Save{
         int maxTreasures = ac.persistencyController().maxTreasures();
         int maxKeys = ac.persistencyController().maxKeys();
         int timeLeft = ac.timerController().getTimeLeft();
-        //gs = new GameMapper().toState(maze, levelNumber, maxTreasures, maxKeys, timeLeft);
+        gs = new GameMapper().toState(maze, levelNumber, maxTreasures, maxKeys, timeLeft);
     }
     public void updateMovement(Input direction, AppController ac, boolean toSave){
         if(toSave){
