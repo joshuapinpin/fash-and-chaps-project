@@ -633,8 +633,10 @@ public class FuzzTest {
             System.err.println("[FUZZ][ISSUE] Could not create directory: " + dir);
             return;
         }
-        String shortName = (t == null ? "no-exception" : t.getClass().getSimpleName());
-        String commit = readGitHead();
+    String shortName = (t == null ? "no-exception" : t.getClass().getSimpleName());
+    String commit = Optional.ofNullable(System.getenv("CI_COMMIT_SHA"))
+        .or(() -> Optional.ofNullable(System.getenv("GIT_COMMIT")))
+        .orElse("unknown");
         String fileName = String.format("fuzz-%s-seed-%d.md", shortName, seed);
         java.io.File f = new java.io.File(dir, fileName);
         try (java.io.PrintWriter pw =
@@ -685,43 +687,8 @@ public class FuzzTest {
      *
      * @return the commit hash, or "unknown" if it cannot be determined
      */
-    private String readGitHead() {
-        try {
-            java.nio.file.Path head = java.nio.file.Paths.get(".git/HEAD");
-            if (!java.nio.file.Files.exists(head)) return "unknown";
-            String ref = java.nio.file.Files.readString(head).trim();
-            if (ref.startsWith("ref:")) {
-                java.nio.file.Path refPath = java.nio.file.Paths.get(".git", ref.substring(5));
-                if (java.nio.file.Files.exists(refPath)) {
-                    return java.nio.file.Files.readString(refPath).trim();
-                }
-            }
-            return ref;
-        } catch (Exception e) { return "unknown"; }
-    }
+    // removed readGitHead(): commit id now taken from CI env if available
 
-    /**
-     * Replays a comma-separated sequence of {@link Input} values starting from a given level.
-     * Intended for local debugging of a previously dumped failing run.
-     *
-     * @param csv comma-separated {@link Input} values
-     * @param startLevel level to start from
-     */
-    @SuppressWarnings("unused")
-    private void replay(String csv, int startLevel) {
-        AppController controller = AppController.of();
-        controller.startNewGame(startLevel);
-        for (String tok : csv.split(",")) {
-            if (tok.isBlank()) continue;
-            try {
-                controller.handleInput(Input.valueOf(tok.trim()));
-                sleepQuiet(50);
-            } catch (Exception e) {
-                System.out.println("Replay halted on input=" + tok + " due to " + e);
-                break;
-            }
-        }
-    }
 
     /**
      * Sleeps without throwing checked exceptions; preserves interrupt status.
@@ -736,10 +703,10 @@ public class FuzzTest {
     // These are quick, deterministic checks that bump domain coverage without adding new files.
 
     private static class CountingObserver implements GameObserver {
-        int moves, keys, treasures, doors, drowns;
-        @Override public void onPlayerMove(Position newPosition) { moves++; }
-        @Override public void onKeyCollected(Key key) { /* not asserted here */ }
-        @Override public void onTreasureCollected() { treasures++; }
+        int doors, drowns;
+        @Override public void onPlayerMove(Position newPosition) { /* not asserted */ }
+        @Override public void onKeyCollected(Key key) { /* not asserted */ }
+        @Override public void onTreasureCollected() { /* not asserted */ }
         @Override public void onDoorOpened(Door door) { doors++; }
         @Override public void onPlayerDrown(Player player) { drowns++; }
     }
