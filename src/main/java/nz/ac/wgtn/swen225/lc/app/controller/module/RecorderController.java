@@ -8,6 +8,11 @@ import nz.ac.wgtn.swen225.lc.app.state.StepReplayState;
 import nz.ac.wgtn.swen225.lc.app.util.Input;
 import nz.ac.wgtn.swen225.lc.recorder.*;
 
+/**
+ * Controller for recording and replaying player movements.
+ * Integrates with Play and Save classes to manage recording state.
+ * @author Joshua Pinpin (Student ID: 300662880)
+ */
 public class RecorderController implements Controller {
     Play autoplayL1;
     Play stepbystepL1;
@@ -29,6 +34,9 @@ public class RecorderController implements Controller {
         saveL1 = SaveL1.of();
     }
 
+    /**
+     * Reset recording state at the start of a new game.
+     */
     @Override
     public void atNewGame(){
         isRecording = false;
@@ -55,6 +63,7 @@ public class RecorderController implements Controller {
      * Stop recording the player's movements and save to file.
      */
     public void stopRecording(){
+        if(!isRecording) return;
         isRecording = false;
         System.out.println("Stopped Recording");
         saveToFile();

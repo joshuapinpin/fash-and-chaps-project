@@ -2,6 +2,7 @@ package nz.ac.wgtn.swen225.lc.app.gui.screen;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
+import nz.ac.wgtn.swen225.lc.app.util.Input;
 import nz.ac.wgtn.swen225.lc.app.util.MyButton;
 import nz.ac.wgtn.swen225.lc.app.util.MyFont;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;
@@ -11,6 +12,11 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
+/**
+ * The defeat screen displayed when the player loses the game.
+ * Provides options to restart levels, load a game, or return home.
+ * @author Joshua Pinpin (Student ID: 300662880)
+ */
 public class DefeatScreen extends JPanel  {
     private AppController c;
     private JPanel titlePanel;
@@ -20,6 +26,10 @@ public class DefeatScreen extends JPanel  {
     int height = AppWindow.WINDOW_HEIGHT/2;
     int buttonGap = 20;
 
+    /**
+     * Constructor for the DefeatScreen.
+     * @param c The application controller to handle user inputs.
+     */
     public DefeatScreen(AppController c) {
         this.c = c;
         setLayout(new BorderLayout());
@@ -57,9 +67,10 @@ public class DefeatScreen extends JPanel  {
     }
 
     private void setupButtons(){
-        setupSingleButton("Level 1", e -> c.startNewGame(1));
-        setupSingleButton("Level 2", e -> c.startNewGame(2));
-        setupSingleButton("Home", e -> c.exitGame());
+        setupSingleButton("Level 1", e -> c.handleInput(Input.LOAD_LEVEL_1));
+        setupSingleButton("Level 2", e -> c.handleInput(Input.LOAD_LEVEL_2));
+        setupSingleButton("Load Game", e -> c.handleInput(Input.RESUME));
+        setupSingleButton("Home", e -> c.handleInput(Input.EXIT));
     }
 
     private void setupSingleButton(String name, ActionListener listener ){

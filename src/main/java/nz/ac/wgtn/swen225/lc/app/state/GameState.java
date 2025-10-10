@@ -3,6 +3,12 @@ package nz.ac.wgtn.swen225.lc.app.state;
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 import nz.ac.wgtn.swen225.lc.app.util.Input;
 
+/**
+ * Interface representing different game states.
+ * Each state can override methods to handle specific inputs.
+ * Default implementations throw UnsupportedOperationException.
+ * @author Joshua Pinpin (Student ID: 300662880)
+ */
 public interface GameState{
     /**
      * Handles input based on the current game state.
@@ -25,6 +31,10 @@ public interface GameState{
             default -> throw new IllegalArgumentException("Unexpected input: " + input);
         }
     }
+    /**
+     * Default implementations throw UnsupportedOperationException.
+     * Override only the methods relevant to the specific state.
+     */
     default void moveUp(AppController c){throw new UnsupportedOperationException();}
     default void moveDown(AppController c){throw new UnsupportedOperationException();}
     default void moveLeft(AppController c){throw new UnsupportedOperationException();}

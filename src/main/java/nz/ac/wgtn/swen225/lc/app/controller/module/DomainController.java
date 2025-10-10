@@ -10,6 +10,12 @@ import nz.ac.wgtn.swen225.lc.renderer.Renderer;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * DomainController manages the domain model of the game, including the maze, player, and game entities.
+ * It handles player movements, level initialization, and updates to the game state.
+ *
+ * @author Joshua Pinpin (Student ID: 300662880)
+ */
 public class DomainController implements Controller {
     AppController c;
     Maze domain;
@@ -35,13 +41,26 @@ public class DomainController implements Controller {
     }
 
     /**
+     * Updates the domain model with a new maze state
+     * @param maze New maze state to set as the domain
+     */
+    public void updateDomain(Maze maze){
+        this.domain = maze;
+        initialiseDomainFields();
+    }
+
+    /**
      * Initialises the domain model for the specified level
-     * @param level
+     * @param level Level number to load
      */
     public void initialiseDomain(int level){
         // Load Level
         this.domain = c.persistencyController().loadLevel(level).load();
+        initialiseDomainFields();
 
+    }
+
+    private void initialiseDomainFields(){
         // Initialise Domain Fields
         this.tileGrid = domain.getTileGrid();
         this.player = domain.getPlayer();
@@ -68,7 +87,6 @@ public class DomainController implements Controller {
      */
     public void movePlayer(Direction dir){
         if(domain == null) throw new RuntimeException("Cannot move player: Domain is null.");
-        // TODO: need a better and safer way to turn info on and off
         c.windowController().displayInfo(false);
         domain.movePlayer(dir);
     }
@@ -80,7 +98,6 @@ public class DomainController implements Controller {
     public void moveCrab(){
         domain.ping();
     }
-
 
     // ========== GETTERS AND SETTERS ==========
     public Maze domain() {return domain;}
