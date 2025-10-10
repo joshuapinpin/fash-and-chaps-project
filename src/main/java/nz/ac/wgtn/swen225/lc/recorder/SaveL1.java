@@ -52,7 +52,7 @@ public class SaveL1 implements Save{
         int maxTreasures = ac.persistencyController().maxTreasures();
         int maxKeys = ac.persistencyController().maxKeys();
         int timeLeft = ac.timerController().getTimeLeft();
-        //gs = new GameMapper().toState(maze, levelNumber, maxTreasures, maxKeys, timeLeft);
+        gs = new GameMapper().toState(maze, levelNumber, maxTreasures, maxKeys, timeLeft);
     }
     public void updateMovement(Input direction, AppController ac, boolean toSave){
         if(toSave){
