@@ -1,7 +1,6 @@
-package nz.ac.wgtn.swen225.lc.persistency.parse;
+package nz.ac.wgtn.swen225.lc.persistency;
 
 import nz.ac.wgtn.swen225.lc.domain.*;
-import nz.ac.wgtn.swen225.lc.persistency.serialisation.GameState;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -30,7 +29,6 @@ public enum EntityParsers {
     KeyP("Key") {
         @Override
         public Entity parse(GameState surroundings, String entity) {
-            surroundings.incrementKeys();
             return this.parseWithColor(surroundings, entity, Key::of);
         }
     },
@@ -49,7 +47,6 @@ public enum EntityParsers {
     TreasureP("Treasure") {
         @Override
         public Entity parse(GameState surroundings, String entity) {
-            surroundings.incrementTreasures();
             return this.parse(surroundings, entity, Treasure::of);
         }
     };
@@ -79,7 +76,7 @@ public enum EntityParsers {
     /**
      * Utility method to parse any given String into an Entity, if formatted correctly.
      * @param entity - the String representation.
-     * @param surroundings - the LevelMaker level surrounding the entity.
+     * @param surroundings - the GameState surroundings of the entity (context for EntityParser strategy)
      * @return - the Entity instance created from the String.
      */
     public static Entity parseEntity(GameState surroundings, String entity) {

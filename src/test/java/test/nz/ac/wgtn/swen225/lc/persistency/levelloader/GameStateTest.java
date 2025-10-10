@@ -1,7 +1,7 @@
 package test.nz.ac.wgtn.swen225.lc.persistency.levelloader;
 
-import nz.ac.wgtn.swen225.lc.persistency.serialisation.GameState;
-import nz.ac.wgtn.swen225.lc.persistency.serialisation.PlayerState;
+import nz.ac.wgtn.swen225.lc.persistency.GameState;
+import nz.ac.wgtn.swen225.lc.persistency.PlayerState;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -18,7 +18,7 @@ public class GameStateTest {
                 {"F:Treasure", "~", "F", "F:Treasure"}
         };
         level.setBoard(board);
-        assertEquals(2, level.treasureCount());
-        assertEquals(4, level.keyCount());
+        assertEquals(2, level.maxTreasures());
+        assertEquals(4, level.maxKeys());
     }
 }

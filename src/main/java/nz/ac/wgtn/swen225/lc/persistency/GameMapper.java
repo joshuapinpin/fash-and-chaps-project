@@ -1,18 +1,18 @@
-package nz.ac.wgtn.swen225.lc.persistency.serialisation;
+package nz.ac.wgtn.swen225.lc.persistency;
 
 import nz.ac.wgtn.swen225.lc.domain.Maze;
 import nz.ac.wgtn.swen225.lc.domain.Monster;
 import nz.ac.wgtn.swen225.lc.domain.Player;
 import nz.ac.wgtn.swen225.lc.domain.Position;
 import nz.ac.wgtn.swen225.lc.domain.Tile;
-import nz.ac.wgtn.swen225.lc.persistency.parse.MonsterParser;
-import nz.ac.wgtn.swen225.lc.persistency.parse.TileParsers;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
- * Concrete Mapper which converts to/from Maze and its serialisation friendly counterpart GameState.
- *
+ * Concrete Mapper which converts to/from Maze and its
+ * serialisation friendly counterpart GameState.
  * @author Thomas Ru - 300658840
  */
 public class GameMapper implements Mapper<LoadedMaze, GameState> {
@@ -23,13 +23,12 @@ public class GameMapper implements Mapper<LoadedMaze, GameState> {
      * @param data - the Maze.
      * @return - a GameState representation ready for writing to file.
      */
-    public GameState toState(Maze data, int levelNumber, int maxTreasures, int time) {
+    public GameState toState(Maze data, int levelNumber, int maxTreasures, int maxKeys, int time) {
         GameState gameState = new GameState(
                 data.getRows(),
                 data.getCols(),
-                levelNumber,
-                maxTreasures,
                 time,
+                new LevelInfo(levelNumber, maxKeys, maxTreasures),
                 playerMapper.toState(data.getPlayer())
         );
         StringTileVisitor tileToString = new StringTileVisitor();
@@ -45,10 +44,8 @@ public class GameMapper implements Mapper<LoadedMaze, GameState> {
         }
 
         // append monster strings on
-        System.out.println(data.getMonsters()); // TODO: remove
         data.getMonsters().forEach(m->{
             Position pos = m.getPos();
-            System.out.println("at position x="+pos.getX()+", y="+pos.getY()); //TODO: remove
             board[pos.getY()][pos.getX()] += TileParsers.separator + monsterToString(m);
         });
 
@@ -57,15 +54,21 @@ public class GameMapper implements Mapper<LoadedMaze, GameState> {
     }
 
 
+    /**
+     * Mostly here for completeness and implementing the interface.
+     * Converts from LoadedMaze to JSON serialisation friendly GameState.
+     * @param data - the LoadedMaze to serialise.
+     * @return - the GameState representation of the LoadedMaze.
+     */
     @Override
     public GameState toState(LoadedMaze data) {
-        return toState(data.maze(), data.levelNumber(), data.maxTreasure(), data.time());
+        LevelInfo meta = data.levelInfo();
+        return toState(data.maze(), meta.levelNumber(), meta.maxTreasures(), meta.maxKeys(), data.time());
     }
 
     /**
-     * Gives the Maze object corresponding to the tiles and entities stored
-     * in the GameState. Note key and treasure counts are also determined as loading occurs,
-     * and the GameState object is mutated to reflect this.
+     * Gives the LoadedMaze object corresponding to the tiles and entities
+     * stored in the GameState.
      * @param state - the gameState, which may be constructed from JSON.
      * @return - the Maze object.
      */
@@ -75,36 +78,38 @@ public class GameMapper implements Mapper<LoadedMaze, GameState> {
         int cols = state.getCols();
         String[][] board = state.getBoard();
         Maze maze = new Maze(rows, cols);
-        String symbol;
-        Position position;
 
         // parse String symbol at each board position
+        String symbol;
+        Position position;
+        List<ParsedTile<?>> parsedTiles = new ArrayList<>();
         for (int y = 0; y < rows; y++) {
             for (int x = 0; x < cols; x++) {
+                //preconditions
                 symbol = Objects.requireNonNull(board[y][x], "Board is null at row=" + x + ", col=" + y);
                 if (symbol.isEmpty()) {
                     throw new IllegalArgumentException("Symbol cannot be empty");
                 }
                 position = new Position(x, y);
-                Tile tile = TileParsers.parseTile(state, symbol, position); // TODO: this sets the no. of keys/treasures in gameState, please refactor!
-                maze.setTileAt(tile);
+                parsedTiles.add(TileParsers.parseTile(state, symbol, position));
             }
         }
 
-        System.out.println(state.getMonsters().size());
-        state.getMonsters().forEach(m->{
-            maze.setMonster(m);
-            System.out.println("added monster");
+        // append on monsters for each tile after tile parsing, since they're independent of tiles
+        parsedTiles.forEach(info->{
+            Tile tile = info.tile();
+            if (info.monster().isPresent()) {maze.setMonster(info.monster().get());}
+            maze.setTileAt(tile);
         });
+
         Player player = playerMapper.fromState(state.getPlayer());
-        player.setTotalTreasures(state.getMaxTreasure());
+        player.setTotalTreasures(state.maxTreasures());
         maze.setPlayer(player);
-        state.loaded();
-        return new LoadedMaze(maze, state.getLevelNumber(), state.getMaxTreasure(), state.getTime());
+        return new LoadedMaze(maze, state.getTime(), state.getLevelInfo());
     }
 
     /**
-     * Converts a crab into a representation ready for suitable for later parsing.
+     * Converts a Monster into a representation ready for suitable for later parsing.
      * @param monster - the crab.
      * @return - 'Crab'.
      */
