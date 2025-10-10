@@ -33,10 +33,10 @@ public class Persist {
      * @param time - the time left for this play-through.
      * @param app - the Swing game window, for choosing where to save.
      */
-    public void saveGame(Maze maze, int levelNumber, int maxTreasures, int maxKeys, int time, JFrame app) {
+    public boolean saveGame(Maze maze, int levelNumber, int maxTreasures, int maxKeys, int time, JFrame app) {
         Objects.requireNonNull(maze, "Cannot save null game board.");
         Objects.requireNonNull(app, "Cannot create file dialog with null window.");
-        gamePersistence.save(new LoadedMaze(maze, time, new LevelInfo(levelNumber, maxKeys, maxTreasures)), app);
+        return gamePersistence.save(new LoadedMaze(maze, time, new LevelInfo(levelNumber, maxKeys, maxTreasures)), app);
     }
 
     /**

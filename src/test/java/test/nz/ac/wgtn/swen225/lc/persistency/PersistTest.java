@@ -88,19 +88,6 @@ public class PersistTest {
         String saved = mockManager.saveLog.getLast();
         assertEquals(save.replaceAll("\\s+", ""), saved.replaceAll("\\s+", "")); // so test OS independent
     }
-
-//    @Test
-//    public void testPlayerRoundTrip() {
-//        ObjectMapper mapper = new ObjectMapper();
-//        Player player = defaultPlayer();
-//        try {
-//            String serialised = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(player);
-//            Player deserialised = mapper.readValue(serialised, Player.class);
-//            assertDefaultPlayer(deserialised);
-//        } catch (JsonProcessingException e) {
-//            throw new AssertionError(e);
-//        }
-//    }
 }
 
 class MockPersistManager implements PersistManager<LoadedMaze> {
@@ -113,12 +100,13 @@ class MockPersistManager implements PersistManager<LoadedMaze> {
     }
 
     @Override
-    public void save(LoadedMaze data, JFrame parent) { // do nothing with parent window and file dialogs
+    public boolean save(LoadedMaze data, JFrame parent) { // do nothing with parent window and file dialogs
         try {
             GameState state = stateMapper.toState(data);
             state.setPlayer(GameStateTest.playerState);
             String save = new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(state);
             saveLog.add(save);
+            return true;
         } catch (JsonProcessingException e) {
             throw new AssertionError(e);
         }

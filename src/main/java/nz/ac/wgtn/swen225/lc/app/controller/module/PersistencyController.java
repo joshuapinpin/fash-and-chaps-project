@@ -74,15 +74,15 @@ public class PersistencyController  {
     /**
      * Saves the current game state.
      */
-    public void saveGame(){
-        persist.saveGame(c.domainController().domain(),
+    public boolean saveGame(){
+        boolean successful = persist.saveGame(c.domainController().domain(),
                 currentLevel.levelNumber(),
                 maxTreasures,
                 maxKeys,
                 c.timerController().getTimeLeft(),
                 c.windowController().window());
-
         c.inputController().clearPressedKeys();
+        return successful;
     }
 
 

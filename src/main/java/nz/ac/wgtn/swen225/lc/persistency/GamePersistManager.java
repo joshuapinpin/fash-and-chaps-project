@@ -40,22 +40,26 @@ class GamePersistManager implements PersistManager<LoadedMaze> {
      * @param time - the time left for this play-through.
      * @param parent - the parent JFrame/window.
      */
-    public void save(Maze data, int levelNumber, int maxTreasures, int maxKeys, int time, JFrame parent) {
+    public boolean save(Maze data, int levelNumber, int maxTreasures, int maxKeys, int time, JFrame parent) {
         String defaultName = timestampName();
-        fileDialog.showSaveDialog(parent, defaultName, extension)
-                .ifPresent(file -> {
-                    try {
-                        LevelInfo levelInfo = new LevelInfo(levelNumber, maxKeys, maxTreasures);
-                        fileIO.save(mapper.toState(new LoadedMaze(data, time, levelInfo)), file);
-                        JOptionPane.showMessageDialog(parent,
-                                "File saved: " + file.getAbsolutePath(),
-                                "Success", JOptionPane.INFORMATION_MESSAGE);
-                    } catch (IOException e) {
-                        JOptionPane.showMessageDialog(parent,
-                                "Error saving: " + e.getMessage(),
-                                "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                });
+        Optional<File> fileOpt = fileDialog.showSaveDialog(parent, defaultName, extension);
+
+        if(fileOpt.isEmpty()) return false;
+
+        fileOpt.ifPresent(file -> {
+            try {
+                LevelInfo levelInfo = new LevelInfo(levelNumber, maxKeys, maxTreasures);
+                fileIO.save(mapper.toState(new LoadedMaze(data, time, levelInfo)), file);
+                JOptionPane.showMessageDialog(parent,
+                        "File saved: " + file.getAbsolutePath(),
+                        "Success", JOptionPane.INFORMATION_MESSAGE);
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(parent,
+                        "Error saving: " + e.getMessage(),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+        return true;
     }
 
     /**
@@ -65,9 +69,9 @@ class GamePersistManager implements PersistManager<LoadedMaze> {
      * @param parent - the parent window for the GUI file choosing popup.
      */
     @Override
-    public void save(LoadedMaze data, JFrame parent) {
+    public boolean save(LoadedMaze data, JFrame parent) {
         LevelInfo meta = data.levelInfo();
-        save(data.maze(), meta.levelNumber(), meta.maxTreasures(), meta.maxKeys(), data.time(), parent);
+        return save(data.maze(), meta.levelNumber(), meta.maxTreasures(), meta.maxKeys(), data.time(), parent);
     }
 
     /**
