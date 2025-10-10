@@ -6,7 +6,6 @@ import nz.ac.wgtn.swen225.lc.app.util.Input;
 import nz.ac.wgtn.swen225.lc.domain.Maze;
 import nz.ac.wgtn.swen225.lc.domain.Position;
 import org.junit.jupiter.api.Assumptions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
@@ -24,7 +23,6 @@ public class FuzzTest {
      * Adjust this constant (or provide the system property) instead of hunting through the method.
      */
     private static final long RUN_MS = Long.getLong("fuzz.ms", 15_000L); // change here e.g. 55_000L for longer sessions
-    @Disabled
     @Test
     @Timeout(60)
     public void testLevel1() {
@@ -32,7 +30,6 @@ public class FuzzTest {
         runFuzzer(1);
     }
 
-    @Disabled
     @Test
     @Timeout(60)
     public void testLevel2() {
