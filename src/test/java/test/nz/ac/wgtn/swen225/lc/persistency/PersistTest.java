@@ -1,4 +1,4 @@
-package test.nz.ac.wgtn.swen225.lc.persistency.save;
+package test.nz.ac.wgtn.swen225.lc.persistency;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,9 +13,7 @@ import nz.ac.wgtn.swen225.lc.persistency.Mapper;
 import nz.ac.wgtn.swen225.lc.persistency.GameMapper;
 import nz.ac.wgtn.swen225.lc.persistency.GameState;
 import nz.ac.wgtn.swen225.lc.persistency.LoadedMaze;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import test.nz.ac.wgtn.swen225.lc.persistency.levelloader.GameStateTest;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -26,24 +24,43 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PersistTest {
-    private String save =
-            "{"
-            +"\n  \"rows\" : 4,"
-            +"\n  \"cols\" : 4,"
-            +"\n  \"board\" : ["
-            +"\n [ \"F:Crab-RIGHT\", \"F:Door-ORANGE\", \"F:Door-GREEN:Crab-LEFT\", \"F\" ]"
-            +"\n, [ \"F:Key-ORANGE\", \"F:Key-GREEN:Crab-LEFT\", \"F:Treasure\", \"F:ExitLock\" ]"
-            +"\n, [ \"W\", \"~\", \"I:temporary\", \"E\" ]"
-            +"\n, [ \"~\", \"~\", \"~\", \"~\" ]"
-            +"\n ]"
-            +"\n}";
+    private final int levelNumber = 1;
+    private final int maxTreasures = 4;
+    private final int maxKeys = 2;
+    private final int time = 60;
+    private final String save =
+            """
+                    {\
+                      "rows" : 4,\
+                      "cols" : 4,\
+                      "time" : 60,\
+                      "levelInfo" : {\
+                      "levelNumber" : 1,\
+                      "maxKeys" : 2,\
+                      "maxTreasures" : 4\
+                      },\
+                      "player" : {\
+                        "x" : 1,\
+                        "y" : 1,\
+                        "treasures" : 1,\
+                        "maxTreasures" : 2,\
+                        "direction" : "UP",\
+                        "keyColors" : [ "GREEN" ]\
+                      },\
+                      "board" : [\
+                        [ "F:Crab-RIGHT", "F:Door-ORANGE", "F:Door-GREEN:Crab-LEFT", "F" ]\
+                        , [ "F:Key-ORANGE", "F:Key-GREEN:Crab-LEFT", "F:Treasure", "F:ExitLock" ]\
+                        , [ "W", "~", "I", "E" ]\
+                        , [ "~", "~", "~", "~" ]\
+                      ]\
+                    }\
+            """;
 
     private static Player defaultPlayer() {
         Player player = Player.of();
         player.addKey(Key.of(EntityColor.GREEN));
-        player.addKey(Key.of(EntityColor.ORANGE));
-        player.setPos(new Position(1, 2));
-        player.setDirection(Direction.RIGHT);
+        player.setPos(new Position(1, 1));
+        player.setDirection(Direction.UP);
         player.setTotalTreasures(3);
         player.collectTreasure();
         return player;
@@ -58,23 +75,18 @@ public class PersistTest {
     }
 
     private static JFrame blankWindow() {
-        JFrame frame = new JFrame("Testing window, parent to file dialogs.");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(300, 200);
-        frame.setVisible(true);
-        return frame;
+        return new JFrame("Testing window, parent to file dialogs.");
     }
 
-    @Disabled // TODO: update the test string to include player
     @Test
     public void testSerialisation() {
         MockPersistManager mockManager = new MockPersistManager(save);
         Persist persist = new Persist(()->mockManager);
         Optional<LoadedMaze> game = persist.loadGame(blankWindow());
         assertTrue(game.isPresent());
-        //persist.saveGame(game.get(), blankWindow());
+        persist.saveGame(game.get().maze(), levelNumber, maxTreasures, maxKeys, time, blankWindow());
         String saved = mockManager.saveLog.getLast();
-        assertEquals(save, saved.replace("\r\n", "\n")); // so test OS independent
+        assertEquals(save.replaceAll("\\s+", ""), saved.replaceAll("\\s+", "")); // so test OS independent
     }
 
 //    @Test
