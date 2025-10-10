@@ -1,12 +1,13 @@
-package nz.ac.wgtn.swen225.lc.persistency.serialisation;
+package nz.ac.wgtn.swen225.lc.persistency.serialisation.game;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import nz.ac.wgtn.swen225.lc.persistency.serialisation.api.FileIO;
 
 import java.io.File;
 import java.io.IOException;
 
 /**
- * Concrete implementation of FileIO which reads/writes to JSON files.
+ * Concrete implementation of FileIO which reads/writes game state to JSON files.
  * @param <S> - the reduced representation of the game's state.
  * @author Thomas Ru - 300658840
  */
@@ -15,8 +16,8 @@ public class GameFileIO<S extends GameState> implements FileIO<S> {
     private final Class<S> type;
 
     /**
-     * Constructor requires the specific class of GameState in order to
-     * deserialise from JSON.
+     * Constructor requires the specific class of GameState in order
+     * to deserialise from JSON.
      * @param type - the GameState type's class.
      */
     public GameFileIO(Class<S> type) {
@@ -27,7 +28,7 @@ public class GameFileIO<S extends GameState> implements FileIO<S> {
      * Save a GameState to file.
      * @param state - the GameState.
      * @param file - the File.
-     * @throws IOException
+     * @throws IOException - when JSON serialisation fails.
      */
     @Override
     public void save(S state, File file) throws IOException {
@@ -38,7 +39,7 @@ public class GameFileIO<S extends GameState> implements FileIO<S> {
      * Loads a GameState from a given file.
      * @param file - the File.
      * @return - the GameState, if readable.
-     * @throws IOException
+     * @throws IOException - when JSON deserialisation fails.
      */
     @Override
     public S load(File file) throws IOException {
