@@ -2,6 +2,7 @@
 
 
 ## Instructions for set up:
+- Re-Build the project before running Main
 - Start the game by running **nz.ac.wgtn.swen225.lc.app.Main** from IntelliJ
 - **Test classes** are found in **test.nz.ac.wgtn.swen225.lc** where coverage was measured in Jacoco tool (disabled assertions):
     - Domain (**DomainTest**), persistency (**LevelMakerTest** and **LevelsTest**) and recorder (**RecorderTest**) unit tests.
