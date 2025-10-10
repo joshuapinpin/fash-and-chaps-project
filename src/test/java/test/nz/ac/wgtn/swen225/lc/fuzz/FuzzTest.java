@@ -70,7 +70,9 @@ public class FuzzTest {
         boolean logSeed = Boolean.getBoolean("fuzz.logSeed");
         boolean slowMode = Boolean.getBoolean("fuzz.slow");
         boolean crossLevels = Boolean.getBoolean("fuzz.crossLevels");
-        boolean enablePause = Boolean.parseBoolean(System.getProperty("fuzz.enablePause","false"));
+    boolean enablePause = Boolean.parseBoolean(System.getProperty("fuzz.enablePause","false"));
+    boolean allowSave = Boolean.parseBoolean(System.getProperty("fuzz.allowSave", "false"));
+    boolean allowResume = Boolean.parseBoolean(System.getProperty("fuzz.allowResume", "false"));
 
         if (logSeed) {
             System.out.println("[FUZZ] seed=" + seed + " ms=" + durationMillis +
@@ -88,14 +90,19 @@ public class FuzzTest {
         }
 
         List<Input> movement = List.of(Input.MOVE_UP, Input.MOVE_DOWN, Input.MOVE_LEFT, Input.MOVE_RIGHT);
-        List<Input> meta = enablePause
-                ? List.of(Input.RESUME, Input.CONTINUE, Input.PAUSE, Input.SAVE)
-                : List.of(Input.RESUME, Input.CONTINUE, Input.SAVE);
+        List<Input> meta = new ArrayList<>();
+        // Never include RESUME by default to avoid GUI load dialog; allow opt-in via fuzz.allowResume=true
+        meta.add(Input.CONTINUE);
+        if (allowResume) meta.add(Input.RESUME);
+        if (enablePause) meta.add(Input.PAUSE);
+        if (allowSave) meta.add(Input.SAVE);
         List<Input> levelLoads = crossLevels
                 ? List.of(Input.LOAD_LEVEL_1, Input.LOAD_LEVEL_2)
                 : Collections.emptyList();
-        boolean allowExit = Boolean.getBoolean("fuzz.allowExit");
-        List<Input> rare = allowExit ? List.of(Input.SAVE, Input.EXIT) : List.of(Input.SAVE);
+    boolean allowExit = Boolean.getBoolean("fuzz.allowExit");
+    List<Input> rare = allowExit
+        ? (allowSave ? List.of(Input.EXIT, Input.SAVE) : List.of(Input.EXIT))
+        : (allowSave ? List.of(Input.SAVE) : Collections.emptyList());
 
         List<Input> executed = new ArrayList<>(4096);
 
@@ -174,10 +181,12 @@ public class FuzzTest {
 
                 Input next;
                 if (!isPlay) {
-                    next = rnd.nextBoolean() ? Input.RESUME : Input.CONTINUE;
+                    // Avoid RESUME to prevent triggering load dialog; use CONTINUE to return to Play
+                    next = Input.CONTINUE;
                 } else if (pausedRecently) {
                     if (enablePause && rnd.nextInt(100) < 25) {
-                        next = rnd.nextBoolean() ? Input.RESUME : Input.CONTINUE;
+                        // Avoid RESUME when recovering from pause; prefer CONTINUE only
+                        next = Input.CONTINUE;
             } else {
                 pausedRecently = false;
                 next = pickAction(controller, rnd, movement, meta, levelLoads, rare,
@@ -326,7 +335,7 @@ public class FuzzTest {
         if (!stateName.contains("Paused")) return true;
         for (int attempt = 0; attempt < 4; attempt++) {
             try {
-                controller.handleInput(Input.RESUME);
+                // Avoid RESUME entirely to prevent GUI load dialog in tests
                 controller.handleInput(Input.CONTINUE);
                 controller.handleInput(Input.MOVE_UP);
             } catch (Exception ignored) {}
