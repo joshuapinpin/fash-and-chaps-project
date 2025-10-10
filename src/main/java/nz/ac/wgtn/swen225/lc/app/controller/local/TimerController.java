@@ -70,8 +70,8 @@ public class TimerController implements ActionListener, Controller {
      * Pauses the timer.
      */
     public void recorderMode() {
-        c.timerController().restartTimer(c.level());
-        c.timerController().pause();
+        restartTimer(c.level());
+        pause();
     }
 
     /**

@@ -115,6 +115,5 @@ public class RecorderController implements Controller {
         System.out.println("Auto-Playing");
         c.setState(new AutoReplayState(c));
         autoplayL1.play(c);
-        // controller.setState(new PausedState(controller));
     }
 }

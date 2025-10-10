@@ -90,7 +90,6 @@ public class AppController {
         // Handle Input, send input to recorder if valid
         try {
             state.handleInput(this, input);
-            //TODO: also pass the exact time the input was made
             recorderController.addMovement(input);
         }
         catch(UnsupportedOperationException e){
