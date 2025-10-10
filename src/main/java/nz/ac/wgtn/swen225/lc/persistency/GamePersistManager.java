@@ -15,7 +15,7 @@ import java.util.Optional;
  * from JSON files via a Swing GUI.
  * @author Thomas Ru - 300658840
  */
-class GamePersistManager implements PersistManager<LoadedMaze> {
+public class GamePersistManager implements PersistManager<LoadedMaze> {
     private final FileDialog fileDialog = new SwingFileDialog();
     private final FileIO<GameState> fileIO;
     private final Mapper<LoadedMaze, GameState> mapper;
