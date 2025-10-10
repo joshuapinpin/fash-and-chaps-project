@@ -13,7 +13,7 @@ public interface PersistManager<T> {
      * @param data - the object to serialise.
      * @param parent - the parent JFrame/window.
      */
-    void save(T data, JFrame parent);
+    boolean save(T data, JFrame parent);
 
     /**
      * Allow a user to select some file from which to load an object from.

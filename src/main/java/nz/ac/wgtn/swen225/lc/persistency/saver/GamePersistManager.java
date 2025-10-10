@@ -43,26 +43,30 @@ class GamePersistManager implements PersistManager<LoadedMaze> {
      * @param data - the Maze object to save.
      * @param parent - the parent JFrame/window.
      */
-    public void save(Maze data, int levelNumber, int maxTreasures, int time, JFrame parent) {
+    public boolean save(Maze data, int levelNumber, int maxTreasures, int time, JFrame parent) {
         String defaultName = timestampName();
-        fileDialog.showSaveDialog(parent, defaultName, extension)
-                .ifPresent(file -> {
-                    try {
-                        fileIO.save(mapper.toState(new LoadedMaze(data, levelNumber, maxTreasures, time)), file);
-                        JOptionPane.showMessageDialog(parent,
-                                "File saved: " + file.getAbsolutePath(),
-                                "Success", JOptionPane.INFORMATION_MESSAGE);
-                    } catch (IOException e) {
-                        JOptionPane.showMessageDialog(parent,
-                                "Error saving: " + e.getMessage(),
-                                "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                });
+        Optional<File> fileOpt = fileDialog.showSaveDialog(parent, defaultName, extension);
+
+        if(fileOpt.isEmpty()) return false;
+
+        fileOpt.ifPresent(file -> {
+            try {
+                fileIO.save(mapper.toState(new LoadedMaze(data, levelNumber, maxTreasures, time)), file);
+                JOptionPane.showMessageDialog(parent,
+                        "File saved: " + file.getAbsolutePath(),
+                        "Success", JOptionPane.INFORMATION_MESSAGE);
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(parent,
+                        "Error saving: " + e.getMessage(),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+        return true;
     }
 
     @Override
-    public void save(LoadedMaze data, JFrame parent) {
-        save(data.maze(), data.levelNumber(), data.maxTreasure(), data.time(), parent);
+    public boolean save(LoadedMaze data, JFrame parent) {
+        return save(data.maze(), data.levelNumber(), data.maxTreasure(), data.time(), parent);
     }
     /**
      * Allow user to load a game from JSON via GUI.
