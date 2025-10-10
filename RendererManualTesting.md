@@ -8,13 +8,11 @@
 | 4c12fb26    | 20/09/25     | Camera Displaying                    | Pass      | #34                   |
 | 7b457475    | 20/09/25     | Fetching Images from correct files   | Pass      | #2                    |
 | 4623e312    | 04/10/25     | Loading Sound Effects                | Pass      | #36                   |
-| 7d8145ae    | 04/10/25     | Observer Pattern                     | Pass      | #                     |
+| 7d8145ae    | 04/10/25     | Observer Pattern                     | Pass      | #36                   |
 | 32809dc2    | 04/10/25     | Background Music playing             | Pass      | #36                   |
 | 9f58221d    | 04/10/25     | BG music looping                     | Pass      | #36                   |
 | 52174764    | 05/10/25     | Visitor Pattern                      | Pass      | #67                   |
 | f6f0abe0    | 07/10/25     | Background music restarting          | Pass      | #76                   |
-
-
 
 
 ## Details
@@ -33,7 +31,7 @@
 ### Commit: 7b457475
 - **Tested:** Images were fetched from correct file, following Java's structure in resources. Tested the file path in which the images were fetched from.
 - **Result:** Images can load perfectly, without having to "hardcode" the file path. Can directly get from resources. 
-- 
+
 ### Commit: 4623e312
 - **Tested:** Sound effects loaded correctly. Checked if the file path is correct and when loading the clip it gets the correct file/actual audio data. Tested if the whole clip would play through. Tested the volume of the sound ensuring its not too loud.
 - **Result:** Sounds loaded and played fully till the end. File loaded correct and audio was fetched and sounds were played at correct volume.
@@ -49,7 +47,7 @@
 ### Commit: 9f58221d
 - **Tested:** Tested to see if background music loops after ending once. Changed where the looping occurs
 - **Result:** Background music now plays and loops correcting after changing where in the code the music loops
-- 
+
 ### Commit: 52174764
 - **Tested:** Implemented Visitor Pattern to show tiles correctly rather than checking its instance every time
 - **Result:** It worked properly, displayed images
@@ -57,13 +55,6 @@
 ### Commit: f6f0abe0
 - **Tested:** Ensured that the bg music would continue after pausing and that stopping the bg music 
 - **Result:** Music played from where it left off correctly
-
-
-### Commit:
-- **Tested:**
-- **Result:**
-
-
 
 ## Issues
 - #2 (closed): Implement loading images and displaying them
