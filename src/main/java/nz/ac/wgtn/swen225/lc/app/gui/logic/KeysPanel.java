@@ -3,8 +3,8 @@ package nz.ac.wgtn.swen225.lc.app.gui.logic;
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
 import nz.ac.wgtn.swen225.lc.app.gui.layout.LeftPanel;
-import nz.ac.wgtn.swen225.lc.domain.entities.EntityColor;
-import nz.ac.wgtn.swen225.lc.domain.entities.Key;
+import nz.ac.wgtn.swen225.lc.domain.EntityColor;
+import nz.ac.wgtn.swen225.lc.domain.Key;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;
 
 import javax.swing.*;

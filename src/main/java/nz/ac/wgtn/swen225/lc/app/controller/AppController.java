@@ -168,9 +168,11 @@ public class AppController {
      */
     public void saveGame(){
         if(state instanceof PlayState) pauseGame();
-        persistencyController.saveGame();
-        System.out.println("Game Saved!");
-        exitGame();
+        boolean successful = persistencyController.saveGame();
+        if(successful){
+            System.out.println("Game Saved!");
+            exitGame();
+        }
     }
 
     /**

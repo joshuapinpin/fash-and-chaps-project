@@ -2,8 +2,6 @@ package nz.ac.wgtn.swen225.lc.persistency;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import nz.ac.wgtn.swen225.lc.domain.Maze;
-import nz.ac.wgtn.swen225.lc.persistency.serialisation.game.GameMapper;
-import nz.ac.wgtn.swen225.lc.persistency.serialisation.game.GameState;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,7 +9,6 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import nz.ac.wgtn.swen225.lc.persistency.serialisation.game.LevelInfo;
 
 /**
  * Level loading API, each level is a singleton.

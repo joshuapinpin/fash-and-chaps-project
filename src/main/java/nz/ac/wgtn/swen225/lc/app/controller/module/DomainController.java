@@ -3,8 +3,7 @@ package nz.ac.wgtn.swen225.lc.app.controller.module;
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 import nz.ac.wgtn.swen225.lc.app.controller.Controller;
 import nz.ac.wgtn.swen225.lc.domain.*;
-import nz.ac.wgtn.swen225.lc.domain.entities.*;
-import nz.ac.wgtn.swen225.lc.domain.tiles.Tile;
+import nz.ac.wgtn.swen225.lc.domain.Tile;
 import nz.ac.wgtn.swen225.lc.renderer.Renderer;
 
 import java.util.Collections;
