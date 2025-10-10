@@ -1,4 +1,4 @@
-package nz.ac.wgtn.swen225.lc.persistency.saver.gui;
+package nz.ac.wgtn.swen225.lc.persistency;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -6,7 +6,7 @@ import java.io.File;
 import java.util.Optional;
 
 /**
- * Concrete file saving/loading dialogs, implemented using Swing.
+ * Concrete file saving/loading graphical dialogs, implemented using Swing.
  * @author Thomas Ru - 300658840
  */
 public class SwingFileDialog implements FileDialog {
@@ -19,6 +19,7 @@ public class SwingFileDialog implements FileDialog {
      */
     @Override
     public Optional<File> showOpenDialog(JFrame parent, String extension) {
+        // filter out irrelevant files
         JFileChooser chooser = new JFileChooser();
         chooser.setFileFilter(new FileNameExtensionFilter(
                 extension.toUpperCase() + " files", extension
@@ -59,7 +60,7 @@ public class SwingFileDialog implements FileDialog {
             file = new File(file.getAbsolutePath() + "." + extension);
         }
         if (file.exists() && !confirmOverwrite(parent)) {
-            return Optional.empty();
+            return Optional.empty(); // user stops file overwrite
         }
 
         return Optional.of(file);

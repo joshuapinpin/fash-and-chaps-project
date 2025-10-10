@@ -17,6 +17,7 @@ public class RecorderController implements Controller {
     Play autoplayL1;
     Play stepbystepL1;
     Save saveL1;
+    Save saveL2;
     boolean isRecording = false;
 
     AppController c;
@@ -40,6 +41,7 @@ public class RecorderController implements Controller {
     @Override
     public void atNewGame(){
         isRecording = false;
+        saveL1.reset();
     }
 
     /**
@@ -57,6 +59,7 @@ public class RecorderController implements Controller {
     public void startRecording(){
         isRecording = true;
         System.out.println("Started Recording");
+        saveL1.startRecorder(c);
     }
 
     /**

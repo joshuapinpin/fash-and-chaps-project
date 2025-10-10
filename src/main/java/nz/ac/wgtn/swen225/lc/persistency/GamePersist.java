@@ -1,9 +1,4 @@
-package nz.ac.wgtn.swen225.lc.persistency.saver;
-
-import nz.ac.wgtn.swen225.lc.domain.Maze;
-import nz.ac.wgtn.swen225.lc.persistency.serialisation.GameFileIO;
-import nz.ac.wgtn.swen225.lc.persistency.serialisation.GameMapper;
-import nz.ac.wgtn.swen225.lc.persistency.serialisation.GameState;
+package nz.ac.wgtn.swen225.lc.persistency;
 
 /**
  * Concrete way for user to save and load Chaps Challenge games via Swing GUI.

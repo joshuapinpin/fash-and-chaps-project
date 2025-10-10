@@ -1,10 +1,9 @@
 package nz.ac.wgtn.swen225.lc.app.controller.module;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
-import nz.ac.wgtn.swen225.lc.domain.Maze;
 import nz.ac.wgtn.swen225.lc.persistency.Levels;
-import nz.ac.wgtn.swen225.lc.persistency.saver.GamePersist;
-import nz.ac.wgtn.swen225.lc.persistency.serialisation.LoadedMaze;
+import nz.ac.wgtn.swen225.lc.persistency.GamePersist;
+import nz.ac.wgtn.swen225.lc.persistency.LoadedMaze;
 
 import java.util.Optional;
 
@@ -63,26 +62,31 @@ public class PersistencyController  {
         if(domainOptional.isEmpty()) return;
         c.windowController().window().requestFocusInWindow();
         LoadedMaze lm = domainOptional.get();
-        level = lm.levelNumber();
+        loadDomain(lm);
+        c.continueGame();
+    }
+
+    public void loadDomain(LoadedMaze lm){
+        level = lm.levelInfo().levelNumber();
         loadLevel(level);
         c.domainController().updateDomain(lm.maze());
         c.timerController().startTimerFrom(lm.time());
         c.windowController().atNewGame();
         c.rendererController().atNewGame();
-        c.continueGame();
     }
 
     /**
      * Saves the current game state.
      */
-    public void saveGame(){
-        persist.saveGame(c.domainController().domain(),
+    public boolean saveGame(){
+        boolean successful = persist.saveGame(c.domainController().domain(),
                 currentLevel.levelNumber(),
                 maxTreasures,
+                maxKeys,
                 c.timerController().getTimeLeft(),
                 c.windowController().window());
-
         c.inputController().clearPressedKeys();
+        return successful;
     }
 
 

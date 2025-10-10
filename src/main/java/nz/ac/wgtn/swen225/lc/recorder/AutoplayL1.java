@@ -2,87 +2,115 @@ package nz.ac.wgtn.swen225.lc.recorder;
 import nz.ac.wgtn.swen225.lc.app.controller.*;
 import nz.ac.wgtn.swen225.lc.app.util.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.core.type.TypeReference;
-import java.io.File;
-import java.io.IOException;
-import javax.swing.*;
+import nz.ac.wgtn.swen225.lc.persistency.GameState;
 import java.util.List;
 import java.util.ArrayList;
 import javax.swing.Timer;
 
+/**
+ * Implements automatic replay of recorded game sessions for Level 1.
+ * This class plays back recorded movements automatically with timing that matches
+ * the original recording, scaled by a configurable speed factor.
+ *
+ * Implements the Singleton pattern to ensure only one autoplay instance exists.
+ * Uses Swing Timer to schedule movements according to their recorded timing.</p>
+ *
+ * @author Arushi Bhatnagar Stewart
+ * Student ID: 300664237
+ */
 public class AutoplayL1 implements Play{
     private static final AutoplayL1 playInstance = new AutoplayL1();
-    private static int speed;
-    private List<SaveL1.inputTime> saveList;
+    private List<SaveL1.Moves> saveList;
     private final ObjectMapper mapper;
     private Timer autoplayTimer;
     private int pos;
+    private static int speed;
     private int prevTimeLeft;
+    SaveL1.FullGame fg;
+    GameState initialState;
+    /**
+     * Private constructor to enforce Singleton pattern.
+     * Initializes the replay state with default values.
+     */
     private AutoplayL1(){
         saveList = new ArrayList<>();
         mapper = new ObjectMapper();
+        pos = 0;
         speed = 1;
+        prevTimeLeft = 0;
     }
     /**
-     * Factory method to return singleton Save instance
-     * @return
+     * Returns the singleton instance of AutoplayL1.
+     *
+     * @return the single AutoplayL1 instance
      */
     public static AutoplayL1 of() {
         return playInstance;
     }
     /**
-     * Resets autoplay and step-by-step play.
-     * Used for resetting for Level 2.
+     * Resets the autoplay state for a new replay session.
+     * Clears all loaded recording data and stops any running autoplay timer.
+     * Should be called when transitioning between levels or starting a new replay.
      */
     public void reset(){
         saveList = new ArrayList<>();
         speed = 1;
+        prevTimeLeft = 0;
+        fg = null;
+        // Stop any running autoplay timer
+        if (autoplayTimer != null) {
+            autoplayTimer.stop();
+            autoplayTimer = null;
+        }
     }
-    /** */
+    /**
+     * Sets the playback speed multiplier for automatic replay.
+     * Higher values result in faster playback.
+     *
+     * @param s the speed multiplier (must be positive)
+     * @throws IllegalArgumentException if speed is negative
+     */
     public void setSpeed(int s) {
         System.out.println("*DEBUG* Inside of the Recorder Package Now");
-        // speed needs to be 1-6
-        assert s > 0 : "Speed must me greater than zero";
+        if (s < 0) {
+            throw new IllegalArgumentException("Speed must be between 1 and 6, got: " + s);
+        }
         speed = s;
     }
     /**
-     * This methods reads the list of saveMap from the json file
-     * and assigns it to our movement arraylist field.
+     * Initiates automatic replay of a recorded game session.
+     * Loads the recording from a file selected by the user, restores the initial
+     * game state, and begins automatic playback.
+     *
+     * @param ac the application controller to apply movements to
+     * @return true if replay started successfully, false if loading failed or was cancelled
      */
-    private List<SaveL1.inputTime> getData() {
-        /*
-        using new TypeReference<List<MyObject>>() {} to create
-        an anonymous subclass of TypeReference,
-        it carries the actual generic type (List<Input>)
-        in its class signature. Can't do List.class.
-         */
-        File myFile = getFile();
-        try {
-            saveList = mapper.readValue(myFile, new TypeReference<List<SaveL1.inputTime>>() {
-            });
-        } catch (IOException e) {
-            // rethrows checked exception as error
-            throw new Error(e);
-        }
-        return saveList;
-    }
-    /** main play method from interface */
     public boolean play(AppController ac){
         System.out.println("*DEBUG* Inside of the Recorder Package Now");
-        getData();
+        fg = getData(mapper);
+        if(fg == null) return false; // stop play immediately
+        saveList = fg.saveList();
+        initialState = fg.state();
+        if(saveList.isEmpty() || saveList == null || initialState == null) return false; // stop play immediately
+        startState(initialState, ac);
         return autoPlay(ac);
     }
     /**
+     * Begins automatic playback of the loaded recording.
+     * Sets up the timer to replay movements according to their recorded timing.
+     *
+     * @param ac the application controller to apply movements to
+     * @return true if autoplay started successfully, false if no moves to replay
      */
-    public boolean autoPlay(AppController ac){
-        if (saveList.isEmpty()) throw new IllegalArgumentException("Character has not moved yet");
+    private boolean autoPlay(AppController ac){
+        if(saveList.isEmpty() || saveList == null) return false; // stop play immediately
         // Stop any existing autoplay
         if (autoplayTimer != null && autoplayTimer.isRunning()) {
             autoplayTimer.stop();
         }
         pos = 0;
         prevTimeLeft = 0;
-        SaveL1.inputTime iT = saveList.get(pos);
+        SaveL1.Moves iT = saveList.get(pos);
         int timeLeft = iT.timeLeftMilli();
         // Calculate delay for THIS move
         int timeDiff = Math.max(0, prevTimeLeft - timeLeft);
@@ -92,25 +120,35 @@ public class AutoplayL1 implements Play{
         autoplayTimer.start();
         return true;
     }
-    /** */
+    /**
+     * Processes the next movement in the replay sequence.
+     * Executes the current movement, updates timing information, and schedules
+     * the next movement with appropriate delay.
+     *
+     * @param ac the application controller to apply the movement to
+     */
     private void processNextMove(AppController ac) {
         if (pos >= saveList.size()) {
             return;
         }
         // Get and execute CURRENT move
-        SaveL1.inputTime iT = saveList.get(pos);
+        SaveL1.Moves iT = saveList.get(pos);
         Input dir = iT.direction();
         int timeLeft = iT.timeLeftMilli();
         // Execute THIS move
         ac.handleInput(dir);
         prevTimeLeft = timeLeft;
         pos++;
+        // make sure pos is not out of bounds
+        if (pos >= saveList.size()) {
+            return;
+        }
         // Calculate delay for NEXT move
-        SaveL1.inputTime nextMove = saveList.get(pos);
+        SaveL1.Moves nextMove = saveList.get(pos);
         int nextTimeLeft = nextMove.timeLeftMilli();
         int timeDiff = Math.max(0, prevTimeLeft - nextTimeLeft);
         int delay = (int) timeDiff/speed;
-        // schedule next move
+        // schedule delay for next move and restart the time
         autoplayTimer.setInitialDelay(delay);
         autoplayTimer.restart();
     }
