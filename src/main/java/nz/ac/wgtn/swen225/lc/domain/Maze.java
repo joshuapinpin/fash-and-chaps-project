@@ -1,9 +1,5 @@
 package nz.ac.wgtn.swen225.lc.domain;
 
-import nz.ac.wgtn.swen225.lc.domain.entities.*;
-import nz.ac.wgtn.swen225.lc.domain.tiles.Tile;
-import nz.ac.wgtn.swen225.lc.domain.tiles.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;

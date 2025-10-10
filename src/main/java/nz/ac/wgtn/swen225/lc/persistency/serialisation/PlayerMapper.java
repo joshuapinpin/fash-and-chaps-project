@@ -3,9 +3,8 @@ package nz.ac.wgtn.swen225.lc.persistency.serialisation;
 import nz.ac.wgtn.swen225.lc.domain.Direction;
 import nz.ac.wgtn.swen225.lc.domain.Player;
 import nz.ac.wgtn.swen225.lc.domain.Position;
-import nz.ac.wgtn.swen225.lc.domain.entities.EntityColor;
-import nz.ac.wgtn.swen225.lc.domain.entities.Key;
-import nz.ac.wgtn.swen225.lc.persistency.parse.EntityParsers;
+import nz.ac.wgtn.swen225.lc.domain.EntityColor;
+import nz.ac.wgtn.swen225.lc.domain.Key;
 
 import java.util.List;
 

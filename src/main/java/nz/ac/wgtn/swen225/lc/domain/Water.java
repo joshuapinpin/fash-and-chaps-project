@@ -1,8 +1,4 @@
-package nz.ac.wgtn.swen225.lc.domain.tiles;
-
-import nz.ac.wgtn.swen225.lc.domain.GameObserver;
-import nz.ac.wgtn.swen225.lc.domain.Player;
-import nz.ac.wgtn.swen225.lc.domain.Position;
+package nz.ac.wgtn.swen225.lc.domain;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +10,7 @@ import java.util.function.Consumer;
  * Inherits from Tile class
  * @author Hayley Far (300659141)
  */
-public class Water extends Tile{
+public class Water extends Tile {
     private record WaterKey(Position pos){} // Record to represent unique key for water caching based on position
     private static final Map<WaterKey,Water> cache = new HashMap<>(); // Cache to store created water instances
 

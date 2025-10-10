@@ -1,6 +1,6 @@
 package nz.ac.wgtn.swen225.lc.persistency.parse;
 
-import nz.ac.wgtn.swen225.lc.domain.entities.*;
+import nz.ac.wgtn.swen225.lc.domain.*;
 import nz.ac.wgtn.swen225.lc.persistency.serialisation.GameState;
 
 import java.util.Arrays;

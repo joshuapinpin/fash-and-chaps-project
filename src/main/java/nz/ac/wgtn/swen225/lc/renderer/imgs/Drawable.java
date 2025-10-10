@@ -1,11 +1,7 @@
 package nz.ac.wgtn.swen225.lc.renderer.imgs;
 import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
-import nz.ac.wgtn.swen225.lc.domain.Direction;
-import nz.ac.wgtn.swen225.lc.domain.Monster;
-import nz.ac.wgtn.swen225.lc.domain.Player;
-import nz.ac.wgtn.swen225.lc.domain.Position;
-import nz.ac.wgtn.swen225.lc.domain.entities.*;
-import nz.ac.wgtn.swen225.lc.domain.tiles.*;
+import nz.ac.wgtn.swen225.lc.domain.*;
+//import nz.ac.wgtn.swen225.lc.domain.entities.*;
 import nz.ac.wgtn.swen225.lc.renderer.Renderer;
 
 import javax.swing.*;

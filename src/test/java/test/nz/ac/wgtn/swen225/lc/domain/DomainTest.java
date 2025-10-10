@@ -1,9 +1,6 @@
 package test.nz.ac.wgtn.swen225.lc.domain;
 
 import nz.ac.wgtn.swen225.lc.domain.*;
-import nz.ac.wgtn.swen225.lc.domain.entities.*;
-import nz.ac.wgtn.swen225.lc.domain.tiles.*;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

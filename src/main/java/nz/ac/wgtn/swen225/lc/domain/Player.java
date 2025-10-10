@@ -1,7 +1,5 @@
 package nz.ac.wgtn.swen225.lc.domain;
 
-import nz.ac.wgtn.swen225.lc.domain.entities.Key;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

@@ -1,7 +1,4 @@
-package nz.ac.wgtn.swen225.lc.domain.entities;
-
-import nz.ac.wgtn.swen225.lc.domain.GameObserver;
-import nz.ac.wgtn.swen225.lc.domain.Player;
+package nz.ac.wgtn.swen225.lc.domain;
 
 import java.util.function.Consumer;
 

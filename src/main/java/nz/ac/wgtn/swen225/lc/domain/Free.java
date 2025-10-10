@@ -1,9 +1,4 @@
-package nz.ac.wgtn.swen225.lc.domain.tiles;
-
-import nz.ac.wgtn.swen225.lc.domain.GameObserver;
-import nz.ac.wgtn.swen225.lc.domain.entities.Entity;
-import nz.ac.wgtn.swen225.lc.domain.Player;
-import nz.ac.wgtn.swen225.lc.domain.Position;
+package nz.ac.wgtn.swen225.lc.domain;
 
 import java.util.Optional;
 import java.util.function.Consumer;
