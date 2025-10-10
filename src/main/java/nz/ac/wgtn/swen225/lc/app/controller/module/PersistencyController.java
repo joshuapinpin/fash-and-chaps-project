@@ -62,13 +62,17 @@ public class PersistencyController  {
         if(domainOptional.isEmpty()) return;
         c.windowController().window().requestFocusInWindow();
         LoadedMaze lm = domainOptional.get();
+        loadDomain(lm);
+        c.continueGame();
+    }
+
+    public void loadDomain(LoadedMaze lm){
         level = lm.levelInfo().levelNumber();
         loadLevel(level);
         c.domainController().updateDomain(lm.maze());
         c.timerController().startTimerFrom(lm.time());
         c.windowController().atNewGame();
         c.rendererController().atNewGame();
-        c.continueGame();
     }
 
     /**

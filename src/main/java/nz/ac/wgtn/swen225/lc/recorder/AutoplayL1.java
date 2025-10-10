@@ -2,6 +2,7 @@ package nz.ac.wgtn.swen225.lc.recorder;
 import nz.ac.wgtn.swen225.lc.app.controller.*;
 import nz.ac.wgtn.swen225.lc.app.util.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import nz.ac.wgtn.swen225.lc.persistency.serialisation.game.GameState;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -15,6 +16,8 @@ public class AutoplayL1 implements Play{
     private int pos;
     private static int speed;
     private int prevTimeLeft;
+    SaveL1.FullGame fg;
+    GameState initialState;
     private AutoplayL1(){
         saveList = new ArrayList<>();
         mapper = new ObjectMapper();
@@ -37,6 +40,7 @@ public class AutoplayL1 implements Play{
         saveList = new ArrayList<>();
         speed = 1;
         prevTimeLeft = 0;
+        fg = null;
         // Stop any running autoplay timer
         if (autoplayTimer != null) {
             autoplayTimer.stop();
@@ -46,22 +50,27 @@ public class AutoplayL1 implements Play{
     /** */
     public void setSpeed(int s) {
         System.out.println("*DEBUG* Inside of the Recorder Package Now");
-        // speed needs to be 1-6
-        assert s > 0 : "Speed must me greater than zero";
+        if (s < 0) {
+            throw new IllegalArgumentException("Speed must be between 1 and 6, got: " + s);
+        }
         speed = s;
     }
 
     /** main play method from interface */
     public boolean play(AppController ac){
         System.out.println("*DEBUG* Inside of the Recorder Package Now");
-        saveList = getData(mapper);
-        if(saveList.isEmpty()) return false; // stop play immediately
+        fg = getData(mapper);
+        if(fg == null) return false; // stop play immediately
+        saveList = fg.saveList();
+        initialState = fg.state();
+        if(saveList.isEmpty() || saveList == null || initialState == null) return false; // stop play immediately
+        startState(initialState, ac);
         return autoPlay(ac);
     }
     /**
      */
     private boolean autoPlay(AppController ac){
-        if(saveList.isEmpty()) return false; // stop play immediately
+        if(saveList.isEmpty() || saveList == null) return false; // stop play immediately
         // Stop any existing autoplay
         if (autoplayTimer != null && autoplayTimer.isRunning()) {
             autoplayTimer.stop();

@@ -19,31 +19,32 @@ import java.util.ArrayList;
  *
  * @author Arushi Bhatnagar Stewart
  */
-public class SaveL1 implements Save{
+public class SaveL2 implements Save{
     public record Moves(Input direction, Integer timeLeftMilli){}
     public record FullGame(List<Moves> saveList, GameState state){};
-    private static final SaveL1 saveInstance = new SaveL1();
-    private List<Moves> saveList;
+    private static final SaveL2 saveInstance = new SaveL2();
+    private List<Moves> playerList;
+    // private List<> crabList;
     private final ObjectMapper mapper;
     private GameState gs;
     /** Method to add the Input objects (the directions/movements)
      * of the character to the movements list.
      *
      */
-    private SaveL1(){
-        saveList = new ArrayList<>();
+    private SaveL2(){
+        playerList = new ArrayList<>();
         mapper = new ObjectMapper();
     }
     /**
      * Factory method to return singleton Save instance
      * @return
      */
-    public static SaveL1 of() {
+    public static SaveL2 of() {
         return saveInstance;
     }
     /** */
     public void reset(){
-        saveList = new ArrayList<>();
+        playerList = new ArrayList<>();
     }
     /** */
     public void startRecorder(AppController ac){
@@ -65,7 +66,7 @@ public class SaveL1 implements Save{
     private void addMovement(Input direction, AppController ac) {
         System.out.println("*DEBUG* Inside of the Recorder Package Now");
         int timeLeft = ac.timerController().getPreciseTimeMillis();
-        saveList.add(new Moves(direction, timeLeft));
+        playerList.add(new Moves(direction, timeLeft));
     }
     /** This is the core method of this class.
      * In this method, we create a file and write
@@ -77,7 +78,7 @@ public class SaveL1 implements Save{
         if (playerMovements == null) {
             return;
         }
-        FullGame fg = new FullGame(saveList, gs);
+        FullGame fg = new FullGame(playerList, gs);
         try {
             mapper.writerWithDefaultPrettyPrinter().writeValue(playerMovements, fg);
         } catch(IOException e){

@@ -5,12 +5,12 @@ import nz.ac.wgtn.swen225.lc.app.controller.*;
 import nz.ac.wgtn.swen225.lc.domain.Maze;
 import nz.ac.wgtn.swen225.lc.persistency.serialisation.game.GameMapper;
 import nz.ac.wgtn.swen225.lc.persistency.serialisation.game.GameState;
+import nz.ac.wgtn.swen225.lc.persistency.serialisation.game.LoadedMaze;
 
 import java.io.File;
 import javax.swing.*;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
+
 
 /**
  * Initial outline for class to replay the actions of the character.
@@ -29,9 +29,10 @@ public interface Play {
     /** */
     public void setSpeed(int s);
     /** */
-    public default void startPlay(){
+    public default void startState(GameState gs, AppController c){
         // sets the game to position at start of recording
-
+        LoadedMaze maze = new GameMapper().fromState(gs);
+        c.persistencyController().loadDomain(maze);
     }
     /** */
     public default File getFile(){
@@ -52,10 +53,10 @@ public interface Play {
         return fileChoice;
     }
     /**
-     * This methods reads the list of saveMap from the json file
-     * and assigns it to our movement arraylist field.
+     * This methods reads full game object from the json file
+     * and returns it
      */
-    default List<SaveL1.Moves> getData(ObjectMapper mapper) {
+    default SaveL1.FullGame getData(ObjectMapper mapper) {
         /*
         using new TypeReference<List<MyObject>>() {} to create
         an anonymous subclass of TypeReference,
@@ -63,18 +64,17 @@ public interface Play {
         in its class signature. Can't do List.class.
          */
         File myFile = getFile();
-        List<SaveL1.Moves> saveList = new ArrayList<>();
+        SaveL1.FullGame fg = null;
         if (myFile == null) {
             // return empty list, which is handled by autoplay and step-by-step methods
-            return saveList;
+            return fg;
         }
         try {
-            saveList = mapper.readValue(myFile, new TypeReference<List<SaveL1.Moves>>() {
-            });
+            fg = mapper.readValue(myFile, new TypeReference<SaveL1.FullGame>() {});
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "Failed to get recording: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-        return saveList;
+        return fg;
     }
 }
 

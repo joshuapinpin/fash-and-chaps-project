@@ -2,6 +2,7 @@ package nz.ac.wgtn.swen225.lc.recorder;
 import nz.ac.wgtn.swen225.lc.app.controller.*;
 import nz.ac.wgtn.swen225.lc.app.util.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import nz.ac.wgtn.swen225.lc.persistency.serialisation.game.GameState;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -11,6 +12,8 @@ public class StepByStepL1 implements Play{
     private static int pos; // count for step by step playing
     private List<SaveL1.Moves> saveList;
     private final ObjectMapper mapper;
+    SaveL1.FullGame fg;
+    GameState initialState;
     private StepByStepL1(){
         saveList = new ArrayList<>();
         mapper = new ObjectMapper();
@@ -39,8 +42,13 @@ public class StepByStepL1 implements Play{
     public boolean play(AppController ac){
         System.out.println("*DEBUG* Inside of the Recorder Package Now");
         // Get data only in the first iteration
-        if(pos == 0) saveList = getData(mapper);
-        if(saveList.isEmpty()) return false; // stop play immediately
+        if(pos == 0){
+            fg = getData(mapper);
+            saveList = fg.saveList();
+            initialState = fg.state();
+            startState(initialState, ac);
+        }
+        if(saveList == null || saveList.isEmpty() || initialState == null) return false; // stop play immediately
         return stepByStep(ac);
     }
     /**

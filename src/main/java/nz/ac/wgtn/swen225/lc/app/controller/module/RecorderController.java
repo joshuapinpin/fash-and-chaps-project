@@ -58,6 +58,7 @@ public class RecorderController implements Controller {
     public void startRecording(){
         isRecording = true;
         System.out.println("Started Recording");
+        saveL1.startRecorder(c);
     }
 
     /**
