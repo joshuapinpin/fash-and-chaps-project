@@ -25,14 +25,14 @@ import java.util.*;
  * - Re-run a failing sequence with {@code -Dfuzz.seed=...}.
  * - Extra logs with {@code -Dfuzz.logSeed=true} and {@code -Dfuzz.verboseWeights=true}.
  *
- * @author Al-Bara Al-Sakkaf
+ * @author Al-Bara Al-Sakkaf (ID: 300668516)
  */
 public class FuzzTest {
     /**
      * Single place to control how long each fuzz test runs (ms). Override with -Dfuzz.ms=NNNN if desired.
      * Adjust this constant (or provide the system property) instead of hunting through the method.
      */
-    private static final long RUN_MS = Long.getLong("fuzz.ms", 15_000L); // change here e.g. 55_000L for longer sessions
+    private static final long RUN_MS = Long.getLong("fuzz.ms", 30_000L); // change here e.g. 55_000L for longer sessions
     @Test
     @Timeout(60)
     public void testLevel1() {
@@ -571,15 +571,6 @@ public class FuzzTest {
         System.out.println("Re-run with: -Dfuzz.seed=" + seed);
         System.out.println("================================");
     }
-
-    
-    /**
-     * Best-effort retrieval of the current commit hash from {@code .git/HEAD}.
-     *
-     * @return the commit hash, or "unknown" if it cannot be determined
-     */
-    // removed readGitHead(): commit id now taken from CI env if available
-
 
     /**
      * Sleeps without throwing checked exceptions; preserves interrupt status.
