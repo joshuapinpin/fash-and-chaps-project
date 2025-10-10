@@ -3,8 +3,7 @@ package test.nz.ac.wgtn.swen225.lc.fuzz;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 import nz.ac.wgtn.swen225.lc.app.util.Input;
-import nz.ac.wgtn.swen225.lc.domain.Maze;
-import nz.ac.wgtn.swen225.lc.domain.Position;
+import nz.ac.wgtn.swen225.lc.domain.*;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
@@ -26,14 +25,14 @@ import java.util.*;
  * - Re-run a failing sequence with {@code -Dfuzz.seed=...}.
  * - Extra logs with {@code -Dfuzz.logSeed=true} and {@code -Dfuzz.verboseWeights=true}.
  *
- * @author Al-Bara Al-Sakkaf
+ * @author Al-Bara Al-Sakkaf (ID: 300668516)
  */
 public class FuzzTest {
     /**
      * Single place to control how long each fuzz test runs (ms). Override with -Dfuzz.ms=NNNN if desired.
      * Adjust this constant (or provide the system property) instead of hunting through the method.
      */
-    private static final long RUN_MS = Long.getLong("fuzz.ms", 15_000L); // change here e.g. 55_000L for longer sessions
+    private static final long RUN_MS = Long.getLong("fuzz.ms", 30_000L); // change here e.g. 55_000L for longer sessions
     @Test
     @Timeout(60)
     public void testLevel1() {
@@ -70,9 +69,9 @@ public class FuzzTest {
         boolean logSeed = Boolean.getBoolean("fuzz.logSeed");
         boolean slowMode = Boolean.getBoolean("fuzz.slow");
         boolean crossLevels = Boolean.getBoolean("fuzz.crossLevels");
-    boolean enablePause = Boolean.parseBoolean(System.getProperty("fuzz.enablePause","false"));
-    boolean allowSave = Boolean.parseBoolean(System.getProperty("fuzz.allowSave", "false"));
-    boolean allowResume = Boolean.parseBoolean(System.getProperty("fuzz.allowResume", "false"));
+        boolean enablePause = Boolean.parseBoolean(System.getProperty("fuzz.enablePause","false"));
+        boolean allowSave = Boolean.parseBoolean(System.getProperty("fuzz.allowSave", "false"));
+        boolean allowResume = Boolean.parseBoolean(System.getProperty("fuzz.allowResume", "false"));
 
         if (logSeed) {
             System.out.println("[FUZZ] seed=" + seed + " ms=" + durationMillis +
@@ -80,8 +79,8 @@ public class FuzzTest {
                     " enablePause=" + enablePause);
         }
 
-    final int MAX_AUDIO_FAILS = Integer.getInteger("fuzz.maxAudioFails", 5);
-    int audioFailCount = 0;
+        final int MAX_AUDIO_FAILS = Integer.getInteger("fuzz.maxAudioFails", 5);
+        int audioFailCount = 0;
 
         AppController controller = AppController.of();
         if (!safeStartNewGame(controller, initialLevel)) {
@@ -99,10 +98,10 @@ public class FuzzTest {
         List<Input> levelLoads = crossLevels
                 ? List.of(Input.LOAD_LEVEL_1, Input.LOAD_LEVEL_2)
                 : Collections.emptyList();
-    boolean allowExit = Boolean.getBoolean("fuzz.allowExit");
-    List<Input> rare = allowExit
-        ? (allowSave ? List.of(Input.EXIT, Input.SAVE) : List.of(Input.EXIT))
-        : (allowSave ? List.of(Input.SAVE) : Collections.emptyList());
+        boolean allowExit = Boolean.getBoolean("fuzz.allowExit");
+        List<Input> rare = allowExit
+            ? (allowSave ? List.of(Input.EXIT, Input.SAVE) : List.of(Input.EXIT))
+            : (allowSave ? List.of(Input.SAVE) : Collections.emptyList());
 
         List<Input> executed = new ArrayList<>(4096);
 
@@ -126,122 +125,77 @@ public class FuzzTest {
         Instant end = Instant.now().plusMillis(durationMillis);
         int moves = 0;
 
-    boolean pausedRecently = false;
-        long nonPlayStateStartMs = -1; // simplified: removed invalidInRow & forcedResumeAttempts
-
-        int audioWarns = 0;
-        final int AUDIO_WARN_LIMIT = 10;
-
         try {
             while (Instant.now().isBefore(end)) {
-
+                // If we somehow got paused (e.g., via PAUSE from rare/meta), try to return to Play
                 String stateName = controller.state().getClass().getSimpleName();
-                boolean isPlay = stateName.contains("Play");
-
-                if (!isPlay) {
-                    if (nonPlayStateStartMs < 0) nonPlayStateStartMs = System.currentTimeMillis();
-                } else {
-                    nonPlayStateStartMs = -1; // forcedResumeAttempts removed
+                if (stateName.contains("Paused")) {
+                    forcePlayIfPaused(controller, initialLevel, rnd);
+                    stateName = controller.state().getClass().getSimpleName();
                 }
 
-                // Auto-restart on Victory or Defeat to keep session active (no disabling logic anymore)
-                if (stateName.contains("Victory") || stateName.contains("Defeat")) {
-                    boolean ok = safeStartNewGame(controller, initialLevel);
-                    if (!ok) {
-                        audioFailCount++;
-                        if (audioFailCount >= MAX_AUDIO_FAILS) {
-                            System.out.println("[FUZZ][WARN] Too many audio-related restart failures (" + audioFailCount + ") continuing without restart.");
-                        }
-                    } else {
-                        lastPos = currentPlayerPos(controller);
-                        stagnationCounter = 0;
-                        inShake = false;
-                        shakeRemaining = 0;
-                        pausedRecently = false;
+                // Auto-recover from win/lose states by starting a new game
+                if (stateName.contains("Victory") || stateName.contains("Lose") || stateName.contains("Defeat")) {
+                    int nextLevel = initialLevel;
+                    if (crossLevels) {
+                        // alternate or randomize to keep variety
+                        nextLevel = (controller.level() == 1) ? 2 : 1;
+                        if (rnd.nextBoolean()) nextLevel = rnd.nextBoolean() ? 1 : 2;
                     }
-                    // Regardless, proceed to next loop iteration (do not send meta inputs in terminal states)
-                    continue;
-                }
-
-                if (!isPlay && (System.currentTimeMillis() - nonPlayStateStartMs) > 1000) {
-                    boolean ok = forcePlayIfPaused(controller, initialLevel, rnd);
-                    if (!ok) {
-                        audioFailCount++;
-                        // We no longer disable restarts; just log once threshold exceeded
-                        if (audioFailCount == MAX_AUDIO_FAILS) {
-                            System.out.println("[FUZZ][WARN] Reached audio fail threshold while paused.");
-                        }
-                    } else {
-                        nonPlayStateStartMs = -1;
-                        pausedRecently = false; // forcedResumeAttempts removed
+                    if (!safeStartNewGame(controller, nextLevel)) {
+                        // If audio failures prevent start, try the other level once
+                        if (nextLevel == 1) safeStartNewGame(controller, 2); else safeStartNewGame(controller, 1);
                     }
+                    // reset local movement heuristics after restart
+                    lastSuccessfulDir = null;
+                    stagnationCounter = 0;
+                    inShake = false;
+                    shakeRemaining = 0;
+                    lastPos = currentPlayerPos(controller);
+                    if (lastPos != null) visited.add(lastPos);
+                    continue; // proceed with next iteration after restart
                 }
 
-                // Final forced start block removed to avoid early termination.
+                // Pick next action
+                Input next = pickAction(controller, rnd, movement, meta, levelLoads, rare,
+                        success, fail, lastSuccessfulDir, stagnationCounter, inShake, crossLevels);
+                boolean movementInput = next == Input.MOVE_UP || next == Input.MOVE_DOWN ||
+                        next == Input.MOVE_LEFT || next == Input.MOVE_RIGHT;
 
-                Input next;
-                if (!isPlay) {
-                    // Avoid RESUME to prevent triggering load dialog; use CONTINUE to return to Play
-                    next = Input.CONTINUE;
-                } else if (pausedRecently) {
-                    if (enablePause && rnd.nextInt(100) < 25) {
-                        // Avoid RESUME when recovering from pause; prefer CONTINUE only
-                        next = Input.CONTINUE;
-            } else {
-                pausedRecently = false;
-                next = pickAction(controller, rnd, movement, meta, levelLoads, rare,
-                    success, fail, lastSuccessfulDir, stagnationCounter, inShake, crossLevels);
-                    }
-                } else {
-            next = pickAction(controller, rnd, movement, meta, levelLoads, rare,
-                success, fail, lastSuccessfulDir, stagnationCounter, inShake, crossLevels);
-                }
-
-                executed.add(next);
                 Position before = currentPlayerPos(controller);
-
                 try {
                     controller.handleInput(next);
-                } catch (UnsupportedOperationException | IllegalArgumentException ignored) {
-                } catch (RuntimeException rte) {
-                    if (rte.getMessage() != null && rte.getMessage().contains("background sound")) {
-                        if (audioWarns++ < AUDIO_WARN_LIMIT) {
-                            System.err.println("[FUZZ][AUDIO-WARN] Suppressed: " + rte.getMessage());
-                            if (audioWarns == AUDIO_WARN_LIMIT) {
-                                System.err.println("[FUZZ][AUDIO-WARN] Further audio warnings suppressed");
-                            }
-                        }
+                    executed.add(next);
+                } catch (RuntimeException e) {
+                    // Suppress background audio initialization failures a few times
+                    if (e.getMessage() != null && e.getMessage().contains("background sound") && audioFailCount < MAX_AUDIO_FAILS) {
                         audioFailCount++;
-                        // No longer disabling restarts; just note threshold
-                        if (audioFailCount == MAX_AUDIO_FAILS) {
-                            System.out.println("[FUZZ][WARN] Audio fail threshold reached (will continue attempts).");
-                        }
-                    } else {
-                        dumpSequence(seed, executed, rte);
-                        throw rte;
+                        System.err.println("[FUZZ][AUDIO-WARN] Suppressed during handleInput (" + audioFailCount + "/" + MAX_AUDIO_FAILS + ")");
+                        sleepQuiet(20);
+                        continue;
                     }
+                    throw e;
                 }
 
-                if (next == Input.PAUSE) pausedRecently = true;
-                if (next == Input.RESUME || next == Input.CONTINUE) pausedRecently = false;
-
-                boolean movementInput = movement.contains(next);
-                if (movementInput) {
-                    Position after = currentPlayerPos(controller);
-                    boolean moved = after != null && before != null && !after.equals(before);
-                    if (moved) {
-                        success.merge(next,1,Integer::sum);
-                        lastSuccessfulDir = next;
-                        stagnationCounter = 0; // invalidInRow removed
-                        if (after != null) visited.add(after);
-                    } else {
-                        fail.merge(next,1,Integer::sum);
-                        stagnationCounter++; // invalidInRow removed
-                    }
-                } else {
-                    // invalidInRow logic removed
+                // EXIT ends the loop early
+                if (next == Input.EXIT) {
+                    break;
                 }
 
+                // Movement success heuristic update
+                Position after = currentPlayerPos(controller);
+                boolean moved = movementInput && after != null && before != null && !after.equals(before);
+                if (moved) {
+                    success.merge(next,1,Integer::sum);
+                    lastSuccessfulDir = next;
+                    stagnationCounter = 0;
+                    if (after != null) visited.add(after);
+                } else if (movementInput) {
+                    fail.merge(next,1,Integer::sum);
+                    stagnationCounter++;
+                }
+
+                // Shake mode to escape stagnation
                 if (movementInput && !inShake && stagnationCounter >= stagnationThreshold) {
                     inShake = true;
                     shakeRemaining = 15 + rnd.nextInt(10);
@@ -253,6 +207,7 @@ public class FuzzTest {
                     System.out.println("[FUZZ][HEURISTIC] Leaving shake phase");
                 }
 
+                // Periodic status log
                 if ((moves % 60) == 0) {
                     int treas = safeCountTreasures(controller);
                     int keys = safeCountKeys(controller);
@@ -271,6 +226,7 @@ public class FuzzTest {
 
                 moves++;
 
+                // Short sleeps to avoid pegging CPU and to let tickers advance
                 if (slowMode) {
                     sleepQuiet(35 + rnd.nextInt(55));
                 } else if ((moves % 80) == 0) {
@@ -614,114 +570,6 @@ public class FuzzTest {
         System.out.println(sb);
         System.out.println("Re-run with: -Dfuzz.seed=" + seed);
         System.out.println("================================");
-        if (Boolean.getBoolean("fuzz.issue.markdown")) {
-            writeIssueMarkdown(seed, executed, t, sb.toString());
-        }
-    }
-
-    /**
-     * Emits a Markdown report under {@code target/fuzz-issues/} containing the seed, stack trace,
-     * platform info, and the executed input sequence in CSV form.
-     *
-     * @param seed random seed used
-     * @param executed sequence of executed inputs
-     * @param t failure that occurred (nullable)
-     * @param csv CSV representation of {@code executed}
-     */
-    private void writeIssueMarkdown(long seed, List<Input> executed, Throwable t, String csv) {
-        java.io.File dir = new java.io.File("target/fuzz-issues");
-        if (!dir.exists() && !dir.mkdirs()) {
-            System.err.println("[FUZZ][ISSUE] Could not create directory: " + dir);
-            return;
-        }
-        String shortName = (t == null ? "no-exception" : t.getClass().getSimpleName());
-        String commit = readGitHead();
-        String fileName = String.format("fuzz-%s-seed-%d.md", shortName, seed);
-        java.io.File f = new java.io.File(dir, fileName);
-        try (java.io.PrintWriter pw =
-                     new java.io.PrintWriter(f, java.nio.charset.StandardCharsets.UTF_8)) {
-            pw.println("# Fuzzer Detected Exception: " + shortName);
-            pw.println();
-            pw.println("Commit: `" + commit + "`");
-            pw.println("Java: `" + System.getProperty("java.version") + "` OS: `" +
-                    System.getProperty("os.name") + " " + System.getProperty("os.arch") + "`");
-            pw.println();
-            pw.println("## Summary");
-            pw.println("Exception during fuzz run: `" + (t == null ? "(none)" : t.toString()) + "`.");
-            pw.println();
-            pw.println("## Reproduction");
-            pw.println("```bash");
-            pw.println("mvn -Dfuzz.seed=" + seed + " -Dfuzz.ms=15000 test");
-            pw.println("```");
-            pw.println();
-            pw.println("## Stack Trace (trimmed)");
-            pw.println("```");
-            if (t != null) {
-                java.io.StringWriter sw = new java.io.StringWriter();
-                t.printStackTrace(new java.io.PrintWriter(sw));
-                pw.println(sw.toString());
-            } else pw.println("(none)");
-            pw.println("```");
-            pw.println();
-            pw.println("## Input Sequence (CSV)");
-            pw.println("```");
-            pw.println(csv);
-            pw.println("```");
-            pw.println();
-            pw.println("## Labels");
-            pw.println("#detectedByFuzzer");
-            pw.println();
-            pw.println("## Suggested Steps");
-            pw.println("- Inspect stack frames.");
-            pw.println("- Re-run with same seed.");
-            pw.println("- Add regression test after fix.");
-        } catch (Exception e) {
-            System.err.println("[FUZZ][ISSUE] Failed to write issue markdown: " + e);
-        }
-        System.out.println("[FUZZ][ISSUE] Markdown written: " + f.getPath());
-    }
-
-    /**
-     * Best-effort retrieval of the current commit hash from {@code .git/HEAD}.
-     *
-     * @return the commit hash, or "unknown" if it cannot be determined
-     */
-    private String readGitHead() {
-        try {
-            java.nio.file.Path head = java.nio.file.Paths.get(".git/HEAD");
-            if (!java.nio.file.Files.exists(head)) return "unknown";
-            String ref = java.nio.file.Files.readString(head).trim();
-            if (ref.startsWith("ref:")) {
-                java.nio.file.Path refPath = java.nio.file.Paths.get(".git", ref.substring(5));
-                if (java.nio.file.Files.exists(refPath)) {
-                    return java.nio.file.Files.readString(refPath).trim();
-                }
-            }
-            return ref;
-        } catch (Exception e) { return "unknown"; }
-    }
-
-    /**
-     * Replays a comma-separated sequence of {@link Input} values starting from a given level.
-     * Intended for local debugging of a previously dumped failing run.
-     *
-     * @param csv comma-separated {@link Input} values
-     * @param startLevel level to start from
-     */
-    @SuppressWarnings("unused")
-    private void replay(String csv, int startLevel) {
-        AppController controller = AppController.of();
-        controller.startNewGame(startLevel);
-        for (String tok : csv.split(",")) {
-            if (tok.isBlank()) continue;
-            try {
-                controller.handleInput(Input.valueOf(tok.trim()));
-                sleepQuiet(50);
-            } catch (Exception e) {
-                System.out.println("Replay halted on input=" + tok + " due to " + e);
-                break;
-            }
-        }
     }
 
     /**
@@ -732,4 +580,5 @@ public class FuzzTest {
     private void sleepQuiet(long millis) {
         try { Thread.sleep(millis); } catch (InterruptedException ie) { Thread.currentThread().interrupt(); }
     }
+
 }
