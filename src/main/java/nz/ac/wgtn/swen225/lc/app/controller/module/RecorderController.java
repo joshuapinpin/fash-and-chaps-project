@@ -17,6 +17,7 @@ public class RecorderController implements Controller {
     Play autoplayL1;
     Play stepbystepL1;
     Save saveL1;
+    Save saveL2;
     boolean isRecording = false;
 
     AppController c;
