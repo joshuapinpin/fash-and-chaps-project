@@ -2,7 +2,10 @@ package nz.ac.wgtn.swen225.lc.recorder;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import nz.ac.wgtn.swen225.lc.app.controller.*;
-import nz.ac.wgtn.swen225.lc.app.util.*;
+import nz.ac.wgtn.swen225.lc.domain.Maze;
+import nz.ac.wgtn.swen225.lc.persistency.serialisation.GameMapper;
+import nz.ac.wgtn.swen225.lc.persistency.serialisation.GameState;
+
 import java.io.File;
 import javax.swing.*;
 import java.io.*;
@@ -28,6 +31,7 @@ public interface Play {
     /** */
     public default void startPlay(){
         // sets the game to position at start of recording
+
     }
     /** */
     public default File getFile(){
@@ -51,7 +55,7 @@ public interface Play {
      * This methods reads the list of saveMap from the json file
      * and assigns it to our movement arraylist field.
      */
-    default List<SaveL1.inputTime> getData(ObjectMapper mapper) {
+    default List<SaveL1.Moves> getData(ObjectMapper mapper) {
         /*
         using new TypeReference<List<MyObject>>() {} to create
         an anonymous subclass of TypeReference,
@@ -59,13 +63,13 @@ public interface Play {
         in its class signature. Can't do List.class.
          */
         File myFile = getFile();
-        List<SaveL1.inputTime> saveList = new ArrayList<>();
+        List<SaveL1.Moves> saveList = new ArrayList<>();
         if (myFile == null) {
             // return empty list, which is handled by autoplay and step-by-step methods
             return saveList;
         }
         try {
-            saveList = mapper.readValue(myFile, new TypeReference<List<SaveL1.inputTime>>() {
+            saveList = mapper.readValue(myFile, new TypeReference<List<SaveL1.Moves>>() {
             });
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "Failed to get recording: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

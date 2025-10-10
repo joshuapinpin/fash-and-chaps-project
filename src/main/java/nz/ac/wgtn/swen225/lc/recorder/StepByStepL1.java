@@ -2,14 +2,14 @@ package nz.ac.wgtn.swen225.lc.recorder;
 import nz.ac.wgtn.swen225.lc.app.controller.*;
 import nz.ac.wgtn.swen225.lc.app.util.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import javax.swing.*;
+
 import java.util.List;
 import java.util.ArrayList;
 
 public class StepByStepL1 implements Play{
     private static final StepByStepL1 playInstance = new StepByStepL1();
     private static int pos; // count for step by step playing
-    private List<SaveL1.inputTime> saveList;
+    private List<SaveL1.Moves> saveList;
     private final ObjectMapper mapper;
     private StepByStepL1(){
         saveList = new ArrayList<>();
@@ -51,7 +51,7 @@ public class StepByStepL1 implements Play{
         // make the method return true while we still have positions to go
         if(pos == saveList.size()){pos = 0; return false;}
         if(saveList.isEmpty()) return false; // stop play immediately
-        SaveL1.inputTime iT = saveList.get(pos);
+        SaveL1.Moves iT = saveList.get(pos);
         Input direction = iT.direction();
         // pass direction to app method
         ac.handleInput(direction);

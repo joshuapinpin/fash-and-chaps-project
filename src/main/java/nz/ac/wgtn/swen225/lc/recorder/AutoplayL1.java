@@ -2,14 +2,14 @@ package nz.ac.wgtn.swen225.lc.recorder;
 import nz.ac.wgtn.swen225.lc.app.controller.*;
 import nz.ac.wgtn.swen225.lc.app.util.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import javax.swing.*;
+
 import java.util.List;
 import java.util.ArrayList;
 import javax.swing.Timer;
 
 public class AutoplayL1 implements Play{
     private static final AutoplayL1 playInstance = new AutoplayL1();
-    private List<SaveL1.inputTime> saveList;
+    private List<SaveL1.Moves> saveList;
     private final ObjectMapper mapper;
     private Timer autoplayTimer;
     private int pos;
@@ -68,7 +68,7 @@ public class AutoplayL1 implements Play{
         }
         pos = 0;
         prevTimeLeft = 0;
-        SaveL1.inputTime iT = saveList.get(pos);
+        SaveL1.Moves iT = saveList.get(pos);
         int timeLeft = iT.timeLeftMilli();
         // Calculate delay for THIS move
         int timeDiff = Math.max(0, prevTimeLeft - timeLeft);
@@ -84,7 +84,7 @@ public class AutoplayL1 implements Play{
             return;
         }
         // Get and execute CURRENT move
-        SaveL1.inputTime iT = saveList.get(pos);
+        SaveL1.Moves iT = saveList.get(pos);
         Input dir = iT.direction();
         int timeLeft = iT.timeLeftMilli();
         // Execute THIS move
@@ -96,7 +96,7 @@ public class AutoplayL1 implements Play{
             return;
         }
         // Calculate delay for NEXT move
-        SaveL1.inputTime nextMove = saveList.get(pos);
+        SaveL1.Moves nextMove = saveList.get(pos);
         int nextTimeLeft = nextMove.timeLeftMilli();
         int timeDiff = Math.max(0, prevTimeLeft - nextTimeLeft);
         int delay = (int) timeDiff/speed;
