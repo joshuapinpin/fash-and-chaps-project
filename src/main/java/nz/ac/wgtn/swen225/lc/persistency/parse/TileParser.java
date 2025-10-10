@@ -1,7 +1,7 @@
 package nz.ac.wgtn.swen225.lc.persistency.parse;
 
 import nz.ac.wgtn.swen225.lc.domain.Position;
-import nz.ac.wgtn.swen225.lc.domain.tiles.Tile;
+import nz.ac.wgtn.swen225.lc.domain.Tile;
 import nz.ac.wgtn.swen225.lc.persistency.serialisation.GameState;
 
 import java.util.HashSet;

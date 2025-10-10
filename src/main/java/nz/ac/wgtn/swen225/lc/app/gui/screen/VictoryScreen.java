@@ -2,6 +2,7 @@ package nz.ac.wgtn.swen225.lc.app.gui.screen;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 import nz.ac.wgtn.swen225.lc.app.gui.AppWindow;
+import nz.ac.wgtn.swen225.lc.app.util.Input;
 import nz.ac.wgtn.swen225.lc.app.util.MyButton;
 import nz.ac.wgtn.swen225.lc.app.util.MyFont;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.LoadingImg;
@@ -11,6 +12,11 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
+/**
+ * Victory screen panel.
+ * Displays options to start a new game, load a game, or return to the home screen.
+ * @author Joshua Pinpin (Student ID: 300662880)
+ */
 public class VictoryScreen extends JPanel {
     private BufferedImage bgImg;
     private AppController c;
@@ -19,6 +25,9 @@ public class VictoryScreen extends JPanel {
     int height = AppWindow.WINDOW_HEIGHT/2;
     int buttonGap = 20;
 
+    /**
+     * Create the panel.
+     */
     public VictoryScreen(AppController c) {
         this.c = c;
         setLayout(new BorderLayout());
@@ -58,6 +67,7 @@ public class VictoryScreen extends JPanel {
     private void setupButtons(){
         setupSingleButton("Level 1", e -> c.startNewGame(1));
         setupSingleButton("Level 2", e -> c.startNewGame(2));
+        setupSingleButton("Load Game", e -> c.handleInput(Input.RESUME));
         setupSingleButton("Home", e -> c.exitGame());
     }
 

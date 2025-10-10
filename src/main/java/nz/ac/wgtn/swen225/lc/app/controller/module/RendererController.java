@@ -7,13 +7,18 @@ import nz.ac.wgtn.swen225.lc.renderer.Renderer;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.Drawable;
 import nz.ac.wgtn.swen225.lc.renderer.sounds.LoadingSounds;
 
+/**
+ * RendererController manages the rendering of the maze state and background music.
+ * It updates the maze panel based on the current domain state and handles music playback.
+ * @author Joshua Pinpin (Student ID: 300662880)
+ */
 public class RendererController implements Controller {
     AppController c;
     Renderer renderer;
     Drawable mazePanel;
     LoadingSounds bgMusic;
-    float playVolume = -20f;
-    float pausedVolume = -35f;
+    float playVolume = -25f;
+    float pausedVolume = -40f;
 
     /**
      * Constructor initializes the renderer with the current domain state.
@@ -58,11 +63,6 @@ public class RendererController implements Controller {
     public void playMusic(){
         stopMusic(); // ensures no overlap
         bgMusic.playBackgroundMusic(playVolume);
-    }
-
-    public void whenPausedMusic(){
-        stopMusic();
-        bgMusic.playBackgroundMusic(pausedVolume);
     }
 
     /**

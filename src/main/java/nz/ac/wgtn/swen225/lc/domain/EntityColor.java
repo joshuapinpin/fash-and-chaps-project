@@ -1,4 +1,4 @@
-package nz.ac.wgtn.swen225.lc.domain.entities;
+package nz.ac.wgtn.swen225.lc.domain;
 
 /**
  * Enum representing key colors in the game

@@ -1,9 +1,5 @@
 package nz.ac.wgtn.swen225.lc.domain;
 
-import nz.ac.wgtn.swen225.lc.domain.tiles.Tile;
-
-import java.util.function.Consumer;
-
 /**
  * Represents a monster in the game
  * Monsters can move horizontally in the maze and interact with the player

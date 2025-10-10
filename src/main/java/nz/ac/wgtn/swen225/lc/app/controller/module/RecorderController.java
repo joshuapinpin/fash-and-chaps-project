@@ -8,12 +8,18 @@ import nz.ac.wgtn.swen225.lc.app.state.StepReplayState;
 import nz.ac.wgtn.swen225.lc.app.util.Input;
 import nz.ac.wgtn.swen225.lc.recorder.*;
 
+/**
+ * Controller for recording and replaying player movements.
+ * Integrates with Play and Save classes to manage recording state.
+ * @author Joshua Pinpin (Student ID: 300662880)
+ */
 public class RecorderController implements Controller {
     Play autoplayL1;
     Play stepbystepL1;
     Save saveL1;
     boolean isRecording = false;
-    AppController controller;
+
+    AppController c;
     TimerController timerController;
 
     /**
@@ -21,16 +27,28 @@ public class RecorderController implements Controller {
      * @param controller AppController to interact with the game state.
      */
     public RecorderController(AppController controller, TimerController timerController) {
-        this.controller = controller;
+        this.c = controller;
         this.timerController = timerController;
         autoplayL1 = AutoplayL1.of();
         stepbystepL1 = StepByStepL1.of();
         saveL1 = SaveL1.of();
     }
 
+    /**
+     * Reset recording state at the start of a new game.
+     */
     @Override
     public void atNewGame(){
         isRecording = false;
+    }
+
+    /**
+     * Add a movement to the recording.
+     * @param dir Direction of movement.
+     */
+    public void addMovement(Input dir){
+        if(!isRecording) return;
+        saveL1.updateMovement(dir, c, false);
     }
 
     /**
@@ -45,6 +63,7 @@ public class RecorderController implements Controller {
      * Stop recording the player's movements and save to file.
      */
     public void stopRecording(){
+        if(!isRecording) return;
         isRecording = false;
         System.out.println("Stopped Recording");
         saveToFile();
@@ -71,7 +90,7 @@ public class RecorderController implements Controller {
      */
     public void saveToFile(){
         isRecording = false;
-        saveL1.updateMovement(Input.SAVE, controller, true);
+        saveL1.updateMovement(Input.SAVE, c, true);
     }
 
     /**
@@ -80,9 +99,9 @@ public class RecorderController implements Controller {
      */
     public void stepByStep() {
         System.out.println("Step-By-Step Playing");
-        controller.setState(new StepReplayState());
-        if(!stepbystepL1.play(controller))
-            controller.setState(new PausedState(controller));
+        c.setState(new StepReplayState(c));
+        if(!stepbystepL1.play(c))
+            c.setState(new PausedState(c));
     }
 
     /**
@@ -91,22 +110,8 @@ public class RecorderController implements Controller {
      */
     public void autoPlay() {
         System.out.println("Auto-Playing");
-        controller.setState(new AutoReplayState());
-        autoplayL1.play(controller);
+        c.setState(new AutoReplayState(c));
+        autoplayL1.play(c);
         // controller.setState(new PausedState(controller));
     }
-
-    /**
-     * Add a movement to the recording.
-     * @param dir Direction of movement.
-     */
-    public void addMovement(Input dir){
-        if(!isRecording) return;
-        saveL1.updateMovement(dir, controller, false);
-    }
-
-
-
-
-
 }

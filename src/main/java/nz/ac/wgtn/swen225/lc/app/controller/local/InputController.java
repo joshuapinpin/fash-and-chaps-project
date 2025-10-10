@@ -12,10 +12,10 @@ import java.util.*;
 /**
  * Handles user input (keyboard and UI actions) and delegates to AppController.
  *
- * @author <Your Name>
+ * @author Joshua Pinpin (Student ID: 300662880)
  */
 public class InputController implements KeyListener {
-    private final AppController controller;
+    private final AppController c;
     private final Map<KeyCombo, KeyAction> inputs;
     private final Set<Integer> pressedKeys = new HashSet<>();
 
@@ -26,7 +26,7 @@ public class InputController implements KeyListener {
     private interface KeyAction {void execute(AppController gameController);}
 
     public InputController(AppController controller) {
-        this.controller = controller;
+        this.c = controller;
         this.inputs = new HashMap<>();
         setupInputs();
     }
@@ -45,10 +45,22 @@ public class InputController implements KeyListener {
         inputs.put(new KeyCombo(KeyEvent.VK_ESCAPE, false), c -> c.handleInput(Input.CONTINUE));
     }
 
+    /**
+     * Clears the set of currently pressed keys.
+     * Useful for resetting state when needed.
+     */
+    public void clearPressedKeys() {
+        pressedKeys.clear();
+    }
+
+    /**
+     * Processes key press events and maps them to game actions.
+     * Ignores repeated key presses for the same key until released.
+     * @param e the event to be processed
+     */
     @Override
     public void keyPressed(KeyEvent e) {
-        if(controller.state().equals(new StepReplayState())
-                || controller.state().equals(new AutoReplayState())) return;
+        if(c.state() instanceof AutoReplayState || c.state() instanceof StepReplayState) return;
 
 
         int keyCode = e.getKeyCode();
@@ -62,12 +74,22 @@ public class InputController implements KeyListener {
 
         // Displays the key pressed for debugging on terminal
         var keyText = KeyEvent.getKeyText(keyCode);
-        if (action != null) action.execute(controller);
+        if (action != null) {
+            action.execute(c);
+            System.out.println("Key Pressed: " + keyText + (ctrl ? " + Ctrl" : ""));
+        }
+
     }
-    @Override public void keyTyped(KeyEvent e) {}
+
+    /**
+     * Handles key release events by removing the key from the pressed set.
+     * This allows for reprocessing of the key press in future events.
+     * @param e the event to be processed
+     */
     @Override public void keyReleased(KeyEvent e) {
         pressedKeys.remove(e.getKeyCode()); // removed to allow for reprocessing.
     }
+    @Override public void keyTyped(KeyEvent e) {}
 }
 
 

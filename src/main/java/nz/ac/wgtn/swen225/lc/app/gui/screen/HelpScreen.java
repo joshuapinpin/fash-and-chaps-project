@@ -12,6 +12,11 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
+/**
+ * Help screen panel.
+ * Displays instructions on how to play the game, including controls and game mechanics.
+ * @author Joshua Pinpin (Student ID: 300662880)
+ */
 public class HelpScreen extends JPanel {
     private AppController c;
 
@@ -26,6 +31,9 @@ public class HelpScreen extends JPanel {
     int headerSize = AppWindow.FONT_SIZE_H2;
     int helpSize = 25;
 
+    /**
+     * Create the panel.
+     */
     public HelpScreen(AppController c) {
         this.c = c;
         setLayout(new BorderLayout());
@@ -108,10 +116,8 @@ public class HelpScreen extends JPanel {
         helpPanel.setOpaque(false);
         helpPanel.setLayout(new GridLayout(8,1));
 
-        JPanel panel = new JPanel();
-
         addTextWithPanel("Pick up keys to open doors.", helpPanel, helpSize);
-        addImageToPanel(List.of(LoadingImg.GreenKey.loadImage(),LoadingImg.GreenDoor.loadImage()), helpPanel);
+        addImageToPanel(List.of(LoadingImg.OrangeKey.loadImage(),LoadingImg.OrangeDoor.loadImage()), helpPanel);
         addTextWithPanel("Collect coins to open chest.", helpPanel, helpSize);
         addImageToPanel(List.of(LoadingImg.Treasure.loadImage(),LoadingImg.ExitLock.loadImage()), helpPanel);
         addTextWithPanel("Avoid crabs and puddles.", helpPanel, helpSize);
@@ -180,8 +186,8 @@ public class HelpScreen extends JPanel {
                 g.drawImage(bgImg, col * squareSize, row * squareSize, squareSize, squareSize, this);
             }
         }
-         //Darken the background
-        g.setColor(new Color(0, 0, 0, 80));
+        //Darken the background
+        g.setColor(new Color(0, 0, 0, 60));
         g.fillRect(0, 0, AppWindow.WINDOW_WIDTH, AppWindow.WINDOW_HEIGHT);
     }
 }

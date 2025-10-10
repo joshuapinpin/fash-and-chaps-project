@@ -1,12 +1,16 @@
 package nz.ac.wgtn.swen225.lc.renderer.imgs;
 
-import nz.ac.wgtn.swen225.lc.domain.entities.*;
+import nz.ac.wgtn.swen225.lc.domain.*;
 
 import java.awt.image.BufferedImage;
 import java.util.Map;
 
-public class EntityImage implements EntityVisitor<BufferedImage>{
-
+/**
+ * Concrete Visitor Class to implement Visitor Pattern
+ * Draws the specific entity image
+ * @author Emily Ung (300663254)
+ */
+public class EntityImage implements EntityVisitor<BufferedImage> {
     Map<EntityColor, LoadingImg> keyLookUpTable = Map.of(    //lookup table for key entities (to see colour)
             EntityColor.PURPLE, LoadingImg.PurpleKey,
             EntityColor.ORANGE, LoadingImg.OrangeKey,
@@ -26,7 +30,7 @@ public class EntityImage implements EntityVisitor<BufferedImage>{
      * @return - key tile image
      */
     @Override
-    public BufferedImage visitKey(Key key) { return keyLookUpTable.get(key.getColor()).loadImage(); }
+    public BufferedImage visitKey(Key key){ return keyLookUpTable.get(key.getColor()).loadImage(); }
 
     /**
      * Draws door image
@@ -34,7 +38,7 @@ public class EntityImage implements EntityVisitor<BufferedImage>{
      * @return - door tile image
      */
     @Override
-    public BufferedImage visitDoor(Door door) { return doorLookUpTable.get(door.getColor()).loadImage();}
+    public BufferedImage visitDoor(Door door){ return doorLookUpTable.get(door.getColor()).loadImage();}
 
     /**
      * Draws exit lock image
@@ -42,7 +46,7 @@ public class EntityImage implements EntityVisitor<BufferedImage>{
      * @return - exit lock tile image
      */
     @Override
-    public BufferedImage visitExitLock(ExitLock exitLock) { return LoadingImg.ExitLock.loadImage(); }
+    public BufferedImage visitExitLock(ExitLock exitLock){ return LoadingImg.ExitLock.loadImage(); }
 
     /**
      * Draws coin image
@@ -50,6 +54,5 @@ public class EntityImage implements EntityVisitor<BufferedImage>{
      * @return - coin tile image
      */
     @Override
-    public BufferedImage visitTreasure(Treasure treasure) { return LoadingImg.Treasure.loadImage(); }
+    public BufferedImage visitTreasure(Treasure treasure){ return LoadingImg.Treasure.loadImage(); }
 }
-

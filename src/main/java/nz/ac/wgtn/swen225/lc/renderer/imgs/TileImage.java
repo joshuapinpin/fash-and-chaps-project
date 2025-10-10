@@ -1,14 +1,15 @@
 package nz.ac.wgtn.swen225.lc.renderer.imgs;
 
-import nz.ac.wgtn.swen225.lc.domain.tiles.*;
+import nz.ac.wgtn.swen225.lc.domain.*;
 
 import java.awt.image.BufferedImage;
 
 /**
  * Concrete Visitor Class to implement Visitor Pattern
  * Draws the specific image for the tile
+ * @author Emily Ung (300663254)
  */
-public class TileImage implements TileVisitor<BufferedImage>{
+public class TileImage implements TileVisitor<BufferedImage> {
 
     /**
      * Draws Rock/wall image

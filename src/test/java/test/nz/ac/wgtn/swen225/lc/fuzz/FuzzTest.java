@@ -34,12 +34,6 @@ public class FuzzTest {
      * Adjust this constant (or provide the system property) instead of hunting through the method.
      */
     private static final long RUN_MS = Long.getLong("fuzz.ms", 15_000L); // change here e.g. 55_000L for longer sessions
-
-    /**
-     * Fuzz Level 1 within the configured duration.
-     * Skipped in headless environments (CI without a display).
-     * Use {@code -Dfuzz.ms} and {@code -Dfuzz.seed} to control run length and determinism.
-     */
     @Test
     @Timeout(60)
     public void testLevel1() {

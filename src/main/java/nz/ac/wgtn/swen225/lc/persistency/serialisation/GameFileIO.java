@@ -11,7 +11,7 @@ import java.io.IOException;
  * @author Thomas Ru - 300658840
  */
 public class GameFileIO<S extends GameState> implements FileIO<S> {
-    private final ObjectMapper mapper = new ObjectMapper(); // add findAndRegisterModules() later
+    private final ObjectMapper mapper = new ObjectMapper();
     private final Class<S> type;
 
     /**

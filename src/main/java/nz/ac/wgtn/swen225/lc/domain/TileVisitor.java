@@ -1,4 +1,4 @@
-package nz.ac.wgtn.swen225.lc.domain.tiles;
+package nz.ac.wgtn.swen225.lc.domain;
 
 /**
  * TileVisitor interface for implementing the Visitor design pattern

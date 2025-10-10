@@ -3,18 +3,17 @@ package nz.ac.wgtn.swen225.lc.renderer;
 import nz.ac.wgtn.swen225.lc.domain.GameObserver;
 import nz.ac.wgtn.swen225.lc.domain.Monster;
 import nz.ac.wgtn.swen225.lc.domain.Player;
-import nz.ac.wgtn.swen225.lc.domain.entities.Door;
-import nz.ac.wgtn.swen225.lc.domain.entities.Key;
-import nz.ac.wgtn.swen225.lc.domain.tiles.Tile;
+import nz.ac.wgtn.swen225.lc.domain.Door;
+import nz.ac.wgtn.swen225.lc.domain.Key;
+import nz.ac.wgtn.swen225.lc.domain.Tile;
 import nz.ac.wgtn.swen225.lc.renderer.imgs.Drawable;
 import nz.ac.wgtn.swen225.lc.renderer.sounds.LoadingSounds;
-
-import javax.swing.*;
 import java.util.List;
 
 /**
  * Controls how panels and tiles are drawn within the game
  * Controls when sounds are played
+ * @author Emily Ung (300663254)
  */
 public class Renderer {
     public static int X_PANEL_WIDTH;
@@ -78,55 +77,4 @@ public class Renderer {
             public void onPlayerDrown(Player player) { LoadingSounds.PlayerDrownSound.playSoundEffect(-20.f); }
         };
     }
-
-    /*
-    * Testing main to see if drawing are displayed.
-     */
-    public static void main(String[] args) throws InterruptedException {
-        /*Renderer renderer = new Renderer(null, null);
-        SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("Test Image Display");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-            frame.add(renderer.getPanel());
-            frame.pack(); // Use pack() to respect preferred size
-            frame.setLocationRelativeTo(null);
-            frame.setVisible(true);
-        });*/
-        LoadingSounds.PlayerDrownSound.playSoundEffect(-20.0f);
-        try {
-            Thread.sleep(3000); // wait long enough for the sound to finish
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        LoadingSounds.BackgroundSound.playBackgroundMusic(-30f);
-        try {
-            Thread.sleep(6000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        LoadingSounds.BackgroundSound.stopBackgroundMusic();
-        LoadingSounds.BackgroundSound.playBackgroundMusic(-30f);
-        try {
-            Thread.sleep(4000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        LoadingSounds.BackgroundSound.stopBackgroundMusic();
-        LoadingSounds.BackgroundSound.restartBackgroundMusic();
-        try {
-            Thread.sleep(4000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-
-
-
-
-        //Thread.sleep(10000);
-        //LoadingSounds.BackgroundSound.stopBackgroundMusic();
-    }
-
-
 }

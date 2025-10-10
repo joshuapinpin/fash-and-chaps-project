@@ -8,6 +8,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+/**
+ * LevelPanel class for the GUI
+ * Displays the current level the player is on
+ * @author Joshua Pinpin (Student ID: 300662880)
+ */
 public class LevelPanel extends JPanel implements LogicPanel {
     private AppController c;
     private JLabel levelLabel;
@@ -20,7 +25,10 @@ public class LevelPanel extends JPanel implements LogicPanel {
         add(levelLabel);
     }
 
-
+    /**
+     * Initialise the panel with the current level.
+     * @param info Current level
+     */
     @Override
     public void updatePanel(int info) {
         levelLabel.setText(info + "");
