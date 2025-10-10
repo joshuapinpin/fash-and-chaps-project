@@ -82,7 +82,7 @@ public class HelpScreen extends JPanel {
         addText("Game Controls", controlsPanel, headerSize);
         addText("ARROW KEYS: Move Player", controlsPanel,fontSize);
         addText("SPACEBAR: Pause Game", controlsPanel,fontSize);
-        addText("ESCAPE: Resumes Current Game", controlsPanel,fontSize);
+        addText("ESCAPE: Resume Current Game", controlsPanel,fontSize);
         controlsPanel.add(Box.createVerticalGlue());
 
     }
