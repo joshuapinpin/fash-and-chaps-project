@@ -2,8 +2,8 @@ package nz.ac.wgtn.swen225.lc.app.controller.module;
 
 import nz.ac.wgtn.swen225.lc.app.controller.AppController;
 import nz.ac.wgtn.swen225.lc.persistency.Levels;
-import nz.ac.wgtn.swen225.lc.persistency.saver.GamePersist;
-import nz.ac.wgtn.swen225.lc.persistency.serialisation.game.LoadedMaze;
+import nz.ac.wgtn.swen225.lc.persistency.GamePersist;
+import nz.ac.wgtn.swen225.lc.persistency.LoadedMaze;
 
 import java.util.Optional;
 
@@ -78,15 +78,15 @@ public class PersistencyController  {
     /**
      * Saves the current game state.
      */
-    public void saveGame(){
-        persist.saveGame(c.domainController().domain(),
+    public boolean saveGame(){
+        boolean successful = persist.saveGame(c.domainController().domain(),
                 currentLevel.levelNumber(),
                 maxTreasures,
                 maxKeys,
                 c.timerController().getTimeLeft(),
                 c.windowController().window());
-
         c.inputController().clearPressedKeys();
+        return successful;
     }
 
 

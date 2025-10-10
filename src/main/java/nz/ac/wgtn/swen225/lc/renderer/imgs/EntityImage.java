@@ -1,6 +1,6 @@
 package nz.ac.wgtn.swen225.lc.renderer.imgs;
 
-import nz.ac.wgtn.swen225.lc.domain.entities.*;
+import nz.ac.wgtn.swen225.lc.domain.*;
 
 import java.awt.image.BufferedImage;
 import java.util.Map;
@@ -10,7 +10,7 @@ import java.util.Map;
  * Draws the specific entity image
  * @author Emily Ung (300663254)
  */
-public class EntityImage implements EntityVisitor<BufferedImage>{
+public class EntityImage implements EntityVisitor<BufferedImage> {
     Map<EntityColor, LoadingImg> keyLookUpTable = Map.of(    //lookup table for key entities (to see colour)
             EntityColor.PURPLE, LoadingImg.PurpleKey,
             EntityColor.ORANGE, LoadingImg.OrangeKey,

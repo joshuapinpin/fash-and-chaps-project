@@ -2,7 +2,7 @@ package nz.ac.wgtn.swen225.lc.recorder;
 import nz.ac.wgtn.swen225.lc.app.controller.*;
 import nz.ac.wgtn.swen225.lc.app.util.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import nz.ac.wgtn.swen225.lc.persistency.serialisation.game.GameState;
+import nz.ac.wgtn.swen225.lc.persistency.GameState;
 import java.util.List;
 import java.util.ArrayList;
 import javax.swing.Timer;

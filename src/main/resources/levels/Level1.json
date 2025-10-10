@@ -30,7 +30,7 @@
   "levelInfo" : {
     "levelNumber" : 1,
     "maxKeys" : 2,
-    "maxTreasures": 4
+    "maxTreasures" : 4
   },
   "player" : {
     "x" : 11,
