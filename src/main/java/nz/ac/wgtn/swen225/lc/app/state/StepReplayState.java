@@ -16,7 +16,6 @@ public record StepReplayState(AppController c) implements GameState {
     public void moveDown(AppController c) { c.movePlayer(Direction.DOWN);}
     public void moveLeft(AppController c) { c.movePlayer(Direction.LEFT);}
     public void moveRight(AppController c) { c.movePlayer(Direction.RIGHT);}
-    public void resume(AppController c) { c.resumeGame();}
     public void startNewGame(AppController c, int level) { c.startNewGame(level);}
     public void exit(AppController c) { c.exitGame();}
 
