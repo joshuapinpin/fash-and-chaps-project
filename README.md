@@ -32,7 +32,7 @@
 
 ### Recording a game (under RECORDER in GUI on right pane):
 - **START:** to start recording
-- **STOP:** to stop recording and store in a JSON format file
+- **STOP:** to stop recording and store in a JSON format file. To play the game again you must restart or exit the game.
 - **AUTO-PLAY:** after recording, plays full recorded game, adjusting replay speed on slider
 - **STEP-BY-STEP:** player recorded game from file, click on the button each time for each step
 
