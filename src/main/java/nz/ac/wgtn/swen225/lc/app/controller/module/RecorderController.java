@@ -54,12 +54,19 @@ public class RecorderController implements Controller {
         stepbystepL2.reset(); // changed
     }
 
+    private void setLevel(int level){
+        if(level == 1) isL2 = false;
+        else isL2 = true;
+    }
+
     /**
      * Add a movement to the recording.
      * @param dir Direction of movement.
      */
     public void addMovement(Input dir){
         if(!isRecording) return;
+
+        System.out.println("Recorded move: " + dir);
         if(isL2) saveL2.updateMovement(dir, c, false); // changed
         else{ // changed
             saveL1.updateMovement(dir, c, false);
@@ -70,6 +77,8 @@ public class RecorderController implements Controller {
      * Start recording the player's movements.
      */
     public void startRecording(){
+        if(isRecording) return;
+        setLevel(c.persistencyController().level());
         isRecording = true;
         System.out.println("Started Recording");
         saveL1.startRecorder(c);
@@ -80,6 +89,7 @@ public class RecorderController implements Controller {
      */
     public void stopRecording(){
         if(!isRecording) return;
+        c.pauseGame();
         isRecording = false;
         System.out.println("Stopped Recording");
         saveToFile();
@@ -120,15 +130,16 @@ public class RecorderController implements Controller {
      * If playback finishes, return to paused state.
      */
     public void stepByStep() {
+        c.pauseGame();
         System.out.println("Step-By-Step Playing");
-        c.setState(new StepReplayState(c));
+        //c.setState(new StepReplayState(c));
+
+        // Note to marker, I would've done dynamic dispatch but recorder made different interfaces :(
         if(isL2){
-            if(!stepbystepL2.play(c))
-                c.setState(new PausedState(c));
+            if(!stepbystepL2.play(c))c.setState(new PausedState(c));
         }
         else{ // changed
-            if(!stepbystepL1.play(c))
-                c.setState(new PausedState(c));
+            if(!stepbystepL1.play(c)) c.setState(new PausedState(c));
         }
     }
 
@@ -137,11 +148,15 @@ public class RecorderController implements Controller {
      * If playback finishes, return to paused state.
      */
     public void autoPlay() {
+        c.pauseGame();
         System.out.println("Auto-Playing");
-        c.setState(new AutoReplayState(c));
-        if(isL2)  autoplayL2.play(c); // changed
+        //c.setState(new AutoReplayState(c));
+        if(isL2)  {
+            autoplayL2.play(c); // changed
+        }
         else{ // changed
             autoplayL1.play(c);
         }
+
     }
 }
