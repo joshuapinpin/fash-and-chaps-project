@@ -132,7 +132,7 @@ public class RecorderController implements Controller {
     public void stepByStep() {
         c.pauseGame();
         System.out.println("Step-By-Step Playing");
-        //c.setState(new StepReplayState(c));
+        c.setState(new StepReplayState(c));
 
         // Note to marker, I would've done dynamic dispatch but recorder made different interfaces :(
         if(isL2){
@@ -141,6 +141,7 @@ public class RecorderController implements Controller {
         else{ // changed
             if(!stepbystepL1.play(c)) c.setState(new PausedState(c));
         }
+        c.timerController().recorderMode();
     }
 
     /**
@@ -150,13 +151,14 @@ public class RecorderController implements Controller {
     public void autoPlay() {
         c.pauseGame();
         System.out.println("Auto-Playing");
-        //c.setState(new AutoReplayState(c));
+        c.setState(new AutoReplayState(c));
         if(isL2)  {
             autoplayL2.play(c); // changed
         }
         else{ // changed
             autoplayL1.play(c);
         }
+        c.timerController().recorderMode();
 
     }
 }
