@@ -12,7 +12,7 @@
 | 32809dc2    | 04/10/25     | Background Music playing             | Pass      | #36                   |
 | 9f58221d    | 04/10/25     | BG music looping                     | Pass      | #36                   |
 | 52174764    | 05/10/25     | Visitor Pattern                      | Pass      | #67                   |
-| f6f0abe0    | 07/10/25     | Background music restarting          | Pass      | #76                   |
+| f6f0abe0, 7cfc263d    | 07/10/25     | Background music ,restarting/starting correctly          | Pass      | #76                   |
 | 7b268b6d    | 10/10/25     | Musis Delay                          | Pass      | #87                   |
 
 ## Details
@@ -52,7 +52,7 @@
 - **Tested:** Implemented Visitor Pattern to show tiles correctly rather than checking its instance every time
 - **Result:** It worked properly, displayed images
 
-### Commit: f6f0abe0
+### Commit: f6f0abe0, 7cfc263d
 - **Tested:** Ensured that the bg music would continue after pausing and that stopping the bg music 
 - **Result:** Music played from where it left off correctly
 
