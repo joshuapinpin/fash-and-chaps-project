@@ -90,7 +90,7 @@ class GamePersistManagerTest {
         fileDialog.saveFile = Optional.of(new File("save_test.json"));
 
         Maze maze = new Maze(6, 7);
-        boolean ok = manager.save(maze, 1, 1, 1, 100, new JFrame());
+        boolean ok = manager.save(maze, 1, 1, 1, 100, null);
 
         assertTrue(ok);
         assertNotNull(fileIO.savedState);
@@ -104,7 +104,7 @@ class GamePersistManagerTest {
         fileDialog.saveFile = Optional.empty();
 
         Maze maze = new Maze(6, 7);
-        boolean ok = manager.save(maze, 1, 1, 1, 1, new JFrame());
+        boolean ok = manager.save(maze, 1, 1, 1, 1, null);
 
         assertFalse(ok);
         assertNull(fileIO.savedState);
@@ -119,7 +119,7 @@ class GamePersistManagerTest {
         GameState gs = new GameState(6, 7, 67, li, ps);
         fileIO.toLoad = gs;
 
-        Optional<LoadedMaze> result = manager.load(new JFrame());
+        Optional<LoadedMaze> result = manager.load(null);
 
         assertTrue(result.isPresent());
         LoadedMaze lm = result.get();
@@ -131,7 +131,7 @@ class GamePersistManagerTest {
     @Test
     void loadCancelEmpty() {
         fileDialog.openFile = Optional.empty();
-        Optional<LoadedMaze> result = manager.load(new JFrame());
+        Optional<LoadedMaze> result = manager.load(null);
         assertTrue(result.isEmpty());
     }
 
@@ -140,7 +140,7 @@ class GamePersistManagerTest {
         fileDialog.openFile = Optional.of(new File("broken.json"));
         fileIO.throwOnLoad = true;
 
-        Optional<LoadedMaze> result = manager.load(new JFrame());
+        Optional<LoadedMaze> result = manager.load(null);
         assertTrue(result.isEmpty());
     }
 }

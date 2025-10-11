@@ -53,7 +53,6 @@ public class GamePersistManager implements PersistManager<LoadedMaze> {
      */
     public boolean save(Maze data, int levelNumber, int maxTreasures, int maxKeys, int time, JFrame parent) {
         Objects.requireNonNull(data, "Cannot save null game board.");
-        Objects.requireNonNull(parent, "Cannot create file dialog with null window.");
         String defaultName = timestampName();
         Optional<File> fileOpt = fileDialog.showSaveDialog(parent, defaultName, extension);
 
