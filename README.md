@@ -17,7 +17,15 @@
 ### Home page (when you run Main.java):
 - **LEVEL 1:** start game at level 1
 - **LEVEL 2:** start game at level 2
+- **LOAD GAME:** loads an existing saved game
 - **HELP:** instructions of our game for the user
+- **EXIT:** exit the program
+
+### Defeat Or Victory Page (when you win or die):
+- **LEVEL 1:** start game at level 1
+- **LEVEL 2:** start game at level 2
+- **SAVE REC:** save a recording if you started a recording
+- **LOAD GAME:** loads an existing saved game
 - **EXIT:** exit the program
 
 ### Keystrokes (as per handout):
