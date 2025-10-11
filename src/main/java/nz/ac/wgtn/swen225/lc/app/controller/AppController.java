@@ -89,8 +89,8 @@ public class AppController {
 
         // Handle Input, send input to recorder if valid
         try {
+            recorderController.addMovement(input); // changed
             state.handleInput(this, input);
-            recorderController.addMovement(input);
         }
         catch(UnsupportedOperationException e){
             System.out.println(

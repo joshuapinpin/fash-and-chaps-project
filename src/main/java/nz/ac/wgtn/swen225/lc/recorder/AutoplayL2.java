@@ -18,21 +18,21 @@ import javax.swing.Timer;
  * @author Arushi Bhatnagar Stewart
  * Student ID: 300664237
  */
-public class AutoplayL1 implements Play{
-    private static final AutoplayL1 playInstance = new AutoplayL1();
-    private List<SaveL1.Moves> saveList;
+public class AutoplayL2 implements PlayL2{
+    private static final AutoplayL2 playInstance = new AutoplayL2();
+    private List<SaveL2.Moves> saveList;
+    List<GameState> states;
     private final ObjectMapper mapper;
     private Timer autoplayTimer;
     private int pos;
     private static int speed;
     private int prevTimeLeft;
-    SaveL1.FullGame fg;
-    GameState initialState;
+    SaveL2.FullGame fg;
     /**
      * Private constructor to enforce Singleton pattern.
      * Initializes the replay state with default values.
      */
-    private AutoplayL1(){
+    private AutoplayL2(){
         saveList = new ArrayList<>();
         mapper = new ObjectMapper();
         pos = 0;
@@ -40,11 +40,11 @@ public class AutoplayL1 implements Play{
         prevTimeLeft = 0;
     }
     /**
-     * Returns the singleton instance of AutoplayL1.
+     * Returns the singleton instance of AutoplayL2.
      *
-     * @return the single AutoplayL1 instance
+     * @return the single AutoplayL2 instance
      */
-    public static AutoplayL1 of() {
+    public static AutoplayL2 of() {
         return playInstance;
     }
     /**
@@ -54,6 +54,7 @@ public class AutoplayL1 implements Play{
      */
     public void reset(){
         saveList = new ArrayList<>();
+        states = new ArrayList<>();
         speed = 1;
         prevTimeLeft = 0;
         fg = null;
@@ -90,9 +91,8 @@ public class AutoplayL1 implements Play{
         fg = getData(mapper);
         if(fg == null) return false; // stop play immediately
         saveList = fg.saveList();
-        initialState = fg.state();
-        if(saveList == null || saveList.isEmpty() || initialState == null) return false; // stop play immediately
-        startState(initialState, ac);
+        states = fg.states();
+        if(saveList == null || saveList.isEmpty()) return false; // stop play immediately
         return autoPlay(ac);
     }
     /**
@@ -110,7 +110,7 @@ public class AutoplayL1 implements Play{
         }
         pos = 0;
         prevTimeLeft = 0;
-        SaveL1.Moves move = saveList.get(pos);
+        SaveL2.Moves move = saveList.get(pos);
         int timeLeft = move.timeLeftMilli();
         // Calculate delay for THIS move
         int timeDiff = Math.max(0, prevTimeLeft - timeLeft);
@@ -132,10 +132,12 @@ public class AutoplayL1 implements Play{
             return;
         }
         // Get and execute CURRENT move
-        SaveL1.Moves move = saveList.get(pos);
+        SaveL2.Moves move = saveList.get(pos);
+        GameState state = states.get(pos);
         Input dir = move.direction();
         int timeLeft = move.timeLeftMilli();
         // Execute THIS move
+        setState(state, ac);
         ac.handleInput(dir);
         prevTimeLeft = timeLeft;
         pos++;
@@ -144,7 +146,7 @@ public class AutoplayL1 implements Play{
             return;
         }
         // Calculate delay for NEXT move
-        SaveL1.Moves nextMove = saveList.get(pos);
+        SaveL2.Moves nextMove = saveList.get(pos);
         int nextTimeLeft = nextMove.timeLeftMilli();
         int timeDiff = Math.max(0, prevTimeLeft - nextTimeLeft);
         int delay = (int) timeDiff/speed;

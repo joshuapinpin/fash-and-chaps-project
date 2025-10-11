@@ -16,10 +16,12 @@ import nz.ac.wgtn.swen225.lc.recorder.*;
 public class RecorderController implements Controller {
     Play autoplayL1;
     Play stepbystepL1;
+    PlayL2 autoplayL2; // changed
+    PlayL2 stepbystepL2; // changed
     Save saveL1;
-    Save saveL2;
+    Save saveL2; // changed
     boolean isRecording = false;
-
+    boolean isL2 = true;
     AppController c;
     TimerController timerController;
 
@@ -33,6 +35,9 @@ public class RecorderController implements Controller {
         autoplayL1 = AutoplayL1.of();
         stepbystepL1 = StepByStepL1.of();
         saveL1 = SaveL1.of();
+        autoplayL2 = AutoplayL2.of(); // changed
+        stepbystepL2 = StepByStepL2.of(); // changed
+        saveL2 = SaveL2.of(); // changed
     }
 
     /**
@@ -42,6 +47,11 @@ public class RecorderController implements Controller {
     public void atNewGame(){
         isRecording = false;
         saveL1.reset();
+        saveL2.reset(); // changed
+        autoplayL1.reset(); // changed
+        autoplayL2.reset(); // changed
+        stepbystepL1.reset(); // changed
+        stepbystepL2.reset(); // changed
     }
 
     /**
@@ -50,7 +60,10 @@ public class RecorderController implements Controller {
      */
     public void addMovement(Input dir){
         if(!isRecording) return;
-        saveL1.updateMovement(dir, c, false);
+        if(isL2) saveL2.updateMovement(dir, c, false); // changed
+        else{ // changed
+            saveL1.updateMovement(dir, c, false);
+        }
     }
 
     /**
@@ -85,7 +98,10 @@ public class RecorderController implements Controller {
      * @param s Speed in milliseconds between moves.
      */
     public void setSpeed(int s) {
-        autoplayL1.setSpeed(s);
+        if(isL2) autoplayL2.setSpeed(s); // changed
+        else{ // changed
+            autoplayL1.setSpeed(s);
+        }
     }
 
     /**
@@ -93,7 +109,10 @@ public class RecorderController implements Controller {
      */
     public void saveToFile(){
         isRecording = false;
-        saveL1.updateMovement(Input.SAVE, c, true);
+        if(isL2) saveL2.updateMovement(Input.SAVE, c, true); // changed
+        else{ // changed
+            saveL1.updateMovement(Input.SAVE, c, true);
+        }
     }
 
     /**
@@ -103,8 +122,14 @@ public class RecorderController implements Controller {
     public void stepByStep() {
         System.out.println("Step-By-Step Playing");
         c.setState(new StepReplayState(c));
-        if(!stepbystepL1.play(c))
-            c.setState(new PausedState(c));
+        if(isL2){
+            if(!stepbystepL2.play(c))
+                c.setState(new PausedState(c));
+        }
+        else{ // changed
+            if(!stepbystepL1.play(c))
+                c.setState(new PausedState(c));
+        }
     }
 
     /**
@@ -114,6 +139,9 @@ public class RecorderController implements Controller {
     public void autoPlay() {
         System.out.println("Auto-Playing");
         c.setState(new AutoReplayState(c));
-        autoplayL1.play(c);
+        if(isL2)  autoplayL2.play(c); // changed
+        else{ // changed
+            autoplayL1.play(c);
+        }
     }
 }
