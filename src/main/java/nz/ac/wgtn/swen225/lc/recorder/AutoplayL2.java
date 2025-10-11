@@ -129,6 +129,7 @@ public class AutoplayL2 implements PlayL2{
      */
     private void processNextMove(AppController ac) {
         if (pos >= saveList.size()) {
+            isPlayComplete(autoplayTimer); // Add completion handler
             return;
         }
         // Get and execute CURRENT move
@@ -138,11 +139,12 @@ public class AutoplayL2 implements PlayL2{
         int timeLeft = move.timeLeftMilli();
         // Execute THIS move
         setState(state, ac);
-        ac.handleInput(dir);
+        // ac.handleInput(dir);
         prevTimeLeft = timeLeft;
         pos++;
         // make sure pos is not out of bounds
         if (pos >= saveList.size()) {
+            isPlayComplete(autoplayTimer); // Add completion handler
             return;
         }
         // Calculate delay for NEXT move
