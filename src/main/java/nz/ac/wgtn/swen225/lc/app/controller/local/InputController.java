@@ -60,7 +60,9 @@ public class InputController implements KeyListener {
      */
     @Override
     public void keyPressed(KeyEvent e) {
-        if(c.state() instanceof AutoReplayState || c.state() instanceof StepReplayState) return;
+        if((c.state() instanceof AutoReplayState || c.state() instanceof StepReplayState)
+            && e.getKeyCode() != KeyEvent.VK_ESCAPE
+        ) return;
 
 
         int keyCode = e.getKeyCode();
@@ -72,13 +74,7 @@ public class InputController implements KeyListener {
         KeyCombo combo = new KeyCombo(keyCode, ctrl);
         KeyAction action = inputs.get(combo);
 
-        // Displays the key pressed for debugging on terminal
-        var keyText = KeyEvent.getKeyText(keyCode);
-        if (action != null) {
-            action.execute(c);
-            System.out.println("Key Pressed: " + keyText + (ctrl ? " + Ctrl" : ""));
-        }
-
+        if (action != null) action.execute(c);
     }
 
     /**

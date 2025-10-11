@@ -69,6 +69,7 @@ public class DefeatScreen extends JPanel  {
     private void setupButtons(){
         setupSingleButton("Level 1", e -> c.handleInput(Input.LOAD_LEVEL_1));
         setupSingleButton("Level 2", e -> c.handleInput(Input.LOAD_LEVEL_2));
+        setupSingleButton("Save Rec", e -> c.recorderController().stopRecording());
         setupSingleButton("Load Game", e -> c.handleInput(Input.RESUME));
         setupSingleButton("Home", e -> c.handleInput(Input.EXIT));
     }

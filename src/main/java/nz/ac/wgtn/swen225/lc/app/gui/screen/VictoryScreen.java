@@ -67,6 +67,7 @@ public class VictoryScreen extends JPanel {
     private void setupButtons(){
         setupSingleButton("Level 1", e -> c.startNewGame(1));
         setupSingleButton("Level 2", e -> c.startNewGame(2));
+        setupSingleButton("Save Rec", e -> c.recorderController().stopRecording());
         setupSingleButton("Load Game", e -> c.handleInput(Input.RESUME));
         setupSingleButton("Home", e -> c.exitGame());
     }

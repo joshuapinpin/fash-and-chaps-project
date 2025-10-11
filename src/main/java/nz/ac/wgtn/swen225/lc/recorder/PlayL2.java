@@ -17,7 +17,7 @@ import java.io.*;
  * @author Arushi Bhatnagar Stewart
  * Student ID: 300664237
  */
-public interface Play {
+public interface PlayL2{
     /**
      * Initiates replay of a recorded game session.
      *
@@ -42,7 +42,7 @@ public interface Play {
      * @param gs the game state to load
      * @param c the application controller to apply the state to
      */
-    public default void startState(GameState gs, AppController c){
+    public default void setState(GameState gs, AppController c){
         // sets the game to position at start of recording
         LoadedMaze maze = new GameMapper().fromState(gs);
         c.persistencyController().loadDomain(maze);
@@ -77,7 +77,7 @@ public interface Play {
      * @param mapper the ObjectMapper for JSON deserialization
      * @return the FullGame object containing the recording, or null if loading fails
      */
-    public default SaveL1.FullGame getData(ObjectMapper mapper) {
+    public default SaveL2.FullGame getData(ObjectMapper mapper) {
         /*
         using new TypeReference<List<MyObject>>() {} to create
         an anonymous subclass of TypeReference,
@@ -85,17 +85,26 @@ public interface Play {
         in its class signature. Can't do List.class.
          */
         File myFile = getFile();
-        SaveL1.FullGame fg = null;
+        SaveL2.FullGame fg = null;
         if (myFile == null) {
             // return empty list, which is handled by autoplay and step-by-step methods
             return fg;
         }
         try {
-            fg = mapper.readValue(myFile, new TypeReference<SaveL1.FullGame>() {});
+            fg = mapper.readValue(myFile, new TypeReference<SaveL2.FullGame>() {});
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "Failed to get recording: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
         return fg;
+    }
+
+    /** This method handles completion of autoplay */
+    public default boolean isPlayComplete(Timer autoplayTimer) {
+        if (autoplayTimer != null) {
+            autoplayTimer.stop();
+        }
+        System.out.println("Playback completed");
+        return true;
     }
 }
 

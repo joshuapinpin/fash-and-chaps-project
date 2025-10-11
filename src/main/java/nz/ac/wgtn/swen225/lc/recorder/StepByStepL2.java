@@ -1,13 +1,9 @@
 package nz.ac.wgtn.swen225.lc.recorder;
-import com.fasterxml.jackson.core.type.TypeReference;
 import nz.ac.wgtn.swen225.lc.app.controller.*;
 import nz.ac.wgtn.swen225.lc.app.util.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import nz.ac.wgtn.swen225.lc.persistency.GameState;
-
 import javax.swing.*;
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 /**
@@ -21,28 +17,29 @@ import java.util.ArrayList;
  * @author Arushi Bhatnagar Stewart
  * Student ID: 300664237
  */
-public class StepByStepL1 implements Play{
-    private static final StepByStepL1 playInstance = new StepByStepL1();
+public class StepByStepL2 implements PlayL2{
+    private static final StepByStepL2 playInstance = new StepByStepL2();
     private static int pos; // count for step by step playing
-    private List<SaveL1.Moves> saveList;
+    private List<SaveL2.Moves> saveList;
+    List<GameState> states;
     private final ObjectMapper mapper;
-    SaveL1.FullGame fg;
-    GameState initialState;
+    SaveL2.FullGame fg;
     /**
      * Private constructor to enforce Singleton pattern.
      * Initializes the replay state with default values.
      */
-    private StepByStepL1(){
+    private StepByStepL2(){
         saveList = new ArrayList<>();
+        states = new ArrayList<>();
         mapper = new ObjectMapper();
         pos = 0;
     }
     /**
-     * Returns the singleton instance of StepByStepL1.
+     * Returns the singleton instance of StepByStepL2.
      *
-     * @return the single StepByStepL1 instance
+     * @return the single StepByStepL2 instance
      */
-    public static StepByStepL1 of() {
+    public static StepByStepL2 of() {
         return playInstance;
     }
     /**
@@ -52,6 +49,7 @@ public class StepByStepL1 implements Play{
      */
     public void reset(){
         saveList = new ArrayList<>();
+        states = new ArrayList<>();
         pos = 0;
     }
     /**
@@ -77,10 +75,9 @@ public class StepByStepL1 implements Play{
         if(pos == 0){
             fg = getData(mapper);
             saveList = fg.saveList();
-            initialState = fg.state();
-            startState(initialState, ac);
+            states = fg.states();
         }
-        if(saveList == null || saveList.isEmpty() || initialState == null) return false; // stop play immediately
+        if(saveList == null || saveList.isEmpty()) return false; // stop play immediately
         return stepByStep(ac);
     }
     /**
@@ -95,10 +92,12 @@ public class StepByStepL1 implements Play{
         // make the method return true while we still have positions to go
         if(pos == saveList.size()){pos = 0; return false;}
         if(saveList.isEmpty()) return false; // stop play immediately
-        SaveL1.Moves move = saveList.get(pos);
+        SaveL2.Moves move = saveList.get(pos);
+        GameState state = states.get(pos);
+        setState(state, ac);
         Input direction = move.direction();
         // pass direction to app method
-        ac.handleInput(direction);
+        // ac.handleInput(direction);
         System.out.println("step-by-step position: " + pos);
         System.out.println("step-by-step direction: " + direction);
         pos++;
