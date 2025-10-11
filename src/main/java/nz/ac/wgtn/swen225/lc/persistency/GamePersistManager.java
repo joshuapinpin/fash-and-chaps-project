@@ -16,7 +16,8 @@ import java.util.Optional;
  * @author Thomas Ru - 300658840
  */
 public class GamePersistManager implements PersistManager<LoadedMaze> {
-    private final FileDialog fileDialog = new SwingFileDialog();
+    private final Message message;
+    private final FileDialog fileDialog;
     private final FileIO<GameState> fileIO;
     private final Mapper<LoadedMaze, GameState> mapper;
     private static final String extension = "json";
@@ -24,10 +25,19 @@ public class GamePersistManager implements PersistManager<LoadedMaze> {
     /**
      * Creates a GamePersistManager given a way to convert between Maze, GameState,
      * and go to/from file-written representation of GameState.
+     * @param message - popup that displays success/failure.
+     * @param fileDialog - popup that allows user to choose files to save/load.
      * @param fileIO - reads and writes GameState objects to file.
      * @param mapper - converts from Maze to GameState, or vice versa.
      */
-    public GamePersistManager(FileIO<GameState> fileIO, Mapper<LoadedMaze, GameState> mapper) {
+    public GamePersistManager(
+            Message message,
+            FileDialog fileDialog,
+            FileIO<GameState> fileIO,
+            Mapper<LoadedMaze, GameState> mapper
+    ) {
+        this.message = message;
+        this.fileDialog = fileDialog;
         this.fileIO = fileIO;
         this.mapper = mapper;
     }
@@ -53,13 +63,15 @@ public class GamePersistManager implements PersistManager<LoadedMaze> {
             try {
                 LevelInfo levelInfo = new LevelInfo(levelNumber, maxKeys, maxTreasures);
                 fileIO.save(mapper.toState(new LoadedMaze(data, time, levelInfo)), file);
-                JOptionPane.showMessageDialog(parent,
+                message.showMessage(
                         "File saved: " + file.getAbsolutePath(),
-                        "Success", JOptionPane.INFORMATION_MESSAGE);
+                        "Success", JOptionPane.INFORMATION_MESSAGE
+                );
             } catch (IOException e) {
-                JOptionPane.showMessageDialog(parent,
+                message.showMessage(
                         "Error saving: " + e.getMessage(),
-                        "Error", JOptionPane.ERROR_MESSAGE);
+                        "Error", JOptionPane.ERROR_MESSAGE
+                );
             }
         });
         return true;
@@ -94,9 +106,10 @@ public class GamePersistManager implements PersistManager<LoadedMaze> {
             GameState gameState = fileIO.load(selected.get());
             return Optional.of(mapper.fromState(gameState));
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(parent,
+            message.showMessage(
                     "Error loading: " + e.getMessage(),
-                    "Error", JOptionPane.ERROR_MESSAGE);
+                    "Error", JOptionPane.ERROR_MESSAGE
+            );
             return Optional.empty();
         }
     }

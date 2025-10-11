@@ -9,7 +9,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class GameStateTest {
+class GameStateTest {
 
     public static final PlayerState playerState =
             new PlayerState(1, 1, 1, 2, "UP", List.of("GREEN"));
@@ -25,14 +25,14 @@ public class GameStateTest {
     }
 
     @Test
-    public void testCounts() {
+    void testCounts() {
         GameState level = makeSampleGameState();
         assertEquals(2, level.maxTreasures());
         assertEquals(4, level.maxKeys());
     }
 
     @Test
-    public void testEquals() {
+    void testEquals() {
         GameState a = makeSampleGameState();
         GameState b = makeSampleGameState();
 
@@ -67,7 +67,7 @@ public class GameStateTest {
     }
 
     @Test
-    public void testHashCode() {
+    void testHashCode() {
         GameState a = makeSampleGameState();
         GameState b = makeSampleGameState();
 
@@ -85,7 +85,7 @@ public class GameStateTest {
     }
 
     @Test
-    public void testToString() {
+    void testToString() {
         GameState state = new GameState(
                 5, // rows
                 7, // cols

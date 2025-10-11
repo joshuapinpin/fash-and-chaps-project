@@ -1,121 +1,146 @@
 package test.nz.ac.wgtn.swen225.lc.persistency;
 
-import nz.ac.wgtn.swen225.lc.domain.Maze;
+import nz.ac.wgtn.swen225.lc.domain.*;
 import nz.ac.wgtn.swen225.lc.persistency.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
-import java.lang.reflect.Field;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class GamePersistManagerTest {
+    static class MockFileDialog implements FileDialog {
+        Optional<File> saveFile = Optional.empty();
+        Optional<File> openFile = Optional.empty();
 
-    /** Stub FileIO that just records if save/load was called. */
-    private static class StubFileIO implements FileIO<GameState> {
-        boolean saved = false;
-        boolean loaded = false;
+        @Override
+        public Optional<File> showSaveDialog(JFrame parent, String defaultName, String extension) {
+            return saveFile;
+        }
+
+        @Override
+        public Optional<File> showOpenDialog(JFrame parent, String extension) {
+            return openFile;
+        }
+    }
+
+    static class MockFileIO implements FileIO<GameState> {
+        GameState savedState;
+        File savedFile;
+        boolean throwOnSave = false;
+        boolean throwOnLoad = false;
+        GameState toLoad;
 
         @Override
         public void save(GameState data, File file) throws IOException {
-            saved = true;
+            if (throwOnSave) throw new IOException("save failure");
+            savedState = data;
+            savedFile = file;
         }
 
         @Override
         public GameState load(File file) throws IOException {
-            loaded = true;
-            return new GameState(1, 1, 10, new LevelInfo(1, 1, 1),
-                    new PlayerState(0, 0, 0, 0, "UP", java.util.List.of()));
+            if (throwOnLoad) throw new IOException("load failure");
+            return toLoad;
         }
     }
 
-    /** Stub Mapper that simply wraps/unpacks dummy data. */
-    private static class StubMapper implements Mapper<LoadedMaze, GameState> {
+    static class MockMapper implements Mapper<LoadedMaze, GameState> {
         @Override
-        public GameState toState(LoadedMaze maze) {
-            return new GameState(1, 1, maze.time(), maze.levelInfo(),
-                    new PlayerState(0, 0, 0, 0, "UP", java.util.List.of()));
+        public GameState toState(LoadedMaze data) {
+            Maze m = data.maze();
+            LevelInfo li = data.levelInfo();
+            int t = data.time();
+            PlayerState ps = new PlayerState(0, 0, 0, 0, null, null);
+            return new GameState(m.getRows(), m.getCols(), t, li, ps);
         }
 
         @Override
         public LoadedMaze fromState(GameState state) {
-            return new LoadedMaze(new Maze(1,1), state.getTime(), state.getLevelInfo());
+            Maze m = new Maze(state.getRows(), state.getCols());
+            return new LoadedMaze(m, state.getTime(), state.getLevelInfo());
         }
     }
 
-    /** Test subclass that bypasses all JOptionPane dialogs and GUI popups. */
-    private static class TestGamePersistManager extends GamePersistManager {
+    private MockFileDialog fileDialog;
+    private MockFileIO fileIO;
+    private MockMapper mapper;
+    private GamePersistManager manager;
 
-        private final Optional<File> fileToUse;
+    @BeforeEach
+    void setUp() {
+        fileDialog = new MockFileDialog();
+        fileIO = new MockFileIO();
+        mapper = new MockMapper();
 
-        public TestGamePersistManager(FileIO<GameState> fileIO, Mapper<LoadedMaze, GameState> mapper, Optional<File> fileToUse) {
-            super(fileIO, mapper);
-            this.fileToUse = fileToUse;
-        }
-
-        @Override
-        public boolean save(Maze data, int levelNumber, int maxTreasures, int maxKeys, int time, JFrame parent) {
-            // Skip any Swing dialogs
-            if (fileToUse.isEmpty()) return false;
-            try {
-                LevelInfo levelInfo = new LevelInfo(levelNumber, maxKeys, maxTreasures);
-                new GameFileIO<GameState>(GameState.class).save(new GameMapper().toState(new LoadedMaze(data, time, levelInfo)), fileToUse.get());
-                return true;
-            } catch (IOException e) {
-                return false;
-            }
-        }
-
-        @Override
-        public Optional<LoadedMaze> load(JFrame parent) {
-            if (fileToUse.isEmpty()) return Optional.empty();
-            try {
-                GameState state = new GameFileIO<GameState>(GameState.class).load(fileToUse.get());
-                return Optional.of(new GameMapper().fromState(state));
-            } catch (IOException e) {
-                return Optional.empty();
-            }
-        }
+        manager = new GamePersistManager(
+                new Message.Stub(),
+                fileDialog,
+                fileIO,
+                mapper
+        );
     }
 
     @Test
-    void testSaveCancelledByUser() {
-        StubFileIO fileIO = new StubFileIO();
-        StubMapper mapper = new StubMapper();
+    void saveGameState() {
+        fileDialog.saveFile = Optional.of(new File("save_test.json"));
 
-        var manager = new TestGamePersistManager(fileIO, mapper, Optional.empty());
+        Maze maze = new Maze(6, 7);
+        boolean ok = manager.save(maze, 1, 1, 1, 100, new JFrame());
 
-        boolean result = manager.save(new Maze(1,1), 1, 2, 3, 100, new JFrame());
-        assertFalse(result, "Save should return false when user cancels");
-        assertFalse(fileIO.saved, "FileIO.save() should not be called if no file selected");
+        assertTrue(ok);
+        assertNotNull(fileIO.savedState);
+        assertEquals(6, fileIO.savedState.getRows());
+        assertEquals(7, fileIO.savedState.getCols());
+        assertEquals(100, fileIO.savedState.getTime());
     }
 
     @Test
-    void testLoadCancelledByUser() {
-        StubFileIO fileIO = new StubFileIO();
-        StubMapper mapper = new StubMapper();
+    void saveCancelFalse() {
+        fileDialog.saveFile = Optional.empty();
 
-        var manager = new TestGamePersistManager(fileIO, mapper, Optional.empty());
+        Maze maze = new Maze(6, 7);
+        boolean ok = manager.save(maze, 1, 1, 1, 1, new JFrame());
+
+        assertFalse(ok);
+        assertNull(fileIO.savedState);
+    }
+
+    @Test
+    void loadGameState() {
+        fileDialog.openFile = Optional.of(new File("load_test.json"));
+
+        LevelInfo li = new LevelInfo(1, 1, 1);
+        PlayerState ps = new PlayerState(0, 0, 0, 0, null, null);
+        GameState gs = new GameState(6, 7, 67, li, ps);
+        fileIO.toLoad = gs;
 
         Optional<LoadedMaze> result = manager.load(new JFrame());
-        assertTrue(result.isEmpty(), "Load should return empty when user cancels");
-        assertFalse(fileIO.loaded, "FileIO.load() should not be called");
+
+        assertTrue(result.isPresent());
+        LoadedMaze lm = result.get();
+        assertEquals(6, lm.maze().getRows());
+        assertEquals(7, lm.maze().getCols());
+        assertEquals(67, lm.time());
+    }
+
+    @Test
+    void loadCancelEmpty() {
+        fileDialog.openFile = Optional.empty();
+        Optional<LoadedMaze> result = manager.load(new JFrame());
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void loadExceptionEmpty() {
+        fileDialog.openFile = Optional.of(new File("broken.json"));
+        fileIO.throwOnLoad = true;
+
+        Optional<LoadedMaze> result = manager.load(new JFrame());
+        assertTrue(result.isEmpty());
     }
 }
-
-
-final class TestUtils {
-    static void setPrivateField(Object target, String fieldName, Object newValue) {
-        try {
-            Field f = target.getClass().getDeclaredField(fieldName);
-            f.setAccessible(true);
-            f.set(target, newValue);
-        } catch (ReflectiveOperationException e) {
-            throw new RuntimeException(e);
-        }
-    }
-}
-

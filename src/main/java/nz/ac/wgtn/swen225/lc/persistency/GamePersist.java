@@ -11,6 +11,8 @@ public class GamePersist extends Persist{
     public GamePersist() {
         super(
                 ()->new GamePersistManager(
+                        new Message.Default(),
+                        new SwingFileDialog(),
                         new GameFileIO<>(GameState.class),
                         new GameMapper()
                 )
