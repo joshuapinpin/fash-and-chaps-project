@@ -13,7 +13,7 @@
 | 9f58221d    | 04/10/25     | BG music looping                     | Pass      | #36                   |
 | 52174764    | 05/10/25     | Visitor Pattern                      | Pass      | #67                   |
 | f6f0abe0    | 07/10/25     | Background music restarting          | Pass      | #76                   |
-
+| 7b268b6d    | 10/10/25     | Musis Delay                          | Pass      | #87                   |
 
 ## Details
 ### Commit: 2528533d
@@ -56,10 +56,15 @@
 - **Tested:** Ensured that the bg music would continue after pausing and that stopping the bg music 
 - **Result:** Music played from where it left off correctly
 
+### Commit: 7b268b6d
+- **Tested:** After closing the clip from previous commit, sound effects started to delay. Add line listener to safely close the clip and tested to see if it still delays. 
+- **Result:** Sound effects no longer delay once adding the line listener. triggers correctly with each event
+
 ## Issues
 - #2 (closed): Implement loading images and displaying them
 - #34 (closed): Implement Camera, 9x9 tile display
 - #36 (closed): Implement loading music and playing them
 - #67 (closed): Implement Visitor pattern to load
 - #76 (closed): Fixing Background Music replay
+- #87 (closed): Add Comments (fixed sound issues in this too)
 
