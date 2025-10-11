@@ -60,7 +60,9 @@ public class InputController implements KeyListener {
      */
     @Override
     public void keyPressed(KeyEvent e) {
-        if(c.state() instanceof AutoReplayState || c.state() instanceof StepReplayState) return;
+        if((c.state() instanceof AutoReplayState || c.state() instanceof StepReplayState)
+            && e.getKeyCode() != KeyEvent.VK_ESCAPE
+        ) return;
 
 
         int keyCode = e.getKeyCode();

@@ -66,15 +66,6 @@ public class TimerController implements ActionListener, Controller {
     }
 
     /**
-     * Called when loading a saved game for recorder
-     * Pauses the timer.
-     */
-    public void recorderMode() {
-        restartTimer(c.level());
-        pause();
-    }
-
-    /**
      * Handles timer ticks.
      * Called by the Timer every second.
      * @param e unused ActionEvent

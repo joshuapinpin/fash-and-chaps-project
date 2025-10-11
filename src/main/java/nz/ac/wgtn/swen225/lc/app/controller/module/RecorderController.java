@@ -4,6 +4,7 @@ import nz.ac.wgtn.swen225.lc.app.controller.Controller;
 import nz.ac.wgtn.swen225.lc.app.controller.local.TimerController;
 import nz.ac.wgtn.swen225.lc.app.state.AutoReplayState;
 import nz.ac.wgtn.swen225.lc.app.state.PausedState;
+import nz.ac.wgtn.swen225.lc.app.state.PlayState;
 import nz.ac.wgtn.swen225.lc.app.state.StepReplayState;
 import nz.ac.wgtn.swen225.lc.app.util.Input;
 import nz.ac.wgtn.swen225.lc.recorder.*;
@@ -77,7 +78,7 @@ public class RecorderController implements Controller {
      * Start recording the player's movements.
      */
     public void startRecording(){
-        if(isRecording) return;
+        if(isRecording || !(c.state() instanceof PlayState)) return;
         setLevel(c.persistencyController().level());
         isRecording = true;
         System.out.println("Started Recording");
@@ -141,7 +142,6 @@ public class RecorderController implements Controller {
         else{ // changed
             if(!stepbystepL1.play(c)) c.setState(new PausedState(c));
         }
-        c.timerController().recorderMode();
     }
 
     /**
@@ -158,7 +158,7 @@ public class RecorderController implements Controller {
         else{ // changed
             autoplayL1.play(c);
         }
-        c.timerController().recorderMode();
+
 
     }
 }
