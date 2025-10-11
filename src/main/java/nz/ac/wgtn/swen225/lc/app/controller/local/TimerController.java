@@ -18,7 +18,7 @@ public class TimerController implements ActionListener, Controller {
     private static final int TIMER_INTERVAL = 100; // Timer ticks every 1/10 second
     private static final int TICKS_PER_SECOND = 1000/TIMER_INTERVAL; // Number of ticks per second
     private static final int LEVEL_1_TIME_LIMIT = 60; // Level 1 time limit in seconds
-    private static final int LEVEL_2_TIME_LIMIT = 60; // Level 2 time limit in seconds
+    private static final int LEVEL_2_TIME_LIMIT = 70; // Level 2 time limit in seconds
 
     private final AppController c;
     private final Timer timer;
@@ -84,7 +84,7 @@ public class TimerController implements ActionListener, Controller {
         if(preciseTime > 0) preciseTime --;
         if(preciseTime % TICKS_PER_SECOND == 0) {
             c.windowController().updateWindow();
-            c.domainController().moveCrab();
+            c.domainController().moveMonster();
         }
         if(preciseTime == 0) {
             timer.stop();

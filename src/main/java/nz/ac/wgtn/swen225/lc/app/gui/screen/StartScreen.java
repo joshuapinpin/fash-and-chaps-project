@@ -71,8 +71,8 @@ public class StartScreen extends JPanel {
         setupLayoutPanel(rightPanel);
 
         setupSingleButton("Level 1", e -> c.handleInput(Input.LOAD_LEVEL_1), leftPanel);
-        setupSingleButton("Level 2", e -> c.handleInput(Input.LOAD_LEVEL_2), rightPanel);
-        setupSingleButton("Load Game", e -> c.handleInput(Input.RESUME), leftPanel);
+        setupSingleButton("Level 2", e -> c.handleInput(Input.LOAD_LEVEL_2), leftPanel);
+        setupSingleButton("Load Game", e -> c.handleInput(Input.RESUME), rightPanel);
         setupSingleButton("Help", e -> c.help(), rightPanel);
 
         JPanel mainPanel = new JPanel(new GridLayout(1,2));
