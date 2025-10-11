@@ -97,5 +97,14 @@ public interface PlayL2{
         }
         return fg;
     }
+
+    /** This method handles completion of autoplay */
+    public default boolean isPlayComplete(Timer autoplayTimer) {
+        if (autoplayTimer != null) {
+            autoplayTimer.stop();
+        }
+        System.out.println("Playback completed");
+        return true;
+    }
 }
 

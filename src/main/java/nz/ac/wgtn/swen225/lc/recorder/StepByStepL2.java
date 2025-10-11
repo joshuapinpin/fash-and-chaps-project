@@ -97,7 +97,7 @@ public class StepByStepL2 implements PlayL2{
         setState(state, ac);
         Input direction = move.direction();
         // pass direction to app method
-        ac.handleInput(direction);
+        // ac.handleInput(direction);
         System.out.println("step-by-step position: " + pos);
         System.out.println("step-by-step direction: " + direction);
         pos++;
