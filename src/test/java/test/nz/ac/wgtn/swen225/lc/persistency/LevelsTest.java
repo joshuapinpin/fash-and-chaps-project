@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 record TestData(int number){}
 
-public class LevelsTest {
+class LevelsTest {
     private static GameState mapper(InputStream in){
         try {
             TestData level = new ObjectMapper().readValue(in, TestData.class);
@@ -33,12 +33,12 @@ public class LevelsTest {
     }
 
     @Test
-    public void testPath() {
+    void testPath() {
         assertEquals("/levels/Level", Levels.defaultPath());
     }
 
     @Test
-    public void testValid() {
+    void testValid() {
         GameState state = Levels.load(67, LevelsTest::mapper);
         Maze result = new Maze(state.getRows(), state.getCols());
         for (int y=0; y<result.getRows(); y++) {
@@ -57,7 +57,7 @@ public class LevelsTest {
     }
 
     @Test
-    public void testInvalidFile() {
+    void testInvalidFile() {
         Error err = assertThrows(Error.class, ()->{
             Levels.load(999, LevelsTest::mapper);
         });
@@ -65,7 +65,7 @@ public class LevelsTest {
     }
 
     @Test
-    public void testMapperReturnsNull() {
+    void testMapperReturnsNull() {
         Error err = assertThrows(Error.class, ()->{
             Levels.load(67, in->null);
         });
@@ -73,7 +73,7 @@ public class LevelsTest {
     }
 
     @Test
-    public void testMapperFailure() {
+    void testMapperFailure() {
         Error err = assertThrows(Error.class, ()->{
             Levels.load(67, in->{
                 throw new Error("Map failure");
@@ -83,7 +83,7 @@ public class LevelsTest {
     }
 
     @Test
-    public void testMapperNull() {
+    void testMapperNull() {
         Exception e = assertThrows(IllegalArgumentException.class, ()->{
             Levels.load(67, null);
         });
@@ -91,20 +91,20 @@ public class LevelsTest {
     }
 
     @Test
-    public void testMaxTime() {
+    void testMaxTime() {
         assertEquals(60, Levels.LevelOne.maxTime());
         assertEquals(60, Levels.LevelTwo.maxTime());
     }
 
     @Test
-    public void testMaxKeys() {
+    void testMaxKeys() {
         assertEquals(2, Levels.LevelOne.maxKeys());
-        // TODO: add LevelTwo check
+        assertEquals(4, Levels.LevelTwo.maxKeys());
     }
 
     @Test
-    public void textMaxTreasures() {
+    void textMaxTreasures() {
         assertEquals(4, Levels.LevelOne.maxTreasures());
-        // TODO: add LevelTwo check
+        assertEquals(5, Levels.LevelTwo.maxTreasures());
     }
 }
