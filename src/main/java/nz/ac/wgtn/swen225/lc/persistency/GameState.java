@@ -123,14 +123,22 @@ public class GameState {
      */
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder();
-        result.append("[\n");
+        StringBuilder sb = new StringBuilder();
+        sb.append("GameState {")
+                .append("\n  rows=").append(rows)
+                .append(", cols=").append(cols)
+                .append(", time=").append(time)
+                .append(", levelInfo=").append(levelInfo)
+                .append(", player=").append(player)
+                .append(",\n  board=\n");
+
         for (String[] row : board) {
-            result.append(Arrays.toString(row));
-            result.append("\n");
+            sb.append("    ")
+                    .append(Arrays.toString(row))
+                    .append("\n");
         }
-        result.append("]");
-        return result.toString();
+        sb.append("}");
+        return sb.toString();
     }
 
     /** // rows cols time levelinfo player(state) monsters board
